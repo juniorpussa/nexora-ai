@@ -30,33 +30,33 @@ if (mode === "video") {
         const startData = await startRes.json();
 
         if (!startRes.ok) {
-          lastError = startData?.error?.message || `Erro ao iniciar vídeo com ${videoModel} (HTTP ${startRes.status})`;
+          lastError = `[${videoModel}] ${startData?.error?.message || `HTTP ${startRes.status}`}`;
           continue;
         }
 
         const operationName = startData?.name;
         if (!operationName) {
-          lastError = `Operação de vídeo sem identificador em ${videoModel}.`;
+          lastError = `[${videoModel}] Sem operation name: ${JSON.stringify(startData).slice(0, 220)}`;
           continue;
         }
 
         const opUrl = `https://generativelanguage.googleapis.com/v1beta/${operationName}?key=${env.GEMINI_API_KEY}`;
         let opData = startData;
 
-        for (let i = 0; i < 16; i++) {
+        for (let i = 0; i < 12; i++) {
           if (opData.done) break;
-          await new Promise((r) => setTimeout(r, 4000));
+          await new Promise((r) => setTimeout(r, 3500));
           const pollRes = await fetch(opUrl);
           opData = await pollRes.json();
         }
 
         if (!opData.done) {
-          lastError = "Renderização ainda em curso no servidor. Tente novamente em instantes.";
+          lastError = `[${videoModel}] Ainda em processamento (${operationName}).`;
           continue;
         }
 
         if (opData.error) {
-          lastError = opData.error.message || `Falha na renderização em ${videoModel}.`;
+          lastError = `[${videoModel}] Erro na operação: ${opData.error.message || JSON.stringify(opData.error)}`;
           continue;
         }
 
@@ -86,14 +86,14 @@ if (mode === "video") {
           resp?.video?.uri;
 
         if (!videoUri) {
-          lastError = `Modelo ${videoModel} concluiu sem URI de vídeo.`;
+          lastError = `[${videoModel}] Sem URI/base64. Resposta: ${JSON.stringify(opData).slice(0, 260)}`;
           continue;
         }
 
         const separator = videoUri.includes("?") ? "&" : "?";
         const fileRes = await fetch(`${videoUri}${separator}key=${env.GEMINI_API_KEY}`);
         if (!fileRes.ok) {
-          lastError = `Falha ao baixar o vídeo gerado (HTTP ${fileRes.status}).`;
+          lastError = `[${videoModel}] Falha ao baixar vídeo (HTTP ${fileRes.status}).`;
           continue;
         }
 
