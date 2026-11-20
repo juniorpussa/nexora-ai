@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXORA.AI — Fotos de Produto Profissionais em Segundos</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #171a21;
+      --card-hover: #1f242e;
+      --border: #2a303c;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --gold: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 17, 21, 0.95);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .logo { font-size: 1.35rem; font-weight: 800; letter-spacing: 0.4px; }
+    .logo span { color: var(--accent); }
+    .credits-box {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--card); border: 1px solid var(--border);
+      padding: 8px 14px; border-radius: 999px; font-size: 0.9rem;
+    }
+    .credits-count { font-weight: 700; color: var(--gold); }
+    .btn-buy-top {
+      background: var(--accent); color: #052e16; border: none;
+      padding: 6px 14px; border-radius: 999px; font-weight: 700;
+      cursor: pointer; font-size: 0.85rem;
+    }
+    main { max-width: 960px; width: 100%; margin: 0 auto; padding: 28px 16px 64px; flex: 1; }
+    .hero { text-align: center; margin-bottom: 28px; }
+    .hero h1 { font-size: 1.9rem; line-height: 1.2; margin-bottom: 10px; }
+    .hero p { color: var(--muted); font-size: 1rem; max-width: 600px; margin: 0 auto; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+    .panel {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px;
+    }
+    .step-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .step-badge {
+      background: var(--accent); color: #052e16; font-size: 0.75rem;
+      width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
+      align-items: center; justify-content: center; font-weight: 800;
+    }
+    .upload-area {
+      border: 2px dashed var(--border); border-radius: 12px;
+      padding: 28px 16px; text-align: center; cursor: pointer;
+      transition: 0.2s; position: relative; min-height: 220px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .upload-area:hover { border-color: var(--accent); background: var(--card-hover); }
+    .upload-area img { max-height: 200px; max-width: 100%; border-radius: 8px; object-fit: contain; }
+    .styles-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .style-card {
+      border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;
+      cursor: pointer; transition: 0.15s; display: flex; justify-content: space-between; align-items: center;
+    }
+    .style-card:hover { background: var(--card-hover); }
+    .style-card.active { border-color: var(--accent); background: rgba(16, 185, 129, 0.08); }
+    .style-info strong { display: block; font-size: 0.95rem; }
+    .style-info span { font-size: 0.8rem; color: var(--muted); }
+    .btn-primary {
+      width: 100%; margin-top: 18px; padding: 15px; border: none; border-radius: 12px;
+      background: var(--accent); color: #052e16; font-size: 1rem; font-weight: 800;
+      cursor: pointer; transition: 0.15s;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .result-box {
+      min-height: 320px; border-radius: 12px; background: #0b0d10;
+      border: 1px solid var(--border); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 16px; text-align: center;
+    }
+    .result-box img { max-width: 100%; max-height: 300px; border-radius: 10px; }
+    .btn-download {
+      margin-top: 14px; width: 100%; padding: 12px; border-radius: 10px;
+      border: 1px solid var(--accent); background: transparent; color: var(--accent);
+      font-weight: 700; cursor: pointer;
+    }
+    .btn-download:hover { background: rgba(16, 185, 129, 0.12); }
+    .loader {
+      width: 36px; height: 36px; border: 4px solid var(--border);
+      border-top-color: var(--accent); border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin-bottom: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.78);
+      display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50;
+    }
+    .modal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; max-width: 440px; width: 100%; padding: 24px;
+    }
+    .modal h2 { font-size: 1.25rem; margin-bottom: 8px; }
+    .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 18px; }
+    .pack-option {
+      border: 1px solid var(--border); border-radius: 12px; padding: 14px;
+      margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer;
+    }
+    .pack-option:hover { border-color: var(--accent); }
+    .pack-tag { background: var(--gold); color: #111; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+    .modal-close { width: 100%; padding: 10px; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 10px; cursor: pointer; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">NEXORA<span>.AI</span></div>
+  <div class="credits-box">
+    <span>Créditos: <span class="credits-count" id="creditsDisplay">2</span></span>
+    <button class="btn-buy-top" onclick="openModal()">+ Recarregar</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Transforme fotos comuns em imagens prontas para vender</h1>
+    <p>Envie a foto do seu produto, escolha o cenário comercial e baixe em alta qualidade para sua loja ou anúncio.</p>
+  </section>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="step-title"><span class="step-badge">1</span> Envie a foto do produto</div>
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept="image/*" hidden />
+        <div id="uploadPlaceholder">
+          <p style="font-weight:700; margin-bottom:6px;">Clique para enviar a foto</p>
+          <p style="font-size:0.82rem; color:var(--muted);">JPG, PNG ou WEBP (até 10MB)</p>
+        </div>
+        <img id="previewImg" style="display:none;" alt="Prévia do produto" />
+      </div>
+
+      <div class="step-title" style="margin-top:20px;"><span class="step-badge">2</span> Escolha o estilo comercial</div>
+      <div class="styles-list" id="stylesList">
+        <div class="style-card active" data-style="vitrine">
+          <div class="style-info">
+            <strong>Fundo Limpo Vitrine</strong>
+            <span>Fundo claro profissional com sombra suave para catálogo</span>
+          </div>
+          <span>✓</span>
+        </div>
+        <div class="style-card" data-style="dark">
+          <div class="style-info">
+            <strong>Estúdio Dark Premium</strong>
+            <span>Superfície escura minimalista com iluminação de destaque</span>
+          </div>
+          <span></span>
+        </div>
+        <div class="style-card" data-style="lifestyle">
+          <div class="style-info">
+            <strong>Cena de Uso (Lifestyle)</strong>
+            <span>Produto ambientado em cenário real de uso cotidiano</span>
+          </div>
+          <span></span>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="generateBtn" onclick="generateImage()">Gerar Foto Profissional (1 crédito)</button>
+    </div>
+
+    <div class="panel">
+      <div class="step-title"><span class="step-badge">3</span> Resultado pronto para publicar</div>
+      <div class="result-box" id="resultBox">
+        <p style="color:var(--muted); font-size:0.9rem;">A imagem gerada aparecerá aqui pronta para download.</p>
+      </div>
+      <button class="btn-download" id="downloadBtn" style="display:none;" onclick="downloadResult()">Baixar Imagem em Alta Qualidade</button>
+    </div>
+  </div>
+</main>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h2>Adicionar Créditos — NEXORA.AI</h2>
+    <p>Escolha um pacote para continuar gerando fotos profissionais sem marca d'água.</p>
+    <div class="pack-option" onclick="simulatePurchase(15)">
+      <div>
+        <strong>Pacote Inicial — 15 créditos</strong>
+        <div style="font-size:0.8rem; color:var(--muted);">Ideal para testar nos seus produtos campeões</div>
+      </div>
+      <span style="color:var(--accent); font-weight:700;">Liberar →</span>
+    </div>
+    <div class="pack-option" onclick="simulatePurchase(60)">
+      <div>
+        <span class="pack-tag">MAIS VENDIDO</span>
+        <strong style="display:block; margin-top:4px;">Pacote Catálogo — 60 créditos</strong>
+        <div style="font-size:0.8rem; color:var(--muted);">Para lojistas com vários itens no catálogo</div>
+      </div>
+      <span style="color:var(--accent); font-weight:700;">Liberar →</span>
+    </div>
+    <button class="modal-close" onclick="closeModal()">Fechar</button>
+  </div>
+</div>
+
+<script>
+  let credits = 2;
+  let selectedStyle = 'vitrine';
+  let uploadedBase64 = null;
+  let uploadedMimeType = 'image/jpeg';
+  let finalImageUrl = null;
+
+  const STYLE_PROMPTS = {
+    vitrine: "Keep the exact product unchanged in shape, label, and proportions. Place it centered on a clean, bright pure-white e-commerce studio surface with natural soft contact shadow and crisp commercial lighting. No extra text or watermarks.",
+    dark: "Keep the exact product unchanged in shape, label, and proportions. Place it on a sleek dark matte #121212 studio pedestal with subtle warm gold and cool teal rim lighting, high-contrast commercial product photography.",
+    lifestyle: "Keep the exact product unchanged in shape, label, and proportions. Place it naturally on a modern tabletop in a realistic everyday indoor setting with soft natural window light and shallow depth of field."
+  };
+
+  document.getElementById('fileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    uploadedMimeType = file.type || 'image/jpeg';
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      uploadedBase64 = dataUrl.split(',')[1];
+      const preview = document.getElementById('previewImg');
+      preview.src = dataUrl;
+      preview.style.display = 'block';
+      document.getElementById('uploadPlaceholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.querySelectorAll('.style-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.style-card').forEach(c => {
+        c.classList.remove('active');
+        c.lastElementChild.textContent = '';
+      });
+      card.classList.add('active');
+      card.lastElementChild.textContent = '✓';
+      selectedStyle = card.dataset.style;
+    });
+  });
+
+  async function generateImage() {
+    if (!uploadedBase64) {
+      alert('Envie primeiro a foto do produto.');
+      return;
+    }
+    if (credits <= 0) {
+      openModal();
+      return;
+    }
+
+    const btn = document.getElementById('generateBtn');
+    const resultBox = document.getElementById('resultBox');
+    btn.disabled = true;
+    resultBox.innerHTML = '<div class="loader"></div><p>Gerando cenário comercial com IA...</p>';
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageBase64: uploadedBase64,
+          mimeType: uploadedMimeType,
+          prompt: STYLE_PROMPTS[selectedStyle]
+        })
+      });
+
+      const rawText = await res.text();
+      let data = {};
+      if (rawText) {
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          throw new Error(`Resposta inválida do servidor (HTTP ${res.status}): ${rawText.slice(0, 180)}`);
+        }
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || `Erro do servidor (HTTP ${res.status})`);
+      }
+
+      if (!data.imageUrl) {
+        throw new Error(data.error || 'A IA não retornou imagem.');
+      }
+
+      credits -= 1;
+      document.getElementById('creditsDisplay').textContent = credits;
+      finalImageUrl = data.imageUrl;
+
+      resultBox.innerHTML = `<img src="${finalImageUrl}" alt="Produto gerado" />`;
+      document.getElementById('downloadBtn').style.display = 'block';
+    } catch (err) {
+      resultBox.innerHTML = `<p style="color:#f87171;">${err.message}</p>`;
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function downloadResult() {
+    if (!finalImageUrl) return;
+    const a = document.createElement('a');
+    a.href = finalImageUrl;
+    a.download = `nexora-ai-${selectedStyle}.png`;
+    a.click();
+  }
+
+  function openModal() { document.getElementById('modalBackdrop').style.display = 'flex'; }
+  function closeModal() { document.getElementById('modalBackdrop').style.display = 'none'; }
+  function simulatePurchase(amount) {
+    credits += amount;
+    document.getElementById('creditsDisplay').textContent = credits;
+    closeModal();
+  }
+</script>
+</body>
+</html>
