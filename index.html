@@ -268,7 +268,6 @@
       color: #052017;
     }
 
-    /* Modal de Recarga */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -371,7 +370,7 @@
   <header>
     <div class="brand">NEXORA<span>.AI</span></div>
     <div class="credits-box">
-      <span>Créditos: <strong id="creditsCount">2</strong></span>
+      <span>Créditos: <strong id="creditsCount">999</strong></span>
       <button class="btn-recharge" id="openRechargeBtn" type="button">+ Recarregar</button>
     </div>
   </header>
@@ -453,7 +452,7 @@
       </div>
 
       <button class="btn-generate" id="generateBtn" type="button">
-        Gerar Foto Profissional (1 crédito)
+        Gerar Foto Profissional (Modo Teste Livre)
       </button>
     </section>
 
@@ -516,11 +515,12 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "nexora_ai_credits_v1";
-    const INITIAL_CREDITS = 2;
+    const FREE_TEST_MODE = true;
+    const STORAGE_KEY = "nexora_ai_credits_v2";
+    const INITIAL_CREDITS = 999;
 
     let credits = Number(localStorage.getItem(STORAGE_KEY));
-    if (Number.isNaN(credits) || credits < 0) credits = INITIAL_CREDITS;
+    if (Number.isNaN(credits) || credits < 50) credits = INITIAL_CREDITS;
 
     let selectedBase64 = null;
     let selectedMimeType = "image/jpeg";
@@ -541,7 +541,7 @@
     const rechargeModal = document.getElementById("rechargeModal");
 
     function renderCredits() {
-      creditsCountEl.textContent = credits;
+      creditsCountEl.textContent = FREE_TEST_MODE ? `${credits} (Livre)` : credits;
       localStorage.setItem(STORAGE_KEY, String(credits));
     }
 
@@ -627,7 +627,7 @@
         return;
       }
 
-      if (credits <= 0) {
+      if (!FREE_TEST_MODE && credits <= 0) {
         rechargeModal.classList.add("open");
         setError("Seus créditos acabaram. Clique em + Recarregar para continuar.");
         return;
@@ -664,14 +664,16 @@
           throw new Error("A resposta da API não retornou imagem.");
         }
 
-        credits = Math.max(0, credits - 1);
-        renderCredits();
+        if (!FREE_TEST_MODE) {
+          credits = Math.max(0, credits - 1);
+          renderCredits();
+        }
         setGeneratedImage(finalSrc);
       } catch (err) {
         setError(err.message || "Falha ao gerar a imagem.");
       } finally {
         generateBtn.disabled = false;
-        generateBtn.textContent = "Gerar Foto Profissional (1 crédito)";
+        generateBtn.textContent = "Gerar Foto Profissional (Modo Teste Livre)";
       }
     });
 
