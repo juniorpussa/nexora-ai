@@ -11,103 +11,175 @@ export async function onRequestPost(context) {
     return new Response(null, { status: 204, headers: corsHeaders });
   }
 
+  const json = (obj, status = 200) =>
+    new Response(JSON.stringify(obj), {
+      status,
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
+    });
+
   try {
     if (!env.FAL_KEY) {
-      return new Response(
-        JSON.stringify({ error: "Variável FAL_KEY não configurada na Cloudflare Pages." }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return json({ error: "Variável FAL_KEY não configurada na Cloudflare Pages." }, 500);
     }
 
     const body = await request.json();
+    const action = body.action || "submit";
     const mode = body.mode || "image";
-    const imageBase64 = body.imageBase64 || "";
-    const mimeType = body.mimeType || "image/jpeg";
-    const customPrompt = (body.prompt || "").trim();
+    const model =
+      mode === "video"
+        ? "fal-ai/kling-video/v2.6/pro/image-to-video"
+        : "fal-ai/nano-banana/edit";
 
-    if (!imageBase64) {
-      return new Response(
-        JSON.stringify({ error: "Envie a foto do produto antes de gerar." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const dataUri = `data:${mimeType};base64,${imageBase64}`;
-    const headers = {
+    const authHeaders = {
       "Authorization": `Key ${env.FAL_KEY}`,
       "Content-Type": "application/json"
     };
 
-    if (mode === "image") {
-      const prompt = customPrompt ||
-        "Luxury commercial product photography keeping the exact uploaded product intact, placed on dark obsidian stone and brushed gold pedestal with dramatic rim lighting, deep shadows, high-contrast studio reflections, ultra sharp 8k look, zero text, zero watermarks, zero extra logos.";
+    if (action === "submit") {
+      const imageBase64 = body.imageBase64 || "";
+      const mimeType = body.mimeType || "image/jpeg";
+      const customPrompt = (body.prompt || "").trim();
 
-      const res = await fetch("https://fal.run/fal-ai/nano-banana/edit", {
+      if (!imageBase64) {
+        return json({ error: "Envie a foto do produto antes de gerar." }, 400);
+      }
+
+      const dataUri = `data:${mimeType};base64,${imageBase64}`;
+
+      const payload =
+        mode === "video"
+          ? {
+              prompt:
+                customPrompt ||
+                "Fast dynamic commercial camera push-in and orbital sweep around the exact product from the input image, dramatic studio lighting shifts, crisp specular highlights, high-energy commercial motion, 9:16 vertical framing, no text overlays, no watermarks.",
+              image_url: dataUri,
+              duration: "5",
+              aspect_ratio: "9:16",
+              generate_audio: false
+            }
+          : {
+              prompt:
+                customPrompt ||
+                "Luxury commercial product photography keeping the exact uploaded product intact, placed on dark obsidian stone and brushed gold pedestal with dramatic rim lighting, deep shadows, high-contrast studio reflections, ultra sharp 8k look, zero text, zero watermarks, zero extra logos.",
+              image_urls: [dataUri],
+              aspect_ratio: "9:16",
+              num_images: 1,
+              output_format: "jpeg"
+            };
+
+      const submitRes = await fetch(`https://queue.fal.run/${model}`, {
         method: "POST",
-        headers,
-        body: JSON.stringify({
-          prompt,
-          image_urls: [dataUri],
-          aspect_ratio: "9:16",
-          num_images: 1,
-          output_format: "jpeg"
-        })
+        headers: authHeaders,
+        body: JSON.stringify(payload)
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        return new Response(
-          JSON.stringify({ error: data.detail || data.message || "Erro ao gerar imagem na fal.ai." }),
-          { status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      const submitText = await submitRes.text();
+      let submitData = {};
+      try {
+        submitData = JSON.parse(submitText);
+      } catch {
+        return json({ error: `Resposta inválida da fal.ai ao iniciar (${submitRes.status}).` }, 502);
+      }
+
+      if (!submitRes.ok) {
+        return json(
+          { error: submitData.detail || submitData.message || "Falha ao enviar pedido para a fal.ai." },
+          submitRes.status
         );
       }
 
-      const imageUrl = data?.images?.[0]?.url || data?.image?.url || "";
-      return new Response(
-        JSON.stringify({ ok: true, mode: "image", url: imageUrl }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return json({
+        ok: true,
+        status: "IN_QUEUE",
+        requestId: submitData.request_id,
+        statusUrl: submitData.status_url,
+        responseUrl: submitData.response_url,
+        model
+      });
     }
 
-    if (mode === "video") {
-      const prompt = customPrompt ||
-        "Fast dynamic commercial camera push-in and orbital sweep around the exact product from the input image, dramatic studio lighting shifts, crisp specular highlights, high-energy commercial motion, 9:16 vertical framing, no text overlays, no watermarks.";
+    if (action === "status") {
+      const requestId = body.requestId;
+      const statusUrl =
+        body.statusUrl ||
+        (requestId ? `https://queue.fal.run/${model}/requests/${requestId}/status` : "");
+      const responseUrl =
+        body.responseUrl ||
+        (requestId ? `https://queue.fal.run/${model}/requests/${requestId}` : "");
 
-      const res = await fetch("https://fal.run/fal-ai/kling-video/v2.6/pro/image-to-video", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          prompt,
-          image_url: dataUri,
-          duration: "5",
-          aspect_ratio: "9:16",
-          generate_audio: false
-        })
+      if (!statusUrl || !responseUrl) {
+        return json({ error: "Identificador do pedido em fila em falta." }, 400);
+      }
+
+      const stRes = await fetch(statusUrl, {
+        method: "GET",
+        headers: { "Authorization": `Key ${env.FAL_KEY}` }
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        return new Response(
-          JSON.stringify({ error: data.detail || data.message || "Erro ao gerar vídeo na fal.ai." }),
-          { status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      const stText = await stRes.text();
+      let stData = {};
+      try {
+        stData = JSON.parse(stText);
+      } catch {
+        return json({ status: "IN_PROGRESS" });
+      }
+
+      if (!stRes.ok) {
+        return json(
+          { error: stData.detail || stData.message || "Erro ao consultar estado na fal.ai." },
+          stRes.status
         );
       }
 
-      const videoUrl = data?.video?.url || data?.url || "";
-      return new Response(
-        JSON.stringify({ ok: true, mode: "video", url: videoUrl }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      if (stData.status === "COMPLETED") {
+        const resFetch = await fetch(responseUrl, {
+          method: "GET",
+          headers: { "Authorization": `Key ${env.FAL_KEY}` }
+        });
+
+        const resText = await resFetch.text();
+        let resultData = {};
+        try {
+          resultData = JSON.parse(resText);
+        } catch {
+          return json({ error: "Resultado final inválido devolvido pela fal.ai." }, 502);
+        }
+
+        if (!resFetch.ok) {
+          return json(
+            { error: resultData.detail || resultData.message || "Erro ao obter resultado final." },
+            resFetch.status
+          );
+        }
+
+        const mediaUrl =
+          mode === "video"
+            ? resultData?.video?.url || resultData?.url || ""
+            : resultData?.images?.[0]?.url || resultData?.image?.url || "";
+
+        return json({
+          ok: true,
+          status: "COMPLETED",
+          mode,
+          url: mediaUrl
+        });
+      }
+
+      if (stData.status === "FAILED") {
+        return json(
+          { error: stData.error || "A geração falhou no motor da fal.ai." },
+          500
+        );
+      }
+
+      return json({
+        ok: true,
+        status: stData.status || "IN_PROGRESS"
+      });
     }
 
-    return new Response(
-      JSON.stringify({ error: "Modo inválido. Use 'image' ou 'video'." }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return json({ error: "Ação inválida." }, 400);
   } catch (err) {
-    return new Response(
-      JSON.stringify({ error: err.message || "Falha interna no servidor." }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return json({ error: err.message || "Falha interna no servidor." }, 500);
   }
 }
