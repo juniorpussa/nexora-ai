@@ -1,691 +1,186 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — Fotos Comerciais com IA</title>
-  <style>
-    :root {
-      --bg: #090b10;
-      --panel: #11151f;
-      --panel-2: #161b28;
-      --border: #232a3b;
-      --text: #f3f6fc;
-      --muted: #9aa4b8;
-      --accent: #10b981;
-      --accent-hover: #059669;
-      --danger: #f87171;
+export async function onRequestPost(context) {
+  const { request, env } = context;
+
+  try {
+    if (!env.GEMINI_API_KEY) {
+      return jsonResponse({ error: "GEMINI_API_KEY não configurada na Cloudflare." }, 500);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    const body = await request.json();
+    const {
+      mode = "image",
+      imageBase64,
+      mimeType = "image/jpeg",
+      prompt = ""
+    } = body;
 
-    body {
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.45;
+    if (!imageBase64) {
+      return jsonResponse({ error: "Envie a foto do produto antes de gerar." }, 400);
     }
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 28px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(17, 21, 31, 0.85);
-      backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
-
-    .brand {
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      font-size: 1.15rem;
-      color: var(--text);
-    }
-
-    .brand span { color: var(--accent); }
-
-    .credits-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      padding: 6px 8px 6px 14px;
-      border-radius: 999px;
-      font-size: 0.9rem;
-    }
-
-    .credits-box strong { color: var(--accent); }
-
-    .btn-recharge {
-      background: var(--accent);
-      color: #062118;
-      border: none;
-      font-weight: 700;
-      font-size: 0.85rem;
-      padding: 7px 14px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: background 0.15s ease, transform 0.1s ease;
-    }
-
-    .btn-recharge:hover { background: var(--accent-hover); color: #ffffff; }
-    .btn-recharge:active { transform: scale(0.98); }
-
-    .hero {
-      text-align: center;
-      padding: 28px 20px 12px;
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    .hero h1 {
-      font-size: clamp(1.45rem, 3vw, 2.1rem);
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .hero p {
-      color: var(--muted);
-      font-size: 0.96rem;
-    }
-
-    .container {
-      max-width: 1120px;
-      margin: 18px auto 48px;
-      padding: 0 20px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 22px;
-    }
-
-    @media (max-width: 860px) {
-      .container { grid-template-columns: 1fr; }
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .step-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 1rem;
-    }
-
-    .step-badge {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: rgba(16, 185, 129, 0.16);
-      color: var(--accent);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.82rem;
-      font-weight: 800;
-    }
-
-    .upload-zone {
-      border: 1.5px dashed #334155;
-      border-radius: 12px;
-      padding: 28px 18px;
-      text-align: center;
-      cursor: pointer;
-      background: var(--panel-2);
-      transition: border-color 0.15s ease, background 0.15s ease;
-      min-height: 210px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .upload-zone:hover {
-      border-color: var(--accent);
-      background: #1a2132;
-    }
-
-    .upload-zone img {
-      max-height: 190px;
-      max-width: 100%;
-      border-radius: 8px;
-      object-fit: contain;
-    }
-
-    .upload-hint { color: var(--muted); font-size: 0.82rem; }
-
-    .styles-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .style-option {
-      width: 100%;
-      text-align: left;
-      background: var(--panel-2);
-      border: 1.5px solid var(--border);
-      border-radius: 11px;
-      padding: 13px 15px;
-      cursor: pointer;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .style-option:hover { border-color: #3b4963; }
-
-    .style-option.active {
-      border-color: var(--accent);
-      background: rgba(16, 185, 129, 0.08);
-    }
-
-    .style-name { font-weight: 700; font-size: 0.94rem; display: block; margin-bottom: 2px; }
-    .style-desc { color: var(--muted); font-size: 0.82rem; display: block; }
-    .style-check { color: var(--accent); font-weight: 800; font-size: 1rem; opacity: 0; }
-    .style-option.active .style-check { opacity: 1; }
-
-    .btn-generate {
-      width: 100%;
-      background: var(--accent);
-      color: #052017;
-      border: none;
-      border-radius: 11px;
-      padding: 14px 18px;
-      font-size: 0.98rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: background 0.15s ease, opacity 0.15s ease;
-    }
-
-    .btn-generate:hover:not(:disabled) {
-      background: var(--accent-hover);
-      color: #ffffff;
-    }
-
-    .btn-generate:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .result-box {
-      background: #07090e;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      min-height: 360px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .result-box img {
-      max-width: 100%;
-      max-height: 440px;
-      border-radius: 10px;
-      object-fit: contain;
-    }
-
-    .error-text { color: var(--danger); font-weight: 600; white-space: pre-wrap; }
-
-    .btn-download {
-      width: 100%;
-      background: transparent;
-      color: var(--accent);
-      border: 1.5px solid var(--accent);
-      border-radius: 11px;
-      padding: 12px 16px;
-      font-size: 0.94rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease;
-    }
-
-    .btn-download:hover {
-      background: var(--accent);
-      color: #052017;
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.72);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      z-index: 50;
-    }
-
-    .modal-backdrop.open { display: flex; }
-
-    .modal {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      max-width: 470px;
-      width: 100%;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .modal-header h2 { font-size: 1.1rem; font-weight: 800; }
-
-    .btn-close {
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      font-size: 1.3rem;
-      cursor: pointer;
-      padding: 2px 6px;
-    }
-
-    .plan-card {
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .plan-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      font-weight: 800;
-    }
-
-    .plan-price { color: var(--accent); font-size: 1.05rem; }
-
-    .btn-wa {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      background: var(--accent);
-      color: #052017;
-      font-weight: 800;
-      padding: 13px 16px;
-      border-radius: 11px;
-      font-size: 0.94rem;
-    }
-
-    .btn-wa:hover { background: var(--accent-hover); color: #ffffff; }
-
-    .owner-shortcut {
-      border-top: 1px solid var(--border);
-      padding-top: 12px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn-ghost-sm {
-      flex: 1;
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 9px;
-      padding: 8px 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-ghost-sm:hover { color: var(--text); border-color: #475569; }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="brand">NEXORA<span>.AI</span></div>
-    <div class="credits-box">
-      <span>Créditos: <strong id="creditsCount">999</strong></span>
-      <button class="btn-recharge" id="openRechargeBtn" type="button">+ Recarregar</button>
-    </div>
-  </header>
-
-  <section class="hero">
-    <h1>Transforme fotos comuns em imagens prontas para vender</h1>
-    <p>Envie a foto do produto, escolha o estilo comercial e gere imagens limpas e fiéis para sua loja ou anúncio.</p>
-  </section>
-
-  <main class="container">
-    <section class="card">
-      <div>
-        <div class="step-title">
-          <span class="step-badge">1</span>
-          <span>Envie a foto do produto</span>
-        </div>
-        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden />
-        <div class="upload-zone" id="uploadZone">
-          <div id="uploadPlaceholder">
-            <div style="font-weight: 700; margin-bottom: 4px;">Clique para enviar a foto</div>
-            <div class="upload-hint">JPG, PNG ou WEBP (até 10MB)</div>
-          </div>
-          <img id="previewImg" alt="Prévia do produto" style="display: none;" />
-        </div>
-      </div>
-
-      <div>
-        <div class="step-title" style="margin-bottom: 12px;">
-          <span class="step-badge">2</span>
-          <span>Escolha o estilo comercial</span>
-        </div>
-
-        <div class="styles-list" id="stylesList">
-          <button class="style-option active" type="button" data-style="clean_showcase"
-            data-prompt="Clean commercial e-commerce product showcase photography on a bright neutral light background with a soft natural contact shadow beneath the product. Keep the product 100% faithful to the original reference photo in shape, color, and label. Strictly no embedded text, no watermarks, no extra logos, and no promotional badges.">
-            <div>
-              <span class="style-name">Fundo Limpo Vitrine</span>
-              <span class="style-desc">Fundo claro profissional com sombra suave para catálogo</span>
-            </div>
-            <span class="style-check">✓</span>
-          </button>
-
-          <button class="style-option" type="button" data-style="dark_studio"
-            data-prompt="Luxury dark studio product photography on a sleek matte dark podium with dramatic rim lighting and subtle studio reflections. Keep the product 100% faithful to the original reference photo in shape, color, and label. Strictly no embedded text, no watermarks, no extra logos, and no promotional badges.">
-            <div>
-              <span class="style-name">Estúdio Dark Premium</span>
-              <span class="style-desc">Superfície escura minimalista com iluminação de destaque</span>
-            </div>
-            <span class="style-check">✓</span>
-          </button>
-
-          <button class="style-option" type="button" data-style="lifestyle_scene"
-            data-prompt="Realistic commercial lifestyle product photography placing the product naturally in a clean everyday setting with natural daylight and shallow depth of field. Keep the product 100% faithful to the original reference photo in shape, color, and label. Strictly no embedded text, no watermarks, no extra logos, and no promotional badges.">
-            <div>
-              <span class="style-name">Cena de Uso (Lifestyle)</span>
-              <span class="style-desc">Produto ambientado em cenário real de uso cotidiano</span>
-            </div>
-            <span class="style-check">✓</span>
-          </button>
-
-          <button class="style-option" type="button" data-style="luxury_marble"
-            data-prompt="High-end editorial product photography resting on a refined light natural marble surface with soft diffused sunlight, subtle organic shadows, and upscale commercial aesthetic. Keep the product 100% faithful to the original reference photo in shape, color, and label. Strictly no embedded text, no watermarks, no extra logos, and no promotional badges.">
-            <div>
-              <span class="style-name">Vitrine Luxo &amp; Mármore</span>
-              <span class="style-desc">Pedra marmorizada elegante, luz suave e acabamento sofisticado</span>
-            </div>
-            <span class="style-check">✓</span>
-          </button>
-
-          <button class="style-option" type="button" data-style="creative_impact"
-            data-prompt="High-impact commercial advertising photography with bold studio lighting, crisp depth, dynamic contrast, and vibrant clean backdrop that makes the product pop for paid ads. Keep the product 100% faithful to the original reference photo in shape, color, and label. Strictly no embedded text, no watermarks, no extra logos, and no promotional badges.">
-            <div>
-              <span class="style-name">Impacto Criativo / Destaque</span>
-              <span class="style-desc">Contraste marcante e luz de anúncio para chamar atenção no feed</span>
-            </div>
-            <span class="style-check">✓</span>
-          </button>
-        </div>
-      </div>
-
-      <button class="btn-generate" id="generateBtn" type="button">
-        Gerar Foto Profissional (Modo Teste Livre)
-      </button>
-    </section>
-
-    <section class="card">
-      <div class="step-title">
-        <span class="step-badge">3</span>
-        <span>Resultado pronto para publicar</span>
-      </div>
-
-      <div class="result-box" id="resultBox">
-        <span id="resultPlaceholder">A imagem gerada aparecerá aqui pronta para download.</span>
-        <img id="resultImg" alt="Imagem gerada" style="display: none;" />
-        <div id="errorMsg" class="error-text" style="display: none;"></div>
-      </div>
-
-      <button class="btn-download" id="downloadBtn" type="button" style="display: none;">
-        Baixar Imagem em Alta Qualidade
-      </button>
-    </section>
-  </main>
-
-  <div class="modal-backdrop" id="rechargeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="modalTitle">Recarregar Créditos — NEXORA.AI</h2>
-        <button class="btn-close" id="closeRechargeBtn" type="button" aria-label="Fechar">×</button>
-      </div>
-
-      <div class="plan-card">
-        <div class="plan-top">
-          <span>Plano Mensal PRO (com teste gratuito)</span>
-          <span class="plan-price">R$ 40,00/mês</span>
-        </div>
-        <span class="style-desc">Geração contínua de imagens comerciais em todos os estilos + suporte direto no WhatsApp.</span>
-      </div>
-
-      <div class="plan-card">
-        <div class="plan-top">
-          <span>Pacote Avulso via Pix</span>
-          <span class="plan-price">10% OFF no Pix</span>
-        </div>
-        <span class="style-desc">Ideal para lotes rápidos de produtos, catálogo e criativos de anúncios.</span>
-      </div>
-
-      <a
-        class="btn-wa"
-        id="waLink"
-        href="https://wa.me/5511975381981?text=Ol%C3%A1%2C%20quero%20recarregar%20cr%C3%A9ditos%20no%20NEXORA.AI!"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Chamar no WhatsApp (11 97538-1981)
-      </a>
-
-      <div class="owner-shortcut">
-        <button class="btn-ghost-sm" id="add50Btn" type="button">+50 créditos (teste)</button>
-        <button class="btn-ghost-sm" id="add200Btn" type="button">+200 créditos (teste)</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const FREE_TEST_MODE = true;
-    const STORAGE_KEY = "nexora_ai_credits_v2";
-    const INITIAL_CREDITS = 999;
-
-    let credits = Number(localStorage.getItem(STORAGE_KEY));
-    if (Number.isNaN(credits) || credits < 50) credits = INITIAL_CREDITS;
-
-    let selectedBase64 = null;
-    let selectedMimeType = "image/jpeg";
-    let selectedPrompt = document.querySelector(".style-option.active").dataset.prompt;
-    let selectedStyleKey = document.querySelector(".style-option.active").dataset.style;
-    let generatedDataUrl = null;
-
-    const creditsCountEl = document.getElementById("creditsCount");
-    const fileInput = document.getElementById("fileInput");
-    const uploadZone = document.getElementById("uploadZone");
-    const uploadPlaceholder = document.getElementById("uploadPlaceholder");
-    const previewImg = document.getElementById("previewImg");
-    const generateBtn = document.getElementById("generateBtn");
-    const resultPlaceholder = document.getElementById("resultPlaceholder");
-    const resultImg = document.getElementById("resultImg");
-    const errorMsg = document.getElementById("errorMsg");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const rechargeModal = document.getElementById("rechargeModal");
-
-    function renderCredits() {
-      creditsCountEl.textContent = FREE_TEST_MODE ? `${credits} (Livre)` : credits;
-      localStorage.setItem(STORAGE_KEY, String(credits));
-    }
-
-    function setError(msg) {
-      resultImg.style.display = "none";
-      downloadBtn.style.display = "none";
-      resultPlaceholder.style.display = "none";
-      errorMsg.textContent = msg;
-      errorMsg.style.display = "block";
-    }
-
-    function setGeneratedImage(src) {
-      errorMsg.style.display = "none";
-      resultPlaceholder.style.display = "none";
-      resultImg.src = src;
-      resultImg.style.display = "block";
-      generatedDataUrl = src;
-      downloadBtn.style.display = "block";
-    }
-
-    renderCredits();
-
-    uploadZone.addEventListener("click", () => fileInput.click());
-
-    fileInput.addEventListener("change", (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      if (file.size > 10 * 1024 * 1024) {
-        setError("A imagem excede o limite de 10MB.");
-        return;
-      }
-
-      selectedMimeType = file.type || "image/jpeg";
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = String(reader.result || "");
-        previewImg.src = result;
-        previewImg.style.display = "block";
-        uploadPlaceholder.style.display = "none";
-        const parts = result.split(",");
-        selectedBase64 = parts.length > 1 ? parts[1] : result;
+    // ==========================================
+    // MODO 1: GERAÇÃO DE IMAGEM COMERCIAL
+    // ==========================================
+    if (mode === "image") {
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${env.GEMINI_API_KEY}`;
+
+      const payload = {
+        contents: [
+          {
+            parts: [
+              {
+                inline_data: {
+                  mime_type: mimeType,
+                  data: imageBase64
+                }
+              },
+              {
+                text: prompt
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          responseModalities: ["IMAGE"]
+        }
       };
-      reader.readAsDataURL(file);
-    });
 
-    document.querySelectorAll(".style-option").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".style-option").forEach((el) => el.classList.remove("active"));
-        btn.classList.add("active");
-        selectedPrompt = btn.dataset.prompt;
-        selectedStyleKey = btn.dataset.style;
+      const geminiRes = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
       });
-    });
 
-    document.getElementById("openRechargeBtn").addEventListener("click", () => {
-      rechargeModal.classList.add("open");
-    });
+      const data = await geminiRes.json();
 
-    document.getElementById("closeRechargeBtn").addEventListener("click", () => {
-      rechargeModal.classList.remove("open");
-    });
-
-    rechargeModal.addEventListener("click", (e) => {
-      if (e.target === rechargeModal) rechargeModal.classList.remove("open");
-    });
-
-    document.getElementById("add50Btn").addEventListener("click", () => {
-      credits += 50;
-      renderCredits();
-      rechargeModal.classList.remove("open");
-    });
-
-    document.getElementById("add200Btn").addEventListener("click", () => {
-      credits += 200;
-      renderCredits();
-      rechargeModal.classList.remove("open");
-    });
-
-    generateBtn.addEventListener("click", async () => {
-      if (!selectedBase64) {
-        setError("Envie a foto do produto antes de gerar.");
-        return;
+      if (!geminiRes.ok) {
+        const msg = data?.error?.message || `Erro na API Gemini (HTTP ${geminiRes.status})`;
+        return jsonResponse({ error: msg }, geminiRes.status);
       }
 
-      if (!FREE_TEST_MODE && credits <= 0) {
-        rechargeModal.classList.add("open");
-        setError("Seus créditos acabaram. Clique em + Recarregar para continuar.");
-        return;
+      const parts = data?.candidates?.[0]?.content?.parts || [];
+      const imagePart = parts.find((p) => p.inlineData || p.inline_data);
+      const inline = imagePart?.inlineData || imagePart?.inline_data;
+
+      if (!inline?.data) {
+        return jsonResponse({ error: "A IA não retornou nenhuma imagem. Tente outro estilo." }, 502);
       }
 
-      generateBtn.disabled = true;
-      generateBtn.textContent = "Gerando imagem...";
-      errorMsg.style.display = "none";
-      resultImg.style.display = "none";
-      downloadBtn.style.display = "none";
-      resultPlaceholder.textContent = "Processando foto comercial no NEXORA.AI...";
-      resultPlaceholder.style.display = "block";
+      return jsonResponse({
+        imageBase64: inline.data,
+        mimeType: inline.mimeType || inline.mime_type || "image/png"
+      });
+    }
 
-      try {
-        const res = await fetch("/api/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imageBase64: selectedBase64,
-            mimeType: selectedMimeType,
-            style: selectedStyleKey,
-            prompt: selectedPrompt
-          })
-        });
+    // ==========================================
+    // MODO 2: GERAÇÃO DE VÍDEO DINÂMICO (VEO)
+    // ==========================================
+    if (mode === "video") {
+      const videoModel = "veo-3.1-fast-generate-preview";
+      const startUrl = `https://generativelanguage.googleapis.com/v1beta/models/${videoModel}:predictLongRunning?key=${env.GEMINI_API_KEY}`;
 
-        const data = await res.json().catch(() => ({}));
-
-        if (!res.ok) {
-          throw new Error(data.error || `Erro do servidor (HTTP ${res.status})`);
+      const startPayload = {
+        instances: [
+          {
+            prompt: prompt,
+            image: {
+              bytesBase64Encoded: imageBase64,
+              mimeType: mimeType
+            }
+          }
+        ],
+        parameters: {
+          aspectRatio: "9:16",
+          personGeneration: "dont_allow"
         }
+      };
 
-        const finalSrc = data.imageUrl || (data.imageBase64 ? `data:${data.mimeType || "image/png"};base64,${data.imageBase64}` : null);
-        if (!finalSrc) {
-          throw new Error("A resposta da API não retornou imagem.");
-        }
+      const startRes = await fetch(startUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(startPayload)
+      });
 
-        if (!FREE_TEST_MODE) {
-          credits = Math.max(0, credits - 1);
-          renderCredits();
-        }
-        setGeneratedImage(finalSrc);
-      } catch (err) {
-        setError(err.message || "Falha ao gerar a imagem.");
-      } finally {
-        generateBtn.disabled = false;
-        generateBtn.textContent = "Gerar Foto Profissional (Modo Teste Livre)";
+      const startData = await startRes.json();
+
+      if (!startRes.ok) {
+        const msg = startData?.error?.message || `Erro ao iniciar vídeo (HTTP ${startRes.status})`;
+        return jsonResponse({ error: msg }, startRes.status);
       }
-    });
 
-    downloadBtn.addEventListener("click", () => {
-      if (!generatedDataUrl) return;
-      const link = document.createElement("a");
-      link.href = generatedDataUrl;
-      link.download = `nexora-${selectedStyleKey}-${Date.now()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-  </script>
-</body>
-</html>
+      const operationName = startData?.name;
+      if (!operationName) {
+        return jsonResponse({ error: "Operação de vídeo não retornou identificador." }, 502);
+      }
+
+      // Aguarda conclusão (polling até ~55s dentro do limite da Function)
+      const opUrl = `https://generativelanguage.googleapis.com/v1beta/${operationName}?key=${env.GEMINI_API_KEY}`;
+      let opData = startData;
+
+      for (let i = 0; i < 14; i++) {
+        if (opData.done) break;
+        await new Promise((r) => setTimeout(r, 4000));
+        const pollRes = await fetch(opUrl);
+        opData = await pollRes.json();
+      }
+
+      if (!opData.done) {
+        return jsonResponse({
+          error: "O vídeo ainda está sendo renderizado no servidor. Tente novamente em alguns segundos."
+        }, 504);
+      }
+
+      if (opData.error) {
+        return jsonResponse({ error: opData.error.message || "Falha na renderização do vídeo." }, 502);
+      }
+
+      const samples =
+        opData?.response?.generateVideoResponse?.generatedSamples ||
+        opData?.response?.generatedVideos ||
+        [];
+      const videoUri = samples[0]?.video?.uri || samples[0]?.uri;
+
+      if (!videoUri) {
+        return jsonResponse({ error: "O servidor concluiu sem retornar o arquivo de vídeo." }, 502);
+      }
+
+      const separator = videoUri.includes("?") ? "&" : "?";
+      const fileRes = await fetch(`${videoUri}${separator}key=${env.GEMINI_API_KEY}`);
+      if (!fileRes.ok) {
+        return jsonResponse({ error: `Falha ao baixar o vídeo gerado (HTTP ${fileRes.status}).` }, 502);
+      }
+
+      const arrayBuffer = await fileRes.arrayBuffer();
+      const base64Video = arrayBufferToBase64(arrayBuffer);
+
+      return jsonResponse({
+        videoBase64: base64Video,
+        mimeType: "video/mp4"
+      });
+    }
+
+    return jsonResponse({ error: "Modo inválido." }, 400);
+  } catch (err) {
+    return jsonResponse({ error: err.message || "Erro interno no servidor." }, 500);
+  }
+}
+
+function arrayBufferToBase64(buffer) {
+  let binary = "";
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(binary);
+}
+
+function jsonResponse(obj, status = 200) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    }
+  });
+}
