@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
-  async function fetchWithTimeout(url, options, timeoutMs = 15000, stageName = "serviço") {
+  async function fetchWithTimeout(url, options, timeoutMs = 20000, stageName = "serviço") {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -64,6 +64,16 @@ export async function onRequestPost(context) {
     );
   }
 
+  function extractVideoUrl(data) {
+    return (
+      data?.video?.url ||
+      data?.video_url ||
+      data?.output?.video?.url ||
+      data?.url ||
+      ""
+    );
+  }
+
   function normalizePtBrScript(raw) {
     return raw
       .replace(/\s+/g, " ")
@@ -89,9 +99,7 @@ export async function onRequestPost(context) {
     const timer = setTimeout(() => controller.abort(), 12000);
     try {
       const res = await fetch(url, {
-        headers: {
-          "User-Agent": "Mozilla/5.0"
-        },
+        headers: { "User-Agent": "Mozilla/5.0" },
         signal: controller.signal
       });
       if (!res.ok) return "";
@@ -132,7 +140,6 @@ export async function onRequestPost(context) {
       let audioUrl = "";
       let providerUsed = "none";
 
-      // 1. Kokoro PT-BR
       try {
         const voiceId = isMale ? "pm_alex" : "pf_dora";
         const kokoroData = await fetchWithTimeout(
@@ -155,7 +162,6 @@ export async function onRequestPost(context) {
         audioUrl = "";
       }
 
-      // 2. MiniMax Speech-02 HD
       if (!audioUrl) {
         try {
           const minimaxVoice = isMale ? "Deep_Voice_Man" : "Sweet_Girl_2";
@@ -186,7 +192,6 @@ export async function onRequestPost(context) {
         }
       }
 
-      // 3. Fallback real em áudio PT-BR para garantir narração dentro do vídeo
       if (!audioUrl) {
         audioUrl = await fetchPtBrFallbackAudioDataUri(scriptPtBr);
         if (audioUrl) providerUsed = "ptbr-tts-fallback";
@@ -214,17 +219,17 @@ export async function onRequestPost(context) {
       const dataUri = `data:${mimeType};base64,${imageBase64}`;
 
       const angleVariations = [
-        "dramatic low-angle hero commercial framing, razor-sharp product focus, studio lighting",
-        "dynamic close-up three-quarter macro angle highlighting surface finish and edge specular light",
-        "high-contrast wide-angle dramatic studio shot with deep shadows and crisp rim light"
+        "dramatic Hollywood blockbuster hero framing, glowing rim light, floating ember sparks and dark smoke atmosphere",
+        "dynamic close-up macro angle highlighting metallic finish and precision details with dramatic light flares",
+        "orbiting three-quarter commercial angle with high-contrast studio lighting and deep cinematic shadows"
       ];
       const angle = angleVariations[(sceneIndex - 1) % angleVariations.length];
 
       const baseDirection =
         imagePrompt ||
-        "commercial product shot on dark obsidian stone and brushed gold pedestal, dramatic rim lighting";
+        "dark obsidian and brushed gold commercial studio with dramatic rim lighting and glowing embers";
 
-      const fullPrompt = `Commercial product photography keeping the exact uploaded product 100% identical and faithful, ${baseDirection}, ${angle}, 9:16 vertical framing, ultra-sharp photorealistic detail, zero added text, zero watermarks, zero extra logos, zero human hands or faces.`;
+      const fullPrompt = `Hollywood commercial cinematography keeping the exact uploaded product 100% identical and faithful, ${baseDirection}, ${angle}, 9:16 vertical framing, ultra-sharp photorealistic detail, zero added text, zero watermarks, zero extra logos.`;
 
       const imgData = await fetchWithTimeout(
         "https://fal.run/fal-ai/nano-banana/edit",
@@ -249,6 +254,43 @@ export async function onRequestPost(context) {
       }
 
       return json({ ok: true, imageUrl, sceneIndex });
+    }
+
+    // Nova etapa opcional: animar cena estática em clipe de vídeo com movimento real de câmera/efeitos
+    if (task === "clip") {
+      const imageUrl = (body.imageUrl || "").trim();
+      const motionPrompt = (body.motionPrompt || "").trim();
+
+      if (!imageUrl) {
+        return json({ error: "URL da cena ausente para animação." }, 400);
+      }
+
+      const fullMotionPrompt =
+        motionPrompt ||
+        "Hollywood commercial camera push-in with subtle orbit, floating glowing sparks and atmospheric light rays, keeping the exact product 100% identical, smooth 9:16 motion, zero text.";
+
+      const clipData = await fetchWithTimeout(
+        "https://fal.run/fal-ai/kling-video/v1.6/standard/image-to-video",
+        {
+          method: "POST",
+          headers: authHeaders,
+          body: JSON.stringify({
+            prompt: fullMotionPrompt,
+            image_url: imageUrl,
+            duration: "5",
+            aspect_ratio: "9:16"
+          })
+        },
+        55000,
+        "animador de cena (Image-to-Video)"
+      );
+
+      const videoUrl = extractVideoUrl(clipData);
+      if (!videoUrl) {
+        return json({ error: "Clipe animado não retornado." }, 502);
+      }
+
+      return json({ ok: true, videoUrl });
     }
 
     return json({ error: "Tarefa inválida." }, 400);
