@@ -17,6 +17,17 @@ export async function onRequestPost(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
+  function formatError(err) {
+    if (!err) return "Erro desconhecido";
+    if (typeof err === "string") return err;
+    if (typeof err.message === "string" && err.message.trim()) return err.message;
+    try {
+      return JSON.stringify(err);
+    } catch {
+      return "Falha inesperada";
+    }
+  }
+
   async function fetchWithTimeout(url, options, timeoutMs = 25000, stageName = "serviço") {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -33,12 +44,10 @@ export async function onRequestPost(context) {
         parsed = null;
       }
       if (!res.ok) {
-        const detail =
-          parsed?.detail ||
-          parsed?.message ||
-          parsed?.error ||
-          `Falha no ${stageName} (${res.status}).`;
-        throw new Error(detail);
+        const rawDetail = parsed?.detail || parsed?.message || parsed?.error || rawText;
+        const detailStr =
+          typeof rawDetail === "string" ? rawDetail : JSON.stringify(rawDetail || {});
+        throw new Error(`Falha no ${stageName} (${res.status}): ${detailStr.slice(0, 220)}`);
       }
       if (!parsed) {
         throw new Error(`Resposta inválida do ${stageName}.`);
@@ -48,7 +57,7 @@ export async function onRequestPost(context) {
       if (err?.name === "AbortError") {
         throw new Error(`${stageName} demorou mais do que o tempo limite.`);
       }
-      throw err;
+      throw new Error(formatError(err));
     } finally {
       clearTimeout(timer);
     }
@@ -97,7 +106,7 @@ export async function onRequestPost(context) {
 
     if (task === "tts") {
       const rawText = (body.text || "").trim();
-      const voice = body.voice === "adam" ? "adam" : "natasha";
+      const voice = body.voice === "natasha" ? "natasha" : "adam";
 
       if (!rawText) {
         return json({ error: "Digite o roteiro do vídeo antes de gerar." }, 400);
@@ -109,7 +118,7 @@ export async function onRequestPost(context) {
       let providerUsed = "none";
       const errors = [];
 
-      // 1. Kokoro PT-BR (pm_alex para Adam masculino | pf_dora para Natasha feminina)
+      // 1. Kokoro PT-BR (pm_alex para masculino | pf_dora para feminino)
       try {
         const voiceId = isMale ? "pm_alex" : "pf_dora";
         const kokoroData = await fetchWithTimeout(
@@ -120,7 +129,7 @@ export async function onRequestPost(context) {
             body: JSON.stringify({
               prompt: scriptPtBr,
               voice: voiceId,
-              speed: 1.18
+              speed: 1.15
             })
           },
           22000,
@@ -129,10 +138,10 @@ export async function onRequestPost(context) {
         audioUrl = extractAudioUrl(kokoroData);
         if (audioUrl) providerUsed = `kokoro-${voiceId}`;
       } catch (err) {
-        errors.push(`Kokoro: ${err?.message || "falha"}`);
+        errors.push(`Kokoro: ${formatError(err)}`);
       }
 
-      // 2. MiniMax Speech-02 HD (Deep_Voice_Man para Adam masculino | Sweet_Girl_2 para Natasha feminina)
+      // 2. MiniMax Speech-02 HD (Deep_Voice_Man para masculino | Sweet_Girl_2 para feminino)
       if (!audioUrl) {
         try {
           const minimaxVoice = isMale ? "Deep_Voice_Man" : "Sweet_Girl_2";
@@ -145,11 +154,10 @@ export async function onRequestPost(context) {
                 text: scriptPtBr,
                 voice_setting: {
                   voice_id: minimaxVoice,
-                  speed: 1.18,
+                  speed: 1.15,
                   vol: 1.0,
-                  pitch: isMale ? -2 : 0
+                  pitch: isMale ? -1 : 0
                 },
-                language_boost: "Portuguese_Brazil",
                 output_format: "mp3"
               })
             },
@@ -159,24 +167,17 @@ export async function onRequestPost(context) {
           audioUrl = extractAudioUrl(minimaxData);
           if (audioUrl) providerUsed = `minimax-${minimaxVoice}`;
         } catch (err) {
-          errors.push(`MiniMax: ${err?.message || "falha"}`);
+          errors.push(`MiniMax: ${formatError(err)}`);
         }
-      }
-
-      if (!audioUrl) {
-        return json(
-          {
-            error: `Não foi possível gerar a voz (${voice}). Detalhes: ${errors.join(" | ") || "sem retorno de áudio"}`
-          },
-          502
-        );
       }
 
       return json({
         ok: true,
         audioUrl,
         voice,
-        provider: providerUsed
+        provider: providerUsed,
+        ttsFallback: !audioUrl,
+        voiceNote: errors.join(" | ")
       });
     }
 
@@ -268,6 +269,6 @@ export async function onRequestPost(context) {
 
     return json({ error: "Tarefa inválida." }, 400);
   } catch (err) {
-    return json({ error: err?.message || "Erro interno no servidor." }, 500);
+    return json({ error: formatError(err) }, 500);
   }
 }
