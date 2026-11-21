@@ -66,8 +66,8 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>50 + 50 VIRAIS</span></div>
-    <div class="pill-info">50 Modelos de Imagem • 50 Ritmos de Vídeo (10s a 30s) • Foco em Cenas &amp; Movimento</div>
+    <div class="brand">NEXORA.AI <span>CINEMA 9:16</span></div>
+    <div class="pill-info">50 Modelos de Imagem • 50 Ritmos de Vídeo (10s a 30s) • Geração Rápida &amp; Player Estável</div>
   </div>
 
   <div class="layout">
@@ -158,8 +158,8 @@
           <span>Legenda compacta (zona segura)</span>
         </label>
         <label class="toggle-row">
-          <input type="checkbox" id="enableMotionClip" checked />
-          <span>Movimento real de cena e produto (Image-to-Video)</span>
+          <input type="checkbox" id="enableMotionClip" />
+          <span>Tentar 1 clipe animado extra (pode demorar mais)</span>
         </label>
       </div>
 
@@ -181,26 +181,26 @@
 
   <script>
     const IMAGE_MODELS = [
-      { id: 1, cat: "Luxo", name: "#01 Estúdio Dark Obsidiana & Ouro", desc: "Pedestal escuro com aro dourado e reflexo profundo", prompt: "dark obsidian stone pedestal with brushed gold metallic trim, deep glossy black floor reflection, dramatic warm rim lighting" },
-      { id: 2, cat: "Luxo", name: "#02 Mármore Nero Marquina", desc: "Mármore preto com veios brancos e luz de vitrine", prompt: "polished Nero Marquina black marble slab with subtle white veins, crisp luxury boutique spotlight, moody dark backdrop" },
-      { id: 3, cat: "Luxo", name: "#03 Pódio Veludo Esmeralda & Latão", desc: "Contraste sofisticado verde escuro e dourado", prompt: "deep emerald velvet display block with antique brass accents, soft golden studio key light, dark luxury atmosphere" },
-      { id: 4, cat: "Luxo", name: "#04 Cristal Fumê & Feixe Dourado", desc: "Bloco de vidro fumê com raios de luz quentes", prompt: "heavy smoked crystal glass podium, warm golden god-rays cutting through dark studio haze, ultra crisp reflections" },
-      { id: 5, cat: "Luxo", name: "#05 Rocha Vulcânica & Âmbar", desc: "Textura mineral bruta com brilho quente lateral", prompt: "textured dark basalt volcanic rock pedestal with warm amber backlight glow, high-end commercial studio photography" },
-      { id: 6, cat: "Luxo", name: "#06 Ouro Líquido & Preto Fosco", desc: "Superfície preta fosca com detalhes metálicos", prompt: "matte carbon black luxury plinth with subtle molten gold reflection accents, dramatic high-contrast studio lighting" },
-      { id: 7, cat: "Luxo", name: "#07 Travertino Italiano & Luz Solar", desc: "Pedra bege nobre com sombras arquitetônicas", prompt: "honed Italian travertine stone pedestal with warm architectural window shadow play, refined neutral luxury backdrop" },
-      { id: 8, cat: "Luxo", name: "#08 Joalheria Noir Reflexiva", desc: "Espelho negro com contorno luminoso perfeito", prompt: "black mirror showcase surface with razor-sharp white and gold rim light, ultra-clean high-ticket commercial look" },
-      { id: 9, cat: "Luxo", name: "#09 Madeira Nobre & Bronze", desc: "Nogueira escura com acabamento metálico quente", prompt: "dark walnut wood and brushed bronze showcase table, warm moody editorial studio lighting, shallow depth of field" },
-      { id: 10, cat: "Luxo", name: "#10 Palco Monolito Cinza Grafite", desc: "Concreto arquitetônico fino com holofote central", prompt: "smooth dark graphite architectural concrete monolith, focused overhead softbox beam, crisp commercial shadows" },
+      { id: 1, cat: "Luxo", name: "#01 Estúdio Dark Obsidiana & Ouro", desc: "Pedestal escuro com aro dourado e reflexo profundo", prompt: "dark obsidian stone pedestal with brushed gold metallic trim, deep glossy black floor reflection, volumetric warm rim lighting" },
+      { id: 2, cat: "Luxo", name: "#02 Mármore Nero Marquina", desc: "Mármore preto com veios brancos e luz de vitrine", prompt: "polished Nero Marquina black marble slab with subtle white veins, crisp boutique spotlight, moody dark backdrop" },
+      { id: 3, cat: "Luxo", name: "#03 Pódio Veludo Esmeralda & Latão", desc: "Contraste sofisticado verde escuro e dourado", prompt: "deep emerald velvet display block with antique brass accents, golden studio key light, dark luxury atmosphere" },
+      { id: 4, cat: "Luxo", name: "#04 Cristal Fumê & Feixe Dourado", desc: "Bloco de vidro fumê com raios de luz quentes", prompt: "heavy smoked crystal glass podium, warm golden volumetric light rays cutting through dark studio haze" },
+      { id: 5, cat: "Luxo", name: "#05 Rocha Vulcânica & Âmbar", desc: "Textura mineral bruta com brilho quente lateral", prompt: "textured dark basalt volcanic rock pedestal with warm amber backlight glow and dramatic rim light" },
+      { id: 6, cat: "Luxo", name: "#06 Ouro Líquido & Preto Fosco", desc: "Superfície preta fosca com detalhes metálicos", prompt: "matte carbon black luxury plinth with molten gold reflection accents and high-contrast studio lighting" },
+      { id: 7, cat: "Luxo", name: "#07 Travertino Italiano & Luz Solar", desc: "Pedra bege nobre com sombras arquitetônicas", prompt: "honed Italian travertine stone pedestal with warm architectural window shadow play, refined luxury backdrop" },
+      { id: 8, cat: "Luxo", name: "#08 Joalheria Noir Reflexiva", desc: "Espelho negro com contorno luminoso perfeito", prompt: "black mirror showcase surface with razor-sharp white and gold rim light, high-ticket commercial look" },
+      { id: 9, cat: "Luxo", name: "#09 Madeira Nobre & Bronze", desc: "Nogueira escura com acabamento metálico quente", prompt: "dark walnut wood and brushed bronze showcase table, warm moody editorial studio lighting, shallow depth" },
+      { id: 10, cat: "Luxo", name: "#10 Palco Monolito Cinza Grafite", desc: "Concreto arquitetônico fino com holofote central", prompt: "smooth dark graphite architectural concrete monolith, focused overhead softbox beam, crisp shadows" },
 
-      { id: 11, cat: "Viral", name: "#11 Estrobo Neon Ciano & Ouro", desc: "Luzes duplas vibrantes que param o scroll", prompt: "dark studio surface lit by electric cyan and warm gold dual rim lights, high-contrast viral commercial aesthetic" },
-      { id: 12, cat: "Viral", name: "#12 Fumaça Densa & Holofote", desc: "Atmosfera dramática com feixe de luz no produto", prompt: "dramatic atmospheric studio mist with a sharp vertical spotlight beam illuminating the product on dark slate" },
+      { id: 11, cat: "Viral", name: "#11 Estrobo Neon Ciano & Ouro", desc: "Luzes duplas vibrantes que param o scroll", prompt: "dark studio surface lit by electric cyan and warm gold dual rim lights, high-contrast commercial aesthetic" },
+      { id: 12, cat: "Viral", name: "#12 Fumaça Densa & Holofote", desc: "Atmosfera dramática com feixe de luz no produto", prompt: "dramatic atmospheric studio mist with a sharp vertical volumetric beam illuminating the product on dark slate" },
       { id: 13, cat: "Viral", name: "#13 Reflexo Molhado Urbano", desc: "Superfície escura espelhada com brilho intenso", prompt: "glossy wet dark slate surface with vivid specular highlights and moody bokeh lights in deep background" },
-      { id: 14, cat: "Viral", name: "#14 Halo Luminoso Vermelho & Preto", desc: "Contraste agressivo para chamar atenção nos 2s", prompt: "deep matte black studio backdrop with dramatic crimson red and white edge halo lighting, bold viral look" },
+      { id: 14, cat: "Viral", name: "#14 Halo Luminoso Vermelho & Preto", desc: "Contraste agressivo para chamar atenção nos 2s", prompt: "deep matte black studio backdrop with dramatic crimson red and white edge halo lighting, bold commercial look" },
       { id: 15, cat: "Viral", name: "#15 Raio Azul Elétrico", desc: "Energia visual forte com recorte nítido", prompt: "sleek dark metallic table with vivid electric blue rim light and crisp white front fill light, ultra-sharp focus" },
       { id: 16, cat: "Viral", name: "#16 Impacto Branco Puro & Sombra Dura", desc: "Estética editorial moderna de alto contraste", prompt: "stark architectural white studio pedestal with bold dramatic diagonal sunlight shadows, ultra crisp detail" },
-      { id: 17, cat: "Viral", name: "#17 Vidro Molhado & Gotículas Frescas", desc: "Sensação tátil ultra-realista com gotas de água", prompt: "dark tempered glass surface covered in realistic fine water droplets, crisp studio strobe lighting, ultra-detailed" },
-      { id: 18, cat: "Viral", name: "#18 Cromo Espelhado Futurista", desc: "Superfície metálica líquida de alto brilho", prompt: "polished liquid chrome metallic pedestal with dramatic studio light streaks, bold high-converting visual" },
-      { id: 19, cat: "Viral", name: "#19 Túnel de Luz Geométrico", desc: "Perspectiva profunda que puxa o olhar ao centro", prompt: "modern dark architectural light tunnel perspective drawing focus directly to the center product, sharp studio lighting" },
+      { id: 17, cat: "Viral", name: "#17 Vidro Molhado & Gotículas Frescas", desc: "Sensação tátil ultra-realista com gotas de água", prompt: "dark tempered glass surface covered in realistic fine water droplets, crisp studio lighting, ultra-detailed" },
+      { id: 18, cat: "Viral", name: "#18 Cromo Espelhado Futurista", desc: "Superfície metálica líquida de alto brilho", prompt: "polished liquid chrome metallic pedestal with dramatic studio light streaks, bold commercial visual" },
+      { id: 19, cat: "Viral", name: "#19 Túnel de Luz Geométrico", desc: "Perspectiva profunda que puxa o olhar ao centro", prompt: "modern dark architectural light tunnel perspective drawing focus directly to the center product, sharp lighting" },
       { id: 20, cat: "Viral", name: "#20 Contraste Solar Dourado", desc: "Feixe quente intenso atravessando fundo escuro", prompt: "intense golden hour sunbeam slicing across a dark matte stone surface, dramatic chiaroscuro product shot" },
 
       { id: 21, cat: "Vendas", name: "#21 Vitrine E-commerce Clean Premium", desc: "Fundo claro sofisticado com sombra suave realista", prompt: "clean off-white luxury studio pedestal with soft natural contact shadow and balanced commercial key light" },
@@ -214,7 +214,7 @@
       { id: 29, cat: "Vendas", name: "#29 Bancada Madeira Clara Escandinava", desc: "Visual orgânico confiável para uso diário", prompt: "light oak Scandinavian wooden table with soft morning studio light and clean neutral wall background" },
       { id: 30, cat: "Vendas", name: "#30 Vitrine Azul Profundo Executivo", desc: "Tom azul marinho elegante que transmite autoridade", prompt: "deep midnight navy matte display pedestal with crisp white and silver studio lighting, authoritative commercial feel" },
 
-      { id: 31, cat: "Lifestyle", name: "#31 Bancada de Banheiro Spa Luxo", desc: "Ideal para cosméticos, perfumes e cuidados pessoais", prompt: "luxury spa bathroom marble vanity with soft natural morning light, subtle steam atmosphere, blurred modern interior" },
+      { id: 31, cat: "Lifestyle", name: "#31 Bancada de Banheiro Spa Luxo", desc: "Ideal para cosméticos, perfumes e cuidados pessoais", prompt: "luxury spa bathroom marble vanity with soft natural morning light, subtle steam atmosphere, blurred interior" },
       { id: 32, cat: "Lifestyle", name: "#32 Mesa de Escritório Executivo", desc: "Cenário real moderno para acessórios e gadgets", prompt: "sleek modern executive desk with dark leather mat, warm desk lamp glow, softly blurred contemporary office" },
       { id: 33, cat: "Lifestyle", name: "#33 Cozinha Gourmet Moderna", desc: "Bancada limpa iluminada para utilidades e casa", prompt: "modern gourmet kitchen quartz island with bright natural daylight and softly blurred upscale home background" },
       { id: 34, cat: "Lifestyle", name: "#34 Criado-Mudo Quarto Aconchegante", desc: "Luz quente intimista de uso real em casa", prompt: "cozy modern bedroom nightstand with warm bedside lamp ambiance, soft linen textures in blurred background" },
@@ -238,86 +238,78 @@
     ];
 
     const VIDEO_MODELS = [
-      { cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Cortes ágeis + movimento de câmera dinâmico", cutSec: 1.0, zoomAmt: 0.22, pan: 42 },
-      { cat: "Agressivo", name: "#02 Corte Relâmpago", desc: "Troca rápida de planos com ação contínua", cutSec: 0.9, zoomAmt: 0.21, pan: 38 },
-      { cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura forte com câmera em movimento", cutSec: 1.05, zoomAmt: 0.24, pan: 46 },
-      { cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Sequência ágil e direta do produto", cutSec: 1.0, zoomAmt: 0.20, pan: 36 },
-      { cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Aproximação marcante em cada corte", cutSec: 1.1, zoomAmt: 0.22, pan: 36 },
-      { cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Movimento constante em todos os planos", cutSec: 0.95, zoomAmt: 0.23, pan: 42 },
-      { cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Ritmo firme até o final do vídeo", cutSec: 1.0, zoomAmt: 0.24, pan: 42 },
-      { cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Varredura lateral marcada por cena", cutSec: 1.15, zoomAmt: 0.19, pan: 54 },
-      { cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Zoom in progressivo com energia", cutSec: 0.95, zoomAmt: 0.23, pan: 38 },
-      { cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Variedade de planos e movimento fluido", cutSec: 1.0, zoomAmt: 0.22, pan: 46 },
+      { cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Crash zoom + speed ramping + cortes de retenção", cutSec: 0.92, zoomAmt: 0.24, pan: 44 },
+      { cat: "Agressivo", name: "#02 Corte Relâmpago", desc: "Troca ágil de ângulos com direção de cinema", cutSec: 0.85, zoomAmt: 0.22, pan: 40 },
+      { cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura de alto impacto com push-in rápido", cutSec: 0.96, zoomAmt: 0.26, pan: 48 },
+      { cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Sequência cinética limpa e direta ao ponto", cutSec: 0.95, zoomAmt: 0.21, pan: 38 },
+      { cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Aproximação firme e variação de ângulo", cutSec: 1.02, zoomAmt: 0.23, pan: 38 },
+      { cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Movimento contínuo de câmera sem pausa", cutSec: 0.88, zoomAmt: 0.24, pan: 44 },
+      { cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Cadência acelerada até o fechamento", cutSec: 0.92, zoomAmt: 0.25, pan: 44 },
+      { cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Varredura lateral cinética entre tomadas", cutSec: 1.05, zoomAmt: 0.20, pan: 56 },
+      { cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Crash zoom progressivo com foco no produto", cutSec: 0.90, zoomAmt: 0.24, pan: 40 },
+      { cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Variedade de planos de superprodução", cutSec: 0.94, zoomAmt: 0.23, pan: 48 },
 
-      { cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Aproximação firme em cada corte", cutSec: 1.05, zoomAmt: 0.26, pan: 32 },
-      { cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Foco nos detalhes com câmera viva", cutSec: 1.15, zoomAmt: 0.28, pan: 28 },
-      { cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Movimento marcado de câmera", cutSec: 1.05, zoomAmt: 0.25, pan: 38 },
-      { cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Entrada dinâmica com zoom", cutSec: 1.1, zoomAmt: 0.26, pan: 36 },
-      { cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Zoom profundo e nítido por tomada", cutSec: 1.05, zoomAmt: 0.26, pan: 34 },
-      { cat: "Zoom", name: "#16 Foco Magnético", desc: "Puxada rápida para o produto", cutSec: 1.15, zoomAmt: 0.25, pan: 28 },
-      { cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Movimento denso e dramático", cutSec: 1.0, zoomAmt: 0.26, pan: 40 },
-      { cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Enquadramento ágil em cada cena", cutSec: 1.05, zoomAmt: 0.27, pan: 34 },
-      { cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão dinâmica de cena", cutSec: 1.1, zoomAmt: 0.23, pan: 40 },
-      { cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância viva entre planos", cutSec: 1.05, zoomAmt: 0.26, pan: 38 },
+      { cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Crash zoom seco em cada corte de cena", cutSec: 0.96, zoomAmt: 0.28, pan: 34 },
+      { cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Macro cinematográfico nos detalhes do produto", cutSec: 1.08, zoomAmt: 0.30, pan: 30 },
+      { cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Speed ramping e impacto de câmera", cutSec: 0.96, zoomAmt: 0.26, pan: 40 },
+      { cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Entrada dinâmica com aproximação de lente", cutSec: 1.02, zoomAmt: 0.27, pan: 38 },
+      { cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Zoom profundo e iluminação volumétrica", cutSec: 0.98, zoomAmt: 0.28, pan: 36 },
+      { cat: "Zoom", name: "#16 Foco Magnético", desc: "Convergência cinematográfica no produto", cutSec: 1.08, zoomAmt: 0.26, pan: 30 },
+      { cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Movimento denso de câmera em cena escura", cutSec: 0.92, zoomAmt: 0.27, pan: 42 },
+      { cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Corte seco com salto de enquadramento", cutSec: 0.96, zoomAmt: 0.29, pan: 36 },
+      { cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão rápida de câmera com profundidade", cutSec: 1.02, zoomAmt: 0.24, pan: 42 },
+      { cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância entre abertura ampla e macro", cutSec: 0.96, zoomAmt: 0.27, pan: 40 },
 
-      { cat: "Vendas", name: "#21 Conversão Sacolinha Pro", desc: "Ritmo comercial claro e dinâmico", cutSec: 1.1, zoomAmt: 0.21, pan: 40 },
-      { cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Movimento comercial ágil", cutSec: 1.25, zoomAmt: 0.19, pan: 42 },
-      { cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Destaque de acabamento e ângulos", cutSec: 1.3, zoomAmt: 0.20, pan: 40 },
-      { cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Ritmo ágil para resposta direta", cutSec: 1.0, zoomAmt: 0.23, pan: 44 },
-      { cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento dinâmico de câmera", cutSec: 1.1, zoomAmt: 0.21, pan: 46 },
-      { cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Sequência clara de tomadas", cutSec: 1.15, zoomAmt: 0.21, pan: 38 },
-      { cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Cadência firme até o fim", cutSec: 1.05, zoomAmt: 0.23, pan: 40 },
-      { cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições claras do produto", cutSec: 1.2, zoomAmt: 0.19, pan: 42 },
-      { cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Ritmo leve e movimentado", cutSec: 1.05, zoomAmt: 0.22, pan: 42 },
-      { cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Foco em retenção e movimento", cutSec: 1.0, zoomAmt: 0.22, pan: 40 },
+      { cat: "Vendas", name: "#21 Conversão Sacolinha Pro", desc: "Ritmo de alta conversão com foco visual", cutSec: 1.02, zoomAmt: 0.22, pan: 42 },
+      { cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Movimento comercial limpo de estúdio", cutSec: 1.15, zoomAmt: 0.20, pan: 44 },
+      { cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Destaque de acabamento, brilho e contorno", cutSec: 1.20, zoomAmt: 0.21, pan: 42 },
+      { cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Ritmo ágil para resposta direta", cutSec: 0.92, zoomAmt: 0.24, pan: 46 },
+      { cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento natural e dinâmico de câmera", cutSec: 1.02, zoomAmt: 0.22, pan: 48 },
+      { cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Sequência clara destacando cada ângulo", cutSec: 1.08, zoomAmt: 0.22, pan: 40 },
+      { cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Cadência firme até o último segundo", cutSec: 0.98, zoomAmt: 0.24, pan: 42 },
+      { cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições limpas mantendo identidade", cutSec: 1.12, zoomAmt: 0.20, pan: 44 },
+      { cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Ritmo leve e movimentado", cutSec: 0.98, zoomAmt: 0.23, pan: 44 },
+      { cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Foco em retenção inicial e clareza", cutSec: 0.94, zoomAmt: 0.23, pan: 42 },
 
-      { cat: "Cinema", name: "#31 Comercial de Luxo", desc: "Movimento cinematográfico fluido", cutSec: 1.35, zoomAmt: 0.19, pan: 44 },
-      { cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Planos dramáticos em movimento", cutSec: 1.15, zoomAmt: 0.24, pan: 38 },
-      { cat: "Cinema", name: "#33 Desfile Editorial", desc: "Panorâmica fluida de alto padrão", cutSec: 1.4, zoomAmt: 0.18, pan: 50 },
-      { cat: "Cinema", name: "#34 Joia em Exposição", desc: "Aproximação elegante e nítida", cutSec: 1.3, zoomAmt: 0.21, pan: 34 },
-      { cat: "Cinema", name: "#35 Lançamento Flagship", desc: "Estilo apresentação de produto", cutSec: 1.2, zoomAmt: 0.22, pan: 40 },
-      { cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Atmosfera sóbria com movimento", cutSec: 1.25, zoomAmt: 0.23, pan: 36 },
-      { cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Órbita viva em torno do produto", cutSec: 1.3, zoomAmt: 0.20, pan: 52 },
-      { cat: "Cinema", name: "#38 Spotlight VIP", desc: "Destaque de luz e movimento", cutSec: 1.25, zoomAmt: 0.21, pan: 38 },
-      { cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Enquadramento firme e dinâmico", cutSec: 1.3, zoomAmt: 0.19, pan: 42 },
-      { cat: "Cinema", name: "#40 Gala & Ouro", desc: "Cadência clássica de comercial", cutSec: 1.35, zoomAmt: 0.20, pan: 40 },
+      { cat: "Cinema", name: "#31 Comercial de Luxo", desc: "Movimento cinematográfico suave e preciso", cutSec: 1.25, zoomAmt: 0.20, pan: 46 },
+      { cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Iluminação volumétrica e câmera de cinema", cutSec: 1.08, zoomAmt: 0.25, pan: 40 },
+      { cat: "Cinema", name: "#33 Desfile Editorial", desc: "Panorâmica fluida de alto padrão", cutSec: 1.30, zoomAmt: 0.19, pan: 52 },
+      { cat: "Cinema", name: "#34 Joia em Exposição", desc: "Aproximação elegante com reflexos nítidos", cutSec: 1.20, zoomAmt: 0.22, pan: 36 },
+      { cat: "Cinema", name: "#35 Lançamento Flagship", desc: "Apresentação cinematográfica de produto", cutSec: 1.12, zoomAmt: 0.23, pan: 42 },
+      { cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Atmosfera sombria com luz direcional", cutSec: 1.16, zoomAmt: 0.24, pan: 38 },
+      { cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Órbita fluida ao redor do produto", cutSec: 1.20, zoomAmt: 0.21, pan: 54 },
+      { cat: "Cinema", name: "#38 Spotlight VIP", desc: "Holofote cinematográfico e movimento suave", cutSec: 1.15, zoomAmt: 0.22, pan: 40 },
+      { cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Enquadramento firme e transições limpas", cutSec: 1.20, zoomAmt: 0.20, pan: 44 },
+      { cat: "Cinema", name: "#40 Gala & Ouro", desc: "Cadência de comercial de luxo", cutSec: 1.25, zoomAmt: 0.21, pan: 42 },
 
-      { cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Sequência contínua e movimentada", cutSec: 0.95, zoomAmt: 0.23, pan: 42 },
-      { cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Movimento contínuo entre cenas", cutSec: 1.05, zoomAmt: 0.21, pan: 40 },
-      { cat: "Viral", name: "#43 Dopamina Rápida", desc: "Troca ágil de cenas com ação", cutSec: 0.9, zoomAmt: 0.24, pan: 44 },
-      { cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Movimento ágil e limpo", cutSec: 0.95, zoomAmt: 0.22, pan: 46 },
-      { cat: "Viral", name: "#45 Quebra de Padrão", desc: "Varia direção de movimento por cena", cutSec: 1.0, zoomAmt: 0.25, pan: 48 },
-      { cat: "Viral", name: "#46 POV Mão na Massa", desc: "Sensação dinâmica de proximidade", cutSec: 1.05, zoomAmt: 0.22, pan: 42 },
-      { cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura direta e movimentada", cutSec: 0.95, zoomAmt: 0.25, pan: 40 },
-      { cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Ritmo urbano com movimento", cutSec: 1.0, zoomAmt: 0.22, pan: 42 },
-      { cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Variação rápida de ângulos", cutSec: 0.95, zoomAmt: 0.21, pan: 46 },
-      { cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Equilíbrio de corte e movimento", cutSec: 1.0, zoomAmt: 0.23, pan: 42 }
+      { cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Sequência contínua de alta retenção", cutSec: 0.88, zoomAmt: 0.24, pan: 44 },
+      { cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Movimento contínuo entre cenas variadas", cutSec: 0.96, zoomAmt: 0.22, pan: 42 },
+      { cat: "Viral", name: "#43 Dopamina Rápida", desc: "Troca ágil de planos com ação constante", cutSec: 0.84, zoomAmt: 0.25, pan: 46 },
+      { cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Movimento ágil e iluminação dramática", cutSec: 0.90, zoomAmt: 0.23, pan: 48 },
+      { cat: "Viral", name: "#45 Quebra de Padrão", desc: "Varia direção de câmera a cada tomada", cutSec: 0.94, zoomAmt: 0.26, pan: 50 },
+      { cat: "Viral", name: "#46 POV Mão na Massa", desc: "Proximidade e energia de câmera", cutSec: 0.98, zoomAmt: 0.23, pan: 44 },
+      { cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura de impacto imediato", cutSec: 0.88, zoomAmt: 0.26, pan: 42 },
+      { cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Ritmo urbano com movimento cinético", cutSec: 0.94, zoomAmt: 0.23, pan: 44 },
+      { cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Alternância rápida entre ângulos variados", cutSec: 0.88, zoomAmt: 0.22, pan: 48 },
+      { cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Combinação equilibrada de corte e movimento", cutSec: 0.92, zoomAmt: 0.24, pan: 44 }
     ];
 
     const SCENE_DIRECTIONS = [
       {
-        img: "front hero shot on studio pedestal, dramatic rim lighting, subtle floating sparks",
-        motion: "Dynamic Hollywood camera push-in toward the exact product on the pedestal, subtle floating sparks and shifting rim light, product stays 100% identical in shape and color, 9:16 vertical."
+        img: "cinematic blockbuster hero shot, volumetric light rays, dramatic rim lighting, floating fine embers and subtle mist, product centered on commercial pedestal",
+        motion: "Hollywood commercial camera push-in with speed ramping toward the exact product, volumetric light shift and subtle floating embers, keeping the exact product 100% identical in design, shape and color, 9:16 vertical."
       },
       {
-        img: "side profile macro angle highlighting surface contour and metallic rim light",
-        motion: "Camera sweeps in a smooth arc from left to right around the exact side profile of the product, subtle studio haze drift, product stays 100% identical, 9:16 vertical."
+        img: "cinematic macro side profile shot, crisp specular edge highlight, shallow depth of field, moody studio atmosphere",
+        motion: "Smooth arc camera sweep along the exact side profile of the product with subtle studio haze motion, keeping the exact product 100% identical, 9:16 vertical."
       },
       {
-        img: "high-angle three-quarter shot with warm golden studio accent light",
-        motion: "Dynamic descending camera tilt from high three-quarter angle onto the exact product, warm light sweep across surface, product stays 100% identical, 9:16 vertical."
+        img: "dramatic high-angle three-quarter commercial shot, warm golden rim light and deep architectural shadows",
+        motion: "Dynamic descending camera crane move from high three-quarter angle onto the exact product with warm rim light sweep, keeping the exact product 100% identical, 9:16 vertical."
       },
       {
-        img: "low-angle dramatic hero framing with dark smoky studio backdrop",
-        motion: "Strong upward camera rise from low angle looking up at the exact product, dark smoke drifting dynamically behind, product stays 100% identical, 9:16 vertical."
-      },
-      {
-        img: "tight macro close-up on top surface, buttons and precision edges",
-        motion: "Dynamic macro camera glide across the exact top details and edges of the product with crisp specular highlight movement, product stays 100% identical, 9:16 vertical."
-      },
-      {
-        img: "opposite three-quarter commercial angle with clean studio spotlight",
-        motion: "Smooth camera orbit from right three-quarter angle with dynamic depth pull, keeping the exact product 100% faithful, 9:16 vertical."
+        img: "low-angle blockbuster hero framing, dramatic upward lighting, dark atmospheric smoke and crisp contrast",
+        motion: "Slow upward camera rise from low angle looking up at the exact product as dark mist drifts smoothly, keeping the exact product 100% identical, 9:16 vertical."
       }
     ];
 
@@ -351,6 +343,7 @@
     let selectedVidModel = VIDEO_MODELS[0];
     let uploadedBase64 = "";
     let uploadedMime = "image/jpeg";
+    let activeVideoBlobUrl = "";
 
     function renderImagePresets() {
       const q = imgSearch.value.trim().toLowerCase();
@@ -519,7 +512,7 @@
         vid.loop = true;
         vid.playsInline = true;
         await new Promise((resolve) => {
-          const timer = setTimeout(() => resolve(), 6000);
+          const timer = setTimeout(() => resolve(), 4500);
           vid.onloadeddata = () => {
             clearTimeout(timer);
             resolve();
@@ -539,7 +532,6 @@
       }
     }
 
-    // Desenha mídia preenchendo o canvas 9:16 inteiro sem dividir ou cortar metade da tela
     function drawFullFrameCover(context2d, source, srcW, srcH, scale, panX, panY) {
       if (!source || !srcW || !srcH) return;
       const canvasRatio = canvas.width / canvas.height;
@@ -563,29 +555,53 @@
       context2d.drawImage(source, offsetX, offsetY, w, h);
     }
 
+    function pickSupportedRecorderMime() {
+      const candidates = [
+        "video/webm;codecs=vp8",
+        "video/webm;codecs=vp9",
+        "video/webm"
+      ];
+      for (const type of candidates) {
+        if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(type)) {
+          return type;
+        }
+      }
+      return "";
+    }
+
     async function renderScenesVideo(images, motionClips, targetSeconds, withBurnedSubs, vidStyle, textForVoice) {
       const finalDuration = Math.min(30, Math.max(10, Number(targetSeconds) || 15));
       const finalSubs = buildSubtitles(textForVoice, finalDuration);
 
-      const canvasStream = canvas.captureStream(30);
-      const mimeCandidate = MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
-        ? "video/webm;codecs=vp9"
-        : "video/webm";
+      // Desenha o primeiro quadro antes de iniciar o stream para garantir que o vídeo tenha frames válidos desde 00:00
+      ctx.fillStyle = "#04060a";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (images[0] && images[0].naturalWidth && images[0].naturalHeight) {
+        drawFullFrameCover(ctx, images[0], images[0].naturalWidth, images[0].naturalHeight, 1.05, 0, 0);
+      }
 
-      const recorder = new MediaRecorder(canvasStream, { mimeType: mimeCandidate });
+      const canvasStream = canvas.captureStream(25);
+      const mimeType = pickSupportedRecorderMime();
+      const recorder = mimeType
+        ? new MediaRecorder(canvasStream, { mimeType })
+        : new MediaRecorder(canvasStream);
+
       const chunks = [];
-      recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
 
       const donePromise = new Promise((resolve) => {
         recorder.onstop = () => {
-          resolve(new Blob(chunks, { type: "video/webm" }));
+          const blobType = mimeType && mimeType.includes("webm") ? "video/webm" : (recorder.mimeType || "video/webm");
+          resolve(new Blob(chunks, { type: blobType }));
         };
       });
 
-      recorder.start();
+      recorder.start(250);
 
       const sceneCount = Math.max(1, images.length);
-      const cutSec = Math.max(0.9, Number(vidStyle.cutSec) || 1.0);
+      const cutSec = Math.max(0.88, Number(vidStyle.cutSec) || 0.95);
       const startTime = performance.now();
 
       await new Promise((resolve) => {
@@ -595,12 +611,13 @@
             if (Array.isArray(motionClips)) {
               motionClips.forEach((v) => { if (v && typeof v.pause === "function") v.pause(); });
             }
-            recorder.stop();
+            if (recorder.state !== "inactive") {
+              recorder.stop();
+            }
             resolve();
             return;
           }
 
-          // Sequência contínua de cenas variadas com movimento de câmera
           const cutIndex = Math.floor(elapsed / cutSec);
           const cutProgress = (elapsed % cutSec) / cutSec;
           const slot = (cutIndex + Math.floor(cutIndex / sceneCount)) % sceneCount;
@@ -608,12 +625,14 @@
           const clipVid = Array.isArray(motionClips) ? motionClips[slot] : null;
 
           const hasRealMotion = Boolean(clipVid && clipVid.readyState >= 2 && clipVid.videoWidth && clipVid.videoHeight);
-          const easeOut = 1 - Math.pow(1 - cutProgress, 2.4);
-          const zoomBase = cutIndex % 2 === 0 ? 1.05 : 1.15;
-          const scale = hasRealMotion ? 1.04 : (zoomBase + easeOut * vidStyle.zoomAmt);
+          const ramp = cutProgress < 0.35
+            ? Math.pow(cutProgress / 0.35, 2.2) * 0.55
+            : 0.55 + (1 - Math.pow(1 - ((cutProgress - 0.35) / 0.65), 2.5)) * 0.45;
+          const zoomBase = cutIndex % 2 === 0 ? 1.04 : 1.15;
+          const scale = hasRealMotion ? 1.04 : (zoomBase + ramp * vidStyle.zoomAmt);
           const dir = cutIndex % 2 === 0 ? 1 : -1;
-          const panX = hasRealMotion ? 0 : (dir * (easeOut - 0.5) * vidStyle.pan);
-          const panY = hasRealMotion ? 0 : (((cutIndex % 3) - 1) * 16 * (1 - easeOut));
+          const panX = hasRealMotion ? 0 : (dir * (ramp - 0.5) * vidStyle.pan);
+          const panY = hasRealMotion ? 0 : (((cutIndex % 3) - 1) * 16 * (1 - ramp));
 
           ctx.fillStyle = "#04060a";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -660,12 +679,29 @@
       });
 
       const videoBlob = await donePromise;
+      if (activeVideoBlobUrl) {
+        URL.revokeObjectURL(activeVideoBlobUrl);
+      }
+      activeVideoBlobUrl = URL.createObjectURL(videoBlob);
+
       return {
-        videoUrl: URL.createObjectURL(videoBlob),
+        videoUrl: activeVideoBlobUrl,
+        videoBlob,
         srtContent: createSrtContent(finalSubs),
         finalDuration,
         animatedCount: Array.isArray(motionClips) ? motionClips.filter((v) => v && v.readyState >= 2).length : 0
       };
+    }
+
+    function triggerBlobDownload(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
     }
 
     btnOnlyImg.addEventListener("click", async () => {
@@ -689,7 +725,7 @@
           <div class="dl-box">
             <div class="dl-title">${selectedImgModel.name}</div>
             <div class="dl-grid">
-              <a class="dl-btn main" href="${sc.imageUrl}" target="_blank" download="nexora-imagem-916.jpg">Abrir / Salvar Imagem 9:16</a>
+              <a class="dl-btn main" href="${sc.imageUrl}" target="_blank" rel="noopener noreferrer" download="nexora-imagem-916.jpg">Abrir / Salvar Imagem 9:16</a>
             </div>
           </div>
         `;
@@ -718,7 +754,7 @@
           const totalScenes = SCENE_DIRECTIONS.length;
           for (let i = 1; i <= totalScenes; i++) {
             const dir = SCENE_DIRECTIONS[i - 1];
-            stage.innerHTML = `<div class="status-msg">1/2 • Gerando cena variada ${i}/${totalScenes} (<strong>${selectedImgModel.name}</strong>)...</div>`;
+            stage.innerHTML = `<div class="status-msg">1/2 • Gerando cena cinematográfica ${i}/${totalScenes} (<strong>${selectedImgModel.name}</strong>)...</div>`;
             const sc = await callApi({
               task: "scene",
               imageBase64: uploadedBase64,
@@ -736,24 +772,21 @@
 
         const motionClips = [];
         if (enableMotionClip.checked && sceneUrls.length > 0) {
-          for (let i = 0; i < sceneUrls.length; i++) {
-            const dir = SCENE_DIRECTIONS[i % SCENE_DIRECTIONS.length];
-            stage.innerHTML = `<div class="status-msg">1.5/2 • Colocando o produto em movimento na cena ${i + 1}/${sceneUrls.length}...</div>`;
-            try {
-              const clipRes = await callApi({
-                task: "clip",
-                imageUrl: sceneUrls[i],
-                motionPrompt: `${dir.motion} Style: ${selectedImgModel.name}.`
-              });
-              const vidEl = await tryLoadMotionVideo(clipRes.videoUrl);
-              motionClips.push(vidEl);
-            } catch {
-              motionClips.push(null);
-            }
+          stage.innerHTML = `<div class="status-msg">1.5/2 • Animando 1 cena de referência (modo rápido)...</div>`;
+          try {
+            const clipRes = await callApi({
+              task: "clip",
+              imageUrl: sceneUrls[0],
+              motionPrompt: `${SCENE_DIRECTIONS[0].motion} Style: ${selectedImgModel.name}.`
+            });
+            const vidEl = await tryLoadMotionVideo(clipRes.videoUrl);
+            motionClips.push(vidEl);
+          } catch {
+            motionClips.push(null);
           }
         }
 
-        stage.innerHTML = `<div class="status-msg">2/2 • Montando sequência final (<strong>${selectedVidModel.name}</strong>)...</div>`;
+        stage.innerHTML = `<div class="status-msg">2/2 • Montando vídeo final (<strong>${selectedVidModel.name}</strong>)...</div>`;
         const result = await renderScenesVideo(
           loadedImages,
           motionClips,
@@ -765,17 +798,35 @@
 
         const srtBlob = new Blob([result.srtContent], { type: "text/plain;charset=utf-8" });
         const srtUrl = URL.createObjectURL(srtBlob);
+        const fileName = `nexora-cenas-${result.finalDuration}s.webm`;
 
         stage.innerHTML = `
-          <video class="player-916" src="${result.videoUrl}" controls autoplay playsinline></video>
+          <video id="outPlayer" class="player-916" src="${result.videoUrl}" controls autoplay loop muted playsinline></video>
           <div class="dl-box">
             <div class="dl-title">${selectedVidModel.name} • ${result.finalDuration}s • ${result.animatedCount}/${loadedImages.length} cenas animadas</div>
             <div class="dl-grid">
-              <a class="dl-btn main" href="${result.videoUrl}" download="nexora-cenas-${result.finalDuration}s.webm">Baixar Vídeo das Cenas (${result.finalDuration}s)</a>
+              <button type="button" id="btnDlVideo" class="dl-btn main">Baixar Vídeo das Cenas (${result.finalDuration}s)</button>
               <a class="dl-btn" href="${srtUrl}" download="legendas.srt">Legenda (.SRT)</a>
+              <button type="button" id="btnPlayAgain" class="dl-btn">Reproduzir / Desmutar</button>
             </div>
           </div>
         `;
+
+        const outPlayer = document.getElementById("outPlayer");
+        if (outPlayer) {
+          outPlayer.play().catch(() => {});
+        }
+
+        document.getElementById("btnDlVideo")?.addEventListener("click", () => {
+          triggerBlobDownload(result.videoBlob, fileName);
+        });
+
+        document.getElementById("btnPlayAgain")?.addEventListener("click", () => {
+          if (!outPlayer) return;
+          outPlayer.muted = false;
+          outPlayer.currentTime = 0;
+          outPlayer.play().catch(() => {});
+        });
       } catch (err) {
         stage.innerHTML = `<div class="err-msg">${err.message || "Erro ao montar vídeo."}</div>`;
       } finally {
