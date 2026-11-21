@@ -3,323 +3,1546 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — Fotos de Produto Profissionais em Segundos</title>
+  <title>NEXORA.AI — Superprodução Hollywood 9:16 (Cortes 1.3s + Macros + Auto-Drop)</title>
   <style>
-    :root {
-      --bg: #0f1115;
-      --card: #171a21;
-      --card-hover: #1f242e;
-      --border: #2a303c;
-      --text: #f3f4f6;
-      --muted: #9ca3af;
-      --accent: #10b981;
-      --accent-hover: #059669;
-      --gold: #f59e0b;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-    header {
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(15, 17, 21, 0.95);
-      position: sticky; top: 0; z-index: 10;
-    }
-    .logo { font-size: 1.35rem; font-weight: 800; letter-spacing: 0.4px; }
-    .logo span { color: var(--accent); }
-    .credits-box {
-      display: flex; align-items: center; gap: 12px;
-      background: var(--card); border: 1px solid var(--border);
-      padding: 8px 14px; border-radius: 999px; font-size: 0.9rem;
-    }
-    .credits-count { font-weight: 700; color: var(--gold); }
-    .btn-buy-top {
-      background: var(--accent); color: #052e16; border: none;
-      padding: 6px 14px; border-radius: 999px; font-weight: 700;
-      cursor: pointer; font-size: 0.85rem;
-    }
-    main { max-width: 960px; width: 100%; margin: 0 auto; padding: 28px 16px 64px; flex: 1; }
-    .hero { text-align: center; margin-bottom: 28px; }
-    .hero h1 { font-size: 1.9rem; line-height: 1.2; margin-bottom: 10px; }
-    .hero p { color: var(--muted); font-size: 1rem; max-width: 600px; margin: 0 auto; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-    .panel {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 20px;
-    }
-    .step-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 8px; }
-    .step-badge {
-      background: var(--accent); color: #052e16; font-size: 0.75rem;
-      width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
-      align-items: center; justify-content: center; font-weight: 800;
-    }
-    .upload-area {
-      border: 2px dashed var(--border); border-radius: 12px;
-      padding: 28px 16px; text-align: center; cursor: pointer;
-      transition: 0.2s; position: relative; min-height: 220px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-    }
-    .upload-area:hover { border-color: var(--accent); background: var(--card-hover); }
-    .upload-area img { max-height: 200px; max-width: 100%; border-radius: 8px; object-fit: contain; }
-    .styles-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-    .style-card {
-      border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;
-      cursor: pointer; transition: 0.15s; display: flex; justify-content: space-between; align-items: center;
-    }
-    .style-card:hover { background: var(--card-hover); }
-    .style-card.active { border-color: var(--accent); background: rgba(16, 185, 129, 0.08); }
-    .style-info strong { display: block; font-size: 0.95rem; }
-    .style-info span { font-size: 0.8rem; color: var(--muted); }
-    .btn-primary {
-      width: 100%; margin-top: 18px; padding: 15px; border: none; border-radius: 12px;
-      background: var(--accent); color: #052e16; font-size: 1rem; font-weight: 800;
-      cursor: pointer; transition: 0.15s;
-    }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .result-box {
-      min-height: 320px; border-radius: 12px; background: #0b0d10;
-      border: 1px solid var(--border); display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 16px; text-align: center;
-    }
-    .result-box img { max-width: 100%; max-height: 300px; border-radius: 10px; }
-    .btn-download {
-      margin-top: 14px; width: 100%; padding: 12px; border-radius: 10px;
-      border: 1px solid var(--accent); background: transparent; color: var(--accent);
-      font-weight: 700; cursor: pointer;
-    }
-    .btn-download:hover { background: rgba(16, 185, 129, 0.12); }
-    .loader {
-      width: 36px; height: 36px; border: 4px solid var(--border);
-      border-top-color: var(--accent); border-radius: 50%;
-      animation: spin 0.8s linear infinite; margin-bottom: 12px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.78);
-      display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50;
-    }
-    .modal {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; max-width: 440px; width: 100%; padding: 24px;
-    }
-    .modal h2 { font-size: 1.25rem; margin-bottom: 8px; }
-    .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 18px; }
-    .pack-option {
-      border: 1px solid var(--border); border-radius: 12px; padding: 14px;
-      margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
-      cursor: pointer;
-    }
-    .pack-option:hover { border-color: var(--accent); }
-    .pack-tag { background: var(--gold); color: #111; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
-    .modal-close { width: 100%; padding: 10px; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 10px; cursor: pointer; margin-top: 6px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, sans-serif; }
+    body { background: #06080d; color: #f4f6fb; min-height: 100vh; padding: 16px; }
+    .topbar { max-width: 1340px; margin: 0 auto 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid #182030; padding-bottom: 12px; }
+    .brand { font-size: 21px; font-weight: 900; letter-spacing: 0.05em; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .brand span { background: #22c55e; color: #041108; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 800; }
+    .pill-info { background: #0d2217; border: 1px solid #1f5c3a; padding: 6px 13px; border-radius: 999px; font-size: 12px; color: #86efac; font-weight: 700; }
+    .layout { max-width: 1340px; margin: 0 auto; display: grid; grid-template-columns: 1.28fr 0.72fr; gap: 16px; }
+    @media (max-width: 980px) { .layout { grid-template-columns: 1fr; } }
+    .panel { background: #0d121d; border: 1px solid #1b2538; border-radius: 16px; padding: 16px; }
+    .step-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #22c55e; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .step-label small { color: #94a3b8; font-weight: 600; text-transform: none; }
+    .mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .mode-btn { background: #080c14; border: 1.5px solid #233048; border-radius: 12px; padding: 11px 13px; cursor: pointer; text-align: left; color: #cbd5e1; transition: 0.15s; }
+    .mode-btn.active { border-color: #22c55e; background: #0d2217; color: #fff; }
+    .mode-btn strong { display: block; font-size: 13.5px; margin-bottom: 2px; }
+    .mode-btn small { font-size: 11px; color: #94a3b8; }
+    .mode-btn.active small { color: #86efac; }
+    .hidden { display: none !important; }
+    .row-top { display: grid; grid-template-columns: 175px 1fr; gap: 12px; margin-bottom: 12px; }
+    @media (max-width: 600px) { .row-top { grid-template-columns: 1fr; } }
+    .upload-area { border: 1.5px dashed #2b3954; border-radius: 12px; padding: 10px; text-align: center; background: #080c14; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 172px; }
+    .upload-area:hover { border-color: #22c55e; }
+    .upload-area input { display: none; }
+    .upload-area img { max-height: 92px; border-radius: 8px; margin-top: 8px; display: none; object-fit: contain; }
+    .box-group { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+    .box-group label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 3px; font-weight: 700; text-transform: uppercase; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
+    select, input[type="text"], input[type="file"].inline-file { width: 100%; background: #111827; border: 1px solid #29364f; border-radius: 9px; color: #f8fafc; padding: 8px 10px; font-size: 12.5px; outline: none; }
+    select:focus, input[type="text"]:focus { border-color: #22c55e; }
+    .sla-bar { background: #0c1a2e; border: 1px solid #1e40af; border-radius: 10px; padding: 9px 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; color: #bfdbfe; }
+    .sla-bar strong { color: #38bdf8; }
+    .sla-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    .sla-controls select { width: auto; background: #0a1426; border-color: #2563eb; font-weight: 700; color: #e0f2fe; padding: 6px 9px; font-size: 12px; }
+    .catalog-box { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 11px; margin-bottom: 12px; }
+    .filter-bar { display: grid; grid-template-columns: 1fr 205px auto; gap: 8px; margin-bottom: 9px; }
+    @media (max-width: 640px) { .filter-bar { grid-template-columns: 1fr; } }
+    .btn-rand { background: #182338; color: #7dd3fc; border: 1px solid #2d3f63; border-radius: 9px; padding: 0 12px; font-size: 12px; font-weight: 800; cursor: pointer; min-height: 36px; white-space: nowrap; }
+    .preset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; max-height: 235px; overflow-y: auto; padding-right: 4px; }
+    @media (max-width: 560px) { .preset-grid { grid-template-columns: 1fr; } }
+    .preset-item { background: #101725; border: 1px solid #233048; border-radius: 9px; padding: 8px 10px; cursor: pointer; text-align: left; color: #e2e8f0; transition: 0.12s; }
+    .preset-item:hover { border-color: #3b4f75; }
+    .preset-item.active { border-color: #22c55e; background: #0e2218; }
+    .preset-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 2px; }
+    .preset-top strong { font-size: 12px; color: #fff; }
+    .badge-cat { font-size: 10px; padding: 2px 6px; border-radius: 5px; background: #1c273d; color: #7dd3fc; font-weight: 700; white-space: nowrap; }
+    .badge-cast { font-size: 9.5px; padding: 1px 5px; border-radius: 4px; background: #261b3a; color: #d8b4fe; font-weight: 700; margin-left: 4px; }
+    .preset-item p { font-size: 11px; color: #94a3b8; line-height: 1.3; }
+    .audio-panel { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 11px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 9px; }
+    .options-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+    .toggle-row { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #cbd5e1; cursor: pointer; }
+    .btn-generate { width: 100%; background: #22c55e; color: #041208; border: none; border-radius: 12px; padding: 15px; font-size: 14px; font-weight: 900; cursor: pointer; }
+    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+    .action-inline { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
+    .btn-cancel { background: rgba(248,113,113,0.14); color: #fca5a5; border: 1px solid rgba(248,113,113,0.35); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .btn-use-ready { background: rgba(34,197,94,0.16); color: #86efac; border: 1px solid rgba(34,197,94,0.45); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .preview-stage { background: #070a10; border: 1px solid #1b2436; border-radius: 14px; min-height: 620px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; gap: 12px; }
+    video.player-916, img.preview-916 { width: 100%; max-width: 300px; aspect-ratio: 9/16; object-fit: cover; border-radius: 14px; background: #000; border: 1px solid #26334d; }
+    .dl-box { width: 100%; background: #0c121e; border: 1px solid #22304a; border-radius: 12px; padding: 12px; text-align: left; }
+    .dl-title { font-size: 11px; font-weight: 800; color: #38bdf8; margin-bottom: 6px; text-transform: uppercase; line-height: 1.4; }
+    .dl-dna { font-size: 11px; color: #86efac; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; margin-bottom: 8px; }
+    .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dl-btn { display: block; text-align: center; background: #182338; color: #f8fafc; border: 1px solid #2d3f63; border-radius: 8px; padding: 9px 10px; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; }
+    .dl-btn.main { background: #22c55e; color: #041208; border: none; grid-column: span 2; font-size: 13px; padding: 11px; }
+    .dl-btn.remix { background: #1e293b; color: #7dd3fc; border: 1px solid #38bdf8; grid-column: span 2; }
+    .timer-badge { background: #132544; border: 1px solid #2563eb; color: #93c5fd; padding: 5px 12px; border-radius: 999px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 800; }
+    .status-msg { font-size: 13px; color: #9fb0cc; line-height: 1.5; max-width: 410px; }
+    .status-log { font-size: 11.5px; color: #7dd3fc; margin-top: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.55; }
+    .progress-bar-wrap { width: 100%; max-width: 340px; height: 8px; background: #151e30; border-radius: 999px; overflow: hidden; margin-top: 8px; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #38bdf8); width: 0%; transition: width 0.25s ease; }
+    .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; width: 100%; }
+    .warn-note { font-size: 11.5px; color: #fde047; margin-top: 6px; }
+    .clip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; justify-content: center; }
+    .clip-chip { background: #131d30; border: 1px solid #283a5c; color: #cbd5e1; border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 700; text-decoration: none; }
+    .thumb-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(38px, 1fr)); gap: 4px; width: 100%; margin-top: 4px; }
+    .thumb-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 5px; border: 1px solid #26334d; }
   </style>
 </head>
 <body>
-
-<header>
-  <div class="logo">NEXORA<span>.AI</span></div>
-  <div class="credits-box">
-    <span>Créditos: <span class="credits-count" id="creditsDisplay">2</span></span>
-    <button class="btn-buy-top" onclick="openModal()">+ Recarregar</button>
+  <div class="topbar">
+    <div class="brand">NEXORA.AI <span>HOLLYWOOD CUTS 1.3s • ZERO SETAS</span></div>
+    <div class="pill-info">⚡ 6 a 12 Planos Únicos (1.3s–1.6s) • Janela Anti-Morphing • Auto-Drop • Trava &lt; 5 min</div>
   </div>
-</header>
 
-<main>
-  <section class="hero">
-    <h1>Transforme fotos comuns em imagens prontas para vender</h1>
-    <p>Envie a foto do seu produto, escolha o cenário comercial e baixe em alta qualidade para sua loja ou anúncio.</p>
-  </section>
-
-  <div class="grid">
+  <div class="layout">
     <div class="panel">
-      <div class="step-title"><span class="step-badge">1</span> Envie a foto do produto</div>
-      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-        <input type="file" id="fileInput" accept="image/*" hidden />
-        <div id="uploadPlaceholder">
-          <p style="font-weight:700; margin-bottom:6px;">Clique para enviar a foto</p>
-          <p style="font-size:0.82rem; color:var(--muted);">JPG, PNG ou WEBP (até 10MB)</p>
-        </div>
-        <img id="previewImg" style="display:none;" alt="Prévia do produto" />
+      <div class="step-label">1. Modo de Produção</div>
+      <div class="mode-switch">
+        <button type="button" class="mode-btn active" data-mode="video">
+          <strong>Superprodução Hollywood 9:16 (Cortes Rápidos 1.3s)</strong>
+          <small>Macros extremos + troca radical de ângulo + zero repetição</small>
+        </button>
+        <button type="button" class="mode-btn" data-mode="image">
+          <strong>Imagem 9:16 Ultra-Realista (Nano Banana)</strong>
+          <small>50 cenários únicos + DNA anti-duplicidade</small>
+        </button>
       </div>
 
-      <div class="step-title" style="margin-top:20px;"><span class="step-badge">2</span> Escolha o estilo comercial</div>
-      <div class="styles-list" id="stylesList">
-        <div class="style-card active" data-style="vitrine">
-          <div class="style-info">
-            <strong>Fundo Limpo Vitrine</strong>
-            <span>Fundo claro profissional com sombra suave para catálogo</span>
+      <div class="step-label">2. Produto, Posição Real &amp; Ritmo de Cortes</div>
+      <div class="row-top">
+        <label class="upload-area" for="productImg">
+          <strong style="font-size:13px;">Foto do Produto</strong>
+          <span style="font-size:11px;color:#94a3b8;margin-top:3px;">100% fiel, zero LED falso</span>
+          <input type="file" id="productImg" accept="image/*" />
+          <img id="thumbPreview" alt="Produto" />
+        </label>
+
+        <div class="box-group">
+          <div class="grid-2">
+            <div>
+              <label for="productOrientation">Posição Real do Produto</label>
+              <select id="productOrientation">
+                <option value="flat" selected>Deitado na base natural (Mouse, Tênis, Óculos, Controle, Caixa)</option>
+                <option value="upright">Em pé na base (Relógio em suporte, Perfume, Garrafa, Pote)</option>
+                <option value="flat_lay">Em bandeja / maleta aberta (Relógio, Joia, Kit)</option>
+              </select>
+            </div>
+            <div id="durFieldWrap">
+              <label for="minDuration">Duração &amp; Quantidade de Cortes Únicos</label>
+              <select id="minDuration">
+                <option value="10" selected>10s — 6 Cortes Únicos (1.3s–1.5s + Hero • Padrão Vídeos 1 &amp; 2)</option>
+                <option value="15">15s — 8 Cortes Únicos (1.4s–1.6s + Hero Clímax)</option>
+                <option value="20">20s — 10 Cortes Únicos (1.6s–1.8s + Hero Clímax)</option>
+                <option value="30">30s — 12 Cortes Únicos (2.0s–2.3s + Hero Clímax)</option>
+              </select>
+            </div>
           </div>
-          <span>✓</span>
-        </div>
-        <div class="style-card" data-style="dark">
-          <div class="style-info">
-            <strong>Estúdio Dark Premium</strong>
-            <span>Superfície escura minimalista com iluminação de destaque</span>
+          <div class="grid-2">
+            <div>
+              <label for="productDetailHint">Nome &amp; Acabamento (Trava corpo apagado sem LED extra)</label>
+              <input type="text" id="productDetailHint" placeholder="Ex: mouse ergonômico preto fosco apagado, scroll prata, logo M, sem luzes" />
+            </div>
+            <div id="macroFieldWrap">
+              <label for="macroTarget">Foco dos Macros Extremos (Opcional)</label>
+              <input type="text" id="macroTarget" placeholder="Ex: scroll metálico, botões DPI e logo M / mostrador esqueleto e coroa" />
+            </div>
           </div>
-          <span></span>
-        </div>
-        <div class="style-card" data-style="lifestyle">
-          <div class="style-info">
-            <strong>Cena de Uso (Lifestyle)</strong>
-            <span>Produto ambientado em cenário real de uso cotidiano</span>
-          </div>
-          <span></span>
         </div>
       </div>
 
-      <button class="btn-primary" id="generateBtn" onclick="generateImage()">Gerar Foto Profissional (1 crédito)</button>
+      <!-- TRAVA DE TEMPO < 5 MIN + SELETOR DE MOTOR -->
+      <div class="sla-bar" id="slaBarWrap">
+        <span>⏱️ <strong>Trava &lt; 5 min (100% Paralelo GPU):</strong></span>
+        <div class="sla-controls">
+          <select id="videoEngine" title="Motor de Vídeo 3D">
+            <option value="kling" selected>Motor: Kling v2.6 Pro (Econômico + Janela 1.6s)</option>
+            <option value="veo">Motor: Veo 3.1 Fast (Ultra-Cinema + Fallback Kling)</option>
+          </select>
+          <select id="maxWaitLimit" title="Limite máximo de espera">
+            <option value="240" selected>⚡ Limite 4m00s (&lt; 4m30s total)</option>
+            <option value="270">⚡ Limite 4m30s (&lt; 5m00s total)</option>
+            <option value="180">🚀 Ultra-Rápido 3m00s</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- CATÁLOGO 50 IMAGENS -->
+      <div id="imgCatalogSection" class="hidden">
+        <div class="step-label">
+          <span>3. Escolha 1 das 50 Imagens Únicas</span>
+          <small id="selectedImgLabel">Selecionado: #01 Eclipse Solar &amp; Faíscas (Padrão Vídeo 2)</small>
+        </div>
+        <div class="catalog-box">
+          <div class="filter-bar">
+            <input type="text" id="imgSearch" placeholder="Buscar entre os 50 cenários..." />
+            <select id="imgCatFilter">
+              <option value="TODOS">Todas Categorias (50)</option>
+              <option value="Acao">Ação, Eclipse &amp; Reator (10)</option>
+              <option value="VFX">VFX 1000fps &amp; Impacto (10)</option>
+              <option value="Luxo">Luxo Noir &amp; Joalheria (10)</option>
+              <option value="Viral">TikTok Shop Hard-Sell (10)</option>
+              <option value="Personagem">Personagens &amp; Cinema Real (10)</option>
+            </select>
+            <button type="button" class="btn-rand" id="btnRandImg">🎲 Sortear</button>
+          </div>
+          <div class="preset-grid" id="imgPresetGrid"></div>
+        </div>
+      </div>
+
+      <!-- CATÁLOGO 50 VÍDEOS HOLLYWOOD -->
+      <div id="vidCatalogSection">
+        <div class="step-label">
+          <span>3. Escolha 1 dos 50 Universos Hollywood (Zero Repetição + DNA Único)</span>
+          <small id="selectedVidLabel">Selecionado: #01 Eclipse Solar &amp; Faíscas (Padrão Vídeo 2)</small>
+        </div>
+        <div class="catalog-box">
+          <div class="filter-bar">
+            <input type="text" id="vidSearch" placeholder="Buscar por cenário, eclipse, reator, cofre, luxo..." />
+            <select id="vidCatFilter">
+              <option value="TODOS">Todos os 50 Universos</option>
+              <option value="Acao">Ação, Eclipse &amp; Reator (10)</option>
+              <option value="VFX">VFX 1000fps &amp; Impacto (10)</option>
+              <option value="Luxo">Luxo Noir &amp; Joalheria (10)</option>
+              <option value="Viral">TikTok Shop Hard-Sell (10)</option>
+              <option value="Personagem">Personagens &amp; Cinema Real (10)</option>
+            </select>
+            <button type="button" class="btn-rand" id="btnRandVid">🎲 Sortear</button>
+          </div>
+          <div class="preset-grid" id="vidPresetGrid"></div>
+        </div>
+
+        <div class="step-label">4. Trilha Sonora Dinâmica Extrema (Auto-Drop no 0.0s) + SFX nos Cortes</div>
+        <div class="audio-panel">
+          <div class="grid-2">
+            <div>
+              <label for="musicPreset">Trilha Sonora Contínua de Estúdio (Zero Música Calma)</label>
+              <select id="musicPreset">
+                <option value="phonk_br" selected>🔥 Brazilian Phonk Agressivo (138 BPM • 808 Pesado)</option>
+                <option value="hard_trap">⚡ Hard Trap Adrenalina (136 BPM • Drops Pesados)</option>
+                <option value="cyber_drop">🤖 Cyberpunk Bass Industrial (134 BPM • Sci-Fi/Tech)</option>
+                <option value="imax_action">🎬 Blockbuster IMAX Ação (130 BPM • Percussão + Brass)</option>
+                <option value="tech_viral">🚀 Tech House Frenético (128 BPM • Ritmo Comercial)</option>
+                <option value="custom">🎵 Minha Trilha MP3/WAV (Começa direto no Drop)</option>
+                <option value="mute">🔇 Mudo (Somente Vídeo Limpo)</option>
+              </select>
+            </div>
+            <div>
+              <label for="customAudioFile">Ou Subir Seu MP3/WAV (1 Faixa Contínua do 0s ao Fim)</label>
+              <input type="file" id="customAudioFile" class="inline-file" accept="audio/*" />
+            </div>
+          </div>
+
+          <div class="options-row">
+            <label class="toggle-row"><input type="checkbox" id="enableHyperCuts" checked /><span><strong>Dinamismo Hollywood</strong> (Snap-Zoom + Whip-Pan Blur + Speed-Ramp 1.85x)</span></label>
+            <label class="toggle-row"><input type="checkbox" id="enableSfxHits" checked /><span><strong>SFX nos Cortes</strong> (Whoosh de ar + Sub-Bass Drop em cada corte)</span></label>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-generate" id="btnBuild">⚡ Gerar Superprodução (10s • 6 Cortes Únicos 1.3s • &lt; 4m30s)</button>
+      <button type="button" class="btn-generate hidden" id="btnOnlyImg">Gerar Imagem Exclusiva 9:16 (Nano Banana)</button>
     </div>
 
     <div class="panel">
-      <div class="step-title"><span class="step-badge">3</span> Resultado pronto para publicar</div>
-      <div class="result-box" id="resultBox">
-        <p style="color:var(--muted); font-size:0.9rem;">A imagem gerada aparecerá aqui pronta para download.</p>
+      <div class="step-label" id="previewTitle">Preview 9:16 &amp; Download MP4</div>
+      <div class="preview-stage" id="stage">
+        <div class="status-msg"><strong>Fórmula dos Vídeos 1 &amp; 2 ativada (sem seta):</strong><br/>• <strong>Cortes rápidos de 1.3s–1.6s</strong> (6 a 12 ângulos 100% únicos: Macro → Textura → Eclipse/Silhueta → Detalhes → Hero)<br/>• <strong>Janela limpa anti-morphing:</strong> corta antes da IA deformar<br/>• <strong>Auto-Drop:</strong> pula a intro calma e abre na batida pesada em 0.0s</div>
       </div>
-      <button class="btn-download" id="downloadBtn" style="display:none;" onclick="downloadResult()">Baixar Imagem em Alta Qualidade</button>
     </div>
   </div>
-</main>
 
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal">
-    <h2>Adicionar Créditos — NEXORA.AI</h2>
-    <p>Escolha um pacote para continuar gerando fotos profissionais sem marca d'água.</p>
-    <div class="pack-option" onclick="simulatePurchase(15)">
-      <div>
-        <strong>Pacote Inicial — 15 créditos</strong>
-        <div style="font-size:0.8rem; color:var(--muted);">Ideal para testar nos seus produtos campeões</div>
-      </div>
-      <span style="color:var(--accent); font-weight:700;">Liberar →</span>
-    </div>
-    <div class="pack-option" onclick="simulatePurchase(60)">
-      <div>
-        <span class="pack-tag">MAIS VENDIDO</span>
-        <strong style="display:block; margin-top:4px;">Pacote Catálogo — 60 créditos</strong>
-        <div style="font-size:0.8rem; color:var(--muted);">Para lojistas com vários itens no catálogo</div>
-      </div>
-      <span style="color:var(--accent); font-weight:700;">Liberar →</span>
-    </div>
-    <button class="modal-close" onclick="closeModal()">Fechar</button>
-  </div>
-</div>
+  <canvas id="renderCanvas" width="720" height="1280" style="display:none;"></canvas>
 
-<script>
-  let credits = 2;
-  let selectedStyle = 'vitrine';
-  let uploadedBase64 = null;
-  let uploadedMimeType = 'image/jpeg';
-  let finalImageUrl = null;
-
-  const STYLE_PROMPTS = {
-    vitrine: "Keep the exact product unchanged in shape, label, and proportions. Place it centered on a clean, bright pure-white e-commerce studio surface with natural soft contact shadow and crisp commercial lighting. No extra text or watermarks.",
-    dark: "Keep the exact product unchanged in shape, label, and proportions. Place it on a sleek dark matte #121212 studio pedestal with subtle warm gold and cool teal rim lighting, high-contrast commercial product photography.",
-    lifestyle: "Keep the exact product unchanged in shape, label, and proportions. Place it naturally on a modern tabletop in a realistic everyday indoor setting with soft natural window light and shallow depth of field."
-  };
-
-  document.getElementById('fileInput').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    uploadedMimeType = file.type || 'image/jpeg';
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const dataUrl = ev.target.result;
-      uploadedBase64 = dataUrl.split(',')[1];
-      const preview = document.getElementById('previewImg');
-      preview.src = dataUrl;
-      preview.style.display = 'block';
-      document.getElementById('uploadPlaceholder').style.display = 'none';
+  <script>
+    // =========================================================================
+    // DNA ÚNICO ANTI-DUPLICIDADE TIKTOK SHOP
+    // =========================================================================
+    const DNA_POOLS = {
+      castVariants: [
+        { tag: "Executivo Grafite (Dir.)", text: "a sharp 34-year-old Brazilian man in a tailored charcoal suit, blurred softly in deep background to the right" },
+        { tag: "Executivo Marinho (Esq.)", text: "a confident 38-year-old man with short beard in a midnight-navy suit, blurred softly in deep background to the left" },
+        { tag: "Executiva Couture (Dir.)", text: "a striking 30-year-old woman in a structured black designer blazer, positioned in soft bokeh to the right" },
+        { tag: "Empresário Noir (Esq.)", text: "a distinguished 40-year-old gentleman in matte-black evening attire, positioned in soft bokeh to the left" },
+        { tag: "Diretora Criativa (Dir.)", text: "a confident 28-year-old stylish woman in dark minimalist tailoring, softly blurred to the right" },
+        { tag: "Founder Tech (Esq.)", text: "a sharp 31-year-old modern tech founder in sleek black knit and dark jacket, softly blurred to the left" }
+      ],
+      lightVariations: [
+        { tag: "Ouro Quente & Sombra", text: "dramatic warm golden-amber rim contrast paired with pure neutral white key light on the product" },
+        { tag: "Chiaroscuro Cinema", text: "aggressive high-contrast chiaroscuro lighting with deep dark shadows and surgical overhead spotlight" },
+        { tag: "Aço Frio & Prata", text: "crisp silver-white commercial overhead key light with moody dark metallic background reflections" },
+        { tag: "Teal & Brasa IMAX", text: "IMAX blockbuster teal-and-amber background atmosphere with clean true-color key light on the product" },
+        { tag: "Obsidiana & Flash", text: "deep velvet-black studio void with sharp directional commercial specular highlights" }
+      ],
+      surfaceNuances: [
+        "with razor-sharp natural contact shadows and dark studio reflections",
+        "with dramatic matte-gloss contrast and rich out-of-focus cinematic depth",
+        "framed by moody dark architectural geometry blurred far behind",
+        "with subtle glowing atmospheric dust motes floating far in background depth"
+      ],
+      musicKeys: ["C minor", "D minor", "F minor", "F# minor", "G minor", "A minor"]
     };
-    reader.readAsDataURL(file);
-  });
 
-  document.querySelectorAll('.style-card').forEach(card => {
-    card.addEventListener('click', () => {
-      document.querySelectorAll('.style-card').forEach(c => {
-        c.classList.remove('active');
-        c.lastElementChild.textContent = '';
-      });
-      card.classList.add('active');
-      card.lastElementChild.textContent = '✓';
-      selectedStyle = card.dataset.style;
+    function cryptoRandInt(max) {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint32Array(1);
+        window.crypto.getRandomValues(arr);
+        return arr[0] % max;
+      }
+      return Math.floor(Math.random() * max);
+    }
+    const pickRandom = (arr) => arr[cryptoRandInt(arr.length)];
+    function shuffleArray(arr) {
+      const c = [...arr];
+      for (let i = c.length - 1; i > 0; i--) {
+        const j = cryptoRandInt(i + 1);
+        [c[i], c[j]] = [c[j], c[i]];
+      }
+      return c;
+    }
+
+    function generateUniqueDNA() {
+      const hex = () => cryptoRandInt(0xffff).toString(16).toUpperCase().padStart(4, "0");
+      const contrast = (1.03 + cryptoRandInt(5) * 0.01).toFixed(2);
+      const saturate = (1.01 + cryptoRandInt(6) * 0.01).toFixed(2);
+      const brightness = (0.99 + cryptoRandInt(4) * 0.01).toFixed(2);
+      return {
+        id: `DNA-${hex()}-${hex()}`,
+        cast: pickRandom(DNA_POOLS.castVariants),
+        light: pickRandom(DNA_POOLS.lightVariations),
+        surfaceNuance: pickRandom(DNA_POOLS.surfaceNuances),
+        musicKey: pickRandom(DNA_POOLS.musicKeys),
+        bpmDelta: cryptoRandInt(7) - 3,
+        flipDir: cryptoRandInt(2) === 0 ? 1 : -1,
+        bitrate: 13200000 + cryptoRandInt(17) * 100000,
+        zoomJitter: cryptoRandInt(4) * 0.008,
+        cssFilter: `contrast(${contrast}) saturate(${saturate}) brightness(${brightness})`
+      };
+    }
+
+    // =========================================================================
+    // 50 UNIVERSOS HOLLYWOOD ÚNICOS (COMEÇANDO PELOS SEUS CAMPEÕES: ECLIPSE, REATOR, COFRE, JOALHERIA)
+    // =========================================================================
+    const VIDEO_MODELS = [
+      // === AÇÃO, ECLIPSE & REATOR (10) ===
+      [1,"Acao",false,"#01 Eclipse Solar & Faíscas (Padrão Vídeo 2)","Halo de eclipse ardente atrás, faíscas de fogo e pedra obsidiana","blockbuster solar-eclipse commercial","monolithic matte-black obsidian pedestal in a pitch-black void","Blazing fiery golden solar eclipse corona halo glowing far behind with fine incandescent fire embers drifting in deep background"],
+      [2,"Acao",false,"#02 Reator Industrial (Strobe Vermelho)","Pedestal obsidiana, strobes vermelhos pulsando e vapor branco subindo","high-voltage industrial reactor commercial","heavy matte-black obsidian pedestal inside an industrial reactor core","Flashing crimson emergency industrial lights pulsing dynamically across thick rising white reactor vapor behind"],
+      [3,"Acao",false,"#03 Cofre Tático Criogênico (Unboxing)","Maleta titânio aberta na espuma carbono + jatos de vapor gelado","military sci-fi tactical unboxing commercial","open matte-black titanium tactical vault case lined with laser-cut black carbon foam (already fully open)","Monolithic dark security bunker venting brisk horizontal clouds of white pneumatic cryogenic steam beneath a focused overhead spotlight"],
+      [4,"Acao",false,"#04 Joalheria Noir & Partículas (Padrão Vídeo 1)","Fundo preto absoluto com holofote cirúrgico e partículas douradas","haute-precision dark commercial","glossy pure-black mirror pedestal in a velvet pitch-black studio","Pinpoint warm-white commercial spotlights and fine illuminated floating dust motes drifting across deep black depth"],
+      [5,"Acao",false,"#05 Pit-Lane Noturno Fórmula 1","Asfalto de corrida noturno sob holofotes e fumaça branca de pneu","night motorsport F1 pit-lane commercial","textured dark motorsport tarmac pit-lane surface","Bright pit-lane floodlights slicing brisk white tire smoke drifting behind in deep dark depth"],
+      [6,"Acao",false,"#06 Beco Cyberpunk sob Chuva Neon","Asfalto preto molhado refletindo neon ciano e magenta sob garoa","dark cyberpunk Neo-Tokyo street commercial","rain-slicked wet black urban asphalt slate","Electric cyan and hot-magenta neon bokeh shimmering on distant wet pavement with backlit rain mist"],
+      [7,"Acao",false,"#07 Hangar de Caça Supersônico","Deck titânio diante de turbina a jato gigante com brilho laranja","supersonic fighter-jet hangar commercial","dark titanium deck block directly ahead of massive matte jet turbine blades","Warm orange afterburner glow pulsing behind massive turbine blades with backlit vapor drifting past"],
+      [8,"Acao",false,"#08 Assalto ao Cofre com Lasers","Monolito de aço em cofre blindado com grade de lasers vermelhos atrás","high-stakes laser-heist vault commercial","reinforced matte-steel security monolith inside a pitch-black heist vault","Thin crimson security laser beams crisscrossing the distant hazy vault far behind the pedestal"],
+      [9,"Acao",false,"#09 Estação Orbital Zero-G","Deck titânio diante de escotilha espacial com a curvatura azul da Terra","sci-fi zero-gravity orbital commercial","brushed dark aerospace titanium observation deck ledge","Glowing blue Earth curvature rotating slowly outside giant viewport with crisp orbital rim contrast"],
+      [10,"Acao",false,"#10 Terraço na Tempestade Elétrica","Ardósia escura molhada sob chuva noturna e relâmpagos rasgando o céu","midnight lightning-storm rooftop commercial","wet dark basalt rooftop ledge overlooking a stormy midnight skyline","Slanted driving rain backlit by dramatic white lightning flashes illuminating dark storm clouds far behind"],
+
+      // === VFX 1000FPS & IMPACTO (10) ===
+      [11,"VFX",false,"#11 Estilhaço de Cristal 1000fps","Espelho negro com cacos de cristal estilhaçando em 3D ao fundo","1000fps Phantom Flex crystal-shatter commercial","glossy pure-black mirror pedestal inside a pitch-black studio","Sparkling clear crystal glass shards bursting outward in background depth behind the untouched product"],
+      [12,"VFX",false,"#12 Explosão de Gelo Ártico","Ardósia molhada com blocos de gelo estilhaçando e névoa subzero","subzero arctic ice-burst commercial","wet black volcanic slate pedestal inside a freezing dark studio","Translucent arctic ice chunks and explosive white cryogenic frost mist swirling behind under cold blue light"],
+      [13,"VFX",false,"#13 Cascata de Faíscas de Forja","Bigorna de aço escuro sob chuva incandescente de faíscas atrás","molten metal-forge sparks commercial","dark scorched forged-steel anvil block inside a cavernous foundry","Blazing golden-orange welding sparks showering and bouncing dynamically behind the product"],
+      [14,"VFX",false,"#14 Onda de Choque em Água Negra","Pedestal emergindo de água negra com coroa de gotas prateadas","high-speed black-water shockwave commercial","sleek raised matte-black plinth rising out of shallow black mirror water","Sculpted silver-lit liquid splashes and crisp water droplets rising symmetrically around the base"],
+      [15,"VFX",false,"#15 Explosão de Pó de Ouro Líquido","Obsidiana preta com nuvens explosivas de pó metálico dourado","explosive luxury gold-powder VFX commercial","pitch-black obsidian monolith in a pure black luxury void","Symmetrical billows of fine shimmering metallic gold dust erupting rapidly behind under warm golden light"],
+      [16,"VFX",false,"#16 Campo Magnético & Rochas","Monolito escuro com fragmentos de basalto levitando atrás","antigravity magnetic-debris VFX commercial","heavy matte-black architectural monolith","Small dark matte basalt shards floating dynamically in antigravity behind under high-contrast rim light"],
+      [17,"VFX",false,"#17 Anel de Fogo em Ignição","Pedestal de carbono diante de halo circular de fogo âmbar ao fundo","ignition fire-ring VFX commercial","dark matte carbon-stone plinth inside a pitch-black concrete chamber","Dramatic circular ring of warm amber fire burning cleanly far behind casting rich rim depth"],
+      [18,"VFX",false,"#18 Vórtice de Fumaça Iluminada","Ardósia espelhada com redemoinho de fumaça branca e dourada atrás","illuminated smoke-vortex commercial","glossy black obsidian slate inside a pitch-black wind studio","Sculpted luminous white-and-gold smoke ribbons swirling rapidly behind the product"],
+      [19,"VFX",false,"#19 Câmara de Espelhos Geométricos","Palco de obsidiana cercado por painéis espelhados escuros","architectural mirror-chamber commercial","glossy obsidian slab inside an architectural dark mirror chamber","Sharp overhead studio light bars casting dynamic reflections across dark angled mirror geometry"],
+      [20,"VFX",false,"#20 Prisma Cromático & Blackout","Bancada óptica preta com reflexos prismáticos no fundo escuro","optical prism studio commercial","clean matte-black optical bench inside a pitch-black crystal studio","Crisp prismatic light refractions shifting across the pitch-black background far behind the product"],
+
+      // === LUXO NOIR & JOALHERIA (10) ===
+      [21,"Luxo",false,"#21 Cofre Suíço 007 (Ouro Líquido)","Mármore Nero Marquina polido com iluminação dourada recortada","Swiss luxury neo-noir commercial","polished Nero Marquina black marble slab inside a velvety dark vault","Sculptural warm liquid-gold overhead rim lighting grazing through silky dark mist behind"],
+      [22,"Luxo",false,"#22 Blackout Keynote (Estilo Apple)","Palco black piano infinito com barras de luz pura correndo atrás","flagship keynote blackout launch commercial","glossy black piano-glass stage against an infinite pitch-black horizon","Surgical pure-white overhead softbox bars sweeping crisp liquid reflections across black glass"],
+      [23,"Luxo",false,"#23 Unboxing Maleta Carbono VIP","Caixa coletora rígida de carbono e Alcântara aberta sob holofote","bespoke carbon-collector unboxing commercial","open matte carbon-fiber luxury collector box lined with dark charcoal Alcantara foam","Dark VIP gallery lighting with crisp focused overhead spotlight and drifting subtle haze"],
+      [24,"Luxo",false,"#24 Veludo Esmeralda & Latão Nobre","Pódio verde esmeralda escuro com filetes de latão dourado","haute-boutique emerald-brass commercial","deep emerald-green velvet podium trimmed with brushed antique brass bars","Moody Parisian high-jewelry vault lit by sharp golden overhead spotlights"],
+      [25,"Luxo",false,"#25 Dunas Douradas (Estilo Duna)","Duna do Saara ao pôr do sol com areia soprando ao fundo","epic golden-desert Dune commercial","wind-carved golden Sahara sand dune crest","Low warm amber sunset, fine golden sand wisps blowing rapidly across distant dune ridges"],
+      [26,"Luxo",false,"#26 Vidro com Chuva & Cobertura","Pedra escura diante de janela com gotas de chuva e cidade dourada","billionaire rainy-penthouse commercial","dark honed stone ledge beside floor-to-ceiling rain-streaked penthouse glass","Golden midnight metropolis bokeh sparkling through glistening raindrops outside, crisp interior spotlight"],
+      [27,"Luxo",false,"#27 Cristal Fumê & Luz Dourada","Monolito pesado de vidro fumê sob iluminação dourada dramática","smoked-crystal luxury commercial","heavy thick smoked-crystal glass display monolith","Warm golden studio backlighting glowing through the smoked crystal glass base"],
+      [28,"Luxo",false,"#28 Pico Nevado Alpino Solar","Cume nevado alpino sob sol cristalino e pó de neve soprando","alpine luxury snow-peak commercial","sculpted pristine alpine snow ridge at crisp golden sunrise","Sparkling sunlit snow powder whipping off distant ridges, majestic icy peaks blurred in depth"],
+      [29,"Luxo",false,"#29 Travertino Italiano & Sombra","Pedra travertino bege nobre cortada por sombras solares vivas","Mediterranean architectural luxury commercial","honed beige Italian travertine stone monolith","Crisp diagonal architectural sunlight shadows sweeping cleanly across warm stone"],
+      [30,"Luxo",false,"#30 Gala Champanhe & Bokeh Ouro","Obsidiana preta diante de pontos luminosos champanhe-ouro","opulent champagne-gala commercial","glossy black obsidian pedestal inside a dark gala showcase hall","Rich floating champagne-gold bokeh spheres glowing dynamically in velvety dark background"],
+
+      // === TIKTOK SHOP HARD-SELL (10) ===
+      [31,"Viral",false,"#31 Arena Fitness Neon Verde","Bancada escura de treino com explosão de pó de magnésio e neon verde","athletic gym-chalk viral commercial","textured dark matte rubber athletic gym bench","Explosive white athletic chalk dust billowing behind under blazing neon-green rim lights and crisp white key"],
+      [32,"Viral",false,"#32 Halo Vermelho Blackout 2s","Monolito preto fosco recortado por halo vermelho atrás nos 2s","scroll-stopper crimson-halo commercial","deep matte-black architectural monolith in pitch-black studio","Blazing crimson backlight halo pulsing behind paired with razor-clean pure-white front key lighting"],
+      [33,"Viral",false,"#33 Mesa Creator Carbono Dark","Bancada de carbono stealth com luz ciano-branca de alto contraste","stealth creator-desk hard-sell commercial","sleek matte dark carbon-fiber creator desk pad","Punchy high-contrast overhead studio beam with crisp cyan ambient glow far behind"],
+      [34,"Viral",false,"#34 Vidro Molhado & Gotículas HD","Vidro temperado escuro coberto de gotículas cristalinas sob strobes","hyper-tactile wet-glass commercial","dark tempered glass slab covered in crisp hyper-realistic water droplets","Electric-cyan and pure-white directional studio lights making surrounding glass droplets sparkle"],
+      [35,"Viral",false,"#35 Palco Dual Rim Ouro & Ciano","Ardósia espelhada com contraste quente/frio impossível de ignorar","viral dual-rim showcase commercial","glossy dark slate flagship stage","Bold dual warm-gold and electric-cyan studio background rim lighting separating the product sharply"],
+      [36,"Viral",false,"#36 Vitrine Estúdio LED Vertical","Pedestal preto espelhado com tubos verticais de luz ao fundo","flagship LED-studio showcase commercial","sleek glossy dark studio showcase pedestal","Crisp vertical cinema light tubes positioned symmetrically in the dark background"],
+      [37,"Viral",false,"#37 Unboxing Caixa Magnética Preta","Caixa rígida preta magnética já aberta na espuma sob holofote","viral luxury-box unboxing commercial","open matte-black rigid magnetic collector box lined with dark custom foam on slate","Focused warm-white overhead studio spotlight carving high-trust commercial contrast"],
+      [38,"Viral",false,"#38 Estúdio Off-White Clean Pro","Pedestal off-white de marca milionária com luz natural e sombras duras","high-converting clean DTC brand commercial","crisp architectural off-white matte studio pedestal","Bold diagonal architectural sunlight shadows across spotless off-white backdrop, true-to-life colors"],
+      [39,"Viral",false,"#39 Concreto Urbano & Grafite","Bloco de concreto street com grafite vibrante desfocado ao entardecer","street-art urban flash commercial","raw dark urban concrete block in a colorful dusk graffiti alley","Vibrant neon-colored graffiti bokeh blurred softly behind with punchy crisp commercial front light"],
+      [40,"Viral",false,"#40 Superprodução IMAX Definitiva","Obsidiana espelhada sob atmosfera teal & ouro, vapor e brasas em 4K","ultimate IMAX blockbuster commercial","monumental black obsidian mirror pedestal","Epic dark IMAX soundstage illuminated by atmospheric teal-and-gold volumetric haze, rising vapor and fine embers"],
+
+      // === PERSONAGENS & CINEMA REAL (10) ===
+      [41,"Personagem",true,"#41 Executivo 007 na Cobertura","Mesa de mármore escuro em 1º plano + personagem VIP na cobertura noturna","luxury penthouse executive commercial","dark polished Nero Marquina marble penthouse table","Warm golden city skyline bokeh through floor-to-ceiling windows and dark luxury penthouse depth"],
+      [42,"Personagem",true,"#42 Velocista Noturno em Estádio","Bancada dark da pista em 1º plano + atleta sob refletores e chuva fina","high-adrenaline athletic stadium commercial","dark wet matte athletic track bench","Blinding night stadium floodlights cutting through fine illuminated rain mist with crisp neon-green rim accents"],
+      [43,"Personagem",true,"#43 Modelo Vogue Editorial Paris","Pódio black piano em 1º plano + modelo editorial em estúdio high-fashion","high-fashion Parisian editorial commercial","glossy black lacquer studio plinth","Dramatic Parisian editorial studio lighting with crisp champagne highlights and velvety dark shadows"],
+      [44,"Personagem",true,"#44 Piloto de Supercarro à Noite","Console em couro e carbono em 1º plano + piloto à noite no túnel","midnight supercar cockpit commercial","matte carbon-fiber and stitched black leather supercar center console","Passing warm city tunnel lights streaking outside tinted windows, moody red-amber cabin ambiance"],
+      [45,"Personagem",true,"#45 Streetwear no Metrô Cyberpunk","Corrimão de aço escuro em 1º plano + criador urbano e metrô atrás","urban street-culture rapid-cut commercial","brushed dark industrial steel subway ledge","Blurred passing express train light streaks behind, cool cyan fluorescent rim light and subtle urban mist"],
+      [46,"Personagem",true,"#46 Milionário no Iate Pôr do Sol","Mesa de madeira teca em 1º plano + personagem VIP no deck sobre o mar","aspirational mega-yacht sunset commercial","polished luxury yacht teak wood table","Warm golden hour ocean sunlight, shimmering turquoise sea bokeh and rich cinema sunset tones"],
+      [47,"Personagem",true,"#47 Pro Gamer em Arena Esports","Bancada de carbono em 1º plano + pro player sob holofotes de palco","high-voltage esports arena commercial","matte dark carbon-fiber esports tournament desk","Atmospheric electric-blue and crimson tournament stage lights glowing through subtle arena haze"],
+      [48,"Personagem",true,"#48 Mulher Sofisticada Café Paris","Mesa de mármore parisiense em 1º plano + modelo elegante na luz matinal","aspirational European lifestyle commercial","bright white veined Parisian marble cafe table","Warm golden morning sunlight, crisp architectural shadows and creamy European street bokeh"],
+      [49,"Personagem",true,"#49 Agente Tático no Heliponto","Case blindado molhado em 1º plano + agente tático na chuva noturna","action-thriller helipad commercial","wet matte-black armored tactical case on dark rooftop helipad","Dramatic blue helipad searchlight ambiance cutting through fine night rain bokeh"],
+      [50,"Personagem",true,"#50 DJ em Palco Neon Subterrâneo","Console preto brilhante em 1º plano + DJ na cabine com lasers atrás","underground festival laser-show commercial","glossy pitch-black festival DJ booth console","Emerald and violet volumetric club haze glowing brightly in deep background bokeh"]
+    ].map(([id,cat,hasPerson,name,desc,genre,surface,lighting])=>({id,cat,hasPerson,name,desc,genre,surface,lighting}));
+
+    const IMAGE_MODELS = VIDEO_MODELS.map((m) => ({
+      id: m.id, cat: m.cat, hasPerson: m.hasPerson, name: m.name, desc: m.desc,
+      prompt: `exact real-sized product resting solidly on ${m.surface}, ${m.lighting}`
+    }));
+
+    // =========================================================================
+    // 12 PLANOS RADICALMENTE DISTINTOS (FÓRMULA EXATA DOS VÍDEOS 1 & 2!)
+    // Alterna escala extrema: Macro 100mm -> Textura Diagonal -> Silhueta -> Hardware -> 3/4 -> Top-Down -> Hero Final
+    // =========================================================================
+    const TWELVE_UNIQUE_SHOTS = [
+      // 0: Abertura Gancho Dramático (igual 0:00 do Vídeo 2)
+      {
+        title: "Gancho Silhueta / Impacto",
+        allowPerson: true,
+        editMove: "crashZoom",
+        frame: (m, macro, dna) => m.hasPerson
+          ? `SHOT A (DRAMATIC FOREGROUND HOOK): Low dramatic 9:16 commercial reveal with exact real-sized product resting in sharp focus in foreground on ${m.surface}, ${dna.surfaceNuance}, and ${dna.cast.text}.`
+          : `SHOT A (DRAMATIC BACKLIT REVEAL HOOK): Bold low-angle 9:16 hero reveal of the exact product anchored solidly on ${m.surface} silhouetted dramatically against the glowing background atmosphere, ${dna.surfaceNuance}.`,
+        motion: "Explosive high-speed snap-zoom slamming rapidly forward toward the exact product as dramatic background light and atmosphere surge."
+      },
+      // 1: Macro Extremo 100mm no Coração do Produto (igual 0:00 do Vídeo 1 / 0:01 do Vídeo 2)
+      {
+        title: "Macro Extremo 100mm (Core)",
+        allowPerson: false,
+        editMove: "macroSlam",
+        frame: (m, macro) => `SHOT B (EXTREME 100MM MACRO CORE — PRODUCT ONLY): Ultra-close 100mm cinema macro filling 85% of the vertical frame with ${macro} of the exact product resting on ${m.surface}, razor-sharp authentic texture, full-bleed background (ZERO black bars, ZERO hands).`,
+        motion: "Fast razor-sharp macro snap-push gliding tightly across the primary mechanism/controls and authentic matte-metal finish."
+      },
+      // 2: Textura Diagonal & Acabamento Lateral (igual 0:02 do Vídeo 1 / 0:03 do Vídeo 2)
+      {
+        title: "Textura Diagonal & Material",
+        allowPerson: false,
+        editMove: "whipLeft",
+        frame: (m) => `SHOT C (DIAGONAL TEXTURE CLOSE-UP — PRODUCT ONLY): Dynamic angled close-up sweeping diagonally across the tactile body grip, finish and side curvature of the exact product resting on ${m.surface}. Zero hands, zero people, full-bleed 9:16.`,
+        motion: "Rapid diagonal whip-pan slider racing cleanly across the sculpted material texture with crisp studio light sheen."
+      },
+      // 3: Perfil Baixo 3/4 Esquerdo (igual 0:05 do Vídeo 2)
+      {
+        title: "Perfil Baixo 3/4 Esquerdo",
+        allowPerson: false,
+        editMove: "whipRight",
+        frame: (m, macro, dna) => `SHOT D (LOW SURFACE 3/4 LEFT — PRODUCT ONLY): Dramatic table-level left three-quarter angle showcasing the full aggressive silhouette of the exact product resting solidly on ${m.surface}, ${dna.surfaceNuance}. Zero hands, zero people.`,
+        motion: "Fast kinetic low-angle slider sweeping left-to-right past the resting product's sleek silhouette against deep bokeh."
+      },
+      // 4: Macro Hardware / Bordas / Botões (igual 0:06 do Vídeo 1 / 0:04 do Vídeo 2)
+      {
+        title: "Macro Detalhe Lateral / Hardware",
+        allowPerson: false,
+        editMove: "macroSlam",
+        frame: (m, macro) => `SHOT E (EXTREME SIDE HARDWARE MACRO — PRODUCT ONLY): Tight dramatic grazing-light close-up focusing on the precision side edge, buttons/crown and chamfered contours of the exact product resting on ${m.surface}. Full-bleed dark depth, zero hands.`,
+        motion: "Sharp energetic macro push-in revealing precision edges and build craftsmanship with dramatic background glow behind."
+      },
+      // 5: Perfil 3/4 Direito com Dutch Tilt 7°
+      {
+        title: "Contraplano 3/4 Direito",
+        allowPerson: false,
+        editMove: "whipLeft",
+        frame: (m, macro, dna) => `SHOT F (DYNAMIC 3/4 RIGHT TILT — PRODUCT ONLY): Bold opposite right-side three-quarter angle with slight dynamic 7-degree cinematic tilt of the exact product resting solidly on ${m.surface}, ${dna.surfaceNuance}. Zero hands.`,
+        motion: "High-speed tracking sweep racing right-to-left along the opposite flank with dynamic depth-of-field parallax."
+      },
+      // 6: Mergulho Superior 45° (Top-Down)
+      {
+        title: "Mergulho Superior 45°",
+        allowPerson: false,
+        editMove: "zoomAttack",
+        frame: (m, macro, dna) => `SHOT G (ELEVATED 45° TOP-DOWN — PRODUCT ONLY): Crisp architectural 45-degree overhead view revealing the exact top geometry, proportions and original logo of the product resting on ${m.surface}, ${dna.surfaceNuance}. Zero hands.`,
+        motion: "Brisk descending overhead crane dive accelerating smoothly toward the full top profile of the resting product."
+      },
+      // 7: Macro Superfície & Logo Original
+      {
+        title: "Macro Logo & Acabamento",
+        allowPerson: false,
+        editMove: "macroSlam",
+        frame: (m) => `SHOT H (TIGHT LOGO & FINISH MACRO — PRODUCT ONLY): Precision close-up focused cleanly on the original authentic logo area and surface grain of the exact product resting on ${m.surface}. Zero invented marks, zero hands.`,
+        motion: "Crisp controlled fast-to-slow macro glide catching natural studio light sheen across the authentic finish."
+      },
+      // 8: Corte Baixo Frontal Poderoso
+      {
+        title: "Frontal Baixo Imponente",
+        allowPerson: false,
+        editMove: "crashZoom",
+        frame: (m, macro, dna) => `SHOT I (LOW-ANGLE FRONTAL POWER SHOT — PRODUCT ONLY): Authoritative low front-facing wide-close angle making the exact product resting on ${m.surface} look monumental, ${dna.surfaceNuance}. Zero hands.`,
+        motion: "Aggressive punch-in camera rush slamming straight toward the frontal face of the resting product."
+      },
+      // 9: Ângulo Lateral Extremo com Profundidade
+      {
+        title: "Lateral Cinematográfico",
+        allowPerson: false,
+        editMove: "whipRight",
+        frame: (m, macro, dna) => `SHOT J (SLEEK SIDE PROFILE — PRODUCT ONLY): Ultra-clean horizontal side silhouette shot of the exact product resting solidly on ${m.surface} with dramatic atmospheric depth blurred behind, ${dna.surfaceNuance}. Zero hands.`,
+        motion: "Rapid motorized lateral whip gliding smoothly across the clean side profile with rich background parallax."
+      },
+      // 10: Plano Médio Dinâmico com Atmosfera
+      {
+        title: "Plano Atmosfera & Cenário",
+        allowPerson: true,
+        editMove: "zoomAttack",
+        frame: (m, macro, dna) => m.hasPerson
+          ? `SHOT K (ATMOSPHERIC MEDIUM — HERO + CAST): Wide-medium editorial frame of the exact product resting sharp in foreground on ${m.surface} with ${dna.cast.text} in moody cinematic depth.`
+          : `SHOT K (ATMOSPHERIC SET SHOWCASE): Dramatic medium-wide commercial angle revealing the full Hollywood environment surrounding the exact product resting solidly on ${m.surface}.`,
+        motion: "Fast kinetic dolly push-in sweeping through atmospheric depth straight onto the sharp foreground product."
+      },
+      // 11: Clímax Hero Simétrico Final (SEMPRE O ÚLTIMO — igual 0:07–0:10 dos Vídeos 1 & 2!)
+      {
+        title: "Clímax Hero Final",
+        allowPerson: true,
+        editMove: "climaxPull",
+        frame: (m, macro, dna) => m.hasPerson
+          ? `SHOT L (MONUMENTAL HERO FINALE): Commanding centered 9:16 closing flagship frame with the exact product razor-sharp in foreground on ${m.surface} and ${dna.cast.text} in grand cinematic bokeh.`
+          : `SHOT L (MONUMENTAL SYMMETRICAL HERO CLIMAX): Iconic dead-center symmetrical flagship hero shot of the exact product resting solidly on ${m.surface}, framed majestically by the full dramatic lighting and particles/mist behind.`,
+        motion: "Explosive speed-ramp pullback rising slightly to lock onto the authoritative, unforgettable centered hero product dominating the closing frame."
+      }
+    ];
+
+    // Seleciona sequência 100% ÚNICA com troca radical de escala em cada corte!
+    // 10s = 6 cortes únicos (ex: Gancho -> Macro Core -> Textura -> 3/4 -> Macro Hardware -> Clímax Hero)
+    // 15s = 8 cortes únicos | 20s = 10 cortes únicos | 30s = 12 cortes únicos
+    function buildRadicalShotSequence(targetSec) {
+      const targetCount = targetSec === 10 ? 6 : (targetSec === 15 ? 8 : (targetSec === 20 ? 10 : 12));
+      // Garante obrigatoriamente Macro Core (1), Textura (2) e Macro Hardware (4) misturados com ângulos médios (3,5,6,7,8,9,10)
+      const mustHave = [1, 2, 4, 3];
+      const extras = shuffleArray([5, 6, 7, 8, 9, 10]);
+      const midNeeded = targetCount - 2; // tira o primeiro (0) e o último (11)
+      const midSelected = shuffleArray([...mustHave, ...extras].slice(0, midNeeded));
+      return [0, ...midSelected, 11];
+    }
+
+    // Ritmo idêntico aos Vídeos 1 & 2: cortes rápidos (1.25s–1.65s) + Clímax Hero maior no final!
+    function buildHollywoodCutDurations(totalSec, count) {
+      if (count <= 1) return [totalSec];
+      const finaleRatio = totalSec <= 10 ? 0.27 : (totalSec <= 15 ? 0.22 : 0.16);
+      const finaleDur = Number((totalSec * finaleRatio).toFixed(2));
+      const fastPoolSec = totalSec - finaleDur;
+      const fastCount = count - 1;
+
+      const weights = Array.from({ length: fastCount }, () => 0.88 + (cryptoRandInt(25) / 100));
+      const sumW = weights.reduce((a, b) => a + b, 0);
+      const durs = weights.map((w) => Number(((w / sumW) * fastPoolSec).toFixed(2)));
+      const used = durs.reduce((a, b) => a + b, 0);
+      durs.push(Number((totalSec - used).toFixed(2)));
+      return durs;
+    }
+
+    // =========================================================================
+    // TRILHAS AGRESSIVAS (ZERO MÚSICA CALMA / AUTO-DROP NO 0.0s)
+    // =========================================================================
+    const MUSIC_PROMPTS = {
+      phonk_br: {
+        label: "Brazilian Phonk Agressivo",
+        baseBpm: 138,
+        prompt: "High-voltage aggressive Brazilian Phonk supercar commercial beat, instant explosive heavy distorted 808 bass drop right at the start, relentless hard-hitting punchy kick and crisp trap snare, intense adrenaline dark bassline, loud club-mastered energy, strictly instrumental, no slow intro, no vocals"
+      },
+      hard_trap: {
+        label: "Hard Trap Adrenalina",
+        baseBpm: 136,
+        prompt: "Explosive high-energy modern hard trap action commercial beat, thunderous 808 sub-bass drops immediately from bar one, rapid crisp hi-hat rolls, aggressive punchy snare hits, dark brass stabs, fierce motivational TikTok ad intensity, loud commercial master, strictly instrumental, no slow intro, no vocals"
+      },
+      cyber_drop: {
+        label: "Cyberpunk Bass Industrial",
+        baseBpm: 134,
+        prompt: "Relentless high-octane cyberpunk midtempo bass electronic soundtrack, roaring gritty analog bass drop right from the start, heavy industrial stomp drums, sharp aggressive synth stabs, futuristic action adrenaline, loud punchy master, strictly instrumental, no calm ambient intro, no vocals"
+      },
+      imax_action: {
+        label: "Blockbuster IMAX Ação",
+        baseBpm: 130,
+        prompt: "Intense fast-paced Hollywood IMAX action movie trailer score, thunderous war taiko percussion immediately at full energy, massive aggressive brass hits, heavy hybrid electronic sub-bass pulse, frantic high-stakes adrenaline rush, theatrical loud master, strictly instrumental, no slow intro, no vocals"
+      },
+      tech_viral: {
+        label: "Tech House Frenético",
+        baseBpm: 128,
+        prompt: "High-energy peak-time festival Tech House commercial anthem, instant driving punchy four-on-the-floor kick and thick bouncy bassline right from the beginning, crisp energetic percussion, bold modern synth stabs, unstoppable viral energy, loud club master, strictly instrumental, no vocals"
+      }
+    };
+
+    function buildUniqueMusicPrompt(mKey, dna) {
+      const base = MUSIC_PROMPTS[mKey] || MUSIC_PROMPTS.phonk_br;
+      return `${base.prompt}, ${base.baseBpm + dna.bpmDelta} BPM, in ${dna.musicKey}`;
+    }
+
+    const ORIENTATION_RULES = {
+      flat: "NATURAL RESTING POSITION: Product rests solidly FLAT on its bottom base on the surface. NEVER stand on edge/tail, NEVER float in mid-air.",
+      upright: "NATURAL RESTING POSITION: Product stands solidly UPRIGHT on its own flat base/stand resting firmly on the surface. NEVER float or tip over.",
+      flat_lay: "NATURAL RESTING POSITION: Product lies neatly FLAT inside the display surface/tray viewed cleanly from above. NEVER float vertically."
+    };
+
+    const modeBtns = document.querySelectorAll(".mode-btn");
+    const durFieldWrap = document.getElementById("durFieldWrap");
+    const macroFieldWrap = document.getElementById("macroFieldWrap");
+    const slaBarWrap = document.getElementById("slaBarWrap");
+    const imgCatalogSection = document.getElementById("imgCatalogSection");
+    const vidCatalogSection = document.getElementById("vidCatalogSection");
+    const previewTitle = document.getElementById("previewTitle");
+    const productImg = document.getElementById("productImg");
+    const thumbPreview = document.getElementById("thumbPreview");
+    const productOrientation = document.getElementById("productOrientation");
+    const minDuration = document.getElementById("minDuration");
+    const videoEngine = document.getElementById("videoEngine");
+    const maxWaitLimit = document.getElementById("maxWaitLimit");
+    const macroTarget = document.getElementById("macroTarget");
+    const productDetailHint = document.getElementById("productDetailHint");
+    const musicPreset = document.getElementById("musicPreset");
+    const customAudioFile = document.getElementById("customAudioFile");
+    const enableHyperCuts = document.getElementById("enableHyperCuts");
+    const enableSfxHits = document.getElementById("enableSfxHits");
+    const btnOnlyImg = document.getElementById("btnOnlyImg");
+    const btnBuild = document.getElementById("btnBuild");
+    const stage = document.getElementById("stage");
+    const canvas = document.getElementById("renderCanvas");
+    const ctx = canvas.getContext("2d", { alpha: false });
+
+    const imgSearch = document.getElementById("imgSearch");
+    const imgCatFilter = document.getElementById("imgCatFilter");
+    const imgPresetGrid = document.getElementById("imgPresetGrid");
+    const selectedImgLabel = document.getElementById("selectedImgLabel");
+    const btnRandImg = document.getElementById("btnRandImg");
+
+    const vidSearch = document.getElementById("vidSearch");
+    const vidCatFilter = document.getElementById("vidCatFilter");
+    const vidPresetGrid = document.getElementById("vidPresetGrid");
+    const selectedVidLabel = document.getElementById("selectedVidLabel");
+    const btnRandVid = document.getElementById("btnRandVid");
+
+    let activeMode = "video";
+    let selectedImgModel = IMAGE_MODELS[0];
+    let selectedVidModel = VIDEO_MODELS[0];
+    let uploadedBase64 = "";
+    let uploadedMime = "image/jpeg";
+    let customAudioBuf = null;
+    let customAudioName = "";
+    let activeVideoBlobUrl = "";
+    let activeRunController = null;
+    let lastMasterSession = null;
+
+    function setMode(mode) {
+      activeMode = mode === "image" ? "image" : "video";
+      modeBtns.forEach((b) => b.classList.toggle("active", b.dataset.mode === activeMode));
+      durFieldWrap.classList.toggle("hidden", activeMode !== "video");
+      macroFieldWrap.classList.toggle("hidden", activeMode !== "video");
+      slaBarWrap.classList.toggle("hidden", activeMode !== "video");
+      vidCatalogSection.classList.toggle("hidden", activeMode !== "video");
+      imgCatalogSection.classList.toggle("hidden", activeMode === "video");
+      btnBuild.classList.toggle("hidden", activeMode !== "video");
+      btnOnlyImg.classList.toggle("hidden", activeMode === "video");
+      previewTitle.textContent = activeMode === "video" ? "Preview 9:16 & Download MP4" : "Preview da Imagem 9:16";
+    }
+    modeBtns.forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+
+    customAudioFile.addEventListener("change", async (e) => {
+      const f = e.target.files?.[0];
+      if (f) { customAudioBuf = await f.arrayBuffer(); customAudioName = f.name; musicPreset.value = "custom"; }
+      else { customAudioBuf = null; customAudioName = ""; }
+      refreshBtn();
     });
-  });
 
-  async function generateImage() {
-    if (!uploadedBase64) {
-      alert('Envie primeiro a foto do produto.');
-      return;
+    function refreshBtn() {
+      const sec = Number(minDuration.value) || 10;
+      const cuts = sec === 10 ? 6 : (sec === 15 ? 8 : (sec === 20 ? 10 : 12));
+      const limitSec = Number(maxWaitLimit.value) || 240;
+      const limitLabel = limitSec === 180 ? "< 3m30s" : (limitSec === 240 ? "< 4m30s" : "< 5m00s");
+      btnBuild.textContent = `⚡ Gerar Superprodução (${sec}s • ${cuts} Cortes Únicos • ${limitLabel})`;
     }
-    if (credits <= 0) {
-      openModal();
-      return;
+    minDuration.addEventListener("change", refreshBtn);
+    maxWaitLimit.addEventListener("change", refreshBtn);
+    refreshBtn();
+
+    function renderImagePresets() {
+      const q = imgSearch.value.trim().toLowerCase();
+      const cat = imgCatFilter.value;
+      const list = IMAGE_MODELS.filter((m) => (cat === "TODOS" || m.cat === cat) && (!q || m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q)));
+      imgPresetGrid.innerHTML = list.map((m) => `
+        <button type="button" class="preset-item ${m.id === selectedImgModel.id ? "active" : ""}" data-id="${m.id}">
+          <div class="preset-top"><strong>${m.name}</strong><span><span class="badge-cat">${m.cat}</span>${m.hasPerson && m.cat !== "Personagem" ? '<span class="badge-cast">Elenco</span>' : ""}</span></div>
+          <p>${m.desc}</p>
+        </button>
+      `).join("");
+      imgPresetGrid.querySelectorAll(".preset-item").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          selectedImgModel = IMAGE_MODELS.find((x) => x.id === Number(btn.dataset.id)) || IMAGE_MODELS[0];
+          selectedImgLabel.textContent = `Selecionado: ${selectedImgModel.name}`;
+          renderImagePresets();
+        });
+      });
     }
 
-    const btn = document.getElementById('generateBtn');
-    const resultBox = document.getElementById('resultBox');
-    btn.disabled = true;
-    resultBox.innerHTML = '<div class="loader"></div><p>Gerando cenário comercial com IA...</p>';
+    function renderVideoPresets() {
+      const q = vidSearch.value.trim().toLowerCase();
+      const cat = vidCatFilter.value;
+      const list = VIDEO_MODELS.filter((m) => (cat === "TODOS" || m.cat === cat) && (!q || m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q)));
+      vidPresetGrid.innerHTML = list.map((m) => `
+        <button type="button" class="preset-item ${m.id === selectedVidModel.id ? "active" : ""}" data-id="${m.id}">
+          <div class="preset-top"><strong>${m.name}</strong><span><span class="badge-cat">${m.cat}</span>${m.hasPerson && m.cat !== "Personagem" ? '<span class="badge-cast">Elenco</span>' : ""}</span></div>
+          <p>${m.desc}</p>
+        </button>
+      `).join("");
+      vidPresetGrid.querySelectorAll(".preset-item").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          selectedVidModel = VIDEO_MODELS.find((x) => x.id === Number(btn.dataset.id)) || VIDEO_MODELS[0];
+          selectedVidLabel.textContent = `Selecionado: ${selectedVidModel.name}`;
+          renderVideoPresets();
+        });
+      });
+    }
 
-    try {
-      const res = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          imageBase64: uploadedBase64,
-          mimeType: uploadedMimeType,
-          prompt: STYLE_PROMPTS[selectedStyle]
-        })
+    btnRandImg.addEventListener("click", () => {
+      const pool = IMAGE_MODELS.filter((m) => m.id !== selectedImgModel.id);
+      selectedImgModel = pool[cryptoRandInt(pool.length)];
+      imgCatFilter.value = "TODOS"; imgSearch.value = "";
+      selectedImgLabel.textContent = `Selecionado: ${selectedImgModel.name}`;
+      renderImagePresets();
+    });
+    btnRandVid.addEventListener("click", () => {
+      const pool = VIDEO_MODELS.filter((m) => m.id !== selectedVidModel.id);
+      selectedVidModel = pool[cryptoRandInt(pool.length)];
+      vidCatFilter.value = "TODOS"; vidSearch.value = "";
+      selectedVidLabel.textContent = `Selecionado: ${selectedVidModel.name}`;
+      renderVideoPresets();
+    });
+    imgSearch.addEventListener("input", renderImagePresets);
+    imgCatFilter.addEventListener("change", renderImagePresets);
+    vidSearch.addEventListener("input", renderVideoPresets);
+    vidCatFilter.addEventListener("change", renderVideoPresets);
+    renderImagePresets();
+    renderVideoPresets();
+
+    // =========================================================================
+    // PROMPTS BLINDADOS (CORPO APAGADO SEM LED FALSO + ZERO SETAS + ZERO TEXTO)
+    // =========================================================================
+    function buildNegative(hasPerson) {
+      const base = [
+        "slow motion", "static shot", "exploding person", "disappearing person",
+        "neon glow on product", "blue electricity on product", "red LED strip under product", "glowing white outline on product", "energy sparks on product",
+        "floating in mid-air", "standing on tail edge", "spinning 360 degrees", "rear underside view",
+        "oversized giant product", "black bars", "letterbox", "grey borders", "split screen",
+        "extra invented buttons", "altered logo font", "morphing", "distorted product",
+        "text", "watermark", "arrows", "red arrow", "shopping cart icon", "blur", "lowres", "cartoon"
+      ];
+      if (hasPerson) base.push("hand grabbing camera", "distorted face", "deformed fingers", "bad anatomy", "person covering product");
+      else base.push("hands", "fingers", "skin", "gloves", "people");
+      return base.join(", ");
+    }
+
+    function getProductSpec() {
+      const hint = productDetailHint.value.trim();
+      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
+      const spec = hint
+        ? `${hint} — 100% strict visual fidelity to the uploaded reference photo, completely unlit solid physical body (zero glowing LEDs, zero neon outlines, exact original logo and buttons only)`
+        : `exact product from uploaded reference photo with 100% strict visual fidelity, completely unlit solid physical body (zero glowing LEDs, zero neon outlines, exact original shape, logo and buttons only)`;
+      return `${spec}. ${orient}`;
+    }
+
+    function buildShotKeyframe(m, shotIdx, dna) {
+      const shot = TWELVE_UNIQUE_SHOTS[shotIdx] || TWELVE_UNIQUE_SHOTS[0];
+      const macroFocus = macroTarget.value.trim() || "exact visible surface texture, controls, logo and precision details";
+      const hasPersonHere = m.hasPerson && shot.allowPerson;
+
+      return [
+        `EDGE-TO-EDGE FULL-BLEED 9:16 VERTICAL 4K HOLLYWOOD COMMERCIAL STILL (${m.genre}). Background fills 100% all 4 edges with ZERO black/grey bars.`,
+        `MANDATORY PRODUCT FIDELITY: ${getProductSpec()}.`,
+        shot.frame(m, macroFocus, dna),
+        `ENVIRONMENT & LIGHTING (${m.name} • ${dna.id}): ${m.lighting}; ${dna.light.text}. Photorealistic 8K ARRI Alexa 65 commercial lens, physically real contact shadows.`,
+        `Negative constraints: ${buildNegative(hasPersonHere)}.`
+      ].join("\n\n");
+    }
+
+    function buildShotMotion(m, shotIdx, dna) {
+      const shot = TWELVE_UNIQUE_SHOTS[shotIdx] || TWELVE_UNIQUE_SHOTS[0];
+      const hasPersonHere = m.hasPerson && shot.allowPerson;
+      return [
+        `Vertical 9:16 full-bleed ${m.genre}, 4K, 60fps, high-octane aggressive Hollywood commercial camera movement, completely mute silent video.`,
+        `PRODUCT RIGIDITY LOCK: ${getProductSpec()}. Keep the product 100% stationary on ${m.surface} with a completely UNLIT solid body — NEVER flip, spin 360°, morph, or draw glowing light on the product.`,
+        `DYNAMIC CAMERA ACTION (${shot.title} • ${dna.id}): ${shot.motion} Background Atmosphere: ${m.lighting}; ${dna.light.text}.`,
+        `Negative prompt: ${buildNegative(hasPersonHere)}.`
+      ].join("\n\n");
+    }
+
+    function buildStandaloneImagePrompt(m, dna) {
+      const castClause = m.hasPerson ? ` Background talent: ${dna.cast.text}.` : "";
+      return [
+        `Ultra-realistic flagship 9:16 vertical edge-to-edge full-bleed photograph (NO black bars, NO borders), concept: ${m.name} (${dna.id}).`,
+        `Product Fidelity: ${getProductSpec()}.`,
+        `Scene & Direction: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Lighting: ${dna.light.text}. Shot on Phase One IQ4 150MP / ARRI Alexa 65 commercial lens.`,
+        `Negative constraints: ${buildNegative(m.hasPerson)}.`
+      ].join("\n\n");
+    }
+
+    function optimizeUpload(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onerror = () => reject(new Error("Erro ao ler arquivo."));
+        r.onload = () => {
+          const dataUrl = String(r.result || "");
+          const img = new Image();
+          img.onerror = () => resolve({ dataUrl, base64: dataUrl.split(",")[1] || "", mime: file.type || "image/jpeg" });
+          img.onload = () => {
+            const maxDim = 1280;
+            let w = img.naturalWidth, h = img.naturalHeight;
+            if (w <= maxDim && h <= maxDim && file.size < 1400000) {
+              resolve({ dataUrl, base64: dataUrl.split(",")[1] || "", mime: file.type || "image/jpeg" }); return;
+            }
+            const ratio = Math.min(maxDim / w, maxDim / h);
+            w = Math.round(w * ratio); h = Math.round(h * ratio);
+            const c = document.createElement("canvas");
+            c.width = w; c.height = h;
+            c.getContext("2d").drawImage(img, 0, 0, w, h);
+            const out = c.toDataURL("image/jpeg", 0.92);
+            resolve({ dataUrl: out, base64: out.split(",")[1] || "", mime: "image/jpeg" });
+          };
+          img.src = dataUrl;
+        };
+        r.readAsDataURL(file);
+      });
+    }
+
+    productImg.addEventListener("change", async (e) => {
+      const f = e.target.files?.[0];
+      if (!f) return;
+      const opt = await optimizeUpload(f);
+      thumbPreview.src = opt.dataUrl;
+      thumbPreview.style.display = "block";
+      uploadedBase64 = opt.base64;
+      uploadedMime = opt.mime;
+    });
+
+    async function callApi(payload, timeoutMs = 24000, outerSignal = null) {
+      const ctrl = new AbortController();
+      const onAbort = () => ctrl.abort();
+      if (outerSignal) {
+        if (outerSignal.aborted) throw new Error("ABORTED_RUN");
+        outerSignal.addEventListener("abort", onAbort, { once: true });
+      }
+      const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+      try {
+        const res = await fetch("/api/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: ctrl.signal });
+        const txt = await res.text();
+        let data;
+        try { data = JSON.parse(txt); } catch { const e = new Error(`Resposta inválida (HTTP ${res.status}).`); e.status = res.status; throw e; }
+        if (!res.ok || data.error) { const e = new Error(data.error || `Erro HTTP ${res.status}`); e.status = res.status; throw e; }
+        return data;
+      } catch (err) {
+        if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
+        if (err && err.name === "AbortError") { const e = new Error("TIMEOUT_REQ"); e.transient = true; throw e; }
+        throw err;
+      } finally {
+        clearTimeout(timer);
+        if (outerSignal) outerSignal.removeEventListener("abort", onAbort);
+      }
+    }
+
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    async function pollFalJob(queued, onStateUpdate, outerSignal) {
+      let errs = 0;
+      for (let i = 0; i < 150; i++) {
+        if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
+        try {
+          const res = await callApi({ task: "poll", statusUrl: queued.statusUrl, responseUrl: queued.responseUrl }, 16000, outerSignal);
+          errs = 0;
+          if (res.status === "COMPLETED") return res;
+          if (onStateUpdate) {
+            const pos = typeof res.queuePosition === "number" ? ` (#${res.queuePosition + 1})` : "";
+            onStateUpdate(res.status === "IN_QUEUE" ? `fila${pos}` : "GPU");
+          }
+        } catch (err) {
+          if (err.message === "ABORTED_RUN") throw err;
+          if (err.status && err.status >= 400 && err.status < 500 && !err.transient) throw err;
+          if (String(err.message || "").toLowerCase().includes("falha na geração")) throw err;
+          errs++;
+          if (onStateUpdate) onStateUpdate(`retry ${errs}/8`);
+          if (errs >= 8) throw new Error("Instabilidade ao consultar a fila da fal.ai.");
+        }
+        await sleep(2400);
+      }
+      throw new Error("Tempo limite excedido na fila da fal.ai.");
+    }
+
+    async function fetchMediaBlob(url) {
+      for (let a = 0; a < 2; a++) {
+        try { const c = new AbortController(); const t = setTimeout(() => c.abort(), 25000); const d = await fetch(url, { mode: "cors", signal: c.signal }); clearTimeout(t); if (d.ok) return await d.blob(); } catch {}
+        try { const c = new AbortController(); const t = setTimeout(() => c.abort(), 25000); const p = await fetch(`/api/generate?proxyUrl=${encodeURIComponent(url)}`, { signal: c.signal }); clearTimeout(t); if (p.ok) return await p.blob(); } catch {}
+        await sleep(700);
+      }
+      throw new Error("Falha ao baixar mídia da fal.ai.");
+    }
+
+    // === AUTO-DROP DETECTOR: PULA QUALQUER INTRO CALMA E COMEÇA NA BATIDA PESADA EM 0.0s ===
+    function findLoudestDropOffset(audioBuffer, neededSec) {
+      try {
+        const sr = audioBuffer.sampleRate, dur = audioBuffer.duration;
+        const maxOffset = Math.max(0, dur - neededSec - 0.2);
+        if (maxOffset < 0.5) return 0;
+        const ch = audioBuffer.getChannelData(0);
+        const winSamples = Math.floor(sr * 0.5);
+        const scanEnd = Math.min(maxOffset, 12.0);
+        const wins = [];
+        let maxRms = 0;
+        for (let t = 0; t <= scanEnd; t += 0.25) {
+          const sIdx = Math.floor(t * sr), eIdx = Math.min(ch.length, sIdx + winSamples);
+          let sumSq = 0;
+          for (let i = sIdx; i < eIdx; i += 4) sumSq += ch[i] * ch[i];
+          const rms = Math.sqrt(sumSq / Math.max(1, (eIdx - sIdx) / 4));
+          wins.push({ t, rms });
+          if (rms > maxRms) maxRms = rms;
+        }
+        const hit = wins.find((w) => w.rms >= maxRms * 0.78);
+        return hit ? hit.t : 0;
+      } catch {
+        return 0;
+      }
+    }
+
+    function detectLetterboxCrop(vid) {
+      const vw = vid.videoWidth || 720, vh = vid.videoHeight || 1280;
+      const tmp = document.createElement("canvas");
+      const tw = 144, th = 256;
+      tmp.width = tw; tmp.height = th;
+      const tctx = tmp.getContext("2d", { willReadFrequently: true });
+      tctx.drawImage(vid, 0, 0, tw, th);
+      const data = tctx.getImageData(0, 0, tw, th).data;
+      const isBarRow = (y) => {
+        let sum = 0, sumSq = 0;
+        for (let x = 8; x < tw - 8; x += 2) {
+          const i = (y * tw + x) * 4;
+          const lum = (data[i] + data[i + 1] + data[i + 2]) / 3;
+          sum += lum; sumSq += lum * lum;
+        }
+        const n = (tw - 16) / 2, mean = sum / n, variance = sumSq / n - mean * mean;
+        return variance < 9 && (mean < 16 || (mean > 140 && mean < 215));
+      };
+      const maxScan = Math.floor(th * 0.24);
+      let top = 0, bottom = th - 1;
+      while (top < maxScan && isBarRow(top)) top++;
+      while (bottom > th - maxScan && isBarRow(bottom)) bottom--;
+      if (top > 4) top += 3;
+      if (bottom < th - 5) bottom -= 3;
+      return { sx: 0, sy: Math.round((top / th) * vh), sw: vw, sh: Math.max(Math.round(vh * 0.55), Math.round(((bottom - top) / th) * vh)) };
+    }
+
+    function loadVideoElement(blob) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(blob);
+        const vid = document.createElement("video");
+        vid.src = url; vid.muted = true; vid.playsInline = true; vid.preload = "auto";
+        const t = setTimeout(() => reject(new Error("Timeout ao decodificar MP4.")), 15000);
+        vid.onloadeddata = () => { clearTimeout(t); resolve({ vid, blobUrl: url, crop: detectLetterboxCrop(vid) }); };
+        vid.onerror = () => { clearTimeout(t); URL.revokeObjectURL(url); reject(new Error("Erro ao decodificar MP4.")); };
+      });
+    }
+
+    function drawCroppedCover(c2d, vid, crop, scale = 1.0, panX = 0, panY = 0, alpha = 1, filterStr = "none") {
+      const cw = canvas.width, ch = canvas.height;
+      const cRatio = cw / ch, sRatio = crop.sw / crop.sh;
+      let baseW = cw, baseH = ch;
+      if (sRatio > cRatio) { baseH = ch; baseW = baseH * sRatio; }
+      else { baseW = cw; baseH = baseW / sRatio; }
+      const minSafe = 1.02 + (Math.abs(panX) * 2.15) / cw + (Math.abs(panY) * 2.15) / ch;
+      const sc = Math.max(scale, minSafe);
+      const dw = baseW * sc, dh = baseH * sc;
+      c2d.save();
+      c2d.globalAlpha = alpha;
+      try { c2d.filter = filterStr || "none"; } catch {}
+      c2d.drawImage(vid, crop.sx, crop.sy, crop.sw, crop.sh, (cw - dw) / 2 + panX, (ch - dh) / 2 + panY, dw, dh);
+      c2d.restore();
+    }
+
+    function scheduleWhooshImpact(audioCtx, dest, noiseBuf, t) {
+      const src = audioCtx.createBufferSource(); src.buffer = noiseBuf;
+      const bp = audioCtx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.9;
+      bp.frequency.setValueAtTime(220, t);
+      bp.frequency.exponentialRampToValueAtTime(2800, t + 0.10);
+      bp.frequency.exponentialRampToValueAtTime(260, t + 0.20);
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.001, t);
+      g.gain.linearRampToValueAtTime(0.26, t + 0.09);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.21);
+      src.connect(bp); bp.connect(g); g.connect(dest);
+      src.start(t); src.stop(t + 0.23);
+    }
+
+    function scheduleSubBassHit(audioCtx, dest, t, gainAmt = 0.44) {
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(105, t);
+      osc.frequency.exponentialRampToValueAtTime(32, t + 0.28);
+      g.gain.setValueAtTime(gainAmt, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+      osc.connect(g); g.connect(dest);
+      osc.start(t); osc.stop(t + 0.34);
+    }
+
+    function pickRecorderProfile() {
+      const list = [
+        { mimeType: "video/mp4;codecs=avc1.42E01E,mp4a.40.2", ext: "mp4", baseType: "video/mp4", label: "MP4 H.264" },
+        { mimeType: "video/mp4", ext: "mp4", baseType: "video/mp4", label: "MP4" },
+        { mimeType: "video/webm;codecs=vp8,opus", ext: "webm", baseType: "video/webm", label: "WebM" },
+        { mimeType: "video/webm", ext: "webm", baseType: "video/webm", label: "WebM" }
+      ];
+      for (const c of list) if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(c.mimeType)) return c;
+      return { mimeType: "", ext: "webm", baseType: "video/webm", label: "Vídeo" };
+    }
+
+    function makeTicker(fps, cb) {
+      const ms = 1000 / fps;
+      try {
+        const u = URL.createObjectURL(new Blob([`let id=setInterval(()=>postMessage(1),${ms});onmessage=()=>{clearInterval(id);close();};`], { type: "application/javascript" }));
+        const w = new Worker(u); w.onmessage = cb;
+        return () => { w.postMessage("stop"); w.terminate(); URL.revokeObjectURL(u); };
+      } catch {
+        const id = setInterval(cb, ms); return () => clearInterval(id);
+      }
+    }
+
+    const easeOutExpo = (x) => { const v = Math.min(1, Math.max(0, x)); return v === 1 ? 1 : 1 - Math.pow(2, -10 * v); };
+    const easeOutCubic = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+
+    // =========================================================================
+    // MASTER EDITOR HOLLYWOOD (CORTES 1.3s–1.6s + JANELA LIMPA ANTI-MORPHING + ZERO SETA!)
+    // =========================================================================
+    async function renderHollywoodMaster(clipBlobs, shotIndices, totalSec, dna, withHyper, withSfx, audioCtx, soundtrackArrayBuf) {
+      if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume().catch(() => {});
+
+      const loaded = [];
+      for (const b of clipBlobs) loaded.push(await loadVideoElement(b));
+
+      const n = loaded.length;
+      const durs = buildHollywoodCutDurations(totalSec, n);
+      let acc = 0;
+      const segments = loaded.map((_, idx) => {
+        const shot = TWELVE_UNIQUE_SHOTS[shotIndices[idx]] || TWELVE_UNIQUE_SHOTS[0];
+        const dur = durs[idx];
+        const seg = { clipIdx: idx, start: acc, end: acc + dur, dur, editMove: shot.editMove };
+        acc += dur;
+        return seg;
       });
 
-      const rawText = await res.text();
-      let data = {};
-      if (rawText) {
-        try {
-          data = JSON.parse(rawText);
-        } catch {
-          throw new Error(`Resposta inválida do servidor (HTTP ${res.status}): ${rawText.slice(0, 180)}`);
+      ctx.fillStyle = "#000"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawCroppedCover(ctx, loaded[0].vid, loaded[0].crop, 1.02 + dna.zoomJitter, 0, 0, 1, dna.cssFilter);
+
+      const canvasStream = canvas.captureStream(30);
+      const tracks = [...canvasStream.getVideoTracks()];
+      let clockOsc = null;
+
+      if (audioCtx && audioCtx.state === "running") {
+        const dest = audioCtx.createMediaStreamDestination();
+        const comp = audioCtx.createDynamicsCompressor();
+        comp.threshold.value = -10; comp.knee.value = 10; comp.ratio.value = 5;
+        comp.connect(dest);
+
+        const startAt = audioCtx.currentTime + 0.05;
+        clockOsc = audioCtx.createOscillator();
+        const cg = audioCtx.createGain(); cg.gain.value = 0.00001;
+        clockOsc.connect(cg); cg.connect(dest); clockOsc.start(startAt);
+
+        if (soundtrackArrayBuf) {
+          try {
+            const decoded = await audioCtx.decodeAudioData(soundtrackArrayBuf.slice(0));
+            const dropOffset = findLoudestDropOffset(decoded, totalSec);
+            const src = audioCtx.createBufferSource();
+            src.buffer = decoded;
+            src.loop = true;
+            const mg = audioCtx.createGain();
+            mg.gain.setValueAtTime(0.05, startAt);
+            mg.gain.linearRampToValueAtTime(0.95, startAt + 0.07);
+            mg.gain.setValueAtTime(0.95, startAt + Math.max(0.7, totalSec - 0.55));
+            mg.gain.linearRampToValueAtTime(0.01, startAt + totalSec);
+            src.connect(mg); mg.connect(comp);
+            src.start(startAt, dropOffset);
+            src.stop(startAt + totalSec + 0.15);
+          } catch {}
         }
+
+        if (withSfx) {
+          const len = Math.floor(audioCtx.sampleRate * 1.0);
+          const nBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+          const d = nBuf.getChannelData(0);
+          for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+          scheduleSubBassHit(audioCtx, comp, startAt, 0.46);
+          segments.forEach((seg, idx) => {
+            if (idx > 0) {
+              scheduleWhooshImpact(audioCtx, comp, nBuf, Math.max(startAt, startAt + seg.start - 0.10));
+              scheduleSubBassHit(audioCtx, comp, startAt + seg.start, 0.38);
+            }
+          });
+        }
+        tracks.push(...dest.stream.getAudioTracks());
       }
 
-      if (!res.ok) {
-        throw new Error(data.error || `Erro do servidor (HTTP ${res.status})`);
-      }
+      const recProf = pickRecorderProfile();
+      const stream = new MediaStream(tracks);
+      let rec;
+      try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: dna.bitrate }) : new MediaRecorder(stream); }
+      catch { rec = new MediaRecorder(canvasStream); }
 
-      if (!data.imageUrl) {
-        throw new Error(data.error || 'A IA não retornou imagem.');
-      }
+      const chunks = [];
+      rec.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
+      const doneP = new Promise((resolve) => {
+        rec.onstop = () => { if (clockOsc) { try { clockOsc.stop(); } catch {} } resolve(new Blob(chunks, { type: recProf.baseType || rec.mimeType || "video/mp4" })); };
+      });
 
-      credits -= 1;
-      document.getElementById('creditsDisplay').textContent = credits;
-      finalImageUrl = data.imageUrl;
+      rec.start(200);
+      const startTime = performance.now();
+      const fillEl = document.getElementById("renderProgressFill");
+      const secEl = document.getElementById("renderProgressSec");
 
-      resultBox.innerHTML = `<img src="${finalImageUrl}" alt="Produto gerado" />`;
-      document.getElementById('downloadBtn').style.display = 'block';
-    } catch (err) {
-      resultBox.innerHTML = `<p style="color:#f87171;">${err.message}</p>`;
-    } finally {
-      btn.disabled = false;
+      let currentSegIdx = -1;
+      const activateSegment = (sIdx) => {
+        if (currentSegIdx === sIdx) return;
+        if (currentSegIdx >= 0) loaded[segments[currentSegIdx].clipIdx].vid.pause();
+        currentSegIdx = sIdx;
+        const vid = loaded[segments[sIdx].clipIdx].vid;
+        // Começa em 0.15s (já em movimento e corta antes dos 2.2s onde a IA distorce!)
+        try { vid.currentTime = 0.15; } catch {}
+        vid.play().catch(() => {});
+      };
+
+      await new Promise((resolve) => {
+        let finished = false;
+        const stop = makeTicker(30, () => {
+          if (finished) return;
+          const elapsed = (performance.now() - startTime) / 1000;
+          if (fillEl) fillEl.style.width = `${Math.min(100, Math.round((elapsed / totalSec) * 100))}%`;
+          if (secEl) secEl.textContent = `${Math.min(totalSec, elapsed).toFixed(1)}s / ${totalSec}.0s`;
+
+          if (elapsed >= totalSec + 0.08) {
+            finished = true; stop();
+            loaded.forEach((x) => x.vid.pause());
+            if (rec.state !== "inactive") rec.stop();
+            resolve(); return;
+          }
+
+          const t = Math.min(totalSec - 0.001, elapsed);
+          let sIdx = segments.length - 1;
+          for (let i = 0; i < segments.length; i++) {
+            if (t >= segments[i].start && t < segments[i].end) { sIdx = i; break; }
+          }
+
+          activateSegment(sIdx);
+          const seg = segments[sIdx];
+          const cEl = Math.max(0, t - seg.start);
+          const p = Math.min(1, cEl / seg.dur);
+          const item = loaded[seg.clipIdx];
+          const vid = item.vid;
+
+          // Speed-Ramp limpo nos cortes curtos (sem estourar os 2.3s de fidelidade máxima!)
+          if (withHyper) {
+            const isLast = sIdx === segments.length - 1;
+            const rate = isLast ? (p < 0.25 ? 1.55 : 0.92) : (p < 0.22 ? 1.85 : (p < 0.78 ? 1.00 : 1.85));
+            try { vid.playbackRate = rate; } catch {}
+          } else {
+            try { vid.playbackRate = 1.05; } catch {}
+          }
+
+          let scale = 1.03 + dna.zoomJitter, panX = 0, panY = 0, whipOffset = 0, flashAlpha = 0;
+          if (withHyper) {
+            if (seg.editMove === "crashZoom") {
+              const hit = cEl < 0.16 ? (1 - easeOutExpo(cEl / 0.16)) : 0;
+              scale = 1.04 + dna.zoomJitter + hit * 0.24 + p * 0.08;
+              if (hit > 0.18) { panX = Math.sin(t * 92) * 7 * hit; panY = Math.cos(t * 84) * 5 * hit; }
+            } else if (seg.editMove === "whipLeft" || seg.editMove === "whipRight") {
+              const dir = (seg.editMove === "whipLeft" ? 1 : -1) * dna.flipDir;
+              const wt = cEl < 0.13 ? (1 - easeOutExpo(cEl / 0.13)) : 0;
+              whipOffset = wt * 88 * dir;
+              scale = 1.05 + dna.zoomJitter + p * 0.11;
+              panX = whipOffset + dir * (p - 0.5) * 26;
+            } else if (seg.editMove === "macroSlam") {
+              const hit = cEl < 0.15 ? (1 - easeOutExpo(cEl / 0.15)) : 0;
+              scale = 1.04 + dna.zoomJitter + hit * 0.18 + easeOutCubic(p) * 0.14;
+              panY = (0.5 - p) * 14 * dna.flipDir;
+            } else if (seg.editMove === "zoomAttack") {
+              scale = 1.03 + dna.zoomJitter + Math.pow(p, 1.45) * 0.22;
+            } else {
+              // climaxPull (Hero final imponente)
+              const hit = cEl < 0.18 ? (1 - easeOutExpo(cEl / 0.18)) : 0;
+              scale = 1.24 + dna.zoomJitter + hit * 0.10 - easeOutCubic(p) * 0.20;
+            }
+            if (sIdx > 0 && cEl < 0.06) flashAlpha = (1 - cEl / 0.06) * 0.24;
+          }
+
+          ctx.fillStyle = "#000"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+          if (vid.readyState >= 2) {
+            if (withHyper && Math.abs(whipOffset) > 14) {
+              drawCroppedCover(ctx, vid, item.crop, scale, panX - whipOffset * 0.48, panY, 1, dna.cssFilter);
+              drawCroppedCover(ctx, vid, item.crop, scale, panX - whipOffset * 0.18, panY, 0.52, dna.cssFilter);
+              drawCroppedCover(ctx, vid, item.crop, scale, panX, panY, 0.62, dna.cssFilter);
+            } else {
+              drawCroppedCover(ctx, vid, item.crop, scale, panX, panY, 1, dna.cssFilter);
+            }
+            if (flashAlpha > 0.01) {
+              ctx.save(); ctx.globalCompositeOperation = "screen";
+              ctx.fillStyle = "#ffffff"; ctx.globalAlpha = flashAlpha;
+              ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.restore();
+            }
+          }
+        });
+      });
+
+      const outBlob = await doneP;
+      loaded.forEach((x) => URL.revokeObjectURL(x.blobUrl));
+      if (activeVideoBlobUrl) URL.revokeObjectURL(activeVideoBlobUrl);
+      activeVideoBlobUrl = URL.createObjectURL(outBlob);
+      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: `${recProf.label} ${(dna.bitrate / 1e6).toFixed(1)}Mbps`, uniqueCount: n, sec: totalSec };
     }
-  }
 
-  function downloadResult() {
-    if (!finalImageUrl) return;
-    const a = document.createElement('a');
-    a.href = finalImageUrl;
-    a.download = `nexora-ai-${selectedStyle}.png`;
-    a.click();
-  }
+    function downloadBlob(blob, filename) {
+      const u = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = u; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(u), 5000);
+    }
 
-  function openModal() { document.getElementById('modalBackdrop').style.display = 'flex'; }
-  function closeModal() { document.getElementById('modalBackdrop').style.display = 'none'; }
-  function simulatePurchase(amount) {
-    credits += amount;
-    document.getElementById('creditsDisplay').textContent = credits;
-    closeModal();
-  }
-</script>
+    function fmtClock(sec) {
+      const s = Math.max(0, Math.floor(sec));
+      return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+    }
+
+    function renderResultStage(out, session, musicLabel, aiMusicUrl, noteMsg) {
+      const fname = `nexora-${session.dna.id.toLowerCase()}-${out.sec}s.${out.ext}`;
+      const elapsedTxt = session.totalElapsedSec ? ` • Gerado em ${fmtClock(session.totalElapsedSec)}` : "";
+
+      stage.innerHTML = `
+        <video id="outPlayer" class="player-916" src="${out.videoUrl}" controls playsinline></video>
+        <div class="dl-box">
+          <div class="dl-title">${session.vidModel.name} • ${out.sec}s • ${out.uniqueCount} Cortes Únicos • ${musicLabel}${elapsedTxt}</div>
+          <div class="dl-dna">🛡️ ${session.dna.id} • Motor: ${session.engineUsed} • Luz: ${session.dna.light.tag} • ${out.label}</div>
+          <div class="dl-grid">
+            <button type="button" id="btnDlVideo" class="dl-btn main">Baixar Superprodução (.${out.ext.toUpperCase()} • ${out.sec}s)</button>
+            <button type="button" id="btnPlayAgain" class="dl-btn" style="grid-column:span 2;">Reproduzir com Som</button>
+            <button type="button" id="btnRemixAudio" class="dl-btn remix">🎵 Trocar Trilha / Re-mixar (Reaproveita os vídeos • Zero custo GPU)</button>
+          </div>
+          <div class="clip-list">
+            ${session.validPairs.map((p, idx) => `<a class="clip-chip" href="${p.url}" target="_blank" rel="noopener noreferrer" download="corte-${idx + 1}.mp4">Corte ${idx + 1}</a>`).join("")}
+            ${aiMusicUrl ? `<a class="clip-chip" href="${aiMusicUrl}" target="_blank" rel="noopener noreferrer" download="trilha-${session.dna.id.toLowerCase()}.wav">🎵 Trilha IA</a>` : ""}
+          </div>
+          ${noteMsg ? `<div class="warn-note">${noteMsg}</div>` : ""}
+        </div>
+        <div class="thumb-strip">${session.keyframeUrls.filter(Boolean).map((u, i) => `<img src="${u}" alt="Corte ${i + 1}" />`).join("")}</div>
+      `;
+
+      const outPlayer = document.getElementById("outPlayer");
+      if (outPlayer) {
+        outPlayer.muted = false;
+        outPlayer.play().catch(() => { outPlayer.muted = true; outPlayer.play().catch(() => {}); });
+      }
+      document.getElementById("btnDlVideo")?.addEventListener("click", () => downloadBlob(out.videoBlob, fname));
+      document.getElementById("btnPlayAgain")?.addEventListener("click", () => {
+        if (!outPlayer) return;
+        outPlayer.muted = false; outPlayer.currentTime = 0; outPlayer.play().catch(() => {});
+      });
+      document.getElementById("btnRemixAudio")?.addEventListener("click", () => remixLastSession());
+    }
+
+    async function remixLastSession() {
+      if (!lastMasterSession) return;
+      const mKey = musicPreset.value;
+      if (mKey === "custom" && !customAudioBuf) {
+        stage.innerHTML = `<div class="err-msg">Suba um .MP3/.WAV ou selecione outra trilha antes de Re-mixar.</div>`;
+        return;
+      }
+
+      let audioCtx = null;
+      try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { audioCtx = new AC(); if (audioCtx.state === "suspended") await audioCtx.resume(); } } catch {}
+
+      btnOnlyImg.disabled = true; btnBuild.disabled = true;
+      const remixDna = generateUniqueDNA();
+      remixDna.cast = lastMasterSession.dna.cast;
+      remixDna.light = lastMasterSession.dna.light;
+
+      let newMusicUrl = null, newEngine = "", soundtrackBuf = null;
+      try {
+        if (mKey === "custom" && customAudioBuf) {
+          soundtrackBuf = customAudioBuf;
+        } else if (mKey !== "mute" && MUSIC_PROMPTS[mKey]) {
+          stage.innerHTML = `<div class="status-msg"><strong>Gerando nova trilha (${MUSIC_PROMPTS[mKey].label})...</strong><br/>Reaproveitando os ${lastMasterSession.clipBlobs.length} cortes prontos!</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div>`;
+          const qm = await callApi({ task: "submit_music", musicPrompt: buildUniqueMusicPrompt(mKey, remixDna), duration: lastMasterSession.targetSec + 5 }, 30000);
+          newEngine = qm.engine || "Lyria 2";
+          const rm = await pollFalJob(qm, null, null);
+          newMusicUrl = rm.audioUrl;
+          soundtrackBuf = await (await fetchMediaBlob(newMusicUrl)).arrayBuffer();
+        }
+
+        stage.innerHTML = `<div class="status-msg"><strong>Re-mixando MP4 (<span id="renderProgressSec">0.0s / ${lastMasterSession.targetSec}.0s</span>)...</strong></div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:12%"></div></div>`;
+        lastMasterSession.dna = remixDna;
+        const out = await renderHollywoodMaster(
+          lastMasterSession.clipBlobs,
+          lastMasterSession.validPairs.map((p) => p.shotIdx),
+          lastMasterSession.targetSec,
+          remixDna,
+          enableHyperCuts.checked,
+          enableSfxHits.checked,
+          audioCtx,
+          soundtrackBuf
+        );
+        const mLabel = mKey === "custom" ? `MP3: ${customAudioName}` : (newMusicUrl ? `${MUSIC_PROMPTS[mKey]?.label || newEngine} (Auto-Drop)` : "Mudo");
+        renderResultStage(out, lastMasterSession, mLabel, newMusicUrl, "");
+      } catch (err) {
+        stage.innerHTML = `<div class="err-msg">Erro no remix: ${err.message}</div>`;
+      } finally {
+        if (audioCtx) { try { await audioCtx.close(); } catch {} }
+        btnOnlyImg.disabled = false; btnBuild.disabled = false;
+      }
+    }
+
+    // === MODO IMAGEM 9:16 ===
+    btnOnlyImg.addEventListener("click", async () => {
+      if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
+      const dna = generateUniqueDNA();
+      activeRunController = new AbortController();
+      btnOnlyImg.disabled = true; btnBuild.disabled = true;
+      let uiClock = null, stTxt = "enviando...";
+      const t0 = performance.now();
+      try {
+        stage.innerHTML = `<div class="status-msg">Gerando imagem 9:16 exclusiva (<strong>${dna.id}</strong>)<br/>${selectedImgModel.name}</div><div class="status-log" id="imgLog">enviando... (0s)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div><div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>`;
+        document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
+        uiClock = setInterval(() => { const el = document.getElementById("imgLog"); if (el) el.textContent = `${stTxt} (${Math.round((performance.now() - t0) / 1000)}s)`; }, 1000);
+        const q = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildStandaloneImagePrompt(selectedImgModel, dna) }, 30000, activeRunController.signal);
+        const r = await pollFalJob(q, (s) => { stTxt = s; }, activeRunController.signal);
+        clearInterval(uiClock);
+        stage.innerHTML = `
+          <img class="preview-916" src="${r.imageUrl}" alt="Imagem 9:16" />
+          <div class="dl-box">
+            <div class="dl-title">${selectedImgModel.name} • Nano Banana 9:16</div>
+            <div class="dl-dna">🛡️ ${dna.id} • Luz: ${dna.light.tag}</div>
+            <div class="dl-grid"><a class="dl-btn main" href="${r.imageUrl}" target="_blank" rel="noopener noreferrer" download="nexora-${dna.id.toLowerCase()}.jpg">Abrir / Baixar Imagem 9:16</a></div>
+          </div>
+        `;
+      } catch (err) {
+        stage.innerHTML = `<div class="err-msg">${err.message === "ABORTED_RUN" ? "Cancelado." : err.message}</div>`;
+      } finally {
+        if (uiClock) clearInterval(uiClock);
+        activeRunController = null;
+        btnOnlyImg.disabled = false; btnBuild.disabled = false;
+      }
+    });
+
+    // =========================================================================
+    // MODO VÍDEO HOLLYWOOD (6 A 12 CORTES ÚNICOS 1.3s–1.6s • 100% PARALELO • < 5 MIN!)
+    // =========================================================================
+    btnBuild.addEventListener("click", async () => {
+      if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
+
+      const targetSec = Number(minDuration.value) || 10;
+      const limitSec = Number(maxWaitLimit.value) || 240;
+      const chosenEngine = videoEngine.value === "veo" ? "veo" : "kling";
+      const mKey = musicPreset.value;
+      if (mKey === "custom" && !customAudioBuf) {
+        stage.innerHTML = `<div class="err-msg">Selecione um .MP3/.WAV ou escolha uma Trilha IA.</div>`;
+        return;
+      }
+
+      const dna = generateUniqueDNA();
+      const shotIndices = buildRadicalShotSequence(targetSec);
+      const totalUnique = shotIndices.length;
+
+      let audioCtx = null;
+      try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { audioCtx = new AC(); if (audioCtx.state === "suspended") await audioCtx.resume(); } } catch {}
+
+      activeRunController = new AbortController();
+      const runSignal = activeRunController.signal;
+      btnOnlyImg.disabled = true; btnBuild.disabled = true;
+
+      const globalStart = performance.now();
+      let userCancelled = false, finishEarly = false, deadlineReached = false, uiClock = null;
+      let engineUsed = chosenEngine === "veo" ? "Veo 3.1 Fast" : "Kling v2.6 Pro";
+
+      // WATCHDOG RÍGIDO < 5 MINUTOS
+      const deadlineTimer = setTimeout(() => {
+        deadlineReached = true;
+        finishEarly = true;
+        activeRunController?.abort();
+      }, limitSec * 1000);
+
+      const keyframeUrls = new Array(totalUnique).fill(null);
+      const readyClipUrls = new Array(totalUnique).fill(null);
+      let aiMusicUrl = null, aiMusicEngine = "", noteMsg = "";
+      let aiMusicStatus = mKey === "mute" ? "mudo" : (mKey === "custom" ? `MP3: ${customAudioName}` : "enviando...");
+
+      // 1) TRILHA AGRESSIVA EM PARALELO DESDE O SEGUNDO 0
+      let musicPromise = Promise.resolve(null);
+      if (mKey !== "mute" && mKey !== "custom" && MUSIC_PROMPTS[mKey]) {
+        musicPromise = (async () => {
+          try {
+            const qm = await callApi({ task: "submit_music", musicPrompt: buildUniqueMusicPrompt(mKey, dna), duration: targetSec + 6 }, 26000, runSignal);
+            aiMusicEngine = qm.engine || "Lyria 2";
+            aiMusicStatus = `${aiMusicEngine}: gerando...`;
+            const rm = await pollFalJob(qm, (st) => { aiMusicStatus = `${aiMusicEngine}: ${st}`; }, runSignal);
+            aiMusicUrl = rm.audioUrl;
+            aiMusicStatus = `pronta ✓ (${aiMusicEngine})`;
+            return rm.audioUrl;
+          } catch (mErr) {
+            if (mErr.message === "ABORTED_RUN") return null;
+            aiMusicStatus = "indisponível";
+            noteMsg = `Aviso trilha: ${mErr.message}`;
+            return null;
+          }
+        })();
+      }
+
+      try {
+        // 2) TODOS OS KEYFRAMES EM PARALELO (6 a 12 escalas radicais diferentes!)
+        const kfStates = shotIndices.map((sIdx, i) => ({ label: `Plano ${i + 1} (${TWELVE_UNIQUE_SHOTS[sIdx].title})`, status: "enviando...", done: false }));
+        stage.innerHTML = `
+          <div class="timer-badge" id="slaTimerBadge">⏱️ Tempo: 00:00 / Limite ${fmtClock(limitSec)}</div>
+          <div class="status-msg"><strong>Etapa 1/3 • Criando ${totalUnique} planos radicais em paralelo (${dna.id})</strong><br/>${selectedVidModel.name}</div>
+          <div class="status-log" id="kfLog"></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="kfBar" style="width:10%"></div></div>
+          <div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>
+        `;
+        document.getElementById("btnCancelNow")?.addEventListener("click", () => { userCancelled = true; activeRunController?.abort(); });
+
+        const renderStep1 = () => {
+          const elT = document.getElementById("slaTimerBadge"), logEl = document.getElementById("kfLog"), barEl = document.getElementById("kfBar");
+          if (elT) elT.textContent = `⏱️ Tempo: ${fmtClock((performance.now() - globalStart) / 1000)} / Limite ${fmtClock(limitSec)} (Trava < 5 min)`;
+          if (logEl) {
+            const lines = kfStates.map((k) => `${k.label}: ${k.done ? "pronto ✓" : k.status}`);
+            lines.push(`🔥 Trilha Auto-Drop: ${aiMusicStatus}`);
+            logEl.innerHTML = lines.join("<br/>");
+          }
+          if (barEl) barEl.style.width = `${10 + Math.round((keyframeUrls.filter(Boolean).length / totalUnique) * 22)}%`;
+        };
+        renderStep1();
+        uiClock = setInterval(renderStep1, 1000);
+
+        await Promise.allSettled(
+          shotIndices.map(async (sIdx, i) => {
+            if (runSignal.aborted) return;
+            const q = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildShotKeyframe(selectedVidModel, sIdx, dna) }, 28000, runSignal);
+            kfStates[i].status = "GPU...";
+            const r = await pollFalJob(q, (st) => { kfStates[i].status = st; }, runSignal);
+            keyframeUrls[i] = r.imageUrl;
+            kfStates[i].done = true;
+            renderStep1();
+          })
+        );
+        clearInterval(uiClock); uiClock = null;
+
+        if (userCancelled) throw new Error("CANCELLED_BY_USER");
+        const validKfCount = keyframeUrls.filter(Boolean).length;
+        if (validKfCount === 0) throw new Error("Nenhuma cena base retornou da fal.ai.");
+
+        // 3) TODOS OS CLIPES 3D EM PARALELO NA GPU
+        const clipStates = shotIndices.map((sIdx, i) => ({
+          label: `Corte ${i + 1}/${totalUnique} (${TWELVE_UNIQUE_SHOTS[sIdx].title})`,
+          status: keyframeUrls[i] ? "disparando GPU..." : "pulada",
+          done: false
+        }));
+
+        stage.innerHTML = `
+          <div class="timer-badge" id="slaTimerBadge">⏱️ Tempo: ${fmtClock((performance.now() - globalStart) / 1000)} / Limite ${fmtClock(limitSec)}</div>
+          <div class="status-msg"><strong>Etapa 2/3 • Animando ${validKfCount} cortes simultâneos na GPU</strong><br/>${selectedVidModel.name}</div>
+          <div class="status-log" id="liveBlockLog"></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="step2Bar" style="width:36%"></div></div>
+          <div class="clip-list" id="liveReadyLinks"></div>
+          <div class="thumb-strip">${keyframeUrls.filter(Boolean).map((u, i) => `<img src="${u}" alt="Corte ${i + 1}" />`).join("")}</div>
+          <div class="action-inline">
+            <button type="button" class="btn-use-ready hidden" id="btnUseReady">Montar agora com prontos</button>
+            <button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button>
+          </div>
+        `;
+        document.getElementById("btnCancelNow")?.addEventListener("click", () => { userCancelled = true; activeRunController?.abort(); });
+        document.getElementById("btnUseReady")?.addEventListener("click", () => { finishEarly = true; activeRunController?.abort(); });
+
+        const renderStep2 = () => {
+          const elT = document.getElementById("slaTimerBadge"), logEl = document.getElementById("liveBlockLog"), barEl = document.getElementById("step2Bar"), linksEl = document.getElementById("liveReadyLinks"), useBtn = document.getElementById("btnUseReady");
+          if (elT) elT.textContent = `⏱️ Tempo: ${fmtClock((performance.now() - globalStart) / 1000)} / Limite ${fmtClock(limitSec)} (Trava < 5 min)`;
+          if (logEl) {
+            const lines = clipStates.map((b) => `${b.label}: ${b.done ? "pronto ✓" : b.status}`);
+            lines.push(`🔥 Trilha Auto-Drop: ${aiMusicStatus}`);
+            logEl.innerHTML = lines.join("<br/>");
+          }
+          const doneC = readyClipUrls.filter(Boolean).length;
+          if (barEl) barEl.style.width = `${36 + Math.round((doneC / validKfCount) * 46)}%`;
+          if (linksEl) linksEl.innerHTML = readyClipUrls.map((u, i) => u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Corte ${i + 1} ✓</a>` : "").filter(Boolean).join("");
+          if (useBtn) useBtn.classList.toggle("hidden", doneC === 0 || doneC === validKfCount);
+        };
+        renderStep2();
+        uiClock = setInterval(renderStep2, 1000);
+
+        await Promise.allSettled(
+          shotIndices.map(async (sIdx, i) => {
+            if (!keyframeUrls[i] || runSignal.aborted) return;
+            const hasPersonHere = selectedVidModel.hasPerson && TWELVE_UNIQUE_SHOTS[sIdx].allowPerson;
+            let q = null;
+            for (let att = 1; att <= 2; att++) {
+              try {
+                q = await callApi({
+                  task: "submit_clip",
+                  engine: chosenEngine,
+                  imageUrl: keyframeUrls[i],
+                  duration: "5",
+                  generateAudio: false,
+                  motionPrompt: buildShotMotion(selectedVidModel, sIdx, dna),
+                  negativePrompt: buildNegative(hasPersonHere)
+                }, 26000, runSignal);
+                if (q.engine) engineUsed = q.engine;
+                break;
+              } catch (err) {
+                if (err.message === "ABORTED_RUN") return;
+                if (err.status === 403) throw err;
+                if (att === 2) { clipStates[i].status = "falhou"; return; }
+                await sleep(1500);
+              }
+            }
+            if (!q || runSignal.aborted) return;
+            clipStates[i].status = "GPU";
+            const r = await pollFalJob(q, (st) => { clipStates[i].status = st; }, runSignal);
+            readyClipUrls[i] = r.videoUrl;
+            clipStates[i].done = true;
+            renderStep2();
+          })
+        );
+        clearInterval(uiClock); uiClock = null;
+
+        if (userCancelled) throw new Error("CANCELLED_BY_USER");
+
+        if (!finishEarly && !deadlineReached) await musicPromise;
+        if (deadlineReached) noteMsg = `⚡ Trava de velocidade (${fmtClock(limitSec)}) acionada para garantir entrega < 5 min.`;
+
+        const validPairs = readyClipUrls.map((u, i) => (u ? { url: u, shotIdx: shotIndices[i] } : null)).filter(Boolean);
+        if (!validPairs.length) throw new Error("Nenhum corte 3D finalizou dentro do limite. Tente novamente.");
+
+        // 4) MASTER HOLLYWOOD (CORTES RÁPIDOS 1.3s–1.6s + JANELA LIMPA + AUTO-DROP!)
+        stage.innerHTML = `
+          <div class="status-msg">
+            <strong>Etapa 3/3 • Editando Superprodução (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
+            Unindo ${validPairs.length} cortes rápidos (1.3s–1.6s) + Auto-Drop + SFX...
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:10%"></div></div>
+        `;
+
+        const clipBlobs = await Promise.all(validPairs.map((p) => fetchMediaBlob(p.url)));
+        let soundtrackBuf = null;
+        if (mKey === "custom" && customAudioBuf) soundtrackBuf = customAudioBuf;
+        else if (aiMusicUrl) {
+          try { soundtrackBuf = await (await fetchMediaBlob(aiMusicUrl)).arrayBuffer(); } catch {}
+        }
+
+        const totalElapsedSec = Math.round((performance.now() - globalStart) / 1000) + targetSec;
+        lastMasterSession = { clipBlobs, validPairs, targetSec, keyframeUrls, shotIndices, vidModel: selectedVidModel, dna, totalElapsedSec, engineUsed };
+
+        const out = await renderHollywoodMaster(
+          clipBlobs,
+          validPairs.map((p) => p.shotIdx),
+          targetSec,
+          dna,
+          enableHyperCuts.checked,
+          enableSfxHits.checked,
+          audioCtx,
+          soundtrackBuf
+        );
+
+        const musicLabel = mKey === "custom" ? `MP3: ${customAudioName}` : (aiMusicUrl ? `${MUSIC_PROMPTS[mKey]?.label || aiMusicEngine} (Auto-Drop)` : "Mudo");
+        renderResultStage(out, lastMasterSession, musicLabel, aiMusicUrl, noteMsg);
+      } catch (err) {
+        const msg = err.message === "CANCELLED_BY_USER" ? "Geração cancelada." : (err.message || "Erro ao gerar vídeo.");
+        const rescued = readyClipUrls.map((u, i) => u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Corte ${i + 1} salvo ✓</a>` : "").filter(Boolean).join("");
+        stage.innerHTML = `<div class="err-msg">${msg}</div>${rescued ? `<div class="clip-list">${rescued}</div>` : ""}`;
+      } finally {
+        clearTimeout(deadlineTimer);
+        if (uiClock) clearInterval(uiClock);
+        activeRunController = null;
+        if (audioCtx) { try { await audioCtx.close(); } catch {} }
+        btnOnlyImg.disabled = false; btnBuild.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
