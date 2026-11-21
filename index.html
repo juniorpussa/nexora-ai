@@ -539,6 +539,30 @@
       }
     }
 
+    // Desenha mídia preenchendo o canvas 9:16 inteiro sem dividir ou cortar metade da tela
+    function drawFullFrameCover(context2d, source, srcW, srcH, scale, panX, panY) {
+      if (!source || !srcW || !srcH) return;
+      const canvasRatio = canvas.width / canvas.height;
+      const srcRatio = srcW / srcH;
+
+      let baseW = canvas.width;
+      let baseH = canvas.height;
+      if (srcRatio > canvasRatio) {
+        baseH = canvas.height;
+        baseW = baseH * srcRatio;
+      } else {
+        baseW = canvas.width;
+        baseH = baseW / srcRatio;
+      }
+
+      const w = baseW * scale;
+      const h = baseH * scale;
+      const offsetX = (canvas.width - w) / 2 + panX;
+      const offsetY = (canvas.height - h) / 2 + panY;
+
+      context2d.drawImage(source, offsetX, offsetY, w, h);
+    }
+
     async function renderScenesVideo(images, motionClips, targetSeconds, withBurnedSubs, vidStyle, textForVoice) {
       const finalDuration = Math.min(30, Math.max(10, Number(targetSeconds) || 15));
       const finalSubs = buildSubtitles(textForVoice, finalDuration);
@@ -561,7 +585,7 @@
       recorder.start();
 
       const sceneCount = Math.max(1, images.length);
-      const cutSec = Math.max(0.85, Number(vidStyle.cutSec) || 1.0);
+      const cutSec = Math.max(0.9, Number(vidStyle.cutSec) || 1.0);
       const startTime = performance.now();
 
       await new Promise((resolve) => {
@@ -576,33 +600,28 @@
             return;
           }
 
-          // Alterna entre as cenas com cortes mais ágeis e movimento de câmera mais perceptível
+          // Sequência contínua de cenas variadas com movimento de câmera
           const cutIndex = Math.floor(elapsed / cutSec);
           const cutProgress = (elapsed % cutSec) / cutSec;
           const slot = (cutIndex + Math.floor(cutIndex / sceneCount)) % sceneCount;
           const img = images[slot];
           const clipVid = Array.isArray(motionClips) ? motionClips[slot] : null;
 
-          const hasRealMotion = Boolean(clipVid && clipVid.readyState >= 2);
-          const easeOut = 1 - Math.pow(1 - cutProgress, 2.6);
-          const zoomBase = cutIndex % 2 === 0 ? 1.04 : 1.14;
-          const scale = hasRealMotion ? 1.0 : (zoomBase + easeOut * vidStyle.zoomAmt);
+          const hasRealMotion = Boolean(clipVid && clipVid.readyState >= 2 && clipVid.videoWidth && clipVid.videoHeight);
+          const easeOut = 1 - Math.pow(1 - cutProgress, 2.4);
+          const zoomBase = cutIndex % 2 === 0 ? 1.05 : 1.15;
+          const scale = hasRealMotion ? 1.04 : (zoomBase + easeOut * vidStyle.zoomAmt);
           const dir = cutIndex % 2 === 0 ? 1 : -1;
-          const panX = hasRealMotion ? 0 : (dir * (easeOut - 0.45) * vidStyle.pan);
-          const panY = hasRealMotion ? 0 : (((cutIndex % 3) - 1) * 18 * (1 - easeOut));
-
-          const w = canvas.width * scale;
-          const h = canvas.height * scale;
-          const offsetX = (canvas.width - w) / 2 + panX;
-          const offsetY = (canvas.height - h) / 2 + panY;
+          const panX = hasRealMotion ? 0 : (dir * (easeOut - 0.5) * vidStyle.pan);
+          const panY = hasRealMotion ? 0 : (((cutIndex % 3) - 1) * 16 * (1 - easeOut));
 
           ctx.fillStyle = "#04060a";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
           if (hasRealMotion) {
-            ctx.drawImage(clipVid, 0, 0, canvas.width, canvas.height);
-          } else if (img) {
-            ctx.drawImage(img, offsetX, offsetY, w, h);
+            drawFullFrameCover(ctx, clipVid, clipVid.videoWidth, clipVid.videoHeight, scale, panX, panY);
+          } else if (img && img.naturalWidth && img.naturalHeight) {
+            drawFullFrameCover(ctx, img, img.naturalWidth, img.naturalHeight, scale, panX, panY);
           } else {
             const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
             grad.addColorStop(0, "#0f172a");
