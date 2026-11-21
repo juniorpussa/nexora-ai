@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
-  async function fetchWithTimeout(url, options, timeoutMs = 45000) {
+  async function fetchWithTimeout(url, options, timeoutMs = 60000, stageName = "serviço") {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -37,16 +37,16 @@ export async function onRequestPost(context) {
           parsed?.detail ||
           parsed?.message ||
           parsed?.error ||
-          `Falha no serviço (${res.status}).`;
+          `Falha no ${stageName} (${res.status}).`;
         throw new Error(detail);
       }
       if (!parsed) {
-        throw new Error("Resposta inválida do serviço de geração.");
+        throw new Error(`Resposta inválida do ${stageName}.`);
       }
       return parsed;
     } catch (err) {
       if (err?.name === "AbortError") {
-        throw new Error("A geração demorou mais do que o tempo limite. Tente novamente.");
+        throw new Error(`O ${stageName} demorou mais do que o tempo limite. Tente novamente.`);
       }
       throw err;
     } finally {
@@ -89,7 +89,8 @@ export async function onRequestPost(context) {
             speed: 1.08
           })
         },
-        45000
+        60000,
+        "motor de voz"
       );
 
       const audioUrl = ttsData?.audio?.url || ttsData?.audio_url || ttsData?.url || "";
@@ -138,7 +139,8 @@ export async function onRequestPost(context) {
             output_format: "jpeg"
           })
         },
-        55000
+        60000,
+        `gerador da cena ${sceneIndex}`
       );
 
       const imageUrl = imgData?.images?.[0]?.url || imgData?.image?.url || "";
