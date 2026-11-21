@@ -31,7 +31,6 @@
     .voice-card strong { display: block; font-size: 13px; }
     .voice-card small { font-size: 11px; color: #94a3b8; }
 
-    /* SELETOR DE 50 MODELOS */
     .catalog-box { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; margin-bottom: 14px; }
     .filter-bar { display: grid; grid-template-columns: 1fr 175px; gap: 8px; margin-bottom: 10px; }
     @media (max-width: 560px) { .filter-bar { grid-template-columns: 1fr; } }
@@ -68,7 +67,7 @@
 <body>
   <div class="topbar">
     <div class="brand">NEXORA.AI <span>50 + 50 VIRAIS</span></div>
-    <div class="pill-info">50 Modelos Ultra-Realistas de Imagem • 50 Modelos Virais de Vídeo (10s a 30s) • Cortes Rápidos + Trilha &amp; SFX</div>
+    <div class="pill-info">50 Modelos Ultra-Realistas de Imagem • 50 Modelos Virais de Vídeo (10s a 30s) • Legenda Compacta</div>
   </div>
 
   <div class="layout">
@@ -108,14 +107,13 @@
         </div>
       </div>
 
-      <!-- CATÁLOGO 1: 50 MODELOS DE IMAGEM -->
       <div class="step-label">
         <span>2. Modelo de Imagem Ultra-Realista (50 Opções)</span>
         <small id="selectedImgLabel">Selecionado: #01 Estúdio Dark Obsidiana &amp; Ouro</small>
       </div>
       <div class="catalog-box">
         <div class="filter-bar">
-          <input type="text" id="imgSearch" placeholder="Buscar entre os 50 modelos de imagem (ex: luxo, neon, mármore, praia, tech)..." />
+          <input type="text" id="imgSearch" placeholder="Buscar entre os 50 modelos de imagem..." />
           <select id="imgCatFilter">
             <option value="TODOS">Todas Categorias (50)</option>
             <option value="Luxo">Luxo &amp; Pedestal (10)</option>
@@ -128,14 +126,13 @@
         <div class="preset-grid" id="imgPresetGrid"></div>
       </div>
 
-      <!-- CATÁLOGO 2: 50 MODELOS DE VÍDEO VIRAL -->
       <div class="step-label">
         <span>3. Modelo de Vídeo Viral &amp; Ritmo (50 Opções)</span>
         <small id="selectedVidLabel">Selecionado: #01 Metralhadora TikTok Shop</small>
       </div>
       <div class="catalog-box">
         <div class="filter-bar">
-          <input type="text" id="vidSearch" placeholder="Buscar entre os 50 ritmos de vídeo (ex: zoom, corte, impacto, phonk, ofertas)..." />
+          <input type="text" id="vidSearch" placeholder="Buscar entre os 50 ritmos de vídeo..." />
           <select id="vidCatFilter">
             <option value="TODOS">Todos Ritmos (50)</option>
             <option value="Agressivo">Cortes Ultra-Rápidos (10)</option>
@@ -158,7 +155,7 @@
       <div class="options-row">
         <label class="toggle-row">
           <input type="checkbox" id="burnSubs" checked />
-          <span>Legenda viral destacada (zona segura)</span>
+          <span>Legenda compacta (zona segura)</span>
         </label>
         <label class="toggle-row">
           <input type="checkbox" id="enableBgm" checked />
@@ -183,11 +180,7 @@
   <canvas id="renderCanvas" width="720" height="1280" style="display:none;"></canvas>
 
   <script>
-    // =========================================================================
-    // CATÁLOGO: 50 MODELOS ULTRA-REALISTAS DE IMAGEM
-    // =========================================================================
     const IMAGE_MODELS = [
-      // 1-10: LUXO & PEDESTAL
       { id: 1, cat: "Luxo", name: "#01 Estúdio Dark Obsidiana & Ouro", desc: "Pedestal escuro com aro dourado e reflexo profundo", prompt: "dark obsidian stone pedestal with brushed gold metallic trim, deep glossy black floor reflection, dramatic warm rim lighting" },
       { id: 2, cat: "Luxo", name: "#02 Mármore Nero Marquina", desc: "Mármore preto com veios brancos e luz de vitrine", prompt: "polished Nero Marquina black marble slab with subtle white veins, crisp luxury boutique spotlight, moody dark backdrop" },
       { id: 3, cat: "Luxo", name: "#03 Pódio Veludo Esmeralda & Latão", desc: "Contraste sofisticado verde escuro e dourado", prompt: "deep emerald velvet display block with antique brass accents, soft golden studio key light, dark luxury atmosphere" },
@@ -199,7 +192,6 @@
       { id: 9, cat: "Luxo", name: "#09 Madeira Nobre & Bronze", desc: "Nogueira escura com acabamento metálico quente", prompt: "dark walnut wood and brushed bronze showcase table, warm moody editorial studio lighting, shallow depth of field" },
       { id: 10, cat: "Luxo", name: "#10 Palco Monolito Cinza Grafite", desc: "Concreto arquitetônico fino com holofote central", prompt: "smooth dark graphite architectural concrete monolith, focused overhead softbox beam, crisp commercial shadows" },
 
-      // 11-20: VIRAL & ALTO CONTRASTE
       { id: 11, cat: "Viral", name: "#11 Estrobo Neon Ciano & Ouro", desc: "Luzes duplas vibrantes que param o scroll", prompt: "dark studio surface lit by electric cyan and warm gold dual rim lights, high-contrast viral commercial aesthetic" },
       { id: 12, cat: "Viral", name: "#12 Fumaça Densa & Holofote", desc: "Atmosfera dramática com feixe de luz no produto", prompt: "dramatic atmospheric studio mist with a sharp vertical spotlight beam illuminating the product on dark slate" },
       { id: 13, cat: "Viral", name: "#13 Reflexo Molhado Urbano", desc: "Superfície escura espelhada com brilho intenso", prompt: "glossy wet dark slate surface with vivid specular highlights and moody bokeh lights in deep background" },
@@ -211,7 +203,6 @@
       { id: 19, cat: "Viral", name: "#19 Túnel de Luz Geométrico", desc: "Perspectiva profunda que puxa o olhar ao centro", prompt: "modern dark architectural light tunnel perspective drawing focus directly to the center product, sharp studio lighting" },
       { id: 20, cat: "Viral", name: "#20 Contraste Solar Dourado", desc: "Feixe quente intenso atravessando fundo escuro", prompt: "intense golden hour sunbeam slicing across a dark matte stone surface, dramatic chiaroscuro product shot" },
 
-      // 21-30: CONVERSÃO & VITRINE
       { id: 21, cat: "Vendas", name: "#21 Vitrine E-commerce Clean Premium", desc: "Fundo claro sofisticado com sombra suave realista", prompt: "clean off-white luxury studio pedestal with soft natural contact shadow and balanced commercial key light" },
       { id: 22, cat: "Vendas", name: "#22 Bancada de Loja Boutique", desc: "Expositor moderno que passa confiança imediata", prompt: "modern upscale retail display counter with warm recessed shelf lighting and soft blurred boutique background" },
       { id: 23, cat: "Vendas", name: "#23 Pedestal Cinza Neutro Comercial", desc: "Equilíbrio perfeito para destacar cores do produto", prompt: "neutral warm grey matte studio podium with soft wrap-around commercial lighting, true-to-life product colors" },
@@ -223,7 +214,6 @@
       { id: 29, cat: "Vendas", name: "#29 Bancada Madeira Clara Escandinava", desc: "Visual orgânico confiável para uso diário", prompt: "light oak Scandinavian wooden table with soft morning studio light and clean neutral wall background" },
       { id: 30, cat: "Vendas", name: "#30 Vitrine Azul Profundo Executivo", desc: "Tom azul marinho elegante que transmite autoridade", prompt: "deep midnight navy matte display pedestal with crisp white and silver studio lighting, authoritative commercial feel" },
 
-      // 31-40: LIFESTYLE ULTRA-REALISTA
       { id: 31, cat: "Lifestyle", name: "#31 Bancada de Banheiro Spa Luxo", desc: "Ideal para cosméticos, perfumes e cuidados pessoais", prompt: "luxury spa bathroom marble vanity with soft natural morning light, subtle steam atmosphere, blurred modern interior" },
       { id: 32, cat: "Lifestyle", name: "#32 Mesa de Escritório Executivo", desc: "Cenário real moderno para acessórios e gadgets", prompt: "sleek modern executive desk with dark leather mat, warm desk lamp glow, softly blurred contemporary office" },
       { id: 33, cat: "Lifestyle", name: "#33 Cozinha Gourmet Moderna", desc: "Bancada limpa iluminada para utilidades e casa", prompt: "modern gourmet kitchen quartz island with bright natural daylight and softly blurred upscale home background" },
@@ -235,7 +225,6 @@
       { id: 39, cat: "Lifestyle", name: "#39 Interior de Carro Executivo", desc: "Console de couro escuro para acessórios automotivos/uso diário", prompt: "luxury dark leather car center console with soft natural daylight coming through window, realistic shallow depth" },
       { id: 40, cat: "Lifestyle", name: "#40 Varanda Tropical & Pedra Natural", desc: "Frescor natural com sombras de folhagens suaves", prompt: "natural limestone patio table with soft dappled palm leaf sunlight shadows, fresh airy lifestyle look" },
 
-      // 41-50: TECH & FUTURISTA
       { id: 41, cat: "Tech", name: "#41 Fibra de Carbono & Luz Fria", desc: "Textura esportiva/tech de altíssima definição", prompt: "woven dark carbon fiber surface with crisp cool white and silver edge lighting, precision tech photography" },
       { id: 42, cat: "Tech", name: "#42 Setup Gamer / Creator RGB Sutil", desc: "Bancada escura com iluminação ambiental moderna", prompt: "sleek dark matte creator desk with subtle violet and cyan ambient backlight glow, ultra-sharp product focus" },
       { id: 43, cat: "Tech", name: "#43 Alumínio Escovado Aeroespacial", desc: "Superfície metálica industrial limpa e precisa", prompt: "anodized dark aerospace brushed aluminum podium with precision linear studio reflections" },
@@ -248,77 +237,63 @@
       { id: 50, cat: "Tech", name: "#50 Palco Blackout Lançamento Pro", desc: "Fundo 100% escuro com recorte cirúrgico no produto", prompt: "pure pitch-black studio void with surgical precision rim lighting outlining the product on a dark reflective base" }
     ];
 
-    // =========================================================================
-    // CATÁLOGO: 50 MODELOS DE VÍDEO VIRAL (DINÂMICA DE CORTES, ZOOM, SHAKE, SOM)
-    // =========================================================================
-    const VIDEO_MODELS = (() => {
-      const patterns = [
-        // 1-10: CORTES ULTRA-RÁPIDOS
-        { cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Cortes a cada 1.1s + zoom agressivo + batida rápida", cutSec: 1.1, zoomAmt: 0.22, shake: 7, flash: true, bpm: 132, pan: 26 },
-        { cat: "Agressivo", name: "#02 Corte Relâmpago 0.9s", desc: "Troca frenética de ângulo para retenção máxima", cutSec: 0.95, zoomAmt: 0.20, shake: 6, flash: true, bpm: 138, pan: 22 },
-        { cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura com impacto forte e cortes acelerados", cutSec: 1.2, zoomAmt: 0.25, shake: 8, flash: true, bpm: 130, pan: 30 },
-        { cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Cortes secos sincronizados com SFX de whoosh", cutSec: 1.15, zoomAmt: 0.19, shake: 5, flash: false, bpm: 128, pan: 24 },
-        { cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Clarão sutil na transição + aproximação rápida", cutSec: 1.25, zoomAmt: 0.21, shake: 6, flash: true, bpm: 126, pan: 20 },
-        { cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Movimento contínuo sem nenhum segundo parado", cutSec: 1.0, zoomAmt: 0.23, shake: 7, flash: true, bpm: 136, pan: 28 },
-        { cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Aceleração progressiva até a chamada para ação", cutSec: 1.1, zoomAmt: 0.24, shake: 6, flash: false, bpm: 134, pan: 25 },
-        { cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Deslizamento rápido esquerda/direita com corte seco", cutSec: 1.3, zoomAmt: 0.18, shake: 5, flash: true, bpm: 124, pan: 36 },
-        { cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Zoom in rápido + vibração de grave nos cortes", cutSec: 1.05, zoomAmt: 0.22, shake: 8, flash: true, bpm: 135, pan: 18 },
-        { cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Sequência dinâmica intensa de ponta a ponta", cutSec: 1.15, zoomAmt: 0.20, shake: 6, flash: true, bpm: 130, pan: 32 },
+    const VIDEO_MODELS = [
+      { cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Cortes a cada 1.1s + zoom agressivo + batida rápida", cutSec: 1.1, zoomAmt: 0.22, shake: 7, flash: true, bpm: 132, pan: 26 },
+      { cat: "Agressivo", name: "#02 Corte Relâmpago 0.9s", desc: "Troca frenética de ângulo para retenção máxima", cutSec: 0.95, zoomAmt: 0.20, shake: 6, flash: true, bpm: 138, pan: 22 },
+      { cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura com impacto forte e cortes acelerados", cutSec: 1.2, zoomAmt: 0.25, shake: 8, flash: true, bpm: 130, pan: 30 },
+      { cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Cortes secos sincronizados com SFX de whoosh", cutSec: 1.15, zoomAmt: 0.19, shake: 5, flash: false, bpm: 128, pan: 24 },
+      { cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Clarão sutil na transição + aproximação rápida", cutSec: 1.25, zoomAmt: 0.21, shake: 6, flash: true, bpm: 126, pan: 20 },
+      { cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Movimento contínuo sem nenhum segundo parado", cutSec: 1.0, zoomAmt: 0.23, shake: 7, flash: true, bpm: 136, pan: 28 },
+      { cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Aceleração progressiva até a chamada para ação", cutSec: 1.1, zoomAmt: 0.24, shake: 6, flash: false, bpm: 134, pan: 25 },
+      { cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Deslizamento rápido esquerda/direita com corte seco", cutSec: 1.3, zoomAmt: 0.18, shake: 5, flash: true, bpm: 124, pan: 36 },
+      { cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Zoom in rápido + vibração de grave nos cortes", cutSec: 1.05, zoomAmt: 0.22, shake: 8, flash: true, bpm: 135, pan: 18 },
+      { cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Sequência dinâmica intensa de ponta a ponta", cutSec: 1.15, zoomAmt: 0.20, shake: 6, flash: true, bpm: 130, pan: 32 },
 
-        // 11-20: CRASH ZOOM & IMPACTO
-        { cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Batida de zoom seco em cada corte de cena", cutSec: 1.4, zoomAmt: 0.28, shake: 9, flash: true, bpm: 128, pan: 14 },
-        { cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Aproximação intensa nos detalhes do produto", cutSec: 1.5, zoomAmt: 0.30, shake: 5, flash: false, bpm: 122, pan: 12 },
-        { cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Tremor controlado de câmera sincronizado ao grave", cutSec: 1.35, zoomAmt: 0.24, shake: 11, flash: true, bpm: 132, pan: 20 },
-        { cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Entrada rápida com desaceleração suave", cutSec: 1.45, zoomAmt: 0.26, shake: 6, flash: false, bpm: 125, pan: 18 },
-        { cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Corte com flash branco rápido + zoom profundo", cutSec: 1.3, zoomAmt: 0.27, shake: 8, flash: true, bpm: 130, pan: 16 },
-        { cat: "Zoom", name: "#16 Foco Magnético", desc: "Puxada rápida para o centro do produto", cutSec: 1.55, zoomAmt: 0.25, shake: 4, flash: false, bpm: 120, pan: 10 },
-        { cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Batida pesada com zoom agressivo e corte seco", cutSec: 1.25, zoomAmt: 0.26, shake: 9, flash: true, bpm: 134, pan: 22 },
-        { cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Salto imediato de enquadramento a cada frase", cutSec: 1.35, zoomAmt: 0.29, shake: 7, flash: true, bpm: 128, pan: 15 },
-        { cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão rápida com efeito sonoro de impacto", cutSec: 1.4, zoomAmt: 0.23, shake: 8, flash: true, bpm: 126, pan: 24 },
-        { cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância entre plano aberto e close fechado", cutSec: 1.3, zoomAmt: 0.25, shake: 6, flash: false, bpm: 129, pan: 20 },
+      { cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Batida de zoom seco em cada corte de cena", cutSec: 1.4, zoomAmt: 0.28, shake: 9, flash: true, bpm: 128, pan: 14 },
+      { cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Aproximação intensa nos detalhes do produto", cutSec: 1.5, zoomAmt: 0.30, shake: 5, flash: false, bpm: 122, pan: 12 },
+      { cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Tremor controlado de câmera sincronizado ao grave", cutSec: 1.35, zoomAmt: 0.24, shake: 11, flash: true, bpm: 132, pan: 20 },
+      { cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Entrada rápida com desaceleração suave", cutSec: 1.45, zoomAmt: 0.26, shake: 6, flash: false, bpm: 125, pan: 18 },
+      { cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Corte com flash branco rápido + zoom profundo", cutSec: 1.3, zoomAmt: 0.27, shake: 8, flash: true, bpm: 130, pan: 16 },
+      { cat: "Zoom", name: "#16 Foco Magnético", desc: "Puxada rápida para o centro do produto", cutSec: 1.55, zoomAmt: 0.25, shake: 4, flash: false, bpm: 120, pan: 10 },
+      { cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Batida pesada com zoom agressivo e corte seco", cutSec: 1.25, zoomAmt: 0.26, shake: 9, flash: true, bpm: 134, pan: 22 },
+      { cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Salto imediato de enquadramento a cada frase", cutSec: 1.35, zoomAmt: 0.29, shake: 7, flash: true, bpm: 128, pan: 15 },
+      { cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão rápida com efeito sonoro de impacto", cutSec: 1.4, zoomAmt: 0.23, shake: 8, flash: true, bpm: 126, pan: 24 },
+      { cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância entre plano aberto e close fechado", cutSec: 1.3, zoomAmt: 0.25, shake: 6, flash: false, bpm: 129, pan: 20 },
 
-        // 21-30: ALTA CONVERSÃO SHOP
-        { cat: "Vendas", name: "#21 Conversão Sacolinha Pro", desc: "Ritmo pensado para prender até o CTA final", cutSec: 1.45, zoomAmt: 0.20, shake: 5, flash: true, bpm: 124, pan: 22 },
-        { cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Movimento comercial limpo, ágil e persuasivo", cutSec: 1.6, zoomAmt: 0.18, shake: 3, flash: false, bpm: 118, pan: 26 },
-        { cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Cortes equilibrados destacando acabamento e uso", cutSec: 1.7, zoomAmt: 0.19, shake: 4, flash: false, bpm: 116, pan: 24 },
-        { cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Energia alta para anúncios de resposta direta", cutSec: 1.2, zoomAmt: 0.22, shake: 6, flash: true, bpm: 130, pan: 28 },
-        { cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento dinâmico estilo criador top afiliado", cutSec: 1.4, zoomAmt: 0.20, shake: 5, flash: false, bpm: 122, pan: 30 },
-        { cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Alternância nítida acompanhando cada argumento", cutSec: 1.5, zoomAmt: 0.21, shake: 4, flash: true, bpm: 120, pan: 20 },
-        { cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Ritmo crescente que culmina forte no final", cutSec: 1.35, zoomAmt: 0.23, shake: 6, flash: true, bpm: 126, pan: 22 },
-        { cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições rápidas sem perder leitura do produto", cutSec: 1.5, zoomAmt: 0.17, shake: 3, flash: false, bpm: 118, pan: 28 },
-        { cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Cadência envolvente perfeita para produtos de ticket médio", cutSec: 1.3, zoomAmt: 0.21, shake: 5, flash: true, bpm: 125, pan: 25 },
-        { cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Foco total em retenção nos primeiros 3 segundos", cutSec: 1.25, zoomAmt: 0.22, shake: 6, flash: true, bpm: 128, pan: 24 },
+      { cat: "Vendas", name: "#21 Conversão Sacolinha Pro", desc: "Ritmo pensado para prender até o CTA final", cutSec: 1.45, zoomAmt: 0.20, shake: 5, flash: true, bpm: 124, pan: 22 },
+      { cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Movimento comercial limpo, ágil e persuasivo", cutSec: 1.6, zoomAmt: 0.18, shake: 3, flash: false, bpm: 118, pan: 26 },
+      { cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Cortes equilibrados destacando acabamento e uso", cutSec: 1.7, zoomAmt: 0.19, shake: 4, flash: false, bpm: 116, pan: 24 },
+      { cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Energia alta para anúncios de resposta direta", cutSec: 1.2, zoomAmt: 0.22, shake: 6, flash: true, bpm: 130, pan: 28 },
+      { cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento dinâmico estilo criador top afiliado", cutSec: 1.4, zoomAmt: 0.20, shake: 5, flash: false, bpm: 122, pan: 30 },
+      { cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Alternância nítida acompanhando cada argumento", cutSec: 1.5, zoomAmt: 0.21, shake: 4, flash: true, bpm: 120, pan: 20 },
+      { cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Ritmo crescente que culmina forte no final", cutSec: 1.35, zoomAmt: 0.23, shake: 6, flash: true, bpm: 126, pan: 22 },
+      { cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições rápidas sem perder leitura do produto", cutSec: 1.5, zoomAmt: 0.17, shake: 3, flash: false, bpm: 118, pan: 28 },
+      { cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Cadência envolvente perfeita para produtos de ticket médio", cutSec: 1.3, zoomAmt: 0.21, shake: 5, flash: true, bpm: 125, pan: 25 },
+      { cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Foco total em retenção nos primeiros 3 segundos", cutSec: 1.25, zoomAmt: 0.22, shake: 6, flash: true, bpm: 128, pan: 24 },
 
-        // 31-40: CINEMATOGRÁFICO & LUXO
-        { cat: "Cinema", name: "#31 Comercial de Luxo Suíço", desc: "Movimentos precisos com cortes elegantes e graves", cutSec: 1.85, zoomAmt: 0.18, shake: 2, flash: false, bpm: 110, pan: 28 },
-        { cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Impactos graves cinematográficos a cada troca", cutSec: 1.55, zoomAmt: 0.24, shake: 6, flash: true, bpm: 116, pan: 22 },
-        { cat: "Cinema", name: "#33 Desfile Editorial Vogue", desc: "Panorâmica fluida com cortes limpos de alto padrão", cutSec: 1.9, zoomAmt: 0.16, shake: 2, flash: false, bpm: 112, pan: 34 },
-        { cat: "Cinema", name: "#34 Joia em Exposição", desc: "Aproximação milimétrica com brilho e presença", cutSec: 1.8, zoomAmt: 0.20, shake: 2, flash: false, bpm: 108, pan: 18 },
-        { cat: "Cinema", name: "#35 Lançamento Flagship", desc: "Ritmo moderno estilo apresentação de produto premium", cutSec: 1.6, zoomAmt: 0.21, shake: 4, flash: true, bpm: 118, pan: 24 },
-        { cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Cortes secos com atmosfera dramática e envolvente", cutSec: 1.65, zoomAmt: 0.22, shake: 4, flash: false, bpm: 114, pan: 20 },
-        { cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Deslocamento diagonal contínuo com troca de ângulo", cutSec: 1.75, zoomAmt: 0.19, shake: 3, flash: false, bpm: 115, pan: 36 },
-        { cat: "Cinema", name: "#38 Spotlight VIP", desc: "Entradas marcadas com brilho suave e som envolvente", cutSec: 1.7, zoomAmt: 0.20, shake: 3, flash: true, bpm: 116, pan: 22 },
-        { cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Enquadramentos firmes e transições cirúrgicas", cutSec: 1.8, zoomAmt: 0.17, shake: 2, flash: false, bpm: 112, pan: 26 },
-        { cat: "Cinema", name: "#40 Gala & Ouro", desc: "Cadência nobre com presença forte na tela", cutSec: 1.85, zoomAmt: 0.18, shake: 2, flash: false, bpm: 110, pan: 24 },
+      { cat: "Cinema", name: "#31 Comercial de Luxo Suíço", desc: "Movimentos precisos com cortes elegantes e graves", cutSec: 1.85, zoomAmt: 0.18, shake: 2, flash: false, bpm: 110, pan: 28 },
+      { cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Impactos graves cinematográficos a cada troca", cutSec: 1.55, zoomAmt: 0.24, shake: 6, flash: true, bpm: 116, pan: 22 },
+      { cat: "Cinema", name: "#33 Desfile Editorial Vogue", desc: "Panorâmica fluida com cortes limpos de alto padrão", cutSec: 1.9, zoomAmt: 0.16, shake: 2, flash: false, bpm: 112, pan: 34 },
+      { cat: "Cinema", name: "#34 Joia em Exposição", desc: "Aproximação milimétrica com brilho e presença", cutSec: 1.8, zoomAmt: 0.20, shake: 2, flash: false, bpm: 108, pan: 18 },
+      { cat: "Cinema", name: "#35 Lançamento Flagship", desc: "Ritmo moderno estilo apresentação de produto premium", cutSec: 1.6, zoomAmt: 0.21, shake: 4, flash: true, bpm: 118, pan: 24 },
+      { cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Cortes secos com atmosfera dramática e envolvente", cutSec: 1.65, zoomAmt: 0.22, shake: 4, flash: false, bpm: 114, pan: 20 },
+      { cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Deslocamento diagonal contínuo com troca de ângulo", cutSec: 1.75, zoomAmt: 0.19, shake: 3, flash: false, bpm: 115, pan: 36 },
+      { cat: "Cinema", name: "#38 Spotlight VIP", desc: "Entradas marcadas com brilho suave e som envolvente", cutSec: 1.7, zoomAmt: 0.20, shake: 3, flash: true, bpm: 116, pan: 22 },
+      { cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Enquadramentos firmes e transições cirúrgicas", cutSec: 1.8, zoomAmt: 0.17, shake: 2, flash: false, bpm: 112, pan: 26 },
+      { cat: "Cinema", name: "#40 Gala & Ouro", desc: "Cadência nobre com presença forte na tela", cutSec: 1.85, zoomAmt: 0.18, shake: 2, flash: false, bpm: 110, pan: 24 },
 
-        // 41-50: TREND & RETENÇÃO
-        { cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Padrão desenhado para segurar o dedo na tela", cutSec: 1.15, zoomAmt: 0.23, shake: 6, flash: true, bpm: 130, pan: 28 },
-        { cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Ritmo circular que faz o usuário assistir 2x", cutSec: 1.25, zoomAmt: 0.21, shake: 5, flash: false, bpm: 126, pan: 26 },
-        { cat: "Viral", name: "#43 Dopamina Rápida", desc: "Estímulos visuais e sonoros constantes", cutSec: 1.05, zoomAmt: 0.24, shake: 7, flash: true, bpm: 134, pan: 30 },
-        { cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Sincronia forte de batida e movimento lateral", cutSec: 1.2, zoomAmt: 0.22, shake: 6, flash: true, bpm: 128, pan: 32 },
-        { cat: "Viral", name: "#45 Quebra de Padrão", desc: "Alterna direção de zoom e pan a cada corte", cutSec: 1.3, zoomAmt: 0.25, shake: 6, flash: true, bpm: 127, pan: 34 },
-        { cat: "Viral", name: "#46 POV Mão na Massa", desc: "Sensação dinâmica de proximidade e energia", cutSec: 1.35, zoomAmt: 0.22, shake: 7, flash: false, bpm: 124, pan: 28 },
-        { cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura de impacto imediato com som de whoosh", cutSec: 1.1, zoomAmt: 0.26, shake: 8, flash: true, bpm: 132, pan: 24 },
-        { cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Pulso grave constante com cortes precisos", cutSec: 1.25, zoomAmt: 0.21, shake: 6, flash: false, bpm: 128, pan: 26 },
-        { cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Alternância veloz entre os 3 ângulos gerados", cutSec: 1.15, zoomAmt: 0.20, shake: 5, flash: true, bpm: 130, pan: 32 },
-        { cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Combinação equilibrada de corte, zoom, flash e grave", cutSec: 1.2, zoomAmt: 0.24, shake: 7, flash: true, bpm: 131, pan: 28 }
-      ];
-      return patterns;
-    })();
+      { cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Padrão desenhado para segurar o dedo na tela", cutSec: 1.15, zoomAmt: 0.23, shake: 6, flash: true, bpm: 130, pan: 28 },
+      { cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Ritmo circular que faz o usuário assistir 2x", cutSec: 1.25, zoomAmt: 0.21, shake: 5, flash: false, bpm: 126, pan: 26 },
+      { cat: "Viral", name: "#43 Dopamina Rápida", desc: "Estímulos visuais e sonoros constantes", cutSec: 1.05, zoomAmt: 0.24, shake: 7, flash: true, bpm: 134, pan: 30 },
+      { cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Sincronia forte de batida e movimento lateral", cutSec: 1.2, zoomAmt: 0.22, shake: 6, flash: true, bpm: 128, pan: 32 },
+      { cat: "Viral", name: "#45 Quebra de Padrão", desc: "Alterna direção de zoom e pan a cada corte", cutSec: 1.3, zoomAmt: 0.25, shake: 6, flash: true, bpm: 127, pan: 34 },
+      { cat: "Viral", name: "#46 POV Mão na Massa", desc: "Sensação dinâmica de proximidade e energia", cutSec: 1.35, zoomAmt: 0.22, shake: 7, flash: false, bpm: 124, pan: 28 },
+      { cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura de impacto imediato com som de whoosh", cutSec: 1.1, zoomAmt: 0.26, shake: 8, flash: true, bpm: 132, pan: 24 },
+      { cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Pulso grave constante com cortes precisos", cutSec: 1.25, zoomAmt: 0.21, shake: 6, flash: false, bpm: 128, pan: 26 },
+      { cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Alternância veloz entre os 3 ângulos gerados", cutSec: 1.15, zoomAmt: 0.20, shake: 5, flash: true, bpm: 130, pan: 32 },
+      { cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Combinação equilibrada de corte, zoom, flash e grave", cutSec: 1.2, zoomAmt: 0.24, shake: 7, flash: true, bpm: 131, pan: 28 }
+    ];
 
-    // =========================================================================
-    // REFERÊNCIAS DE DOM E ESTADO
-    // =========================================================================
     const productImg = document.getElementById("productImg");
     const thumbPreview = document.getElementById("thumbPreview");
     const minDuration = document.getElementById("minDuration");
@@ -350,7 +325,6 @@
     let uploadedBase64 = "";
     let uploadedMime = "image/jpeg";
 
-    // Renderizar lista filtrada dos 50 modelos de imagem
     function renderImagePresets() {
       const q = imgSearch.value.trim().toLowerCase();
       const cat = imgCatFilter.value;
@@ -384,7 +358,6 @@
       });
     }
 
-    // Renderizar lista filtrada dos 50 modelos de vídeo
     function renderVideoPresets() {
       const q = vidSearch.value.trim().toLowerCase();
       const cat = vidCatFilter.value;
@@ -509,12 +482,8 @@
       });
     }
 
-    // =========================================================================
-    // MOTOR DE TRILHA SONORA DINÂMICA + EFEITOS SONOROS (WHOOSH / SUB DROP)
-    // =========================================================================
     function startDynamicSoundEngine(audioCtx, dest, durationSec, bpm, cutSec) {
       const masterMusic = audioCtx.createGain();
-      // Volume equilibrado para dar energia sem encobrir a voz Adam/Natasha (ducking)
       masterMusic.gain.setValueAtTime(0.16, audioCtx.currentTime);
       masterMusic.connect(dest);
       masterMusic.connect(audioCtx.destination);
@@ -522,12 +491,10 @@
       const beatSec = 60 / bpm;
       const now = audioCtx.currentTime;
 
-      // 1. Batida energética (Kick + Hi-hat + Linha de baixo pulsante)
       for (let t = 0; t < durationSec; t += beatSec / 2) {
         const step = Math.round(t / (beatSec / 2));
         const time = now + t;
 
-        // Kick grave nos tempos fortes
         if (step % 2 === 0) {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
@@ -542,7 +509,6 @@
           osc.stop(time + 0.17);
         }
 
-        // Sintetizador / Pluck rítmico viral
         const notes = [110, 110, 130.81, 146.83, 110, 164.81, 146.83, 130.81];
         const freq = notes[step % notes.length];
         const synth = audioCtx.createOscillator();
@@ -557,7 +523,6 @@
         synth.stop(time + 0.19);
       }
 
-      // 2. SFX de Whoosh + Impacto Grave em cada corte rápido de cena
       for (let c = 0; c < durationSec; c += cutSec) {
         const cutTime = now + c;
         const sfxOsc = audioCtx.createOscillator();
@@ -574,9 +539,6 @@
       }
     }
 
-    // =========================================================================
-    // RENDERIZADOR DE VÍDEO VIRAL 9:16 (CORTES RÁPIDOS + ZOOMS + SHAKE + LEGENDA)
-    // =========================================================================
     async function renderViralVideo(images, audioUrl, targetSeconds, withBurnedSubs, withMusic, vidStyle) {
       const audio = new Audio(audioUrl);
       audio.crossOrigin = "anonymous";
@@ -592,7 +554,6 @@
       const source = audioCtx.createMediaElementSource(audio);
       const dest = audioCtx.createMediaStreamDestination();
 
-      // Ganho forte e limpo para a voz principal (Adam/Natasha)
       const voiceGain = audioCtx.createGain();
       voiceGain.gain.value = 1.25;
       source.connect(voiceGain);
@@ -640,17 +601,14 @@
             return;
           }
 
-          // Índice do corte rápido (alterna entre as 3 cenas a cada ~1s a 1.8s)
           const cutIndex = Math.floor(elapsed / cutSec);
           const cutProgress = (elapsed % cutSec) / cutSec;
           const img = images[cutIndex % images.length];
 
-          // Curva de aceleração agressiva (Crash Zoom / Punch)
           const easeOut = 1 - Math.pow(1 - cutProgress, 3);
           const zoomBase = cutIndex % 2 === 0 ? 1.03 : 1.08;
           const scale = zoomBase + easeOut * vidStyle.zoomAmt;
 
-          // Pan alternado esquerda/direita + micro-shake no impacto do corte
           const dir = cutIndex % 2 === 0 ? 1 : -1;
           const panX = dir * (easeOut - 0.5) * vidStyle.pan;
           const impactDecay = Math.max(0, 1 - cutProgress * 4.5);
@@ -675,41 +633,33 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
 
-          // Flash rápido de impacto nos primeiros 90ms do corte
           if (vidStyle.flash && cutProgress < 0.08) {
             const alpha = (0.08 - cutProgress) * 4.2;
             ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(0.35, alpha)})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
 
-          // Legenda dinâmica em ZONA SEGURA (acima dos botões inferiores do TikTok/Reels)
+          // LEGENDA COMPACTA E LIMPA EM ZONA SEGURA
           if (withBurnedSubs) {
             const activeSub = finalSubs.find((s) => elapsed >= s.start && elapsed <= s.end);
             if (activeSub) {
-              const subProgress = (elapsed - activeSub.start) / Math.max(0.1, activeSub.end - activeSub.start);
-              const popScale = subProgress < 0.15 ? 0.92 + (subProgress / 0.15) * 0.12 : 1.0;
-
               ctx.save();
-              ctx.translate(canvas.width / 2, canvas.height - 410);
-              ctx.scale(popScale, popScale);
-
-              ctx.font = "900 46px Inter, Arial, sans-serif";
+              ctx.font = "800 22px Inter, Arial, sans-serif";
               ctx.textAlign = "center";
               const label = activeSub.text.toUpperCase();
-              const textWidth = ctx.measureText(label).width;
-              const boxW = Math.min(canvas.width - 70, textWidth + 46);
+              const maxTextW = canvas.width - 180;
+              const textWidth = Math.min(maxTextW, ctx.measureText(label).width);
+              const boxW = textWidth + 18;
+              const boxX = (canvas.width - boxW) / 2;
+              const boxY = canvas.height - 390;
 
-              ctx.fillStyle = "rgba(6, 9, 15, 0.84)";
+              ctx.fillStyle = "rgba(0, 0, 0, 0.58)";
               ctx.beginPath();
-              ctx.roundRect(-boxW / 2, -48, boxW, 74, 16);
+              ctx.roundRect(boxX, boxY - 18, boxW, 28, 6);
               ctx.fill();
 
-              ctx.strokeStyle = "#facc15";
-              ctx.lineWidth = 2.5;
-              ctx.stroke();
-
-              ctx.fillStyle = "#facc15";
-              ctx.fillText(label, 0, 4, canvas.width - 96);
+              ctx.fillStyle = "#fde047";
+              ctx.fillText(label, canvas.width / 2, boxY + 2, maxTextW);
               ctx.restore();
             }
           }
@@ -727,7 +677,6 @@
       };
     }
 
-    // BOTÃO 1: GERAR SÓ IMAGEM ULTRA-REALISTA 9:16
     btnOnlyImg.addEventListener("click", async () => {
       if (!uploadedBase64) {
         stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`;
@@ -761,7 +710,6 @@
       }
     });
 
-    // BOTÃO 2: GERAR VÍDEO VIRAL COMPLETO (10s A 30s)
     btnBuild.addEventListener("click", async () => {
       const text = scriptText.value.trim();
       if (!text) {
@@ -797,7 +745,7 @@
           loadedImages.push(null);
         }
 
-        stage.innerHTML = `<div class="status-msg">3/3 • Aplicando cortes rápidos, zooms, trilha + SFX (<strong>${selectedVidModel.name}</strong>)...</div>`;
+        stage.innerHTML = `<div class="status-msg">3/3 • Montando vídeo (<strong>${selectedVidModel.name}</strong>)...</div>`;
         const result = await renderViralVideo(
           loadedImages,
           tts.audioUrl,
