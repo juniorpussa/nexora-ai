@@ -17,6 +17,43 @@ export async function onRequestPost(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
+  async function fetchWithTimeoutAndRetry(url, options, timeoutMs = 25000, retries = 1) {
+    let lastErr = null;
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const res = await fetch(url, {
+          ...options,
+          signal: AbortSignal.timeout(timeoutMs)
+        });
+        const rawText = await res.text();
+        let parsed = null;
+        try {
+          parsed = JSON.parse(rawText);
+        } catch {
+          parsed = null;
+        }
+        if (!res.ok) {
+          const detail =
+            parsed?.detail ||
+            parsed?.message ||
+            parsed?.error ||
+            `Falha no serviço (${res.status}).`;
+          throw new Error(detail);
+        }
+        if (!parsed) {
+          throw new Error("Resposta inválida do serviço de geração.");
+        }
+        return parsed;
+      } catch (err) {
+        lastErr = err;
+        if (attempt < retries) {
+          await new Promise((r) => setTimeout(r, 700));
+        }
+      }
+    }
+    throw lastErr || new Error("Tempo limite excedido ao processar.");
+  }
+
   try {
     if (!env.FAL_KEY) {
       return json({ error: "Variável FAL_KEY não configurada na Cloudflare Pages." }, 500);
@@ -30,7 +67,6 @@ export async function onRequestPost(context) {
       "Content-Type": "application/json"
     };
 
-    // 1. NARRAÇÃO EM PORTUGUÊS DO BRASIL (ADAM OU NATASHA)
     if (task === "tts") {
       const text = (body.text || "").trim();
       const voice = body.voice === "adam" ? "adam" : "natasha";
@@ -40,31 +76,22 @@ export async function onRequestPost(context) {
       }
 
       const voiceId = voice === "adam" ? "pm_alex" : "pf_dora";
+      const trimmedPrompt = text.slice(0, 600);
 
-      const ttsRes = await fetch("https://fal.run/fal-ai/kokoro/brazilian-portuguese", {
-        method: "POST",
-        headers: authHeaders,
-        body: JSON.stringify({
-          prompt: text,
-          voice: voiceId,
-          speed: 1.07
-        })
-      });
-
-      const ttsText = await ttsRes.text();
-      let ttsData = {};
-      try {
-        ttsData = JSON.parse(ttsText);
-      } catch {
-        return json({ error: `Resposta inválida do motor de voz (${ttsRes.status}).` }, 502);
-      }
-
-      if (!ttsRes.ok) {
-        return json(
-          { error: ttsData.detail || ttsData.message || "Erro ao gerar narração." },
-          ttsRes.status
-        );
-      }
+      const ttsData = await fetchWithTimeoutAndRetry(
+        "https://fal.run/fal-ai/kokoro/brazilian-portuguese",
+        {
+          method: "POST",
+          headers: authHeaders,
+          body: JSON.stringify({
+            prompt: trimmedPrompt,
+            voice: voiceId,
+            speed: 1.08
+          })
+        },
+        22000,
+        1
+      );
 
       const audioUrl = ttsData?.audio?.url || ttsData?.audio_url || ttsData?.url || "";
       if (!audioUrl) {
@@ -74,7 +101,6 @@ export async function onRequestPost(context) {
       return json({ ok: true, audioUrl, voice });
     }
 
-    // 2. GERAÇÃO DE CENAS ULTRA-REALISTAS 9:16 (50 MODELOS DE IMAGEM)
     if (task === "scene") {
       const imageBase64 = body.imageBase64 || "";
       const mimeType = body.mimeType || "image/jpeg";
@@ -88,44 +114,34 @@ export async function onRequestPost(context) {
       const dataUri = `data:${mimeType};base64,${imageBase64}`;
 
       const angleVariations = [
-        "hero centered commercial angle, dramatic depth of field",
-        "dynamic slightly low-angle three-quarter perspective, crisp edge highlights",
-        "tight macro-luxury detail perspective, rich specular reflections"
+        "dramatic low-angle hero commercial framing, razor-sharp product focus, studio lighting",
+        "dynamic close-up three-quarter macro angle highlighting surface finish and edge specular light",
+        "high-contrast wide-angle dramatic studio shot with deep shadows and crisp rim light"
       ];
       const angle = angleVariations[(sceneIndex - 1) % angleVariations.length];
 
       const baseDirection =
         imagePrompt ||
-        "ultra-realistic commercial product photography on dark obsidian stone and brushed gold pedestal, dramatic rim lighting";
+        "commercial product shot on dark obsidian stone and brushed gold pedestal, dramatic rim lighting";
 
-      const fullPrompt = `Ultra-realistic 8k commercial product photography keeping the exact uploaded product completely intact and faithful, ${baseDirection}, ${angle}, 9:16 vertical framing, photorealistic textures, sharp focus, zero added text, zero watermarks, zero extra logos, zero human hands or faces.`;
+      const fullPrompt = `Commercial product photography keeping the exact uploaded product 100% identical and faithful, ${baseDirection}, ${angle}, 9:16 vertical framing, ultra-sharp photorealistic detail, zero added text, zero watermarks, zero extra logos, zero human hands or faces.`;
 
-      const imgRes = await fetch("https://fal.run/fal-ai/nano-banana/edit", {
-        method: "POST",
-        headers: authHeaders,
-        body: JSON.stringify({
-          prompt: fullPrompt,
-          image_urls: [dataUri],
-          aspect_ratio: "9:16",
-          num_images: 1,
-          output_format: "jpeg"
-        })
-      });
-
-      const imgText = await imgRes.text();
-      let imgData = {};
-      try {
-        imgData = JSON.parse(imgText);
-      } catch {
-        return json({ error: `Resposta inválida ao gerar cena ${sceneIndex}.` }, 502);
-      }
-
-      if (!imgRes.ok) {
-        return json(
-          { error: imgData.detail || imgData.message || `Erro ao gerar cena ${sceneIndex}.` },
-          imgRes.status
-        );
-      }
+      const imgData = await fetchWithTimeoutAndRetry(
+        "https://fal.run/fal-ai/nano-banana/edit",
+        {
+          method: "POST",
+          headers: authHeaders,
+          body: JSON.stringify({
+            prompt: fullPrompt,
+            image_urls: [dataUri],
+            aspect_ratio: "9:16",
+            num_images: 1,
+            output_format: "jpeg"
+          })
+        },
+        28000,
+        1
+      );
 
       const imageUrl = imgData?.images?.[0]?.url || imgData?.image?.url || "";
       if (!imageUrl) {
@@ -137,6 +153,6 @@ export async function onRequestPost(context) {
 
     return json({ error: "Tarefa inválida." }, 400);
   } catch (err) {
-    return json({ error: err.message || "Erro interno no servidor." }, 500);
+    return json({ error: err?.message || "Erro interno no servidor." }, 500);
   }
 }
