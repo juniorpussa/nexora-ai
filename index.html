@@ -66,8 +66,8 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>50 + 50 VIRAIS</span></div>
-    <div class="pill-info">50 Modelos de Imagem • 50 Ritmos de Vídeo (10s a 30s) • Cortes Rápidos + Trilha &amp; SFX</div>
+    <div class="brand">NEXORA.AI <span>HOLLYWOOD 9:16</span></div>
+    <div class="pill-info">50 Modelos de Imagem • 50 Ritmos de Vídeo (10s a 30s) • Movimento + Trilha &amp; SFX</div>
   </div>
 
   <div class="layout">
@@ -155,11 +155,15 @@
       <div class="options-row">
         <label class="toggle-row">
           <input type="checkbox" id="burnSubs" checked />
-          <span>Legenda compacta (zona segura)</span>
+          <span>Legenda compacta + seta da sacolinha</span>
         </label>
         <label class="toggle-row">
           <input type="checkbox" id="enableBgm" checked />
           <span>Trilha sonora dinâmica + SFX nos cortes</span>
+        </label>
+        <label class="toggle-row">
+          <input type="checkbox" id="enableMotionClip" checked />
+          <span>Animar cena em movimento real (Image-to-Video)</span>
         </label>
       </div>
 
@@ -238,60 +242,60 @@
     ];
 
     const VIDEO_MODELS = [
-      { cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Cortes rápidos + zoom agressivo + batida forte", cutSec: 0.58, zoomAmt: 0.42, shake: 15, flash: true, bpm: 140, pan: 72 },
-      { cat: "Agressivo", name: "#02 Corte Relâmpago 0.55s", desc: "Troca frenética de ângulo e zoom para retenção máxima", cutSec: 0.55, zoomAmt: 0.40, shake: 14, flash: true, bpm: 144, pan: 68 },
-      { cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura com impacto forte e cortes acelerados", cutSec: 0.60, zoomAmt: 0.45, shake: 16, flash: true, bpm: 138, pan: 76 },
-      { cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Cortes secos sincronizados com SFX de whoosh", cutSec: 0.60, zoomAmt: 0.38, shake: 13, flash: true, bpm: 136, pan: 66 },
-      { cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Clarão na transição + aproximação rápida", cutSec: 0.64, zoomAmt: 0.40, shake: 14, flash: true, bpm: 134, pan: 64 },
-      { cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Movimento contínuo sem nenhum segundo parado", cutSec: 0.56, zoomAmt: 0.44, shake: 15, flash: true, bpm: 142, pan: 70 },
-      { cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Aceleração progressiva até a chamada para ação", cutSec: 0.58, zoomAmt: 0.45, shake: 14, flash: true, bpm: 140, pan: 68 },
-      { cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Deslizamento rápido esquerda/direita com corte seco", cutSec: 0.65, zoomAmt: 0.36, shake: 13, flash: true, bpm: 132, pan: 84 },
-      { cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Zoom in rápido + vibração de grave nos cortes", cutSec: 0.56, zoomAmt: 0.42, shake: 17, flash: true, bpm: 142, pan: 62 },
-      { cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Sequência dinâmica intensa de ponta a ponta", cutSec: 0.60, zoomAmt: 0.40, shake: 14, flash: true, bpm: 138, pan: 78 },
+      { cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Cortes rápidos + zoom agressivo + batida forte", cutSec: 0.55, zoomAmt: 0.42, shake: 14, flash: true, bpm: 140, pan: 72 },
+      { cat: "Agressivo", name: "#02 Corte Relâmpago 0.5s", desc: "Troca frenética de ângulo e zoom para retenção máxima", cutSec: 0.50, zoomAmt: 0.40, shake: 13, flash: true, bpm: 144, pan: 68 },
+      { cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura com impacto forte e cortes acelerados", cutSec: 0.58, zoomAmt: 0.45, shake: 15, flash: true, bpm: 138, pan: 76 },
+      { cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Cortes secos sincronizados com SFX de whoosh", cutSec: 0.58, zoomAmt: 0.38, shake: 12, flash: true, bpm: 136, pan: 66 },
+      { cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Clarão na transição + aproximação rápida", cutSec: 0.60, zoomAmt: 0.40, shake: 13, flash: true, bpm: 134, pan: 64 },
+      { cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Movimento contínuo sem nenhum segundo parado", cutSec: 0.52, zoomAmt: 0.44, shake: 14, flash: true, bpm: 142, pan: 70 },
+      { cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Aceleração progressiva até a chamada para ação", cutSec: 0.55, zoomAmt: 0.45, shake: 13, flash: true, bpm: 140, pan: 68 },
+      { cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Deslizamento rápido esquerda/direita com corte seco", cutSec: 0.62, zoomAmt: 0.36, shake: 12, flash: true, bpm: 132, pan: 84 },
+      { cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Zoom in rápido + vibração de grave nos cortes", cutSec: 0.52, zoomAmt: 0.42, shake: 16, flash: true, bpm: 142, pan: 62 },
+      { cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Sequência dinâmica intensa de ponta a ponta", cutSec: 0.56, zoomAmt: 0.40, shake: 13, flash: true, bpm: 138, pan: 78 },
 
-      { cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Batida de zoom seco em cada corte de cena", cutSec: 0.62, zoomAmt: 0.48, shake: 17, flash: true, bpm: 136, pan: 56 },
-      { cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Aproximação intensa nos detalhes do produto", cutSec: 0.66, zoomAmt: 0.50, shake: 12, flash: true, bpm: 130, pan: 50 },
-      { cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Tremor forte de câmera sincronizado ao grave", cutSec: 0.60, zoomAmt: 0.44, shake: 19, flash: true, bpm: 140, pan: 64 },
-      { cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Entrada rápida com impacto e zoom marcante", cutSec: 0.64, zoomAmt: 0.46, shake: 13, flash: true, bpm: 132, pan: 60 },
-      { cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Corte com flash rápido + zoom profundo", cutSec: 0.60, zoomAmt: 0.47, shake: 16, flash: true, bpm: 138, pan: 58 },
-      { cat: "Zoom", name: "#16 Foco Magnético", desc: "Puxada rápida para o centro do produto", cutSec: 0.66, zoomAmt: 0.45, shake: 11, flash: true, bpm: 128, pan: 48 },
-      { cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Batida pesada com zoom agressivo e corte seco", cutSec: 0.58, zoomAmt: 0.46, shake: 17, flash: true, bpm: 142, pan: 66 },
-      { cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Salto imediato de enquadramento a cada corte", cutSec: 0.62, zoomAmt: 0.49, shake: 15, flash: true, bpm: 136, pan: 56 },
-      { cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão rápida com efeito sonoro de impacto", cutSec: 0.64, zoomAmt: 0.43, shake: 16, flash: true, bpm: 134, pan: 68 },
-      { cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância entre plano aberto e close fechado", cutSec: 0.60, zoomAmt: 0.46, shake: 14, flash: true, bpm: 136, pan: 64 },
+      { cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Batida de zoom seco em cada corte de cena", cutSec: 0.58, zoomAmt: 0.48, shake: 16, flash: true, bpm: 136, pan: 56 },
+      { cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Aproximação intensa nos detalhes do produto", cutSec: 0.62, zoomAmt: 0.50, shake: 11, flash: true, bpm: 130, pan: 50 },
+      { cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Tremor forte de câmera sincronizado ao grave", cutSec: 0.56, zoomAmt: 0.44, shake: 18, flash: true, bpm: 140, pan: 64 },
+      { cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Entrada rápida com impacto e zoom marcante", cutSec: 0.60, zoomAmt: 0.46, shake: 12, flash: true, bpm: 132, pan: 60 },
+      { cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Corte com flash rápido + zoom profundo", cutSec: 0.56, zoomAmt: 0.47, shake: 15, flash: true, bpm: 138, pan: 58 },
+      { cat: "Zoom", name: "#16 Foco Magnético", desc: "Puxada rápida para o centro do produto", cutSec: 0.62, zoomAmt: 0.45, shake: 10, flash: true, bpm: 128, pan: 48 },
+      { cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Batida pesada com zoom agressivo e corte seco", cutSec: 0.54, zoomAmt: 0.46, shake: 16, flash: true, bpm: 142, pan: 66 },
+      { cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Salto imediato de enquadramento a cada corte", cutSec: 0.58, zoomAmt: 0.49, shake: 14, flash: true, bpm: 136, pan: 56 },
+      { cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão rápida com efeito sonoro de impacto", cutSec: 0.60, zoomAmt: 0.43, shake: 15, flash: true, bpm: 134, pan: 68 },
+      { cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância entre plano aberto e close fechado", cutSec: 0.56, zoomAmt: 0.46, shake: 13, flash: true, bpm: 136, pan: 64 },
 
-      { cat: "Vendas", name: "#21 Conversão Sacolinha Pro", desc: "Ritmo pensado para prender até o CTA final", cutSec: 0.64, zoomAmt: 0.40, shake: 12, flash: true, bpm: 132, pan: 66 },
-      { cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Movimento comercial limpo, ágil e persuasivo", cutSec: 0.70, zoomAmt: 0.36, shake: 10, flash: true, bpm: 128, pan: 70 },
-      { cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Cortes rápidos destacando acabamento e uso", cutSec: 0.72, zoomAmt: 0.38, shake: 11, flash: true, bpm: 126, pan: 68 },
-      { cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Energia alta para anúncios de resposta direta", cutSec: 0.58, zoomAmt: 0.42, shake: 14, flash: true, bpm: 138, pan: 72 },
-      { cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento dinâmico estilo criador top afiliado", cutSec: 0.62, zoomAmt: 0.39, shake: 12, flash: true, bpm: 130, pan: 74 },
-      { cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Alternância nítida acompanhando cada argumento", cutSec: 0.66, zoomAmt: 0.40, shake: 11, flash: true, bpm: 130, pan: 64 },
-      { cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Ritmo forte que culmina no final", cutSec: 0.60, zoomAmt: 0.43, shake: 14, flash: true, bpm: 134, pan: 66 },
-      { cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições rápidas sem perder o produto", cutSec: 0.68, zoomAmt: 0.36, shake: 10, flash: true, bpm: 128, pan: 72 },
-      { cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Cadência envolvente para produtos virais", cutSec: 0.60, zoomAmt: 0.41, shake: 13, flash: true, bpm: 134, pan: 68 },
-      { cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Foco total em retenção nos primeiros segundos", cutSec: 0.58, zoomAmt: 0.42, shake: 14, flash: true, bpm: 136, pan: 68 },
+      { cat: "Vendas", name: "#21 Conversão Sacolinha Pro", desc: "Ritmo pensado para prender até o CTA final", cutSec: 0.60, zoomAmt: 0.40, shake: 11, flash: true, bpm: 132, pan: 66 },
+      { cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Movimento comercial limpo, ágil e persuasivo", cutSec: 0.66, zoomAmt: 0.36, shake: 9, flash: true, bpm: 128, pan: 70 },
+      { cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Cortes rápidos destacando acabamento e uso", cutSec: 0.68, zoomAmt: 0.38, shake: 10, flash: true, bpm: 126, pan: 68 },
+      { cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Energia alta para anúncios de resposta direta", cutSec: 0.54, zoomAmt: 0.42, shake: 13, flash: true, bpm: 138, pan: 72 },
+      { cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento dinâmico estilo criador top afiliado", cutSec: 0.58, zoomAmt: 0.39, shake: 11, flash: true, bpm: 130, pan: 74 },
+      { cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Alternância nítida acompanhando cada argumento", cutSec: 0.62, zoomAmt: 0.40, shake: 10, flash: true, bpm: 130, pan: 64 },
+      { cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Ritmo forte que culmina no final", cutSec: 0.56, zoomAmt: 0.43, shake: 13, flash: true, bpm: 134, pan: 66 },
+      { cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições rápidas sem perder o produto", cutSec: 0.64, zoomAmt: 0.36, shake: 9, flash: true, bpm: 128, pan: 72 },
+      { cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Cadência envolvente para produtos virais", cutSec: 0.56, zoomAmt: 0.41, shake: 12, flash: true, bpm: 134, pan: 68 },
+      { cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Foco total em retenção nos primeiros segundos", cutSec: 0.54, zoomAmt: 0.42, shake: 13, flash: true, bpm: 136, pan: 68 },
 
-      { cat: "Cinema", name: "#31 Comercial de Luxo", desc: "Movimentos precisos com cortes ágeis e graves", cutSec: 0.74, zoomAmt: 0.37, shake: 9, flash: true, bpm: 124, pan: 72 },
-      { cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Impactos graves cinematográficos a cada troca", cutSec: 0.64, zoomAmt: 0.44, shake: 14, flash: true, bpm: 128, pan: 66 },
-      { cat: "Cinema", name: "#33 Desfile Editorial", desc: "Panorâmica ágil com cortes limpos de alto padrão", cutSec: 0.74, zoomAmt: 0.35, shake: 9, flash: true, bpm: 124, pan: 80 },
-      { cat: "Cinema", name: "#34 Joia em Exposição", desc: "Aproximação marcante com brilho e presença", cutSec: 0.70, zoomAmt: 0.40, shake: 9, flash: true, bpm: 122, pan: 60 },
-      { cat: "Cinema", name: "#35 Lançamento Flagship", desc: "Ritmo moderno estilo apresentação de produto", cutSec: 0.66, zoomAmt: 0.41, shake: 11, flash: true, bpm: 130, pan: 68 },
-      { cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Cortes secos com atmosfera dramática", cutSec: 0.68, zoomAmt: 0.42, shake: 12, flash: true, bpm: 126, pan: 64 },
-      { cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Deslocamento lateral contínuo com troca de ângulo", cutSec: 0.70, zoomAmt: 0.38, shake: 10, flash: true, bpm: 128, pan: 82 },
-      { cat: "Cinema", name: "#38 Spotlight VIP", desc: "Entradas marcadas com brilho e som forte", cutSec: 0.68, zoomAmt: 0.40, shake: 11, flash: true, bpm: 128, pan: 66 },
-      { cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Enquadramentos firmes e transições rápidas", cutSec: 0.70, zoomAmt: 0.36, shake: 9, flash: true, bpm: 124, pan: 70 },
-      { cat: "Cinema", name: "#40 Gala & Ouro", desc: "Cadência marcante com presença forte na tela", cutSec: 0.72, zoomAmt: 0.38, shake: 9, flash: true, bpm: 122, pan: 68 },
+      { cat: "Cinema", name: "#31 Comercial de Luxo", desc: "Movimentos precisos com cortes ágeis e graves", cutSec: 0.70, zoomAmt: 0.37, shake: 8, flash: true, bpm: 124, pan: 72 },
+      { cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Impactos graves cinematográficos a cada troca", cutSec: 0.60, zoomAmt: 0.44, shake: 13, flash: true, bpm: 128, pan: 66 },
+      { cat: "Cinema", name: "#33 Desfile Editorial", desc: "Panorâmica ágil com cortes limpos de alto padrão", cutSec: 0.70, zoomAmt: 0.35, shake: 8, flash: true, bpm: 124, pan: 80 },
+      { cat: "Cinema", name: "#34 Joia em Exposição", desc: "Aproximação marcante com brilho e presença", cutSec: 0.66, zoomAmt: 0.40, shake: 8, flash: true, bpm: 122, pan: 60 },
+      { cat: "Cinema", name: "#35 Lançamento Flagship", desc: "Ritmo moderno estilo apresentação de produto", cutSec: 0.62, zoomAmt: 0.41, shake: 10, flash: true, bpm: 130, pan: 68 },
+      { cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Cortes secos com atmosfera dramática", cutSec: 0.64, zoomAmt: 0.42, shake: 11, flash: true, bpm: 126, pan: 64 },
+      { cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Deslocamento lateral contínuo com troca de ângulo", cutSec: 0.66, zoomAmt: 0.38, shake: 9, flash: true, bpm: 128, pan: 82 },
+      { cat: "Cinema", name: "#38 Spotlight VIP", desc: "Entradas marcadas com brilho e som forte", cutSec: 0.64, zoomAmt: 0.40, shake: 10, flash: true, bpm: 128, pan: 66 },
+      { cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Enquadramentos firmes e transições rápidas", cutSec: 0.66, zoomAmt: 0.36, shake: 8, flash: true, bpm: 124, pan: 70 },
+      { cat: "Cinema", name: "#40 Gala & Ouro", desc: "Cadência marcante com presença forte na tela", cutSec: 0.68, zoomAmt: 0.38, shake: 8, flash: true, bpm: 122, pan: 68 },
 
-      { cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Padrão desenhado para segurar o dedo na tela", cutSec: 0.56, zoomAmt: 0.43, shake: 14, flash: true, bpm: 138, pan: 72 },
-      { cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Ritmo circular que prende até o fim", cutSec: 0.60, zoomAmt: 0.40, shake: 13, flash: true, bpm: 134, pan: 70 },
-      { cat: "Viral", name: "#43 Dopamina Rápida", desc: "Estímulos visuais e sonoros constantes", cutSec: 0.55, zoomAmt: 0.44, shake: 15, flash: true, bpm: 142, pan: 74 },
-      { cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Sincronia forte de batida e movimento lateral", cutSec: 0.58, zoomAmt: 0.42, shake: 14, flash: true, bpm: 136, pan: 76 },
-      { cat: "Viral", name: "#45 Quebra de Padrão", desc: "Alterna direção de zoom e pan a cada corte", cutSec: 0.60, zoomAmt: 0.45, shake: 14, flash: true, bpm: 136, pan: 78 },
-      { cat: "Viral", name: "#46 POV Mão na Massa", desc: "Sensação dinâmica de proximidade e energia", cutSec: 0.62, zoomAmt: 0.42, shake: 15, flash: true, bpm: 134, pan: 72 },
-      { cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura de impacto imediato com som de whoosh", cutSec: 0.56, zoomAmt: 0.46, shake: 16, flash: true, bpm: 140, pan: 68 },
-      { cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Pulso grave constante com cortes precisos", cutSec: 0.60, zoomAmt: 0.41, shake: 14, flash: true, bpm: 136, pan: 70 },
-      { cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Alternância veloz entre os ângulos gerados", cutSec: 0.56, zoomAmt: 0.40, shake: 13, flash: true, bpm: 138, pan: 76 },
-      { cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Combinação forte de corte, zoom, flash e grave", cutSec: 0.58, zoomAmt: 0.44, shake: 15, flash: true, bpm: 139, pan: 72 }
+      { cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Padrão desenhado para segurar o dedo na tela", cutSec: 0.52, zoomAmt: 0.43, shake: 13, flash: true, bpm: 138, pan: 72 },
+      { cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Ritmo circular que prende até o fim", cutSec: 0.56, zoomAmt: 0.40, shake: 12, flash: true, bpm: 134, pan: 70 },
+      { cat: "Viral", name: "#43 Dopamina Rápida", desc: "Estímulos visuais e sonoros constantes", cutSec: 0.50, zoomAmt: 0.44, shake: 14, flash: true, bpm: 142, pan: 74 },
+      { cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Sincronia forte de batida e movimento lateral", cutSec: 0.54, zoomAmt: 0.42, shake: 13, flash: true, bpm: 136, pan: 76 },
+      { cat: "Viral", name: "#45 Quebra de Padrão", desc: "Alterna direção de zoom e pan a cada corte", cutSec: 0.56, zoomAmt: 0.45, shake: 13, flash: true, bpm: 136, pan: 78 },
+      { cat: "Viral", name: "#46 POV Mão na Massa", desc: "Sensação dinâmica de proximidade e energia", cutSec: 0.58, zoomAmt: 0.42, shake: 14, flash: true, bpm: 134, pan: 72 },
+      { cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura de impacto imediato com som de whoosh", cutSec: 0.52, zoomAmt: 0.46, shake: 15, flash: true, bpm: 140, pan: 68 },
+      { cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Pulso grave constante com cortes precisos", cutSec: 0.56, zoomAmt: 0.41, shake: 13, flash: true, bpm: 136, pan: 70 },
+      { cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Alternância veloz entre os ângulos gerados", cutSec: 0.52, zoomAmt: 0.40, shake: 12, flash: true, bpm: 138, pan: 76 },
+      { cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Combinação forte de corte, zoom, flash e grave", cutSec: 0.54, zoomAmt: 0.44, shake: 14, flash: true, bpm: 139, pan: 72 }
     ];
 
     const productImg = document.getElementById("productImg");
@@ -303,6 +307,7 @@
     const estTime = document.getElementById("estTime");
     const burnSubs = document.getElementById("burnSubs");
     const enableBgm = document.getElementById("enableBgm");
+    const enableMotionClip = document.getElementById("enableMotionClip");
     const btnOnlyImg = document.getElementById("btnOnlyImg");
     const btnBuild = document.getElementById("btnBuild");
     const stage = document.getElementById("stage");
@@ -482,7 +487,36 @@
       });
     }
 
-    // Trilha sonora energética + SFX de impacto e whoosh em cada corte rápido
+    async function tryLoadMotionVideo(videoUrl) {
+      if (!videoUrl) return null;
+      try {
+        const vid = document.createElement("video");
+        vid.src = videoUrl;
+        vid.crossOrigin = "anonymous";
+        vid.muted = true;
+        vid.loop = true;
+        vid.playsInline = true;
+        await new Promise((resolve) => {
+          const timer = setTimeout(() => resolve(), 4000);
+          vid.onloadeddata = () => {
+            clearTimeout(timer);
+            resolve();
+          };
+          vid.onerror = () => {
+            clearTimeout(timer);
+            resolve();
+          };
+        });
+        if (vid.readyState >= 2) {
+          await vid.play().catch(() => {});
+          return vid;
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
     function startDynamicSoundEngine(audioCtx, dest, durationSec, bpm, cutSec) {
       const masterMusic = audioCtx.createGain();
       masterMusic.gain.setValueAtTime(0.45, audioCtx.currentTime);
@@ -535,7 +569,6 @@
         bass.stop(time + 0.22);
       }
 
-      // SFX de Whoosh + Impacto seco a cada corte rápido
       for (let c = 0; c < durationSec; c += cutSec) {
         const cutTime = now + c;
         const whoosh = audioCtx.createOscillator();
@@ -549,30 +582,6 @@
         wGain.connect(masterMusic);
         whoosh.start(cutTime);
         whoosh.stop(cutTime + 0.16);
-      }
-    }
-
-    function speakFallbackPtBr(text, voice) {
-      try {
-        if (!("speechSynthesis" in window)) return;
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "pt-BR";
-        utter.rate = 1.12;
-        utter.pitch = voice === "adam" ? 0.85 : 1.08;
-        const voices = window.speechSynthesis.getVoices() || [];
-        const ptVoices = voices.filter((v) => /pt[-_]?BR/i.test(v.lang));
-        if (ptVoices.length) {
-          const preferred = ptVoices.find((v) =>
-            voice === "adam"
-              ? /daniel|felipe|ricardo|male|masculino/i.test(v.name)
-              : /francisca|camila|vitória|vitoria|luciana|female|feminino/i.test(v.name)
-          );
-          utter.voice = preferred || ptVoices[0];
-        }
-        window.speechSynthesis.speak(utter);
-      } catch {
-        // Ignora se o navegador não suportar síntese local
       }
     }
 
@@ -603,7 +612,38 @@
       }
     }
 
-    async function renderViralVideo(images, audioUrl, targetSeconds, withBurnedSubs, withMusic, vidStyle, textForVoice, voiceChoice) {
+    // Desenha setinha animada apontando para o canto inferior esquerdo (sacolinha) nos últimos segundos
+    function drawCartArrow(context2d, elapsed, totalDuration) {
+      if (elapsed < totalDuration - 3.2) return;
+      const pulse = Math.sin(elapsed * 12) * 10;
+      const x = 135 + pulse * 0.4;
+      const y = canvas.height - 235 + pulse;
+
+      context2d.save();
+      context2d.strokeStyle = "#fde047";
+      context2d.fillStyle = "#ef4444";
+      context2d.lineWidth = 5;
+      context2d.lineCap = "round";
+      context2d.lineJoin = "round";
+
+      // Haste curva apontando para baixo/esquerda (onde fica a sacolinha)
+      context2d.beginPath();
+      context2d.moveTo(x + 28, y - 55);
+      context2d.quadraticCurveTo(x - 10, y - 20, x - 18, y + 26);
+      context2d.stroke();
+
+      // Ponta da seta
+      context2d.beginPath();
+      context2d.moveTo(x - 36, y + 10);
+      context2d.lineTo(x - 18, y + 32);
+      context2d.lineTo(x + 2, y + 12);
+      context2d.closePath();
+      context2d.fill();
+      context2d.stroke();
+      context2d.restore();
+    }
+
+    async function renderViralVideo(images, motionClips, audioUrl, targetSeconds, withBurnedSubs, withMusic, vidStyle, textForVoice) {
       const { audio, duration: audioDuration } = await tryLoadAudioSafe(audioUrl);
 
       const chosenSec = Math.min(30, Math.max(10, Number(targetSeconds) || 15));
@@ -624,13 +664,11 @@
         try {
           const source = audioCtx.createMediaElementSource(audio);
           const voiceGain = audioCtx.createGain();
-          voiceGain.gain.value = 1.3;
+          voiceGain.gain.value = 1.35;
           source.connect(voiceGain);
           voiceGain.connect(dest);
           voiceGain.connect(audioCtx.destination);
-        } catch {
-          // Mantém trilha + SFX se o roteamento externo for bloqueado
-        }
+        } catch {}
       }
 
       if (withMusic) {
@@ -661,8 +699,6 @@
       recorder.start();
       if (audio) {
         audio.play().catch(() => {});
-      } else {
-        speakFallbackPtBr(textForVoice, voiceChoice);
       }
 
       const startTime = performance.now();
@@ -673,27 +709,30 @@
           const elapsed = (now - startTime) / 1000;
           if (elapsed >= finalDuration) {
             if (audio) audio.pause();
-            if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+            if (Array.isArray(motionClips)) {
+              motionClips.forEach((v) => { if (v && typeof v.pause === "function") v.pause(); });
+            }
             recorder.stop();
             resolve();
             return;
           }
 
-          // Cortes rápidos + crash zoom + deslocamento lateral + shake de impacto
           const cutIndex = Math.floor(elapsed / cutSec);
           const cutProgress = (elapsed % cutSec) / cutSec;
-          const img = images[cutIndex % images.length];
+          const slot = cutIndex % Math.max(1, images.length);
+          const img = images[slot];
+          const clipVid = Array.isArray(motionClips) ? motionClips[slot] : null;
 
-          const easeOut = 1 - Math.pow(1 - cutProgress, 3.2);
-          const zoomBase = cutIndex % 2 === 0 ? 1.05 : 1.18;
+          const easeOut = 1 - Math.pow(1 - cutProgress, 3.5);
+          const zoomBase = cutIndex % 2 === 0 ? 1.06 : 1.24;
           const scale = zoomBase + easeOut * vidStyle.zoomAmt;
 
           const dir = cutIndex % 2 === 0 ? 1 : -1;
           const panX = dir * (easeOut - 0.5) * vidStyle.pan;
-          const panY = ((cutIndex % 3) - 1) * 22 * (1 - easeOut);
-          const impactDecay = Math.max(0, 1 - cutProgress * 4.2);
-          const shakeX = Math.sin(elapsed * 85) * vidStyle.shake * impactDecay;
-          const shakeY = Math.cos(elapsed * 78) * vidStyle.shake * impactDecay;
+          const panY = ((cutIndex % 3) - 1) * 28 * (1 - easeOut);
+          const impactDecay = Math.max(0, 1 - cutProgress * 3.8);
+          const shakeX = Math.sin(elapsed * 95) * vidStyle.shake * impactDecay;
+          const shakeY = Math.cos(elapsed * 88) * vidStyle.shake * impactDecay;
 
           const w = canvas.width * scale;
           const h = canvas.height * scale;
@@ -703,7 +742,9 @@
           ctx.fillStyle = "#04060a";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          if (img) {
+          if (clipVid && clipVid.readyState >= 2) {
+            ctx.drawImage(clipVid, offsetX, offsetY, w, h);
+          } else if (img) {
             ctx.drawImage(img, offsetX, offsetY, w, h);
           } else {
             const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
@@ -713,8 +754,8 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
 
-          if (vidStyle.flash && cutProgress < 0.09) {
-            const alpha = (0.09 - cutProgress) * 4.8;
+          if (vidStyle.flash && cutProgress < 0.11) {
+            const alpha = (0.11 - cutProgress) * 4.5;
             ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(0.45, alpha)})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
@@ -741,6 +782,7 @@
               ctx.fillText(label, canvas.width / 2, boxY + 2, maxTextW);
               ctx.restore();
             }
+            drawCartArrow(ctx, elapsed, finalDuration);
           }
 
           requestAnimationFrame(drawFrame);
@@ -752,8 +794,7 @@
       return {
         videoUrl: URL.createObjectURL(videoBlob),
         srtContent: createSrtContent(finalSubs),
-        finalDuration,
-        hadVoice: Boolean(audio)
+        finalDuration
       };
     }
 
@@ -808,6 +849,7 @@
         });
 
         const loadedImages = [];
+        const sceneUrls = [];
         if (uploadedBase64) {
           for (let i = 1; i <= 3; i++) {
             stage.innerHTML = `<div class="status-msg">2/3 • Renderizando ângulo ${i}/3 no estilo <strong>${selectedImgModel.name}</strong>...</div>`;
@@ -818,6 +860,7 @@
               sceneIndex: i,
               imagePrompt: selectedImgModel.prompt
             });
+            sceneUrls.push(sc.imageUrl);
             const imgObj = await loadImage(sc.imageUrl);
             loadedImages.push(imgObj);
           }
@@ -825,16 +868,34 @@
           loadedImages.push(null);
         }
 
+        const motionClips = [];
+        if (enableMotionClip.checked && sceneUrls.length > 0) {
+          for (let i = 0; i < sceneUrls.length; i++) {
+            stage.innerHTML = `<div class="status-msg">2.5/3 • Animando cena ${i + 1}/${sceneUrls.length} com movimento cinematográfico...</div>`;
+            try {
+              const clipRes = await callApi({
+                task: "clip",
+                imageUrl: sceneUrls[i],
+                motionPrompt: `Hollywood commercial camera motion for ${selectedImgModel.name}, dramatic rim lighting, floating sparks and subtle smoke, keeping the exact product 100% identical, 9:16 vertical.`
+              });
+              const vidEl = await tryLoadMotionVideo(clipRes.videoUrl);
+              motionClips.push(vidEl);
+            } catch {
+              motionClips.push(null);
+            }
+          }
+        }
+
         stage.innerHTML = `<div class="status-msg">3/3 • Montando vídeo (<strong>${selectedVidModel.name}</strong>)...</div>`;
         const result = await renderViralVideo(
           loadedImages,
+          motionClips,
           tts.audioUrl,
           Number(minDuration.value),
           burnSubs.checked,
           enableBgm.checked,
           selectedVidModel,
-          text,
-          selectedVoice
+          text
         );
 
         const srtBlob = new Blob([result.srtContent], { type: "text/plain;charset=utf-8" });
