@@ -118,7 +118,7 @@ export async function onRequestPost(context) {
       let providerUsed = "none";
       const errors = [];
 
-      // 1. Kokoro PT-BR (pm_alex para masculino | pf_dora para feminino)
+      // 1. Kokoro PT-BR (ambas persuasivas e dinâmicas em speed 1.18)
       try {
         const voiceId = isMale ? "pm_alex" : "pf_dora";
         const kokoroData = await fetchWithTimeout(
@@ -129,7 +129,7 @@ export async function onRequestPost(context) {
             body: JSON.stringify({
               prompt: scriptPtBr,
               voice: voiceId,
-              speed: 1.15
+              speed: 1.18
             })
           },
           22000,
@@ -141,7 +141,7 @@ export async function onRequestPost(context) {
         errors.push(`Kokoro: ${formatError(err)}`);
       }
 
-      // 2. MiniMax Speech-02 HD (Deep_Voice_Man para masculino | Sweet_Girl_2 para feminino)
+      // 2. MiniMax Speech-02 HD (reserva mantendo energia e dinamismo em ambas)
       if (!audioUrl) {
         try {
           const minimaxVoice = isMale ? "Deep_Voice_Man" : "Sweet_Girl_2";
@@ -154,9 +154,9 @@ export async function onRequestPost(context) {
                 text: scriptPtBr,
                 voice_setting: {
                   voice_id: minimaxVoice,
-                  speed: 1.15,
+                  speed: 1.18,
                   vol: 1.0,
-                  pitch: isMale ? -1 : 0
+                  pitch: isMale ? -1 : 1
                 },
                 output_format: "mp3"
               })
