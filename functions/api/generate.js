@@ -1,834 +1,249 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — 50 Modelos Virais de Imagem &amp; Vídeo (10s a 30s)</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, sans-serif; }
-    body { background: #06080d; color: #f4f6fb; min-height: 100vh; padding: 18px; }
-    .topbar { max-width: 1320px; margin: 0 auto 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-bottom: 1px solid #182030; padding-bottom: 14px; }
-    .brand { font-size: 22px; font-weight: 900; letter-spacing: 0.05em; color: #fff; display: flex; align-items: center; gap: 10px; }
-    .brand span { background: #22c55e; color: #041108; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 800; }
-    .pill-info { background: #101624; border: 1px solid #222e45; padding: 7px 14px; border-radius: 999px; font-size: 12px; color: #9fb0cc; }
-    .layout { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 18px; }
-    @media (max-width: 980px) { .layout { grid-template-columns: 1fr; } }
-    .panel { background: #0d121d; border: 1px solid #1b2538; border-radius: 16px; padding: 18px; }
-    .step-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #22c55e; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-    .step-label small { color: #94a3b8; font-weight: 600; text-transform: none; }
-    .row-top { display: grid; grid-template-columns: 190px 1fr; gap: 12px; margin-bottom: 16px; }
-    @media (max-width: 600px) { .row-top { grid-template-columns: 1fr; } }
-    .upload-area { border: 1.5px dashed #2b3954; border-radius: 12px; padding: 12px; text-align: center; background: #080c14; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 138px; }
-    .upload-area input { display: none; }
-    .upload-area img { max-height: 92px; border-radius: 8px; margin-top: 8px; display: none; }
-    .box-group { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-    .box-group label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; }
-    select, textarea, input[type="text"] { width: 100%; background: #111827; border: 1px solid #29364f; border-radius: 9px; color: #f8fafc; padding: 9px 11px; font-size: 13px; outline: none; }
-    textarea { min-height: 98px; resize: vertical; line-height: 1.45; }
-    .voice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .voice-card { background: #111827; border: 1.5px solid #26324a; border-radius: 10px; padding: 10px; cursor: pointer; text-align: left; color: #e2e8f0; transition: 0.15s; }
-    .voice-card.active { border-color: #22c55e; background: #0f2119; }
-    .voice-card strong { display: block; font-size: 13px; }
-    .voice-card small { font-size: 11px; color: #94a3b8; }
+export async function onRequestPost(context) {
+  const { request, env } = context;
 
-    .catalog-box { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; margin-bottom: 14px; }
-    .filter-bar { display: grid; grid-template-columns: 1fr 175px; gap: 8px; margin-bottom: 10px; }
-    @media (max-width: 560px) { .filter-bar { grid-template-columns: 1fr; } }
-    .preset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; max-height: 172px; overflow-y: auto; padding-right: 4px; }
-    @media (max-width: 560px) { .preset-grid { grid-template-columns: 1fr; } }
-    .preset-item { background: #101725; border: 1px solid #233048; border-radius: 9px; padding: 8px 10px; cursor: pointer; text-align: left; color: #e2e8f0; transition: 0.12s; }
-    .preset-item:hover { border-color: #3b4f75; }
-    .preset-item.active { border-color: #22c55e; background: #0e2218; }
-    .preset-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 2px; }
-    .preset-top strong { font-size: 12px; color: #fff; }
-    .badge-cat { font-size: 10px; padding: 2px 6px; border-radius: 5px; background: #1c273d; color: #7dd3fc; font-weight: 700; white-space: nowrap; }
-    .preset-item p { font-size: 11px; color: #94a3b8; line-height: 1.3; }
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
+  };
 
-    .meta-bar { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-top: 6px; margin-bottom: 12px; }
-    .options-row { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; }
-    .toggle-row { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #cbd5e1; cursor: pointer; }
-    .btn-row { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; }
-    @media (max-width: 560px) { .btn-row { grid-template-columns: 1fr; } }
-    .btn-sec { background: #182338; color: #f8fafc; border: 1px solid #2f4266; border-radius: 12px; padding: 14px; font-size: 13px; font-weight: 800; cursor: pointer; }
-    .btn-generate { background: #22c55e; color: #041208; border: none; border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 900; cursor: pointer; }
-    .btn-generate:disabled, .btn-sec:disabled { opacity: 0.5; cursor: not-allowed; }
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
 
-    .preview-stage { background: #070a10; border: 1px solid #1b2436; border-radius: 14px; min-height: 610px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; gap: 12px; }
-    video.player-916, img.preview-916 { width: 100%; max-width: 300px; aspect-ratio: 9/16; object-fit: cover; border-radius: 14px; background: #000; border: 1px solid #26334d; }
-    .dl-box { width: 100%; background: #0c121e; border: 1px solid #22304a; border-radius: 12px; padding: 12px; text-align: left; }
-    .dl-title { font-size: 11px; font-weight: 800; color: #38bdf8; margin-bottom: 8px; text-transform: uppercase; }
-    .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .dl-btn { display: block; text-align: center; background: #182338; color: #f8fafc; border: 1px solid #2d3f63; border-radius: 8px; padding: 9px 10px; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; }
-    .dl-btn.main { background: #22c55e; color: #041208; border: none; grid-column: span 2; font-size: 13px; padding: 11px; }
-    .status-msg { font-size: 13px; color: #9fb0cc; line-height: 1.5; }
-    .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; }
-  </style>
-</head>
-<body>
-  <div class="topbar">
-    <div class="brand">NEXORA.AI <span>50 + 50 VIRAIS</span></div>
-    <div class="pill-info">50 Modelos de Imagem • 50 Ritmos de Vídeo (10s a 30s) • Cortes Rápidos + Trilha &amp; SFX</div>
-  </div>
-
-  <div class="layout">
-    <div class="panel">
-      <div class="step-label">1. Produto, Voz &amp; Duração</div>
-      <div class="row-top">
-        <label class="upload-area" for="productImg">
-          <strong style="font-size:13px;">Foto do Produto</strong>
-          <span style="font-size:11px;color:#94a3b8;margin-top:3px;">Mantém 100% fiel</span>
-          <input type="file" id="productImg" accept="image/*" />
-          <img id="thumbPreview" alt="Produto" />
-        </label>
-
-        <div class="box-group">
-          <div>
-            <label>Voz da Narração</label>
-            <div class="voice-grid">
-              <button type="button" class="voice-card active" data-voice="adam">
-                <strong>Adam (Masculina)</strong>
-                <small>Forte &amp; persuasiva</small>
-              </button>
-              <button type="button" class="voice-card" data-voice="natasha">
-                <strong>Natasha (Feminina)</strong>
-                <small>Dinâmica &amp; natural</small>
-              </button>
-            </div>
-          </div>
-          <div>
-            <label for="minDuration">Duração do Vídeo (10s a 30s)</label>
-            <select id="minDuration">
-              <option value="10">10 segundos (Gancho Ultra Rápido)</option>
-              <option value="15" selected>15 segundos (Ideal TikTok Shop / Reels)</option>
-              <option value="20">20 segundos (Oferta &amp; Prova)</option>
-              <option value="30">30 segundos (Review Completo)</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="step-label">
-        <span>2. Modelo de Imagem Ultra-Realista (50 Opções)</span>
-        <small id="selectedImgLabel">Selecionado: #01 Estúdio Dark Obsidiana &amp; Ouro</small>
-      </div>
-      <div class="catalog-box">
-        <div class="filter-bar">
-          <input type="text" id="imgSearch" placeholder="Buscar entre os 50 modelos de imagem..." />
-          <select id="imgCatFilter">
-            <option value="TODOS">Todas Categorias (50)</option>
-            <option value="Luxo">Luxo &amp; Pedestal (10)</option>
-            <option value="Viral">Viral &amp; Alto Contraste (10)</option>
-            <option value="Vendas">Conversão &amp; Vitrine (10)</option>
-            <option value="Lifestyle">Lifestyle Ultra-Realista (10)</option>
-            <option value="Tech">Tech &amp; Futurista (10)</option>
-          </select>
-        </div>
-        <div class="preset-grid" id="imgPresetGrid"></div>
-      </div>
-
-      <div class="step-label">
-        <span>3. Modelo de Vídeo Viral &amp; Ritmo (50 Opções)</span>
-        <small id="selectedVidLabel">Selecionado: #01 Metralhadora TikTok Shop</small>
-      </div>
-      <div class="catalog-box">
-        <div class="filter-bar">
-          <input type="text" id="vidSearch" placeholder="Buscar entre os 50 ritmos de vídeo..." />
-          <select id="vidCatFilter">
-            <option value="TODOS">Todos Ritmos (50)</option>
-            <option value="Agressivo">Cortes Ultra-Rápidos (10)</option>
-            <option value="Zoom">Crash Zoom &amp; Impacto (10)</option>
-            <option value="Vendas">Alta Conversão Shop (10)</option>
-            <option value="Cinema">Cinematográfico &amp; Luxo (10)</option>
-            <option value="Viral">Trend &amp; Retenção (10)</option>
-          </select>
-        </div>
-        <div class="preset-grid" id="vidPresetGrid"></div>
-      </div>
-
-      <div class="step-label">4. Roteiro do Vídeo (Narração + Legenda Sincronizada)</div>
-      <textarea id="scriptText">Para tudo e olha esse nível de acabamento antes de gastar dinheiro à toa. Ele entrega resultado real já no primeiro uso, tem qualidade absurda e está saindo com condição especial hoje. Clica na sacolinha aqui embaixo e garante o seu agora!</textarea>
-      <div class="meta-bar">
-        <span id="wordCount">0 palavras</span>
-        <span id="estTime">Duração alvo: 15s (10s a 30s)</span>
-      </div>
-
-      <div class="options-row">
-        <label class="toggle-row">
-          <input type="checkbox" id="burnSubs" checked />
-          <span>Legenda compacta (zona segura)</span>
-        </label>
-        <label class="toggle-row">
-          <input type="checkbox" id="enableBgm" checked />
-          <span>Trilha sonora dinâmica + SFX nos cortes</span>
-        </label>
-      </div>
-
-      <div class="btn-row">
-        <button type="button" class="btn-sec" id="btnOnlyImg">Gerar Só Imagem 9:16</button>
-        <button type="button" class="btn-generate" id="btnBuild">Gerar Vídeo Viral Completo (10s–30s)</button>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="step-label">5. Resultado Pronto para Postar</div>
-      <div class="preview-stage" id="stage">
-        <div class="status-msg">Escolha um dos <strong>50 modelos de imagem</strong> + um dos <strong>50 modelos de vídeo viral</strong>, digite seu roteiro e clique em <strong>Gerar Vídeo Viral Completo</strong>.</div>
-      </div>
-    </div>
-  </div>
-
-  <canvas id="renderCanvas" width="720" height="1280" style="display:none;"></canvas>
-
-  <script>
-    const IMAGE_MODELS = [
-      { id: 1, cat: "Luxo", name: "#01 Estúdio Dark Obsidiana & Ouro", desc: "Pedestal escuro com aro dourado e reflexo profundo", prompt: "dark obsidian stone pedestal with brushed gold metallic trim, deep glossy black floor reflection, dramatic warm rim lighting" },
-      { id: 2, cat: "Luxo", name: "#02 Mármore Nero Marquina", desc: "Mármore preto com veios brancos e luz de vitrine", prompt: "polished Nero Marquina black marble slab with subtle white veins, crisp luxury boutique spotlight, moody dark backdrop" },
-      { id: 3, cat: "Luxo", name: "#03 Pódio Veludo Esmeralda & Latão", desc: "Contraste sofisticado verde escuro e dourado", prompt: "deep emerald velvet display block with antique brass accents, soft golden studio key light, dark luxury atmosphere" },
-      { id: 4, cat: "Luxo", name: "#04 Cristal Fumê & Feixe Dourado", desc: "Bloco de vidro fumê com raios de luz quentes", prompt: "heavy smoked crystal glass podium, warm golden god-rays cutting through dark studio haze, ultra crisp reflections" },
-      { id: 5, cat: "Luxo", name: "#05 Rocha Vulcânica & Âmbar", desc: "Textura mineral bruta com brilho quente lateral", prompt: "textured dark basalt volcanic rock pedestal with warm amber backlight glow, high-end commercial studio photography" },
-      { id: 6, cat: "Luxo", name: "#06 Ouro Líquido & Preto Fosco", desc: "Superfície preta fosca com detalhes metálicos", prompt: "matte carbon black luxury plinth with subtle molten gold reflection accents, dramatic high-contrast studio lighting" },
-      { id: 7, cat: "Luxo", name: "#07 Travertino Italiano & Luz Solar", desc: "Pedra bege nobre com sombras arquitetônicas", prompt: "honed Italian travertine stone pedestal with warm architectural window shadow play, refined neutral luxury backdrop" },
-      { id: 8, cat: "Luxo", name: "#08 Joalheria Noir Reflexiva", desc: "Espelho negro com contorno luminoso perfeito", prompt: "black mirror showcase surface with razor-sharp white and gold rim light, ultra-clean high-ticket commercial look" },
-      { id: 9, cat: "Luxo", name: "#09 Madeira Nobre & Bronze", desc: "Nogueira escura com acabamento metálico quente", prompt: "dark walnut wood and brushed bronze showcase table, warm moody editorial studio lighting, shallow depth of field" },
-      { id: 10, cat: "Luxo", name: "#10 Palco Monolito Cinza Grafite", desc: "Concreto arquitetônico fino com holofote central", prompt: "smooth dark graphite architectural concrete monolith, focused overhead softbox beam, crisp commercial shadows" },
-
-      { id: 11, cat: "Viral", name: "#11 Estrobo Neon Ciano & Ouro", desc: "Luzes duplas vibrantes que param o scroll", prompt: "dark studio surface lit by electric cyan and warm gold dual rim lights, high-contrast viral commercial aesthetic" },
-      { id: 12, cat: "Viral", name: "#12 Fumaça Densa & Holofote", desc: "Atmosfera dramática com feixe de luz no produto", prompt: "dramatic atmospheric studio mist with a sharp vertical spotlight beam illuminating the product on dark slate" },
-      { id: 13, cat: "Viral", name: "#13 Reflexo Molhado Urbano", desc: "Superfície escura espelhada com brilho intenso", prompt: "glossy wet dark slate surface with vivid specular highlights and moody bokeh lights in deep background" },
-      { id: 14, cat: "Viral", name: "#14 Halo Luminoso Vermelho & Preto", desc: "Contraste agressivo para chamar atenção nos 2s", prompt: "deep matte black studio backdrop with dramatic crimson red and white edge halo lighting, bold viral look" },
-      { id: 15, cat: "Viral", name: "#15 Raio Azul Elétrico", desc: "Energia visual forte com recorte nítido", prompt: "sleek dark metallic table with vivid electric blue rim light and crisp white front fill light, ultra-sharp focus" },
-      { id: 16, cat: "Viral", name: "#16 Impacto Branco Puro & Sombra Dura", desc: "Estética editorial moderna de alto contraste", prompt: "stark architectural white studio pedestal with bold dramatic diagonal sunlight shadows, ultra crisp detail" },
-      { id: 17, cat: "Viral", name: "#17 Vidro Molhado & Gotículas Frescas", desc: "Sensação tátil ultra-realista com gotas de água", prompt: "dark tempered glass surface covered in realistic fine water droplets, crisp studio strobe lighting, ultra-detailed" },
-      { id: 18, cat: "Viral", name: "#18 Cromo Espelhado Futurista", desc: "Superfície metálica líquida de alto brilho", prompt: "polished liquid chrome metallic pedestal with dramatic studio light streaks, bold high-converting visual" },
-      { id: 19, cat: "Viral", name: "#19 Túnel de Luz Geométrico", desc: "Perspectiva profunda que puxa o olhar ao centro", prompt: "modern dark architectural light tunnel perspective drawing focus directly to the center product, sharp studio lighting" },
-      { id: 20, cat: "Viral", name: "#20 Contraste Solar Dourado", desc: "Feixe quente intenso atravessando fundo escuro", prompt: "intense golden hour sunbeam slicing across a dark matte stone surface, dramatic chiaroscuro product shot" },
-
-      { id: 21, cat: "Vendas", name: "#21 Vitrine E-commerce Clean Premium", desc: "Fundo claro sofisticado com sombra suave realista", prompt: "clean off-white luxury studio pedestal with soft natural contact shadow and balanced commercial key light" },
-      { id: 22, cat: "Vendas", name: "#22 Bancada de Loja Boutique", desc: "Expositor moderno que passa confiança imediata", prompt: "modern upscale retail display counter with warm recessed shelf lighting and soft blurred boutique background" },
-      { id: 23, cat: "Vendas", name: "#23 Pedestal Cinza Neutro Comercial", desc: "Equilíbrio perfeito para destacar cores do produto", prompt: "neutral warm grey matte studio podium with soft wrap-around commercial lighting, true-to-life product colors" },
-      { id: 24, cat: "Vendas", name: "#24 Mesa de Mármore Branco Carrara", desc: "Clássico de alta conversão para beleza e casa", prompt: "bright white Carrara marble countertop with soft daylight window reflection and clean luxury aesthetic" },
-      { id: 25, cat: "Vendas", name: "#25 Expositor Acrílico Transparente", desc: "Visual limpo flutuante com brilho de estúdio", prompt: "crystal clear thick acrylic display block on soft neutral studio backdrop, crisp commercial rim highlights" },
-      { id: 26, cat: "Vendas", name: "#26 Fundo Bege Areia Minimalista", desc: "Tom quente acolhedor que vende muito no feed", prompt: "warm sand-toned minimalist plaster pedestal with gentle natural shadows, clean modern e-commerce look" },
-      { id: 27, cat: "Vendas", name: "#27 Pódio Duplo em Camadas", desc: "Composição profissional de catálogo premium", prompt: "two-tier architectural stone and brushed metal display podium, crisp studio lighting, clean commercial framing" },
-      { id: 28, cat: "Vendas", name: "#28 Destaque Central Estúdio Pro", desc: "Iluminação de catálogo internacional de alta definição", prompt: "international flagship catalog studio lighting, subtle dark-to-slate gradient background, razor-sharp product texture" },
-      { id: 29, cat: "Vendas", name: "#29 Bancada Madeira Clara Escandinava", desc: "Visual orgânico confiável para uso diário", prompt: "light oak Scandinavian wooden table with soft morning studio light and clean neutral wall background" },
-      { id: 30, cat: "Vendas", name: "#30 Vitrine Azul Profundo Executivo", desc: "Tom azul marinho elegante que transmite autoridade", prompt: "deep midnight navy matte display pedestal with crisp white and silver studio lighting, authoritative commercial feel" },
-
-      { id: 31, cat: "Lifestyle", name: "#31 Bancada de Banheiro Spa Luxo", desc: "Ideal para cosméticos, perfumes e cuidados pessoais", prompt: "luxury spa bathroom marble vanity with soft natural morning light, subtle steam atmosphere, blurred modern interior" },
-      { id: 32, cat: "Lifestyle", name: "#32 Mesa de Escritório Executivo", desc: "Cenário real moderno para acessórios e gadgets", prompt: "sleek modern executive desk with dark leather mat, warm desk lamp glow, softly blurred contemporary office" },
-      { id: 33, cat: "Lifestyle", name: "#33 Cozinha Gourmet Moderna", desc: "Bancada limpa iluminada para utilidades e casa", prompt: "modern gourmet kitchen quartz island with bright natural daylight and softly blurred upscale home background" },
-      { id: 34, cat: "Lifestyle", name: "#34 Criado-Mudo Quarto Aconchegante", desc: "Luz quente intimista de uso real em casa", prompt: "cozy modern bedroom nightstand with warm bedside lamp ambiance, soft linen textures in blurred background" },
-      { id: 35, cat: "Lifestyle", name: "#35 Café Urbano & Luz da Manhã", desc: "Mesa de cafeteria sofisticada com bokeh natural", prompt: "upscale urban cafe stone table bathed in warm morning sunlight with natural city bokeh in background" },
-      { id: 36, cat: "Lifestyle", name: "#36 Academia & Treino Dark", desc: "Ideal para suplementos, garrafas e linha fitness", prompt: "modern dark boutique gym bench with dramatic overhead lighting and subtle metallic textures in background" },
-      { id: 37, cat: "Lifestyle", name: "#37 Terraço Pôr do Sol Dourado", desc: "Luz natural quente ao ar livre com fundo desfocado", prompt: "modern outdoor stone terrace at golden hour sunset, warm natural sunlight, creamy bokeh background" },
-      { id: 38, cat: "Lifestyle", name: "#38 Lavabo Minimalista Arquitetônico", desc: "Pedra natural e iluminação indireta sofisticada", prompt: "architectural minimalist powder room stone sink counter with warm hidden LED cove lighting" },
-      { id: 39, cat: "Lifestyle", name: "#39 Interior de Carro Executivo", desc: "Console de couro escuro para acessórios automotivos/uso diário", prompt: "luxury dark leather car center console with soft natural daylight coming through window, realistic shallow depth" },
-      { id: 40, cat: "Lifestyle", name: "#40 Varanda Tropical & Pedra Natural", desc: "Frescor natural com sombras de folhagens suaves", prompt: "natural limestone patio table with soft dappled palm leaf sunlight shadows, fresh airy lifestyle look" },
-
-      { id: 41, cat: "Tech", name: "#41 Fibra de Carbono & Luz Fria", desc: "Textura esportiva/tech de altíssima definição", prompt: "woven dark carbon fiber surface with crisp cool white and silver edge lighting, precision tech photography" },
-      { id: 42, cat: "Tech", name: "#42 Setup Gamer / Creator RGB Sutil", desc: "Bancada escura com iluminação ambiental moderna", prompt: "sleek dark matte creator desk with subtle violet and cyan ambient backlight glow, ultra-sharp product focus" },
-      { id: 43, cat: "Tech", name: "#43 Alumínio Escovado Aeroespacial", desc: "Superfície metálica industrial limpa e precisa", prompt: "anodized dark aerospace brushed aluminum podium with precision linear studio reflections" },
-      { id: 44, cat: "Tech", name: "#44 Vidro Black Piano & LED Branco", desc: "Brilho limpo estilo lançamento de smartphone", prompt: "glossy black piano glass stage with clean pure-white LED light bars reflected on surface, flagship tech launch look" },
-      { id: 45, cat: "Tech", name: "#45 Laboratório Científico Dark", desc: "Visual de alta tecnologia para fórmulas e inovação", prompt: "dark high-tech precision laboratory glass surface with cool cyan analytical lighting and crisp reflections" },
-      { id: 46, cat: "Tech", name: "#46 Titânio Fosco & Luz Lateral", desc: "Acabamento metálico moderno e resistente", prompt: "matte titanium metallic pedestal with dramatic directional side key light and deep clean shadows" },
-      { id: 47, cat: "Tech", name: "#47 Grade Luminosa Cyberpunk Limpa", desc: "Linhas de luz modernas sem poluição visual", prompt: "dark studio floor with subtle glowing geometric light lines in deep background, crisp front commercial lighting" },
-      { id: 48, cat: "Tech", name: "#48 Esfera & Monolito Futurista", desc: "Cenário geométrico arrojado de estúdio 3D realista", prompt: "ultra-realistic architectural dark matte geometric pedestals with precision rim lighting, modern commercial art" },
-      { id: 49, cat: "Tech", name: "#49 Aço Inox & Reflexo Azul Gelo", desc: "Visual frio, limpo e extremamente nítido", prompt: "brushed stainless steel display surface with crisp ice-blue and pure white studio highlights" },
-      { id: 50, cat: "Tech", name: "#50 Palco Blackout Lançamento Pro", desc: "Fundo 100% escuro com recorte cirúrgico no produto", prompt: "pure pitch-black studio void with surgical precision rim lighting outlining the product on a dark reflective base" }
-    ];
-
-    const VIDEO_MODELS = [
-      { cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Cortes rápidos + zoom agressivo + batida forte", cutSec: 0.72, zoomAmt: 0.34, shake: 12, flash: true, bpm: 136, pan: 52 },
-      { cat: "Agressivo", name: "#02 Corte Relâmpago 0.6s", desc: "Troca frenética de ângulo e zoom para retenção máxima", cutSec: 0.65, zoomAmt: 0.32, shake: 11, flash: true, bpm: 140, pan: 48 },
-      { cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura com impacto forte e cortes acelerados", cutSec: 0.75, zoomAmt: 0.36, shake: 13, flash: true, bpm: 134, pan: 56 },
-      { cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Cortes secos sincronizados com SFX de whoosh", cutSec: 0.75, zoomAmt: 0.30, shake: 10, flash: true, bpm: 132, pan: 46 },
-      { cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Clarão na transição + aproximação rápida", cutSec: 0.80, zoomAmt: 0.32, shake: 11, flash: true, bpm: 130, pan: 44 },
-      { cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Movimento contínuo sem nenhum segundo parado", cutSec: 0.68, zoomAmt: 0.35, shake: 12, flash: true, bpm: 138, pan: 50 },
-      { cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Aceleração progressiva até a chamada para ação", cutSec: 0.72, zoomAmt: 0.36, shake: 11, flash: true, bpm: 136, pan: 48 },
-      { cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Deslizamento rápido esquerda/direita com corte seco", cutSec: 0.82, zoomAmt: 0.28, shake: 10, flash: true, bpm: 128, pan: 64 },
-      { cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Zoom in rápido + vibração de grave nos cortes", cutSec: 0.70, zoomAmt: 0.34, shake: 14, flash: true, bpm: 138, pan: 42 },
-      { cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Sequência dinâmica intensa de ponta a ponta", cutSec: 0.75, zoomAmt: 0.32, shake: 11, flash: true, bpm: 134, pan: 58 },
-
-      { cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Batida de zoom seco em cada corte de cena", cutSec: 0.80, zoomAmt: 0.40, shake: 14, flash: true, bpm: 132, pan: 36 },
-      { cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Aproximação intensa nos detalhes do produto", cutSec: 0.85, zoomAmt: 0.42, shake: 9, flash: true, bpm: 126, pan: 32 },
-      { cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Tremor forte de câmera sincronizado ao grave", cutSec: 0.78, zoomAmt: 0.36, shake: 16, flash: true, bpm: 136, pan: 44 },
-      { cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Entrada rápida com impacto e zoom marcante", cutSec: 0.82, zoomAmt: 0.38, shake: 10, flash: true, bpm: 128, pan: 40 },
-      { cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Corte com flash rápido + zoom profundo", cutSec: 0.76, zoomAmt: 0.39, shake: 13, flash: true, bpm: 134, pan: 38 },
-      { cat: "Zoom", name: "#16 Foco Magnético", desc: "Puxada rápida para o centro do produto", cutSec: 0.85, zoomAmt: 0.37, shake: 8, flash: true, bpm: 124, pan: 30 },
-      { cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Batida pesada com zoom agressivo e corte seco", cutSec: 0.74, zoomAmt: 0.38, shake: 14, flash: true, bpm: 138, pan: 46 },
-      { cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Salto imediato de enquadramento a cada corte", cutSec: 0.78, zoomAmt: 0.41, shake: 12, flash: true, bpm: 132, pan: 36 },
-      { cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão rápida com efeito sonoro de impacto", cutSec: 0.80, zoomAmt: 0.35, shake: 13, flash: true, bpm: 130, pan: 48 },
-      { cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância entre plano aberto e close fechado", cutSec: 0.76, zoomAmt: 0.38, shake: 11, flash: true, bpm: 132, pan: 44 },
-
-      { cat: "Vendas", name: "#21 Conversão Sacolinha Pro", desc: "Ritmo pensado para prender até o CTA final", cutSec: 0.82, zoomAmt: 0.32, shake: 9, flash: true, bpm: 128, pan: 46 },
-      { cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Movimento comercial limpo, ágil e persuasivo", cutSec: 0.88, zoomAmt: 0.28, shake: 7, flash: true, bpm: 124, pan: 50 },
-      { cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Cortes rápidos destacando acabamento e uso", cutSec: 0.90, zoomAmt: 0.30, shake: 8, flash: true, bpm: 122, pan: 48 },
-      { cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Energia alta para anúncios de resposta direta", cutSec: 0.74, zoomAmt: 0.34, shake: 11, flash: true, bpm: 134, pan: 52 },
-      { cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento dinâmico estilo criador top afiliado", cutSec: 0.80, zoomAmt: 0.31, shake: 9, flash: true, bpm: 126, pan: 54 },
-      { cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Alternância nítida acompanhando cada argumento", cutSec: 0.84, zoomAmt: 0.32, shake: 8, flash: true, bpm: 126, pan: 44 },
-      { cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Ritmo forte que culmina no final", cutSec: 0.76, zoomAmt: 0.35, shake: 11, flash: true, bpm: 130, pan: 46 },
-      { cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições rápidas sem perder o produto", cutSec: 0.85, zoomAmt: 0.28, shake: 7, flash: true, bpm: 124, pan: 52 },
-      { cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Cadência envolvente para produtos virais", cutSec: 0.76, zoomAmt: 0.33, shake: 10, flash: true, bpm: 130, pan: 48 },
-      { cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Foco total em retenção nos primeiros segundos", cutSec: 0.75, zoomAmt: 0.34, shake: 11, flash: true, bpm: 132, pan: 48 },
-
-      { cat: "Cinema", name: "#31 Comercial de Luxo", desc: "Movimentos precisos com cortes ágeis e graves", cutSec: 0.95, zoomAmt: 0.29, shake: 6, flash: true, bpm: 120, pan: 52 },
-      { cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Impactos graves cinematográficos a cada troca", cutSec: 0.82, zoomAmt: 0.36, shake: 11, flash: true, bpm: 124, pan: 46 },
-      { cat: "Cinema", name: "#33 Desfile Editorial", desc: "Panorâmica ágil com cortes limpos de alto padrão", cutSec: 0.95, zoomAmt: 0.27, shake: 6, flash: true, bpm: 120, pan: 60 },
-      { cat: "Cinema", name: "#34 Joia em Exposição", desc: "Aproximação marcante com brilho e presença", cutSec: 0.90, zoomAmt: 0.32, shake: 6, flash: true, bpm: 118, pan: 40 },
-      { cat: "Cinema", name: "#35 Lançamento Flagship", desc: "Ritmo moderno estilo apresentação de produto", cutSec: 0.84, zoomAmt: 0.33, shake: 8, flash: true, bpm: 126, pan: 48 },
-      { cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Cortes secos com atmosfera dramática", cutSec: 0.86, zoomAmt: 0.34, shake: 9, flash: true, bpm: 122, pan: 44 },
-      { cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Deslocamento lateral contínuo com troca de ângulo", cutSec: 0.88, zoomAmt: 0.30, shake: 7, flash: true, bpm: 124, pan: 62 },
-      { cat: "Cinema", name: "#38 Spotlight VIP", desc: "Entradas marcadas com brilho e som forte", cutSec: 0.86, zoomAmt: 0.32, shake: 8, flash: true, bpm: 124, pan: 46 },
-      { cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Enquadramentos firmes e transições rápidas", cutSec: 0.90, zoomAmt: 0.28, shake: 6, flash: true, bpm: 120, pan: 50 },
-      { cat: "Cinema", name: "#40 Gala & Ouro", desc: "Cadência marcante com presença forte na tela", cutSec: 0.92, zoomAmt: 0.30, shake: 6, flash: true, bpm: 118, pan: 48 },
-
-      { cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Padrão desenhado para segurar o dedo na tela", cutSec: 0.72, zoomAmt: 0.35, shake: 11, flash: true, bpm: 134, pan: 52 },
-      { cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Ritmo circular que prende até o fim", cutSec: 0.78, zoomAmt: 0.32, shake: 10, flash: true, bpm: 130, pan: 50 },
-      { cat: "Viral", name: "#43 Dopamina Rápida", desc: "Estímulos visuais e sonoros constantes", cutSec: 0.68, zoomAmt: 0.36, shake: 12, flash: true, bpm: 138, pan: 54 },
-      { cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Sincronia forte de batida e movimento lateral", cutSec: 0.74, zoomAmt: 0.34, shake: 11, flash: true, bpm: 132, pan: 56 },
-      { cat: "Viral", name: "#45 Quebra de Padrão", desc: "Alterna direção de zoom e pan a cada corte", cutSec: 0.76, zoomAmt: 0.37, shake: 11, flash: true, bpm: 132, pan: 58 },
-      { cat: "Viral", name: "#46 POV Mão na Massa", desc: "Sensação dinâmica de proximidade e energia", cutSec: 0.78, zoomAmt: 0.34, shake: 12, flash: true, bpm: 130, pan: 52 },
-      { cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura de impacto imediato com som de whoosh", cutSec: 0.70, zoomAmt: 0.38, shake: 13, flash: true, bpm: 136, pan: 48 },
-      { cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Pulso grave constante com cortes precisos", cutSec: 0.76, zoomAmt: 0.33, shake: 11, flash: true, bpm: 132, pan: 50 },
-      { cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Alternância veloz entre os ângulos gerados", cutSec: 0.72, zoomAmt: 0.32, shake: 10, flash: true, bpm: 134, pan: 56 },
-      { cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Combinação forte de corte, zoom, flash e grave", cutSec: 0.74, zoomAmt: 0.36, shake: 12, flash: true, bpm: 135, pan: 52 }
-    ];
-
-    const productImg = document.getElementById("productImg");
-    const thumbPreview = document.getElementById("thumbPreview");
-    const minDuration = document.getElementById("minDuration");
-    const voiceCards = document.querySelectorAll(".voice-card");
-    const scriptText = document.getElementById("scriptText");
-    const wordCount = document.getElementById("wordCount");
-    const estTime = document.getElementById("estTime");
-    const burnSubs = document.getElementById("burnSubs");
-    const enableBgm = document.getElementById("enableBgm");
-    const btnOnlyImg = document.getElementById("btnOnlyImg");
-    const btnBuild = document.getElementById("btnBuild");
-    const stage = document.getElementById("stage");
-    const canvas = document.getElementById("renderCanvas");
-    const ctx = canvas.getContext("2d");
-
-    const imgSearch = document.getElementById("imgSearch");
-    const imgCatFilter = document.getElementById("imgCatFilter");
-    const imgPresetGrid = document.getElementById("imgPresetGrid");
-    const selectedImgLabel = document.getElementById("selectedImgLabel");
-
-    const vidSearch = document.getElementById("vidSearch");
-    const vidCatFilter = document.getElementById("vidCatFilter");
-    const vidPresetGrid = document.getElementById("vidPresetGrid");
-    const selectedVidLabel = document.getElementById("selectedVidLabel");
-
-    let selectedVoice = "adam";
-    let selectedImgModel = IMAGE_MODELS[0];
-    let selectedVidModel = VIDEO_MODELS[0];
-    let uploadedBase64 = "";
-    let uploadedMime = "image/jpeg";
-
-    function renderImagePresets() {
-      const q = imgSearch.value.trim().toLowerCase();
-      const cat = imgCatFilter.value;
-      const list = IMAGE_MODELS.filter((m) => {
-        const matchCat = cat === "TODOS" || m.cat === cat;
-        const matchQ = !q || m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q);
-        return matchCat && matchQ;
-      });
-
-      imgPresetGrid.innerHTML = list
-        .map(
-          (m) => `
-          <button type="button" class="preset-item ${m.id === selectedImgModel.id ? "active" : ""}" data-img-id="${m.id}">
-            <div class="preset-top">
-              <strong>${m.name}</strong>
-              <span class="badge-cat">${m.cat}</span>
-            </div>
-            <p>${m.desc}</p>
-          </button>
-        `
-        )
-        .join("");
-
-      imgPresetGrid.querySelectorAll(".preset-item").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = Number(btn.dataset.imgId);
-          selectedImgModel = IMAGE_MODELS.find((x) => x.id === id) || IMAGE_MODELS[0];
-          selectedImgLabel.textContent = `Selecionado: ${selectedImgModel.name}`;
-          renderImagePresets();
-        });
-      });
-    }
-
-    function renderVideoPresets() {
-      const q = vidSearch.value.trim().toLowerCase();
-      const cat = vidCatFilter.value;
-      const list = VIDEO_MODELS.filter((m) => {
-        const matchCat = cat === "TODOS" || m.cat === cat;
-        const matchQ = !q || m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q);
-        return matchCat && matchQ;
-      });
-
-      vidPresetGrid.innerHTML = list
-        .map(
-          (m) => `
-          <button type="button" class="preset-item ${m.name === selectedVidModel.name ? "active" : ""}" data-vid-name="${m.name}">
-            <div class="preset-top">
-              <strong>${m.name}</strong>
-              <span class="badge-cat">${m.cat}</span>
-            </div>
-            <p>${m.desc}</p>
-          </button>
-        `
-        )
-        .join("");
-
-      vidPresetGrid.querySelectorAll(".preset-item").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const nm = btn.dataset.vidName;
-          selectedVidModel = VIDEO_MODELS.find((x) => x.name === nm) || VIDEO_MODELS[0];
-          selectedVidLabel.textContent = `Selecionado: ${selectedVidModel.name}`;
-          renderVideoPresets();
-        });
-      });
-    }
-
-    imgSearch.addEventListener("input", renderImagePresets);
-    imgCatFilter.addEventListener("change", renderImagePresets);
-    vidSearch.addEventListener("input", renderVideoPresets);
-    vidCatFilter.addEventListener("change", renderVideoPresets);
-    renderImagePresets();
-    renderVideoPresets();
-
-    voiceCards.forEach((card) => {
-      card.addEventListener("click", () => {
-        voiceCards.forEach((c) => c.classList.remove("active"));
-        card.classList.add("active");
-        selectedVoice = card.dataset.voice;
-      });
+  const json = (obj, status = 200) =>
+    new Response(JSON.stringify(obj), {
+      status,
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
-    function updateCounter() {
-      const words = scriptText.value.trim().split(/\s+/).filter(Boolean);
-      const sec = Math.max(10, Math.min(30, Math.round(words.length / 2.6)));
-      wordCount.textContent = `${words.length} palavras`;
-      estTime.textContent = `Duração alvo: ${sec}s (mín. 10s / máx. 30s)`;
-    }
-    scriptText.addEventListener("input", updateCounter);
-    updateCounter();
-
-    productImg.addEventListener("change", (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      uploadedMime = file.type || "image/jpeg";
-      const reader = new FileReader();
-      reader.onload = () => {
-        const dataUrl = String(reader.result || "");
-        thumbPreview.src = dataUrl;
-        thumbPreview.style.display = "block";
-        uploadedBase64 = dataUrl.split(",")[1] || "";
-      };
-      reader.readAsDataURL(file);
-    });
-
-    async function callApi(payload) {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+  async function fetchWithTimeout(url, options, timeoutMs = 18000, stageName = "serviço") {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, {
+        ...options,
+        signal: controller.signal
       });
-      const text = await res.text();
-      let data;
-      try { data = JSON.parse(text); } catch { throw new Error("Falha de resposta do servidor."); }
-      if (!res.ok || data.error) throw new Error(data.error || `Erro ${res.status}`);
-      return data;
-    }
-
-    function buildSubtitles(text, totalDuration) {
-      const words = text.trim().split(/\s+/).filter(Boolean);
-      const chunks = [];
-      for (let i = 0; i < words.length; i += 3) {
-        chunks.push(words.slice(i, i + 3).join(" "));
-      }
-      if (!chunks.length) return [];
-      const slice = totalDuration / chunks.length;
-      return chunks.map((line, idx) => ({
-        index: idx + 1,
-        start: idx * slice,
-        end: (idx + 1) * slice,
-        text: line
-      }));
-    }
-
-    function formatSrtTime(sec) {
-      const h = String(Math.floor(sec / 3600)).padStart(2, "0");
-      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
-      const s = String(Math.floor(sec % 60)).padStart(2, "0");
-      const ms = String(Math.floor((sec % 1) * 1000)).padStart(3, "0");
-      return `${h}:${m}:${s},${ms}`;
-    }
-
-    function createSrtContent(subs) {
-      return subs
-        .map((s) => `${s.index}\n${formatSrtTime(s.start)} --> ${formatSrtTime(s.end)}\n${s.text}\n`)
-        .join("\n");
-    }
-
-    function loadImage(url) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error("Erro ao carregar cena visual."));
-        img.src = url;
-      });
-    }
-
-    function startDynamicSoundEngine(audioCtx, dest, durationSec, bpm, cutSec) {
-      const masterMusic = audioCtx.createGain();
-      masterMusic.gain.setValueAtTime(0.45, audioCtx.currentTime);
-      masterMusic.connect(dest);
-      masterMusic.connect(audioCtx.destination);
-
-      const beatSec = 60 / bpm;
-      const now = audioCtx.currentTime;
-
-      for (let t = 0; t < durationSec; t += beatSec / 2) {
-        const step = Math.round(t / (beatSec / 2));
-        const time = now + t;
-
-        if (step % 2 === 0) {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(160, time);
-          osc.frequency.exponentialRampToValueAtTime(36, time + 0.17);
-          gain.gain.setValueAtTime(1.0, time);
-          gain.gain.exponentialRampToValueAtTime(0.001, time + 0.19);
-          osc.connect(gain);
-          gain.connect(masterMusic);
-          osc.start(time);
-          osc.stop(time + 0.20);
-        } else {
-          const hat = audioCtx.createOscillator();
-          const hGain = audioCtx.createGain();
-          hat.type = "square";
-          hat.frequency.setValueAtTime(7200, time);
-          hGain.gain.setValueAtTime(0.14, time);
-          hGain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
-          hat.connect(hGain);
-          hGain.connect(masterMusic);
-          hat.start(time);
-          hat.stop(time + 0.06);
-        }
-
-        const bassNotes = [82.41, 82.41, 98.0, 110.0, 82.41, 123.47, 110.0, 98.0];
-        const freq = bassNotes[step % bassNotes.length];
-        const bass = audioCtx.createOscillator();
-        const bGain = audioCtx.createGain();
-        bass.type = "sawtooth";
-        bass.frequency.setValueAtTime(freq, time);
-        bGain.gain.setValueAtTime(0.38, time);
-        bGain.gain.exponentialRampToValueAtTime(0.001, time + 0.21);
-        bass.connect(bGain);
-        bGain.connect(masterMusic);
-        bass.start(time);
-        bass.stop(time + 0.22);
-      }
-
-      for (let c = 0; c < durationSec; c += cutSec) {
-        const cutTime = now + c;
-        const sfxOsc = audioCtx.createOscillator();
-        const sfxGain = audioCtx.createGain();
-        sfxOsc.type = "sawtooth";
-        sfxOsc.frequency.setValueAtTime(640, cutTime);
-        sfxOsc.frequency.exponentialRampToValueAtTime(48, cutTime + 0.15);
-        sfxGain.gain.setValueAtTime(0.65, cutTime);
-        sfxGain.gain.exponentialRampToValueAtTime(0.001, cutTime + 0.16);
-        sfxOsc.connect(sfxGain);
-        sfxGain.connect(masterMusic);
-        sfxOsc.start(cutTime);
-        sfxOsc.stop(cutTime + 0.17);
-      }
-    }
-
-    async function tryLoadAudioSafe(audioUrl) {
-      if (!audioUrl) return { audio: null, duration: 0 };
+      const rawText = await res.text();
+      let parsed = null;
       try {
-        const res = await fetch(audioUrl);
-        if (!res.ok) return { audio: null, duration: 0 };
-        const blob = await res.blob();
-        if (!blob || blob.size === 0) return { audio: null, duration: 0 };
-        const localUrl = URL.createObjectURL(blob);
-        const audio = new Audio(localUrl);
-        await new Promise((resolve) => {
-          const timer = setTimeout(() => resolve(), 3000);
-          audio.onloadedmetadata = () => {
-            clearTimeout(timer);
-            resolve();
-          };
-          audio.onerror = () => {
-            clearTimeout(timer);
-            resolve();
-          };
-        });
-        const dur = Number.isFinite(audio.duration) && audio.duration > 0 ? Math.ceil(audio.duration) : 0;
-        return { audio, duration: dur };
+        parsed = JSON.parse(rawText);
       } catch {
-        return { audio: null, duration: 0 };
+        parsed = null;
       }
+      if (!res.ok) {
+        const detail =
+          parsed?.detail ||
+          parsed?.message ||
+          parsed?.error ||
+          `Falha no ${stageName} (${res.status}).`;
+        throw new Error(detail);
+      }
+      if (!parsed) {
+        throw new Error(`Resposta inválida do ${stageName}.`);
+      }
+      return parsed;
+    } catch (err) {
+      if (err?.name === "AbortError") {
+        throw new Error(`${stageName} excedeu o tempo limite.`);
+      }
+      throw err;
+    } finally {
+      clearTimeout(timer);
     }
+  }
 
-    async function renderViralVideo(images, audioUrl, targetSeconds, withBurnedSubs, withMusic, vidStyle) {
-      const { audio, duration: audioDuration } = await tryLoadAudioSafe(audioUrl);
+  function extractAudioUrl(data) {
+    return (
+      data?.audio?.url ||
+      data?.audio_url ||
+      data?.url ||
+      data?.output?.audio?.url ||
+      ""
+    );
+  }
 
-      const chosenSec = Math.min(30, Math.max(10, Number(targetSeconds) || 15));
-      const finalDuration = audioDuration > 0
-        ? Math.min(30, Math.max(10, chosenSec, audioDuration))
-        : chosenSec;
+  function normalizePtBrScript(raw) {
+    return raw
+      .replace(/\s+/g, " ")
+      .replace(/([.!?])\s*/g, "$1 ")
+      .trim()
+      .slice(0, 420);
+  }
 
-      const finalSubs = buildSubtitles(scriptText.value, finalDuration);
+  function buildVoiceServices(scriptPtBr, voice, authHeaders) {
+    const isMale = voice === "adam";
+    const services = [];
 
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === "suspended") {
-        await audioCtx.resume();
-      }
-
-      const dest = audioCtx.createMediaStreamDestination();
-
-      if (audio) {
-        try {
-          const source = audioCtx.createMediaElementSource(audio);
-          const voiceGain = audioCtx.createGain();
-          voiceGain.gain.value = 1.25;
-          source.connect(voiceGain);
-          voiceGain.connect(dest);
-          voiceGain.connect(audioCtx.destination);
-        } catch {
-          // Ignora se o navegador bloquear roteamento de áudio externo e mantém trilha + SFX
-        }
-      }
-
-      if (withMusic) {
-        startDynamicSoundEngine(audioCtx, dest, finalDuration, vidStyle.bpm, vidStyle.cutSec);
-      }
-
-      const canvasStream = canvas.captureStream(30);
-      const combinedStream = new MediaStream([
-        ...canvasStream.getVideoTracks(),
-        ...dest.stream.getAudioTracks()
-      ]);
-
-      const mimeCandidate = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
-        ? "video/webm;codecs=vp9,opus"
-        : "video/webm";
-
-      const recorder = new MediaRecorder(combinedStream, { mimeType: mimeCandidate });
-      const chunks = [];
-      recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
-
-      const donePromise = new Promise((resolve) => {
-        recorder.onstop = () => {
-          audioCtx.close();
-          resolve(new Blob(chunks, { type: "video/webm" }));
-        };
-      });
-
-      recorder.start();
-      if (audio) {
-        audio.play().catch(() => {});
-      }
-
-      const startTime = performance.now();
-      const cutSec = vidStyle.cutSec;
-
-      await new Promise((resolve) => {
-        function drawFrame(now) {
-          const elapsed = (now - startTime) / 1000;
-          if (elapsed >= finalDuration) {
-            if (audio) audio.pause();
-            recorder.stop();
-            resolve();
-            return;
-          }
-
-          const cutIndex = Math.floor(elapsed / cutSec);
-          const cutProgress = (elapsed % cutSec) / cutSec;
-          const img = images[cutIndex % images.length];
-
-          const easeOut = 1 - Math.pow(1 - cutProgress, 3);
-          const zoomBase = cutIndex % 2 === 0 ? 1.04 : 1.14;
-          const scale = zoomBase + easeOut * vidStyle.zoomAmt;
-
-          const dir = cutIndex % 2 === 0 ? 1 : -1;
-          const panX = dir * (easeOut - 0.5) * vidStyle.pan;
-          const panY = (cutIndex % 3 - 1) * 14 * (1 - easeOut);
-          const impactDecay = Math.max(0, 1 - cutProgress * 4.5);
-          const shakeX = Math.sin(elapsed * 75) * vidStyle.shake * impactDecay;
-          const shakeY = Math.cos(elapsed * 68) * vidStyle.shake * impactDecay;
-
-          const w = canvas.width * scale;
-          const h = canvas.height * scale;
-          const offsetX = (canvas.width - w) / 2 + panX + shakeX;
-          const offsetY = (canvas.height - h) / 2 + panY + shakeY;
-
-          ctx.fillStyle = "#04060a";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          if (img) {
-            ctx.drawImage(img, offsetX, offsetY, w, h);
-          } else {
-            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            grad.addColorStop(0, cutIndex % 2 === 0 ? "#0f172a" : "#111827");
-            grad.addColorStop(1, "#020617");
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
-
-          if (vidStyle.flash && cutProgress < 0.08) {
-            const alpha = (0.08 - cutProgress) * 4.5;
-            ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(0.42, alpha)})`;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
-
-          if (withBurnedSubs) {
-            const activeSub = finalSubs.find((s) => elapsed >= s.start && elapsed <= s.end);
-            if (activeSub) {
-              ctx.save();
-              ctx.font = "800 22px Inter, Arial, sans-serif";
-              ctx.textAlign = "center";
-              const label = activeSub.text.toUpperCase();
-              const maxTextW = canvas.width - 180;
-              const textWidth = Math.min(maxTextW, ctx.measureText(label).width);
-              const boxW = textWidth + 18;
-              const boxX = (canvas.width - boxW) / 2;
-              const boxY = canvas.height - 390;
-
-              ctx.fillStyle = "rgba(0, 0, 0, 0.58)";
-              ctx.beginPath();
-              ctx.roundRect(boxX, boxY - 18, boxW, 28, 6);
-              ctx.fill();
-
-              ctx.fillStyle = "#fde047";
-              ctx.fillText(label, canvas.width / 2, boxY + 2, maxTextW);
-              ctx.restore();
-            }
-          }
-
-          requestAnimationFrame(drawFrame);
-        }
-        requestAnimationFrame(drawFrame);
-      });
-
-      const videoBlob = await donePromise;
-      return {
-        videoUrl: URL.createObjectURL(videoBlob),
-        srtContent: createSrtContent(finalSubs),
-        finalDuration,
-        hadVoice: Boolean(audio)
-      };
-    }
-
-    btnOnlyImg.addEventListener("click", async () => {
-      if (!uploadedBase64) {
-        stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`;
-        return;
-      }
-      btnOnlyImg.disabled = true;
-      btnBuild.disabled = true;
-      try {
-        stage.innerHTML = `<div class="status-msg">Gerando imagem 9:16 no modelo <strong>${selectedImgModel.name}</strong>...</div>`;
-        const sc = await callApi({
-          task: "scene",
-          imageBase64: uploadedBase64,
-          mimeType: uploadedMime,
-          sceneIndex: 1,
-          imagePrompt: selectedImgModel.prompt
-        });
-        stage.innerHTML = `
-          <img class="preview-916" src="${sc.imageUrl}" alt="Imagem gerada" />
-          <div class="dl-box">
-            <div class="dl-title">${selectedImgModel.name}</div>
-            <div class="dl-grid">
-              <a class="dl-btn main" href="${sc.imageUrl}" target="_blank" download="nexora-imagem-916.jpg">Abrir / Salvar Imagem 9:16</a>
-            </div>
-          </div>
-        `;
-      } catch (err) {
-        stage.innerHTML = `<div class="err-msg">${err.message || "Erro ao gerar imagem."}</div>`;
-      } finally {
-        btnOnlyImg.disabled = false;
-        btnBuild.disabled = false;
-      }
-    });
-
-    btnBuild.addEventListener("click", async () => {
-      const text = scriptText.value.trim();
-      if (!text) {
-        stage.innerHTML = `<div class="err-msg">Digite o roteiro do vídeo antes de gerar.</div>`;
-        return;
-      }
-
-      btnOnlyImg.disabled = true;
-      btnBuild.disabled = true;
-      try {
-        stage.innerHTML = `<div class="status-msg">1/3 • Gravando narração com voz <strong>${selectedVoice.toUpperCase()}</strong>...</div>`;
-        const tts = await callApi({
-          task: "tts",
-          text,
-          voice: selectedVoice
-        });
-
-        const loadedImages = [];
-        if (uploadedBase64) {
-          for (let i = 1; i <= 3; i++) {
-            stage.innerHTML = `<div class="status-msg">2/3 • Renderizando ângulo ${i}/3 no estilo <strong>${selectedImgModel.name}</strong>...</div>`;
-            const sc = await callApi({
-              task: "scene",
-              imageBase64: uploadedBase64,
-              mimeType: uploadedMime,
-              sceneIndex: i,
-              imagePrompt: selectedImgModel.prompt
-            });
-            const imgObj = await loadImage(sc.imageUrl);
-            loadedImages.push(imgObj);
-          }
-        } else {
-          loadedImages.push(null);
-        }
-
-        stage.innerHTML = `<div class="status-msg">3/3 • Montando vídeo (<strong>${selectedVidModel.name}</strong>)...</div>`;
-        const result = await renderViralVideo(
-          loadedImages,
-          tts.audioUrl,
-          Number(minDuration.value),
-          burnSubs.checked,
-          enableBgm.checked,
-          selectedVidModel
+    services.push({
+      id: isMale ? "kokoro-ptbr-male-pm_alex" : "kokoro-ptbr-female-pf_dora",
+      label: isMale ? "Kokoro PT-BR Masculino (pm_alex)" : "Kokoro PT-BR Feminino (pf_dora)",
+      gender: isMale ? "male" : "female",
+      run: async () => {
+        const voiceId = isMale ? "pm_alex" : "pf_dora";
+        const data = await fetchWithTimeout(
+          "https://fal.run/fal-ai/kokoro/brazilian-portuguese",
+          {
+            method: "POST",
+            headers: authHeaders,
+            body: JSON.stringify({
+              prompt: scriptPtBr,
+              voice: voiceId,
+              speed: 1.05
+            })
+          },
+          18000,
+          "Kokoro PT-BR"
         );
-
-        const srtBlob = new Blob([result.srtContent], { type: "text/plain;charset=utf-8" });
-        const srtUrl = URL.createObjectURL(srtBlob);
-        const audioBtn = tts.audioUrl
-          ? `<a class="dl-btn" href="${tts.audioUrl}" target="_blank" download="voz-${selectedVoice}.wav">Áudio (${selectedVoice.toUpperCase()})</a>`
-          : `<span class="dl-btn" style="opacity:0.65;">Trilha + SFX Ativos</span>`;
-
-        stage.innerHTML = `
-          <video class="player-916" src="${result.videoUrl}" controls autoplay playsinline></video>
-          <div class="dl-box">
-            <div class="dl-title">${selectedVidModel.name} • ${result.finalDuration}s (9:16)</div>
-            <div class="dl-grid">
-              <a class="dl-btn main" href="${result.videoUrl}" download="nexora-viral-${result.finalDuration}s.webm">Baixar Vídeo Pronto (${result.finalDuration}s)</a>
-              ${audioBtn}
-              <a class="dl-btn" href="${srtUrl}" download="legendas.srt">Legenda (.SRT)</a>
-            </div>
-          </div>
-        `;
-      } catch (err) {
-        stage.innerHTML = `<div class="err-msg">${err.message || "Erro ao montar vídeo."}</div>`;
-      } finally {
-        btnOnlyImg.disabled = false;
-        btnBuild.disabled = false;
+        return extractAudioUrl(data);
       }
     });
-  </script>
-</body>
-</html>
+
+    services.push({
+      id: isMale ? "minimax-male-deep_voice_man" : "minimax-female-sweet_girl_2",
+      label: isMale ? "MiniMax Masculino (Deep_Voice_Man)" : "MiniMax Feminino (Sweet_Girl_2)",
+      gender: isMale ? "male" : "female",
+      run: async () => {
+        const minimaxVoice = isMale ? "Deep_Voice_Man" : "Sweet_Girl_2";
+        const data = await fetchWithTimeout(
+          "https://fal.run/fal-ai/minimax/speech-02-hd",
+          {
+            method: "POST",
+            headers: authHeaders,
+            body: JSON.stringify({
+              text: scriptPtBr,
+              voice_setting: {
+                voice_id: minimaxVoice,
+                speed: 1.05,
+                vol: 1.0,
+                pitch: isMale ? -1 : 0
+              },
+              language_boost: "Portuguese_Brazil",
+              output_format: "mp3"
+            })
+          },
+          22000,
+          "MiniMax Speech-02 HD"
+        );
+        return extractAudioUrl(data);
+      }
+    });
+
+    return services;
+  }
+
+  try {
+    if (!env.FAL_KEY) {
+      return json({ error: "Variável FAL_KEY não configurada na Cloudflare Pages." }, 500);
+    }
+
+    const body = await request.json();
+    const task = body.task || "scene";
+
+    const authHeaders = {
+      "Authorization": `Key ${env.FAL_KEY}`,
+      "Content-Type": "application/json"
+    };
+
+    if (task === "tts") {
+      const rawText = (body.text || "").trim();
+      const voice = body.voice === "adam" ? "adam" : "natasha";
+
+      if (!rawText) {
+        return json({ error: "Digite o roteiro do vídeo antes de gerar." }, 400);
+      }
+
+      const scriptPtBr = normalizePtBrScript(rawText);
+      const services = buildVoiceServices(scriptPtBr, voice, authHeaders);
+      const voicesAvailable = services.map((s) => ({
+        id: s.id,
+        label: s.label,
+        gender: s.gender
+      }));
+      const attemptedErrors = [];
+
+      let audioUrl = "";
+      let providerUsed = "none";
+
+      for (const svc of services) {
+        try {
+          const url = await svc.run();
+          if (url) {
+            audioUrl = url;
+            providerUsed = svc.id;
+            break;
+          }
+          attemptedErrors.push(`${svc.label}: sem áudio retornado`);
+        } catch (err) {
+          attemptedErrors.push(`${svc.label}: ${err?.message || "falha"}`);
+        }
+      }
+
+      return json({
+        ok: true,
+        audioUrl,
+        voice,
+        gender: voice === "adam" ? "male" : "female",
+        provider: providerUsed,
+        voicesAvailable,
+        attemptedErrors,
+        ttsFallback: !audioUrl
+      });
+    }
+
+    if (task === "scene") {
+      const imageBase64 = body.imageBase64 || "";
+      const mimeType = body.mimeType || "image/jpeg";
+      const sceneIndex = Number(body.sceneIndex || 1);
+      const imagePrompt = (body.imagePrompt || "").trim();
+
+      if (!imageBase64) {
+        return json({ error: "Envie a foto do produto." }, 400);
+      }
+
+      const dataUri = `data:${mimeType};base64,${imageBase64}`;
+
+      const angleVariations = [
+        "dramatic low-angle hero commercial framing, razor-sharp product focus, studio lighting",
+        "dynamic close-up three-quarter macro angle highlighting surface finish and edge specular light",
+        "high-contrast wide-angle dramatic studio shot with deep shadows and crisp rim light"
+      ];
+      const angle = angleVariations[(sceneIndex - 1) % angleVariations.length];
+
+      const baseDirection =
+        imagePrompt ||
+        "commercial product shot on dark obsidian stone and brushed gold pedestal, dramatic rim lighting";
+
+      const fullPrompt = `Commercial product photography keeping the exact uploaded product 100% identical and faithful, ${baseDirection}, ${angle}, 9:16 vertical framing, ultra-sharp photorealistic detail, zero added text, zero watermarks, zero extra logos, zero human hands or faces.`;
+
+      const imgData = await fetchWithTimeout(
+        "https://fal.run/fal-ai/nano-banana/edit",
+        {
+          method: "POST",
+          headers: authHeaders,
+          body: JSON.stringify({
+            prompt: fullPrompt,
+            image_urls: [dataUri],
+            aspect_ratio: "9:16",
+            num_images: 1,
+            output_format: "jpeg"
+          })
+        },
+        45000,
+        `gerador da cena ${sceneIndex}`
+      );
+
+      const imageUrl = imgData?.images?.[0]?.url || imgData?.image?.url || "";
+      if (!imageUrl) {
+        return json({ error: `Cena ${sceneIndex} não retornou imagem.` }, 502);
+      }
+
+      return json({ ok: true, imageUrl, sceneIndex });
+    }
+
+    return json({ error: "Tarefa inválida." }, 400);
+  } catch (err) {
+    return json({ error: err?.message || "Erro interno no servidor." }, 500);
+  }
+}
