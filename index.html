@@ -3,230 +3,397 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — Estúdio de Imagem e Vídeo 9:16</title>
+  <title>NEXORA.AI — Criador de Vídeos Virais & Vendas (10s a 30s)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, sans-serif; }
-    body { background: #090b10; color: #f4f6fb; min-height: 100vh; padding: 24px; }
-    .topbar { max-width: 1120px; margin: 0 auto 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .brand { font-size: 20px; font-weight: 800; letter-spacing: 0.06em; color: #fff; }
-    .badge { background: #141923; border: 1px solid #263042; padding: 8px 14px; border-radius: 999px; font-size: 13px; color: #9fb0cc; }
-    .grid { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
-    .card { background: #111622; border: 1px solid #1f293d; border-radius: 16px; padding: 20px; }
-    .section-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: #eef3fc; }
-    .upload-box { border: 1.5px dashed #2e3b55; border-radius: 12px; padding: 18px; text-align: center; background: #0c1018; cursor: pointer; }
-    .upload-box input { display: none; }
-    .preview-thumb { margin-top: 14px; max-height: 220px; max-width: 100%; border-radius: 10px; object-fit: contain; display: none; margin-left: auto; margin-right: auto; }
-    .styles { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-    .style-btn { text-align: left; background: #0c1018; border: 1px solid #222d42; border-radius: 12px; padding: 12px 14px; color: #e2e8f5; cursor: pointer; transition: 0.15s; }
-    .style-btn:hover, .style-btn.active { border-color: #22c55e; background: #101c17; }
-    .style-name { font-size: 13px; font-weight: 700; display: block; margin-bottom: 3px; }
-    .style-desc { font-size: 12px; color: #94a3b8; display: block; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-    @media (max-width: 520px) { .actions { grid-template-columns: 1fr; } }
-    button.primary { background: #22c55e; color: #051109; border: none; border-radius: 12px; padding: 14px 16px; font-size: 14px; font-weight: 800; cursor: pointer; }
-    button.secondary { background: #1a2438; color: #f8fafc; border: 1px solid #2d3c59; border-radius: 12px; padding: 14px 16px; font-size: 14px; font-weight: 700; cursor: pointer; }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .output-box { min-height: 440px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0c1018; border: 1px solid #1d2638; border-radius: 12px; padding: 16px; text-align: center; gap: 14px; }
-    .status-text { font-size: 13px; color: #9fb0cc; line-height: 1.5; }
-    .error-text { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 14px; border-radius: 10px; }
-    .result-media { max-height: 360px; max-width: 100%; border-radius: 12px; }
-    .download-link { display: inline-block; margin-top: 4px; background: #22c55e; color: #051109; text-decoration: none; font-weight: 700; font-size: 13px; padding: 10px 16px; border-radius: 10px; }
+    body { background: #07090e; color: #f4f6fb; min-height: 100vh; padding: 20px; }
+    .topbar { max-width: 1220px; margin: 0 auto 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-bottom: 1px solid #182030; padding-bottom: 16px; }
+    .brand { font-size: 22px; font-weight: 900; letter-spacing: 0.05em; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .brand span { background: #22c55e; color: #041108; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 800; }
+    .pill-info { background: #111724; border: 1px solid #222e45; padding: 8px 14px; border-radius: 999px; font-size: 12px; color: #9fb0cc; }
+    .layout { max-width: 1220px; margin: 0 auto; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; }
+    @media (max-width: 920px) { .layout { grid-template-columns: 1fr; } }
+    .panel { background: #0f1420; border: 1px solid #1d273b; border-radius: 16px; padding: 20px; }
+    .step-label { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: #22c55e; margin-bottom: 10px; display: block; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    @media (max-width: 560px) { .row-2 { grid-template-columns: 1fr; } }
+    .upload-area { border: 1.5px dashed #2b3954; border-radius: 12px; padding: 14px; text-align: center; background: #0a0e17; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 132px; }
+    .upload-area input { display: none; }
+    .upload-area img { max-height: 96px; border-radius: 8px; margin-top: 8px; display: none; }
+    .box-group { background: #0a0e17; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; }
+    .box-group label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 6px; font-weight: 600; }
+    select, textarea { width: 100%; background: #111827; border: 1px solid #29364f; border-radius: 10px; color: #f8fafc; padding: 10px 12px; font-size: 13px; outline: none; }
+    textarea { min-height: 118px; resize: vertical; line-height: 1.45; }
+    .voice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .voice-card { background: #0a0e17; border: 1.5px solid #1e293e; border-radius: 12px; padding: 12px; cursor: pointer; text-align: left; color: #e2e8f0; transition: 0.15s; }
+    .voice-card.active { border-color: #22c55e; background: #0f1f18; }
+    .voice-card strong { display: block; font-size: 14px; margin-bottom: 2px; }
+    .voice-card small { font-size: 11px; color: #94a3b8; }
+    .meta-bar { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-top: 6px; margin-bottom: 14px; }
+    .toggle-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #cbd5e1; margin-bottom: 16px; cursor: pointer; }
+    .btn-generate { width: 100%; background: #22c55e; color: #041208; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 900; cursor: pointer; }
+    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+    .preview-stage { background: #080b12; border: 1px solid #1b2436; border-radius: 14px; min-height: 520px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; gap: 12px; }
+    video.player-916 { width: 100%; max-width: 290px; aspect-ratio: 9/16; border-radius: 14px; background: #000; border: 1px solid #26334d; }
+    .capcut-box { width: 100%; background: #0c121e; border: 1px solid #22304a; border-radius: 12px; padding: 12px; text-align: left; }
+    .capcut-title { font-size: 12px; font-weight: 800; color: #38bdf8; margin-bottom: 8px; text-transform: uppercase; }
+    .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dl-btn { display: block; text-align: center; background: #182338; color: #f8fafc; border: 1px solid #2d3f63; border-radius: 8px; padding: 9px 10px; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; }
+    .dl-btn.main { background: #22c55e; color: #041208; border: none; grid-column: span 2; font-size: 13px; padding: 11px; }
+    .status-msg { font-size: 13px; color: #9fb0cc; line-height: 1.5; }
+    .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; }
   </style>
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI</div>
-    <div class="badge">Modo de Teste • Imagem + Vídeo 9:16 (5s)</div>
+    <div class="brand">NEXORA.AI <span>ESTÚDIO 9:16</span></div>
+    <div class="pill-info">Vídeos de 10s a 30s • Vozes Adam &amp; Natasha • Pacote Pronto para CapCut</div>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <div class="section-title">1. Envie a foto do produto e escolha o estilo</div>
+  <div class="layout">
+    <div class="panel">
+      <span class="step-label">1. Mídia e Estilo do Vídeo</span>
+      <div class="row-2">
+        <label class="upload-area" for="productImg">
+          <strong style="font-size:13px;">Foto do Produto (Opcional)</strong>
+          <span style="font-size:11px;color:#94a3b8;margin-top:3px;">Gera até 3 cenas comerciais 9:16</span>
+          <input type="file" id="productImg" accept="image/*" />
+          <img id="thumbPreview" alt="Produto" />
+        </label>
 
-      <label class="upload-box" for="fileInput">
-        <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Clique para enviar a foto do produto</div>
-        <div style="font-size:12px;color:#94a3b8;">PNG ou JPG • Mantém o produto original</div>
-        <input type="file" id="fileInput" accept="image/*" />
-        <img id="sourcePreview" class="preview-thumb" alt="Pré-visualização do produto" />
+        <div class="box-group">
+          <label for="videoMode">Objetivo do Vídeo</label>
+          <select id="videoMode">
+            <option value="vendas">Vendas / TikTok Shop / Anúncio</option>
+            <option value="viral">Viral / Retenção Máxima</option>
+            <option value="pessoal">Pessoal / Lifestyle</option>
+          </select>
+
+          <label for="minDuration" style="margin-top:10px;">Duração Mínima Alvo</label>
+          <select id="minDuration">
+            <option value="10">Mínimo 10 segundos</option>
+            <option value="15" selected>15 segundos (Ideal TikTok/Reels)</option>
+            <option value="20">20 segundos</option>
+            <option value="30">Até 30 segundos</option>
+          </select>
+        </div>
+      </div>
+
+      <span class="step-label">2. Escolha a Voz da Narração</span>
+      <div class="voice-grid">
+        <button type="button" class="voice-card active" data-voice="adam">
+          <strong>Adam (Masculina)</strong>
+          <small>Tom firme, direto e persuasivo para vendas</small>
+        </button>
+        <button type="button" class="voice-card" data-voice="natasha">
+          <strong>Natasha (Feminina)</strong>
+          <small>Tom natural, envolvente e dinâmico</small>
+        </button>
+      </div>
+
+      <span class="step-label">3. Texto / Roteiro do Vídeo</span>
+      <textarea id="scriptText" placeholder="Cole ou digite aqui o texto que será narrado e legendado...">Olha o acabamento desse produto antes de comprar qualquer outro. Ele entrega qualidade absurda no dia a dia, chega rápido e resolve o seu problema sem complicação. Clica na sacolinha aqui embaixo e garante o seu agora!</textarea>
+      <div class="meta-bar">
+        <span id="wordCount">0 palavras</span>
+        <span id="estTime">Tempo estimado: ~12s (dentro de 10s–30s)</span>
+      </div>
+
+      <label class="toggle-row">
+        <input type="checkbox" id="burnSubs" checked />
+        <span>Incluir legendas dinâmicas no vídeo (também gera arquivo .SRT separado para o CapCut)</span>
       </label>
 
-      <div class="styles" id="styleList">
-        <button type="button" class="style-btn active" data-prompt="Fast dynamic commercial studio push-in and orbital sweep around the exact product from the image on a clean minimal showcase pedestal, crisp reflections, high-energy commercial motion, 9:16 vertical framing, no text, no watermarks.">
-          <span class="style-name">Vídeo 1 — Fundo Limpo Vitrine Dinâmico</span>
-          <span class="style-desc">Movimento comercial ágil, foco nítido no produto e enquadramento 9:16</span>
-        </button>
-
-        <button type="button" class="style-btn" data-prompt="High-contrast dark studio commercial shot with dramatic rim lighting, sleek camera dolly and subtle rotation around the exact product, deep shadows and bright highlights, 9:16 vertical framing, no text, no watermarks.">
-          <span class="style-name">Vídeo 2 — Estúdio Dark Premium Turbo</span>
-          <span class="style-desc">Iluminação escura contrastada, reflexos intensos e visual premium</span>
-        </button>
-
-        <button type="button" class="style-btn" data-prompt="Dynamic lifestyle commercial camera movement around the exact product in a modern warm-lit setting, smooth speed-ramp motion and crisp depth of field, 9:16 vertical framing, no text, no watermarks.">
-          <span class="style-name">Vídeo 3 — Cena de Uso (Lifestyle) Acelerado</span>
-          <span class="style-desc">Movimento dinâmico em ambiente moderno com foco no produto</span>
-        </button>
-
-        <button type="button" class="style-btn" data-prompt="Luxury marble and brushed gold commercial showcase with smooth sweeping camera movement around the exact product, rich specular reflections, 9:16 vertical framing, no text, no watermarks.">
-          <span class="style-name">Vídeo 4 — Vitrine Luxo &amp; Mármore</span>
-          <span class="style-desc">Acabamento sofisticado com mármore, dourado e movimento de câmera</span>
-        </button>
-
-        <button type="button" class="style-btn" data-prompt="High-impact commercial ad camera zoom and fast orbital pan around the exact product with energetic studio light sweeps, sharp product fidelity, 9:16 vertical framing, no text, no watermarks.">
-          <span class="style-name">Vídeo 5 — Impacto Criativo / Retenção Máxima</span>
-          <span class="style-desc">Movimentação rápida de câmera pensada para prender atenção nos primeiros segundos</span>
-        </button>
-      </div>
-
-      <div class="actions">
-        <button type="button" class="secondary" id="btnImage">Gerar Imagem Luxo (9:16)</button>
-        <button type="button" class="primary" id="btnVideo">Gerar Vídeo Dinâmico 9:16 (5s)</button>
-      </div>
+      <button type="button" class="btn-generate" id="btnBuild">Gerar Vídeo Completo (10s a 30s) + Pacote CapCut</button>
     </div>
 
-    <div class="card">
-      <div class="section-title">2. Resultado da geração</div>
-      <div class="output-box" id="outputBox">
-        <div class="status-text">Envie a foto de um produto ao lado e clique em <strong>Gerar Imagem Luxo</strong> ou <strong>Gerar Vídeo Dinâmico 9:16</strong> para testar.</div>
+    <div class="panel">
+      <span class="step-label">4. Vídeo Pronto &amp; Exportação CapCut</span>
+      <div class="preview-stage" id="stage">
+        <div class="status-msg">Preencha o texto, escolha <strong>Adam</strong> ou <strong>Natasha</strong> e clique em <strong>Gerar Vídeo Completo</strong>.</div>
       </div>
     </div>
   </div>
 
+  <canvas id="renderCanvas" width="720" height="1280" style="display:none;"></canvas>
+
   <script>
-    const fileInput = document.getElementById("fileInput");
-    const sourcePreview = document.getElementById("sourcePreview");
-    const styleButtons = document.querySelectorAll(".style-btn");
-    const btnImage = document.getElementById("btnImage");
-    const btnVideo = document.getElementById("btnVideo");
-    const outputBox = document.getElementById("outputBox");
+    const productImg = document.getElementById("productImg");
+    const thumbPreview = document.getElementById("thumbPreview");
+    const videoMode = document.getElementById("videoMode");
+    const minDuration = document.getElementById("minDuration");
+    const voiceCards = document.querySelectorAll(".voice-card");
+    const scriptText = document.getElementById("scriptText");
+    const wordCount = document.getElementById("wordCount");
+    const estTime = document.getElementById("estTime");
+    const burnSubs = document.getElementById("burnSubs");
+    const btnBuild = document.getElementById("btnBuild");
+    const stage = document.getElementById("stage");
+    const canvas = document.getElementById("renderCanvas");
+    const ctx = canvas.getContext("2d");
 
-    let base64Data = "";
-    let mimeType = "image/jpeg";
-    let selectedPrompt = styleButtons[0].dataset.prompt;
+    let selectedVoice = "adam";
+    let uploadedBase64 = "";
+    let uploadedMime = "image/jpeg";
+    let uploadedDataUrl = "";
 
-    styleButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        styleButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        selectedPrompt = btn.dataset.prompt;
+    voiceCards.forEach((card) => {
+      card.addEventListener("click", () => {
+        voiceCards.forEach((c) => c.classList.remove("active"));
+        card.classList.add("active");
+        selectedVoice = card.dataset.voice;
       });
     });
 
-    fileInput.addEventListener("change", (e) => {
+    function updateCounter() {
+      const words = scriptText.value.trim().split(/\s+/).filter(Boolean);
+      const sec = Math.max(10, Math.min(30, Math.round(words.length / 2.6)));
+      wordCount.textContent = `${words.length} palavras`;
+      estTime.textContent = `Duração alvo: ${sec}s (mín. 10s / máx. 30s)`;
+    }
+    scriptText.addEventListener("input", updateCounter);
+    updateCounter();
+
+    productImg.addEventListener("change", (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      mimeType = file.type || "image/jpeg";
+      uploadedMime = file.type || "image/jpeg";
       const reader = new FileReader();
       reader.onload = () => {
-        const result = String(reader.result || "");
-        sourcePreview.src = result;
-        sourcePreview.style.display = "block";
-        const parts = result.split(",");
-        base64Data = parts[1] || "";
+        uploadedDataUrl = String(reader.result || "");
+        thumbPreview.src = uploadedDataUrl;
+        thumbPreview.style.display = "block";
+        uploadedBase64 = uploadedDataUrl.split(",")[1] || "";
       };
       reader.readAsDataURL(file);
     });
 
-    function setLoading(msg) {
-      btnImage.disabled = true;
-      btnVideo.disabled = true;
-      outputBox.innerHTML = `<div class="status-text">${msg}</div>`;
-    }
-
-    function setError(msg) {
-      btnImage.disabled = false;
-      btnVideo.disabled = false;
-      outputBox.innerHTML = `<div class="error-text">${msg}</div>`;
-    }
-
-    async function postApi(payload) {
+    async function callApi(payload) {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
-      const rawText = await res.text();
-      let parsed;
-      try {
-        parsed = JSON.parse(rawText);
-      } catch {
-        throw new Error(`Resposta inesperada do servidor (${res.status}). Tente novamente em instantes.`);
-      }
-      if (!res.ok || parsed.error) {
-        throw new Error(parsed.error || `Erro HTTP ${res.status}`);
-      }
-      return parsed;
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch { throw new Error("Falha de resposta do servidor."); }
+      if (!res.ok || data.error) throw new Error(data.error || `Erro ${res.status}`);
+      return data;
     }
 
-    async function runGeneration(mode) {
-      if (!base64Data) {
-        setError("Envie primeiro a foto de um produto.");
+    function buildSubtitles(text, totalDuration) {
+      const words = text.trim().split(/\s+/).filter(Boolean);
+      const chunks = [];
+      for (let i = 0; i < words.length; i += 4) {
+        chunks.push(words.slice(i, i + 4).join(" "));
+      }
+      if (!chunks.length) return [];
+      const slice = totalDuration / chunks.length;
+      return chunks.map((line, idx) => ({
+        index: idx + 1,
+        start: idx * slice,
+        end: (idx + 1) * slice,
+        text: line
+      }));
+    }
+
+    function formatSrtTime(sec) {
+      const h = String(Math.floor(sec / 3600)).padStart(2, "0");
+      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
+      const s = String(Math.floor(sec % 60)).padStart(2, "0");
+      const ms = String(Math.floor((sec % 1) * 1000)).padStart(3, "0");
+      return `${h}:${m}:${s},${ms}`;
+    }
+
+    function createSrtContent(subs) {
+      return subs
+        .map((s) => `${s.index}\n${formatSrtTime(s.start)} --> ${formatSrtTime(s.end)}\n${s.text}\n`)
+        .join("\n");
+    }
+
+    function loadImage(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error("Erro ao carregar cena visual."));
+        img.src = url;
+      });
+    }
+
+    async function renderVerticalVideo(images, audioUrl, subs, targetSeconds, withBurnedSubs) {
+      const audio = new Audio(audioUrl);
+      audio.crossOrigin = "anonymous";
+      await new Promise((res, rej) => {
+        audio.onloadedmetadata = res;
+        audio.onerror = () => rej(new Error("Erro ao carregar áudio da narração."));
+      });
+
+      const finalDuration = Math.min(30, Math.max(10, Number(targetSeconds), Math.ceil(audio.duration || 10)));
+      const finalSubs = buildSubtitles(scriptText.value, finalDuration);
+
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioCtx.createMediaElementSource(audio);
+      const dest = audioCtx.createMediaStreamDestination();
+      source.connect(dest);
+      source.connect(audioCtx.destination);
+
+      const canvasStream = canvas.captureStream(30);
+      const combinedStream = new MediaStream([
+        ...canvasStream.getVideoTracks(),
+        ...dest.stream.getAudioTracks()
+      ]);
+
+      const mimeCandidate = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
+        ? "video/webm;codecs=vp9,opus"
+        : "video/webm";
+
+      const recorder = new MediaRecorder(combinedStream, { mimeType: mimeCandidate });
+      const chunks = [];
+      recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+
+      const donePromise = new Promise((resolve) => {
+        recorder.onstop = () => {
+          audioCtx.close();
+          resolve(new Blob(chunks, { type: "video/webm" }));
+        };
+      });
+
+      recorder.start();
+      audio.play().catch(() => {});
+
+      const startTime = performance.now();
+      const sceneLen = finalDuration / images.length;
+
+      await new Promise((resolve) => {
+        function drawFrame(now) {
+          const elapsed = (now - startTime) / 1000;
+          if (elapsed >= finalDuration) {
+            audio.pause();
+            recorder.stop();
+            resolve();
+            return;
+          }
+
+          const sceneIdx = Math.min(images.length - 1, Math.floor(elapsed / sceneLen));
+          const localProgress = (elapsed % sceneLen) / sceneLen;
+          const img = images[sceneIdx];
+
+          // Movimento dinâmico de zoom/pan estilo anúncio viral
+          const scale = 1.0 + localProgress * 0.14;
+          const w = canvas.width * scale;
+          const h = canvas.height * scale;
+          const offsetX = (canvas.width - w) / 2;
+          const offsetY = (canvas.height - h) / 2;
+
+          ctx.fillStyle = "#05070b";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          if (img) {
+            ctx.drawImage(img, offsetX, offsetY, w, h);
+          } else {
+            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            grad.addColorStop(0, "#0f172a");
+            grad.addColorStop(1, "#020617");
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
+
+          if (withBurnedSubs) {
+            const activeSub = finalSubs.find((s) => elapsed >= s.start && elapsed <= s.end);
+            if (activeSub) {
+              ctx.font = "900 44px Inter, Arial, sans-serif";
+              ctx.textAlign = "center";
+              const textWidth = ctx.measureText(activeSub.text).width;
+              const boxW = Math.min(canvas.width - 60, textWidth + 44);
+              const boxX = (canvas.width - boxW) / 2;
+              const boxY = canvas.height - 290;
+
+              ctx.fillStyle = "rgba(0, 0, 0, 0.78)";
+              ctx.beginPath();
+              ctx.roundRect(boxX, boxY, boxW, 74, 16);
+              ctx.fill();
+
+              ctx.fillStyle = "#facc15";
+              ctx.fillText(activeSub.text.toUpperCase(), canvas.width / 2, boxY + 52, canvas.width - 80);
+            }
+          }
+
+          requestAnimationFrame(drawFrame);
+        }
+        requestAnimationFrame(drawFrame);
+      });
+
+      const videoBlob = await donePromise;
+      return {
+        videoUrl: URL.createObjectURL(videoBlob),
+        srtContent: createSrtContent(finalSubs),
+        finalDuration
+      };
+    }
+
+    btnBuild.addEventListener("click", async () => {
+      const text = scriptText.value.trim();
+      if (!text) {
+        stage.innerHTML = `<div class="err-msg">Digite o roteiro do vídeo antes de gerar.</div>`;
         return;
       }
 
-      const label = mode === "video" ? "vídeo 9:16 de 5s" : "imagem luxuosa 9:16";
-      setLoading(`Enviando pedido de ${label} para a fila...`);
-
+      btnBuild.disabled = true;
       try {
-        const submit = await postApi({
-          action: "submit",
-          mode,
-          imageBase64: base64Data,
-          mimeType,
-          prompt: mode === "video" ? selectedPrompt : ""
+        stage.innerHTML = `<div class="status-msg">1/3 • Gerando narração com voz <strong>${selectedVoice.toUpperCase()}</strong>...</div>`;
+        const tts = await callApi({
+          task: "tts",
+          text,
+          voice: selectedVoice
         });
 
-        let attempts = 0;
-        const maxAttempts = 90;
-
-        while (attempts < maxAttempts) {
-          await new Promise((r) => setTimeout(r, 2000));
-          attempts += 1;
-
-          setLoading(
-            `Processando ${label} na fila...<br><span style="font-size:12px;color:#64748b;">Consulta ${attempts} • Aguarde sem fechar a aba</span>`
-          );
-
-          const st = await postApi({
-            action: "status",
-            mode,
-            requestId: submit.requestId,
-            statusUrl: submit.statusUrl,
-            responseUrl: submit.responseUrl
-          });
-
-          if (st.status === "COMPLETED") {
-            btnImage.disabled = false;
-            btnVideo.disabled = false;
-
-            if (!st.url) {
-              setError("A geração concluiu, mas nenhum ficheiro foi retornado.");
-              return;
-            }
-
-            if (mode === "video") {
-              outputBox.innerHTML = `
-                <video class="result-media" src="${st.url}" controls autoplay loop playsinline></video>
-                <a class="download-link" href="${st.url}" target="_blank" rel="noopener noreferrer" download>Baixar Vídeo 9:16</a>
-              `;
-            } else {
-              outputBox.innerHTML = `
-                <img class="result-media" src="${st.url}" alt="Imagem gerada" />
-                <a class="download-link" href="${st.url}" target="_blank" rel="noopener noreferrer" download>Baixar Imagem 9:16</a>
-              `;
-            }
-            return;
+        const loadedImages = [];
+        if (uploadedBase64) {
+          for (let i = 1; i <= 3; i++) {
+            stage.innerHTML = `<div class="status-msg">2/3 • Criando cena comercial ${i} de 3 em 9:16...</div>`;
+            const sc = await callApi({
+              task: "scene",
+              imageBase64: uploadedBase64,
+              mimeType: uploadedMime,
+              sceneIndex: i,
+              style: videoMode.value
+            });
+            const imgObj = await loadImage(sc.imageUrl);
+            loadedImages.push(imgObj);
           }
+        } else {
+          loadedImages.push(null);
         }
 
-        setError("O processamento demorou mais do que o esperado. Tente gerar novamente.");
-      } catch (err) {
-        setError(err.message || "Erro ao gerar.");
-      }
-    }
+        stage.innerHTML = `<div class="status-msg">3/3 • Montando vídeo vertical 9:16 (${minDuration.value}s) com legendas e áudio...</div>`;
+        const result = await renderVerticalVideo(
+          loadedImages,
+          tts.audioUrl,
+          [],
+          Number(minDuration.value),
+          burnSubs.checked
+        );
 
-    btnImage.addEventListener("click", () => runGeneration("image"));
-    btnVideo.addEventListener("click", () => runGeneration("video"));
+        const srtBlob = new Blob([result.srtContent], { type: "text/plain;charset=utf-8" });
+        const srtUrl = URL.createObjectURL(srtBlob);
+
+        stage.innerHTML = `
+          <video class="player-916" src="${result.videoUrl}" controls autoplay playsinline></video>
+          <div class="capcut-box">
+            <div class="capcut-title">Exportação &amp; Pacote CapCut (${result.finalDuration}s • 9:16)</div>
+            <div class="dl-grid">
+              <a class="dl-btn main" href="${result.videoUrl}" download="nexora-video-${result.finalDuration}s.webm">Baixar Vídeo Pronto (${result.finalDuration}s)</a>
+              <a class="dl-btn" href="${tts.audioUrl}" target="_blank" download="narracao-${selectedVoice}.wav">Baixar Voz (${selectedVoice.toUpperCase()})</a>
+              <a class="dl-btn" href="${srtUrl}" download="legendas-capcut.srt">Baixar Legenda (.SRT)</a>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        stage.innerHTML = `<div class="err-msg">${err.message || "Erro ao montar vídeo."}</div>`;
+      } finally {
+        btnBuild.disabled = false;
+      }
+    });
   </script>
 </body>
 </html>
