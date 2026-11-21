@@ -17,41 +17,41 @@ export async function onRequestPost(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
-  async function fetchWithTimeoutAndRetry(url, options, timeoutMs = 25000, retries = 1) {
-    let lastErr = null;
-    for (let attempt = 0; attempt <= retries; attempt++) {
+  async function fetchWithTimeout(url, options, timeoutMs = 45000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, {
+        ...options,
+        signal: controller.signal
+      });
+      const rawText = await res.text();
+      let parsed = null;
       try {
-        const res = await fetch(url, {
-          ...options,
-          signal: AbortSignal.timeout(timeoutMs)
-        });
-        const rawText = await res.text();
-        let parsed = null;
-        try {
-          parsed = JSON.parse(rawText);
-        } catch {
-          parsed = null;
-        }
-        if (!res.ok) {
-          const detail =
-            parsed?.detail ||
-            parsed?.message ||
-            parsed?.error ||
-            `Falha no serviço (${res.status}).`;
-          throw new Error(detail);
-        }
-        if (!parsed) {
-          throw new Error("Resposta inválida do serviço de geração.");
-        }
-        return parsed;
-      } catch (err) {
-        lastErr = err;
-        if (attempt < retries) {
-          await new Promise((r) => setTimeout(r, 700));
-        }
+        parsed = JSON.parse(rawText);
+      } catch {
+        parsed = null;
       }
+      if (!res.ok) {
+        const detail =
+          parsed?.detail ||
+          parsed?.message ||
+          parsed?.error ||
+          `Falha no serviço (${res.status}).`;
+        throw new Error(detail);
+      }
+      if (!parsed) {
+        throw new Error("Resposta inválida do serviço de geração.");
+      }
+      return parsed;
+    } catch (err) {
+      if (err?.name === "AbortError") {
+        throw new Error("A geração demorou mais do que o tempo limite. Tente novamente.");
+      }
+      throw err;
+    } finally {
+      clearTimeout(timer);
     }
-    throw lastErr || new Error("Tempo limite excedido ao processar.");
   }
 
   try {
@@ -78,7 +78,7 @@ export async function onRequestPost(context) {
       const voiceId = voice === "adam" ? "pm_alex" : "pf_dora";
       const trimmedPrompt = text.slice(0, 600);
 
-      const ttsData = await fetchWithTimeoutAndRetry(
+      const ttsData = await fetchWithTimeout(
         "https://fal.run/fal-ai/kokoro/brazilian-portuguese",
         {
           method: "POST",
@@ -89,8 +89,7 @@ export async function onRequestPost(context) {
             speed: 1.08
           })
         },
-        22000,
-        1
+        45000
       );
 
       const audioUrl = ttsData?.audio?.url || ttsData?.audio_url || ttsData?.url || "";
@@ -126,7 +125,7 @@ export async function onRequestPost(context) {
 
       const fullPrompt = `Commercial product photography keeping the exact uploaded product 100% identical and faithful, ${baseDirection}, ${angle}, 9:16 vertical framing, ultra-sharp photorealistic detail, zero added text, zero watermarks, zero extra logos, zero human hands or faces.`;
 
-      const imgData = await fetchWithTimeoutAndRetry(
+      const imgData = await fetchWithTimeout(
         "https://fal.run/fal-ai/nano-banana/edit",
         {
           method: "POST",
@@ -139,8 +138,7 @@ export async function onRequestPost(context) {
             output_format: "jpeg"
           })
         },
-        28000,
-        1
+        55000
       );
 
       const imageUrl = imgData?.images?.[0]?.url || imgData?.image?.url || "";
