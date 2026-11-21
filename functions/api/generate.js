@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
-  async function fetchWithTimeout(url, options, timeoutMs = 60000, stageName = "serviço") {
+  async function fetchWithTimeout(url, options, timeoutMs = 20000, stageName = "serviço") {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -46,7 +46,7 @@ export async function onRequestPost(context) {
       return parsed;
     } catch (err) {
       if (err?.name === "AbortError") {
-        throw new Error(`O ${stageName} demorou mais do que o tempo limite. Tente novamente.`);
+        throw new Error(`O ${stageName} não respondeu a tempo (limite de ${Math.round(timeoutMs / 1000)}s).`);
       }
       throw err;
     } finally {
@@ -76,7 +76,7 @@ export async function onRequestPost(context) {
       }
 
       const voiceId = voice === "adam" ? "pm_alex" : "pf_dora";
-      const trimmedPrompt = text.slice(0, 600);
+      const trimmedPrompt = text.slice(0, 420);
 
       const ttsData = await fetchWithTimeout(
         "https://fal.run/fal-ai/kokoro/brazilian-portuguese",
@@ -89,7 +89,7 @@ export async function onRequestPost(context) {
             speed: 1.08
           })
         },
-        60000,
+        18000,
         "motor de voz"
       );
 
@@ -139,7 +139,7 @@ export async function onRequestPost(context) {
             output_format: "jpeg"
           })
         },
-        60000,
+        45000,
         `gerador da cena ${sceneIndex}`
       );
 
