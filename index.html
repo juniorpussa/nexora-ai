@@ -573,7 +573,6 @@
       const finalDuration = Math.min(30, Math.max(10, Number(targetSeconds) || 15));
       const finalSubs = buildSubtitles(textForVoice, finalDuration);
 
-      // Desenha o primeiro quadro antes de iniciar o stream para garantir que o vídeo tenha frames válidos desde 00:00
       ctx.fillStyle = "#04060a";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       if (images[0] && images[0].naturalWidth && images[0].naturalHeight) {
@@ -801,7 +800,7 @@
         const fileName = `nexora-cenas-${result.finalDuration}s.webm`;
 
         stage.innerHTML = `
-          <video id="outPlayer" class="player-916" src="${result.videoUrl}" controls autoplay loop muted playsinline></video>
+          <video id="outPlayer" class="player-916" src="${result.videoUrl}" controls autoplay muted playsinline></video>
           <div class="dl-box">
             <div class="dl-title">${selectedVidModel.name} • ${result.finalDuration}s • ${result.animatedCount}/${loadedImages.length} cenas animadas</div>
             <div class="dl-grid">
