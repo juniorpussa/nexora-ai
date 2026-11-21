@@ -67,7 +67,7 @@
 <body>
   <div class="topbar">
     <div class="brand">NEXORA.AI <span>50 + 50 VIRAIS</span></div>
-    <div class="pill-info">50 Modelos de Imagem • 50 Ritmos de Vídeo (10s a 30s) • Legenda Compacta</div>
+    <div class="pill-info">50 Modelos de Imagem • 50 Ritmos de Vídeo (10s a 30s) • Foco em Cenas &amp; Movimento</div>
   </div>
 
   <div class="layout">
@@ -145,7 +145,7 @@
         <div class="preset-grid" id="vidPresetGrid"></div>
       </div>
 
-      <div class="step-label">4. Roteiro do Vídeo (Narração + Legenda Sincronizada)</div>
+      <div class="step-label">4. Roteiro do Vídeo (Legenda Sincronizada)</div>
       <textarea id="scriptText">Para tudo e olha esse nível de acabamento antes de gastar dinheiro à toa. Ele entrega resultado real já no primeiro uso, tem qualidade absurda e está saindo com condição especial hoje. Clica na sacolinha aqui embaixo e garante o seu agora!</textarea>
       <div class="meta-bar">
         <span id="wordCount">0 palavras</span>
@@ -158,12 +158,8 @@
           <span>Legenda compacta (zona segura)</span>
         </label>
         <label class="toggle-row">
-          <input type="checkbox" id="enableBgm" checked />
-          <span>Trilha sonora dinâmica + SFX nos cortes</span>
-        </label>
-        <label class="toggle-row">
           <input type="checkbox" id="enableMotionClip" checked />
-          <span>Animar cena em movimento real (Image-to-Video)</span>
+          <span>Movimento real de cena e produto (Image-to-Video)</span>
         </label>
       </div>
 
@@ -242,69 +238,87 @@
     ];
 
     const VIDEO_MODELS = [
-      { cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Cortes rápidos + zoom fluido + retenção", cutSec: 0.9, zoomAmt: 0.24, shake: 4, flash: false, bpm: 122, pan: 38 },
-      { cat: "Agressivo", name: "#02 Corte Relâmpago", desc: "Troca ágil de ângulo para retenção máxima", cutSec: 0.85, zoomAmt: 0.22, shake: 4, flash: false, bpm: 126, pan: 34 },
-      { cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura marcante e cortes cadenciados", cutSec: 0.95, zoomAmt: 0.26, shake: 5, flash: false, bpm: 122, pan: 42 },
-      { cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Cortes limpos sem estourar o áudio", cutSec: 0.95, zoomAmt: 0.20, shake: 3, flash: false, bpm: 118, pan: 36 },
-      { cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Transição limpa + aproximação suave", cutSec: 1.05, zoomAmt: 0.22, shake: 4, flash: false, bpm: 118, pan: 32 },
-      { cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Movimento contínuo de câmera", cutSec: 0.9, zoomAmt: 0.24, shake: 4, flash: false, bpm: 124, pan: 40 },
-      { cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Ritmo constante até o final", cutSec: 0.95, zoomAmt: 0.25, shake: 4, flash: false, bpm: 122, pan: 38 },
-      { cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Deslizamento lateral controlado", cutSec: 1.1, zoomAmt: 0.20, shake: 3, flash: false, bpm: 116, pan: 50 },
-      { cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Zoom in progressivo", cutSec: 0.9, zoomAmt: 0.24, shake: 5, flash: false, bpm: 124, pan: 34 },
-      { cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Sequência dinâmica de ponta a ponta", cutSec: 0.95, zoomAmt: 0.22, shake: 4, flash: false, bpm: 122, pan: 44 },
+      { cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Cortes sequenciais sem repetir quadros", zoomAmt: 0.14, pan: 24 },
+      { cat: "Agressivo", name: "#02 Corte Relâmpago", desc: "Troca progressiva de ângulos", zoomAmt: 0.14, pan: 22 },
+      { cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura heroica com movimento contínuo", zoomAmt: 0.16, pan: 26 },
+      { cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Sequência limpa e direta", zoomAmt: 0.13, pan: 20 },
+      { cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Aproximação progressiva por cena", zoomAmt: 0.14, pan: 20 },
+      { cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Movimento fluido em cada plano", zoomAmt: 0.15, pan: 24 },
+      { cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Cadência constante até o final", zoomAmt: 0.16, pan: 24 },
+      { cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Deslocamento lateral controlado", zoomAmt: 0.12, pan: 30 },
+      { cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Zoom in suave em cada tomada", zoomAmt: 0.15, pan: 20 },
+      { cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Variedade de planos do início ao fim", zoomAmt: 0.14, pan: 26 },
 
-      { cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Aproximação marcante em cada cena", cutSec: 1.0, zoomAmt: 0.28, shake: 5, flash: false, bpm: 120, pan: 30 },
-      { cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Foco nos detalhes do produto", cutSec: 1.1, zoomAmt: 0.30, shake: 3, flash: false, bpm: 116, pan: 26 },
-      { cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Movimento firme de câmera", cutSec: 1.0, zoomAmt: 0.26, shake: 6, flash: false, bpm: 122, pan: 34 },
-      { cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Entrada suave com zoom", cutSec: 1.05, zoomAmt: 0.27, shake: 3, flash: false, bpm: 118, pan: 32 },
-      { cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Zoom profundo e limpo", cutSec: 1.0, zoomAmt: 0.28, shake: 4, flash: false, bpm: 120, pan: 30 },
-      { cat: "Zoom", name: "#16 Foco Magnético", desc: "Puxada para o centro do produto", cutSec: 1.1, zoomAmt: 0.26, shake: 2, flash: false, bpm: 114, pan: 24 },
-      { cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Ritmo grave e zoom marcado", cutSec: 0.95, zoomAmt: 0.27, shake: 5, flash: false, bpm: 124, pan: 36 },
-      { cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Troca limpa de enquadramento", cutSec: 1.0, zoomAmt: 0.29, shake: 4, flash: false, bpm: 120, pan: 30 },
-      { cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão suave de cena", cutSec: 1.05, zoomAmt: 0.24, shake: 4, flash: false, bpm: 118, pan: 36 },
-      { cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância de planos", cutSec: 1.0, zoomAmt: 0.27, shake: 4, flash: false, bpm: 120, pan: 34 },
+      { cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Aproximação firme por cena", zoomAmt: 0.18, pan: 18 },
+      { cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Foco nos detalhes em cada plano", zoomAmt: 0.19, pan: 16 },
+      { cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Movimento marcado de câmera", zoomAmt: 0.16, pan: 20 },
+      { cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Entrada fluida com zoom", zoomAmt: 0.17, pan: 20 },
+      { cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Zoom profundo e limpo", zoomAmt: 0.18, pan: 18 },
+      { cat: "Zoom", name: "#16 Foco Magnético", desc: "Puxada suave para o produto", zoomAmt: 0.16, pan: 16 },
+      { cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Movimento denso e dramático", zoomAmt: 0.17, pan: 22 },
+      { cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Enquadramento ágil por cena", zoomAmt: 0.18, pan: 18 },
+      { cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão suave de cena", zoomAmt: 0.15, pan: 22 },
+      { cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância sequencial de planos", zoomAmt: 0.17, pan: 20 },
 
-      { cat: "Vendas", name: "#21 Conversão Sacolinha Pro", desc: "Ritmo focado em retenção", cutSec: 1.05, zoomAmt: 0.22, shake: 3, flash: false, bpm: 118, pan: 36 },
-      { cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Movimento comercial limpo", cutSec: 1.2, zoomAmt: 0.20, shake: 2, flash: false, bpm: 114, pan: 38 },
-      { cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Destaque de acabamento", cutSec: 1.25, zoomAmt: 0.21, shake: 2, flash: false, bpm: 112, pan: 36 },
-      { cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Ritmo ágil para resposta direta", cutSec: 0.95, zoomAmt: 0.24, shake: 4, flash: false, bpm: 124, pan: 40 },
-      { cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento natural de criador", cutSec: 1.05, zoomAmt: 0.22, shake: 3, flash: false, bpm: 118, pan: 42 },
-      { cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Alternância limpa de cenas", cutSec: 1.1, zoomAmt: 0.22, shake: 2, flash: false, bpm: 116, pan: 34 },
-      { cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Cadência firme até o CTA", cutSec: 1.0, zoomAmt: 0.24, shake: 4, flash: false, bpm: 120, pan: 36 },
-      { cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições claras do produto", cutSec: 1.15, zoomAmt: 0.20, shake: 2, flash: false, bpm: 114, pan: 38 },
-      { cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Ritmo leve e direto", cutSec: 1.0, zoomAmt: 0.23, shake: 3, flash: false, bpm: 120, pan: 38 },
-      { cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Foco em retenção inicial", cutSec: 0.95, zoomAmt: 0.23, shake: 4, flash: false, bpm: 122, pan: 36 },
+      { cat: "Vendas", name: "#21 Conversão Sacolinha Pro", desc: "Ritmo comercial claro", zoomAmt: 0.14, pan: 22 },
+      { cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Movimento limpo de vitrine", zoomAmt: 0.12, pan: 24 },
+      { cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Destaque de acabamento e ângulo", zoomAmt: 0.13, pan: 22 },
+      { cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Ritmo ágil por cena", zoomAmt: 0.15, pan: 24 },
+      { cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento natural de câmera", zoomAmt: 0.14, pan: 26 },
+      { cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Sequência limpa de tomadas", zoomAmt: 0.14, pan: 20 },
+      { cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Cadência firme até o fim", zoomAmt: 0.15, pan: 22 },
+      { cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições claras do produto", zoomAmt: 0.12, pan: 24 },
+      { cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Ritmo leve e direto", zoomAmt: 0.14, pan: 24 },
+      { cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Foco em clareza visual", zoomAmt: 0.15, pan: 22 },
 
-      { cat: "Cinema", name: "#31 Comercial de Luxo", desc: "Movimento suave e elegante", cutSec: 1.3, zoomAmt: 0.20, shake: 1, flash: false, bpm: 108, pan: 40 },
-      { cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Cinematográfico e dramático", cutSec: 1.1, zoomAmt: 0.25, shake: 4, flash: false, bpm: 114, pan: 34 },
-      { cat: "Cinema", name: "#33 Desfile Editorial", desc: "Panorâmica fluida de alto padrão", cutSec: 1.35, zoomAmt: 0.18, shake: 1, flash: false, bpm: 110, pan: 46 },
-      { cat: "Cinema", name: "#34 Joia em Exposição", desc: "Aproximação delicada e nítida", cutSec: 1.25, zoomAmt: 0.22, shake: 1, flash: false, bpm: 106, pan: 30 },
-      { cat: "Cinema", name: "#35 Lançamento Flagship", desc: "Estilo apresentação de produto", cutSec: 1.15, zoomAmt: 0.23, shake: 2, flash: false, bpm: 114, pan: 36 },
-      { cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Atmosfera sóbria e limpa", cutSec: 1.2, zoomAmt: 0.24, shake: 2, flash: false, bpm: 112, pan: 32 },
-      { cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Deslocamento contínuo lateral", cutSec: 1.25, zoomAmt: 0.21, shake: 2, flash: false, bpm: 112, pan: 48 },
-      { cat: "Cinema", name: "#38 Spotlight VIP", desc: "Entrada suave em destaque", cutSec: 1.2, zoomAmt: 0.22, shake: 2, flash: false, bpm: 112, pan: 34 },
-      { cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Enquadramento firme e limpo", cutSec: 1.25, zoomAmt: 0.19, shake: 1, flash: false, bpm: 108, pan: 38 },
-      { cat: "Cinema", name: "#40 Gala & Ouro", desc: "Cadência clássica de vitrine", cutSec: 1.3, zoomAmt: 0.20, shake: 1, flash: false, bpm: 106, pan: 36 },
+      { cat: "Cinema", name: "#31 Comercial de Luxo", desc: "Movimento suave e cinematográfico", zoomAmt: 0.13, pan: 26 },
+      { cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Planos dramáticos em sequência", zoomAmt: 0.16, pan: 22 },
+      { cat: "Cinema", name: "#33 Desfile Editorial", desc: "Panorâmica fluida de estúdio", zoomAmt: 0.12, pan: 28 },
+      { cat: "Cinema", name: "#34 Joia em Exposição", desc: "Aproximação elegante e nítida", zoomAmt: 0.14, pan: 18 },
+      { cat: "Cinema", name: "#35 Lançamento Flagship", desc: "Estilo apresentação de produto", zoomAmt: 0.15, pan: 22 },
+      { cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Atmosfera sóbria com movimento", zoomAmt: 0.15, pan: 20 },
+      { cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Órbita suave em torno do produto", zoomAmt: 0.14, pan: 30 },
+      { cat: "Cinema", name: "#38 Spotlight VIP", desc: "Destaque de luz e ângulo", zoomAmt: 0.14, pan: 20 },
+      { cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Enquadramento firme e limpo", zoomAmt: 0.12, pan: 22 },
+      { cat: "Cinema", name: "#40 Gala & Ouro", desc: "Cadência clássica de comercial", zoomAmt: 0.13, pan: 22 },
 
-      { cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Ritmo constante para retenção", cutSec: 0.9, zoomAmt: 0.24, shake: 4, flash: false, bpm: 122, pan: 38 },
-      { cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Movimento contínuo sem quebras", cutSec: 1.0, zoomAmt: 0.22, shake: 3, flash: false, bpm: 120, pan: 36 },
-      { cat: "Viral", name: "#43 Dopamina Rápida", desc: "Troca constante de cenas", cutSec: 0.85, zoomAmt: 0.25, shake: 4, flash: false, bpm: 126, pan: 40 },
-      { cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Movimento ágil e limpo", cutSec: 0.9, zoomAmt: 0.23, shake: 4, flash: false, bpm: 122, pan: 42 },
-      { cat: "Viral", name: "#45 Quebra de Padrão", desc: "Alterna direção de movimento", cutSec: 0.95, zoomAmt: 0.26, shake: 4, flash: false, bpm: 122, pan: 44 },
-      { cat: "Viral", name: "#46 POV Mão na Massa", desc: "Sensação de proximidade", cutSec: 1.0, zoomAmt: 0.23, shake: 4, flash: false, bpm: 118, pan: 38 },
-      { cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura direta e dinâmica", cutSec: 0.9, zoomAmt: 0.26, shake: 5, flash: false, bpm: 124, pan: 36 },
-      { cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Ritmo urbano equilibrado", cutSec: 0.95, zoomAmt: 0.23, shake: 4, flash: false, bpm: 122, pan: 38 },
-      { cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Alternância clara entre cenas", cutSec: 0.9, zoomAmt: 0.22, shake: 3, flash: false, bpm: 122, pan: 42 },
-      { cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Equilíbrio de corte e zoom", cutSec: 0.92, zoomAmt: 0.24, shake: 4, flash: false, bpm: 123, pan: 38 }
+      { cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Sequência contínua sem repetição", zoomAmt: 0.15, pan: 24 },
+      { cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Movimento contínuo entre cenas", zoomAmt: 0.14, pan: 22 },
+      { cat: "Viral", name: "#43 Dopamina Rápida", desc: "Troca sequencial de planos", zoomAmt: 0.16, pan: 26 },
+      { cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Movimento ágil e limpo", zoomAmt: 0.15, pan: 26 },
+      { cat: "Viral", name: "#45 Quebra de Padrão", desc: "Varia direção de movimento por cena", zoomAmt: 0.16, pan: 28 },
+      { cat: "Viral", name: "#46 POV Mão na Massa", desc: "Sensação de proximidade", zoomAmt: 0.15, pan: 24 },
+      { cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura direta e dinâmica", zoomAmt: 0.16, pan: 22 },
+      { cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Ritmo urbano equilibrado", zoomAmt: 0.14, pan: 24 },
+      { cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Variação sequencial de ângulos", zoomAmt: 0.14, pan: 28 },
+      { cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Equilíbrio de tomada e movimento", zoomAmt: 0.15, pan: 24 }
     ];
 
     const SCENE_DIRECTIONS = [
-      "dramatic front hero shot on studio pedestal, rim lighting, subtle floating sparks",
-      "close-up side profile macro angle highlighting surface finish and edge reflection",
-      "high-angle three-quarter shot with warm golden studio accent light",
-      "low-angle dramatic hero framing with dark smoky backdrop",
-      "tight macro detail shot on buttons, scroll wheel and precision contours",
-      "clean architectural studio angle with subtle light sweep across product"
+      {
+        img: "front hero shot on studio pedestal, dramatic rim lighting, subtle floating sparks",
+        motion: "Smooth camera push-in toward the exact product on the pedestal, subtle floating sparks and shifting rim light, product stays 100% identical in shape and color, 9:16 vertical."
+      },
+      {
+        img: "side profile macro angle highlighting surface contour and metallic rim light",
+        motion: "Camera glides in a smooth arc from left to right around the exact side profile of the product, subtle studio haze drift, product stays 100% identical, 9:16 vertical."
+      },
+      {
+        img: "high-angle three-quarter shot with warm golden studio accent light",
+        motion: "Gentle descending camera tilt from high three-quarter angle onto the exact product, warm light sweep across surface, product stays 100% identical, 9:16 vertical."
+      },
+      {
+        img: "low-angle dramatic hero framing with dark smoky studio backdrop",
+        motion: "Slow upward camera rise from low angle looking up at the exact product, dark smoke drifting softly behind, product stays 100% identical, 9:16 vertical."
+      },
+      {
+        img: "tight macro close-up on top surface, buttons and precision edges",
+        motion: "Subtle macro camera drift across the exact top details and edges of the product with crisp specular highlight movement, product stays 100% identical, 9:16 vertical."
+      },
+      {
+        img: "opposite three-quarter commercial angle with clean studio spotlight",
+        motion: "Smooth camera orbit from right three-quarter angle with subtle depth pull, keeping the exact product 100% faithful, 9:16 vertical."
+      }
     ];
 
     const productImg = document.getElementById("productImg");
@@ -315,7 +329,6 @@
     const wordCount = document.getElementById("wordCount");
     const estTime = document.getElementById("estTime");
     const burnSubs = document.getElementById("burnSubs");
-    const enableBgm = document.getElementById("enableBgm");
     const enableMotionClip = document.getElementById("enableMotionClip");
     const btnOnlyImg = document.getElementById("btnOnlyImg");
     const btnBuild = document.getElementById("btnBuild");
@@ -506,7 +519,7 @@
         vid.loop = true;
         vid.playsInline = true;
         await new Promise((resolve) => {
-          const timer = setTimeout(() => resolve(), 5000);
+          const timer = setTimeout(() => resolve(), 6000);
           vid.onloadeddata = () => {
             clearTimeout(timer);
             resolve();
@@ -526,123 +539,36 @@
       }
     }
 
-    // Trilha grave limpa e discreta para não competir com a voz
-    function startAmbientPad(audioCtx, dest, durationSec) {
-      const padGain = audioCtx.createGain();
-      padGain.gain.setValueAtTime(0.035, audioCtx.currentTime);
-      padGain.connect(dest);
-      padGain.connect(audioCtx.destination);
-
-      const osc1 = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
-      osc1.type = "sine";
-      osc2.type = "sine";
-      osc1.frequency.setValueAtTime(73.42, audioCtx.currentTime);
-      osc2.frequency.setValueAtTime(110.0, audioCtx.currentTime);
-
-      osc1.connect(padGain);
-      osc2.connect(padGain);
-
-      const now = audioCtx.currentTime;
-      osc1.start(now);
-      osc2.start(now);
-      osc1.stop(now + durationSec + 0.1);
-      osc2.stop(now + durationSec + 0.1);
-    }
-
-    async function tryLoadAudioSafe(audioUrl) {
-      if (!audioUrl) return { audio: null, duration: 0 };
-      try {
-        const res = await fetch(audioUrl);
-        if (!res.ok) return { audio: null, duration: 0 };
-        const blob = await res.blob();
-        if (!blob || blob.size === 0) return { audio: null, duration: 0 };
-        const localUrl = URL.createObjectURL(blob);
-        const audio = new Audio(localUrl);
-        await new Promise((resolve) => {
-          const timer = setTimeout(() => resolve(), 3500);
-          audio.onloadedmetadata = () => {
-            clearTimeout(timer);
-            resolve();
-          };
-          audio.onerror = () => {
-            clearTimeout(timer);
-            resolve();
-          };
-        });
-        const dur = Number.isFinite(audio.duration) && audio.duration > 0 ? Math.ceil(audio.duration) : 0;
-        return { audio, duration: dur };
-      } catch {
-        return { audio: null, duration: 0 };
-      }
-    }
-
-    async function renderViralVideo(images, motionClips, audioUrl, targetSeconds, withBurnedSubs, withMusic, vidStyle, textForVoice) {
-      const { audio, duration: audioDuration } = await tryLoadAudioSafe(audioUrl);
-
-      const chosenSec = Math.min(30, Math.max(10, Number(targetSeconds) || 15));
-      const finalDuration = audioDuration > 0
-        ? Math.min(30, Math.max(10, chosenSec, audioDuration))
-        : chosenSec;
-
+    async function renderScenesVideo(images, motionClips, targetSeconds, withBurnedSubs, vidStyle, textForVoice) {
+      const finalDuration = Math.min(30, Math.max(10, Number(targetSeconds) || 15));
       const finalSubs = buildSubtitles(textForVoice, finalDuration);
 
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === "suspended") {
-        await audioCtx.resume();
-      }
-
-      const dest = audioCtx.createMediaStreamDestination();
-
-      if (audio) {
-        try {
-          const source = audioCtx.createMediaElementSource(audio);
-          const voiceGain = audioCtx.createGain();
-          voiceGain.gain.value = 1.4;
-          source.connect(voiceGain);
-          voiceGain.connect(dest);
-          voiceGain.connect(audioCtx.destination);
-        } catch {}
-      }
-
-      if (withMusic) {
-        startAmbientPad(audioCtx, dest, finalDuration);
-      }
-
       const canvasStream = canvas.captureStream(30);
-      const combinedStream = new MediaStream([
-        ...canvasStream.getVideoTracks(),
-        ...dest.stream.getAudioTracks()
-      ]);
-
-      const mimeCandidate = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
-        ? "video/webm;codecs=vp9,opus"
+      const mimeCandidate = MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
+        ? "video/webm;codecs=vp9"
         : "video/webm";
 
-      const recorder = new MediaRecorder(combinedStream, { mimeType: mimeCandidate });
+      const recorder = new MediaRecorder(canvasStream, { mimeType: mimeCandidate });
       const chunks = [];
       recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
 
       const donePromise = new Promise((resolve) => {
         recorder.onstop = () => {
-          audioCtx.close();
           resolve(new Blob(chunks, { type: "video/webm" }));
         };
       });
 
       recorder.start();
-      if (audio) {
-        audio.play().catch(() => {});
-      }
 
+      // Distribui as cenas sequencialmente ao longo da duração para evitar repetição excessiva
+      const sceneCount = Math.max(1, images.length);
+      const slotDuration = finalDuration / sceneCount;
       const startTime = performance.now();
-      const cutSec = vidStyle.cutSec;
 
       await new Promise((resolve) => {
         function drawFrame(now) {
           const elapsed = (now - startTime) / 1000;
           if (elapsed >= finalDuration) {
-            if (audio) audio.pause();
             if (Array.isArray(motionClips)) {
               motionClips.forEach((v) => { if (v && typeof v.pause === "function") v.pause(); });
             }
@@ -651,19 +577,16 @@
             return;
           }
 
-          const cutIndex = Math.floor(elapsed / cutSec);
-          const cutProgress = (elapsed % cutSec) / cutSec;
-          const slot = cutIndex % Math.max(1, images.length);
+          const slot = Math.min(sceneCount - 1, Math.floor(elapsed / slotDuration));
+          const slotProgress = ((elapsed - slot * slotDuration) / slotDuration);
           const img = images[slot];
           const clipVid = Array.isArray(motionClips) ? motionClips[slot] : null;
 
-          const easeOut = 1 - Math.pow(1 - cutProgress, 3);
-          const zoomBase = cutIndex % 2 === 0 ? 1.03 : 1.12;
-          const scale = zoomBase + easeOut * vidStyle.zoomAmt;
-
-          const dir = cutIndex % 2 === 0 ? 1 : -1;
-          const panX = dir * (easeOut - 0.5) * vidStyle.pan;
-          const panY = ((cutIndex % 3) - 1) * 14 * (1 - easeOut);
+          // Quando já temos clipe animado real (Image-to-Video), evitamos zoom/pan artificial pesado
+          const hasRealMotion = Boolean(clipVid && clipVid.readyState >= 2);
+          const scale = hasRealMotion ? 1.0 : (1.02 + slotProgress * vidStyle.zoomAmt);
+          const panX = hasRealMotion ? 0 : ((slot % 2 === 0 ? 1 : -1) * (slotProgress - 0.5) * vidStyle.pan);
+          const panY = hasRealMotion ? 0 : (((slot % 3) - 1) * 10 * (1 - slotProgress));
 
           const w = canvas.width * scale;
           const h = canvas.height * scale;
@@ -673,13 +596,13 @@
           ctx.fillStyle = "#04060a";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          if (clipVid && clipVid.readyState >= 2) {
-            ctx.drawImage(clipVid, offsetX, offsetY, w, h);
+          if (hasRealMotion) {
+            ctx.drawImage(clipVid, 0, 0, canvas.width, canvas.height);
           } else if (img) {
             ctx.drawImage(img, offsetX, offsetY, w, h);
           } else {
             const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            grad.addColorStop(0, cutIndex % 2 === 0 ? "#0f172a" : "#111827");
+            grad.addColorStop(0, "#0f172a");
             grad.addColorStop(1, "#020617");
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -718,7 +641,8 @@
       return {
         videoUrl: URL.createObjectURL(videoBlob),
         srtContent: createSrtContent(finalSubs),
-        finalDuration
+        finalDuration,
+        animatedCount: Array.isArray(motionClips) ? motionClips.filter((v) => v && v.readyState >= 2).length : 0
       };
     }
 
@@ -736,7 +660,7 @@
           imageBase64: uploadedBase64,
           mimeType: uploadedMime,
           sceneIndex: 1,
-          imagePrompt: selectedImgModel.prompt
+          imagePrompt: `${selectedImgModel.prompt}, ${SCENE_DIRECTIONS[0].img}`
         });
         stage.innerHTML = `
           <img class="preview-916" src="${sc.imageUrl}" alt="Imagem gerada" />
@@ -765,26 +689,20 @@
       btnOnlyImg.disabled = true;
       btnBuild.disabled = true;
       try {
-        stage.innerHTML = `<div class="status-msg">1/3 • Gravando narração com voz <strong>${selectedVoice.toUpperCase()}</strong>...</div>`;
-        const tts = await callApi({
-          task: "tts",
-          text,
-          voice: selectedVoice
-        });
-
         const loadedImages = [];
         const sceneUrls = [];
+
         if (uploadedBase64) {
-          const totalScenes = 6;
+          const totalScenes = SCENE_DIRECTIONS.length;
           for (let i = 1; i <= totalScenes; i++) {
-            const dirText = SCENE_DIRECTIONS[(i - 1) % SCENE_DIRECTIONS.length];
-            stage.innerHTML = `<div class="status-msg">2/3 • Renderizando ângulo ${i}/${totalScenes} no estilo <strong>${selectedImgModel.name}</strong>...</div>`;
+            const dir = SCENE_DIRECTIONS[i - 1];
+            stage.innerHTML = `<div class="status-msg">1/2 • Gerando cena variada ${i}/${totalScenes} (<strong>${selectedImgModel.name}</strong>)...</div>`;
             const sc = await callApi({
               task: "scene",
               imageBase64: uploadedBase64,
               mimeType: uploadedMime,
               sceneIndex: i,
-              imagePrompt: `${selectedImgModel.prompt}, ${dirText}`
+              imagePrompt: `${selectedImgModel.prompt}, ${dir.img}`
             });
             sceneUrls.push(sc.imageUrl);
             const imgObj = await loadImage(sc.imageUrl);
@@ -797,12 +715,13 @@
         const motionClips = [];
         if (enableMotionClip.checked && sceneUrls.length > 0) {
           for (let i = 0; i < sceneUrls.length; i++) {
-            stage.innerHTML = `<div class="status-msg">2.5/3 • Animando cena ${i + 1}/${sceneUrls.length} com movimento cinematográfico...</div>`;
+            const dir = SCENE_DIRECTIONS[i % SCENE_DIRECTIONS.length];
+            stage.innerHTML = `<div class="status-msg">1.5/2 • Colocando o produto em movimento na cena ${i + 1}/${sceneUrls.length}...</div>`;
             try {
               const clipRes = await callApi({
                 task: "clip",
                 imageUrl: sceneUrls[i],
-                motionPrompt: `Commercial camera motion for ${selectedImgModel.name}, ${SCENE_DIRECTIONS[i % SCENE_DIRECTIONS.length]}, smooth camera movement keeping exact product faithful, 9:16 vertical.`
+                motionPrompt: `${dir.motion} Style: ${selectedImgModel.name}.`
               });
               const vidEl = await tryLoadMotionVideo(clipRes.videoUrl);
               motionClips.push(vidEl);
@@ -812,31 +731,25 @@
           }
         }
 
-        stage.innerHTML = `<div class="status-msg">3/3 • Montando vídeo (<strong>${selectedVidModel.name}</strong>)...</div>`;
-        const result = await renderViralVideo(
+        stage.innerHTML = `<div class="status-msg">2/2 • Montando sequência final (<strong>${selectedVidModel.name}</strong>)...</div>`;
+        const result = await renderScenesVideo(
           loadedImages,
           motionClips,
-          tts.audioUrl,
           Number(minDuration.value),
           burnSubs.checked,
-          enableBgm.checked,
           selectedVidModel,
           text
         );
 
         const srtBlob = new Blob([result.srtContent], { type: "text/plain;charset=utf-8" });
         const srtUrl = URL.createObjectURL(srtBlob);
-        const audioBtn = tts.audioUrl
-          ? `<a class="dl-btn" href="${tts.audioUrl}" target="_blank" download="voz-${selectedVoice}.wav">Áudio (${selectedVoice.toUpperCase()})</a>`
-          : `<span class="dl-btn" style="opacity:0.75;">Legenda Sincronizada</span>`;
 
         stage.innerHTML = `
           <video class="player-916" src="${result.videoUrl}" controls autoplay playsinline></video>
           <div class="dl-box">
-            <div class="dl-title">${selectedVidModel.name} • ${result.finalDuration}s (9:16)</div>
+            <div class="dl-title">${selectedVidModel.name} • ${result.finalDuration}s • ${result.animatedCount}/${loadedImages.length} cenas animadas</div>
             <div class="dl-grid">
-              <a class="dl-btn main" href="${result.videoUrl}" download="nexora-viral-${result.finalDuration}s.webm">Baixar Vídeo Pronto (${result.finalDuration}s)</a>
-              ${audioBtn}
+              <a class="dl-btn main" href="${result.videoUrl}" download="nexora-cenas-${result.finalDuration}s.webm">Baixar Vídeo das Cenas (${result.finalDuration}s)</a>
               <a class="dl-btn" href="${srtUrl}" download="legendas.srt">Legenda (.SRT)</a>
             </div>
           </div>
