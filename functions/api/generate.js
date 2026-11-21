@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
-  async function fetchWithTimeout(url, options, timeoutMs = 20000, stageName = "serviço") {
+  async function fetchWithTimeout(url, options, timeoutMs = 25000, stageName = "serviço") {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -46,7 +46,7 @@ export async function onRequestPost(context) {
       return parsed;
     } catch (err) {
       if (err?.name === "AbortError") {
-        throw new Error(`${stageName} excedeu o tempo limite.`);
+        throw new Error(`${stageName} demorou mais do que o tempo limite.`);
       }
       throw err;
     } finally {
@@ -79,39 +79,7 @@ export async function onRequestPost(context) {
       .replace(/\s+/g, " ")
       .replace(/([.!?])\s*/g, "$1 ")
       .trim()
-      .slice(0, 380);
-  }
-
-  async function arrayBufferToBase64(buffer) {
-    const bytes = new Uint8Array(buffer);
-    let binary = "";
-    const chunkSize = 0x8000;
-    for (let i = 0; i < bytes.length; i += chunkSize) {
-      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
-    }
-    return btoa(binary);
-  }
-
-  async function fetchPtBrFallbackAudioDataUri(text) {
-    const q = encodeURIComponent(text.slice(0, 200));
-    const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=pt-BR&client=tw-ob&q=${q}`;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 12000);
-    try {
-      const res = await fetch(url, {
-        headers: { "User-Agent": "Mozilla/5.0" },
-        signal: controller.signal
-      });
-      if (!res.ok) return "";
-      const buf = await res.arrayBuffer();
-      if (!buf || buf.byteLength < 500) return "";
-      const b64 = await arrayBufferToBase64(buf);
-      return `data:audio/mpeg;base64,${b64}`;
-    } catch {
-      return "";
-    } finally {
-      clearTimeout(timer);
-    }
+      .slice(0, 420);
   }
 
   try {
@@ -139,7 +107,9 @@ export async function onRequestPost(context) {
       const isMale = voice === "adam";
       let audioUrl = "";
       let providerUsed = "none";
+      const errors = [];
 
+      // 1. Kokoro PT-BR (pm_alex para Adam masculino | pf_dora para Natasha feminina)
       try {
         const voiceId = isMale ? "pm_alex" : "pf_dora";
         const kokoroData = await fetchWithTimeout(
@@ -150,18 +120,19 @@ export async function onRequestPost(context) {
             body: JSON.stringify({
               prompt: scriptPtBr,
               voice: voiceId,
-              speed: 1.06
+              speed: 1.18
             })
           },
-          15000,
+          22000,
           "Kokoro PT-BR"
         );
         audioUrl = extractAudioUrl(kokoroData);
-        if (audioUrl) providerUsed = "kokoro-ptbr";
-      } catch {
-        audioUrl = "";
+        if (audioUrl) providerUsed = `kokoro-${voiceId}`;
+      } catch (err) {
+        errors.push(`Kokoro: ${err?.message || "falha"}`);
       }
 
+      // 2. MiniMax Speech-02 HD (Deep_Voice_Man para Adam masculino | Sweet_Girl_2 para Natasha feminina)
       if (!audioUrl) {
         try {
           const minimaxVoice = isMale ? "Deep_Voice_Man" : "Sweet_Girl_2";
@@ -174,35 +145,38 @@ export async function onRequestPost(context) {
                 text: scriptPtBr,
                 voice_setting: {
                   voice_id: minimaxVoice,
-                  speed: 1.06,
+                  speed: 1.18,
                   vol: 1.0,
-                  pitch: isMale ? -1 : 0
+                  pitch: isMale ? -2 : 0
                 },
                 language_boost: "Portuguese_Brazil",
                 output_format: "mp3"
               })
             },
-            18000,
+            25000,
             "MiniMax Speech-02 HD"
           );
           audioUrl = extractAudioUrl(minimaxData);
-          if (audioUrl) providerUsed = "minimax-speech-02-hd";
-        } catch {
-          audioUrl = "";
+          if (audioUrl) providerUsed = `minimax-${minimaxVoice}`;
+        } catch (err) {
+          errors.push(`MiniMax: ${err?.message || "falha"}`);
         }
       }
 
       if (!audioUrl) {
-        audioUrl = await fetchPtBrFallbackAudioDataUri(scriptPtBr);
-        if (audioUrl) providerUsed = "ptbr-tts-fallback";
+        return json(
+          {
+            error: `Não foi possível gerar a voz (${voice}). Detalhes: ${errors.join(" | ") || "sem retorno de áudio"}`
+          },
+          502
+        );
       }
 
       return json({
         ok: true,
         audioUrl,
         voice,
-        provider: providerUsed,
-        ttsFallback: providerUsed !== "kokoro-ptbr"
+        provider: providerUsed
       });
     }
 
@@ -219,17 +193,17 @@ export async function onRequestPost(context) {
       const dataUri = `data:${mimeType};base64,${imageBase64}`;
 
       const angleVariations = [
-        "dramatic Hollywood blockbuster hero framing, glowing rim light, floating ember sparks and dark smoke atmosphere",
-        "dynamic close-up macro angle highlighting metallic finish and precision details with dramatic light flares",
-        "orbiting three-quarter commercial angle with high-contrast studio lighting and deep cinematic shadows"
+        "dramatic low-angle hero commercial framing, razor-sharp product focus, studio lighting, floating embers and dark atmospheric mist",
+        "dynamic close-up three-quarter macro angle highlighting surface texture, metallic rim light and dramatic light streaks",
+        "high-contrast wide-angle dramatic studio shot with deep cinematic shadows, volumetric light beam and crisp rim light"
       ];
       const angle = angleVariations[(sceneIndex - 1) % angleVariations.length];
 
       const baseDirection =
         imagePrompt ||
-        "dark obsidian and brushed gold commercial studio with dramatic rim lighting and glowing embers";
+        "dark obsidian stone pedestal with brushed gold trim, dramatic studio rim lighting, floating sparks and smoke";
 
-      const fullPrompt = `Hollywood commercial cinematography keeping the exact uploaded product 100% identical and faithful, ${baseDirection}, ${angle}, 9:16 vertical framing, ultra-sharp photorealistic detail, zero added text, zero watermarks, zero extra logos.`;
+      const fullPrompt = `Hollywood commercial product photography keeping the exact uploaded product 100% identical and faithful in shape, color and design, ${baseDirection}, ${angle}, 9:16 vertical framing, ultra-sharp photorealistic detail, zero added text, zero watermarks, zero extra logos.`;
 
       const imgData = await fetchWithTimeout(
         "https://fal.run/fal-ai/nano-banana/edit",
@@ -256,7 +230,6 @@ export async function onRequestPost(context) {
       return json({ ok: true, imageUrl, sceneIndex });
     }
 
-    // Nova etapa opcional: animar cena estática em clipe de vídeo com movimento real de câmera/efeitos
     if (task === "clip") {
       const imageUrl = (body.imageUrl || "").trim();
       const motionPrompt = (body.motionPrompt || "").trim();
@@ -267,7 +240,7 @@ export async function onRequestPost(context) {
 
       const fullMotionPrompt =
         motionPrompt ||
-        "Hollywood commercial camera push-in with subtle orbit, floating glowing sparks and atmospheric light rays, keeping the exact product 100% identical, smooth 9:16 motion, zero text.";
+        "Hollywood commercial camera orbit and dynamic push-in around the exact product, swirling dark smoke, glowing sparks and shifting dramatic studio rim light, keeping the product 100% faithful, 9:16 vertical motion, zero text.";
 
       const clipData = await fetchWithTimeout(
         "https://fal.run/fal-ai/kling-video/v1.6/standard/image-to-video",
