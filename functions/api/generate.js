@@ -23,163 +23,129 @@ export async function onRequestPost(context) {
     }
 
     const body = await request.json();
-    const action = body.action || "submit";
-    const mode = body.mode || "image";
-    const model =
-      mode === "video"
-        ? "fal-ai/kling-video/v2.6/pro/image-to-video"
-        : "fal-ai/nano-banana/edit";
+    const task = body.task || "scene";
 
     const authHeaders = {
       "Authorization": `Key ${env.FAL_KEY}`,
       "Content-Type": "application/json"
     };
 
-    if (action === "submit") {
+    // 1. GERAÇÃO DE NARRAÇÃO (VOZ ADAM OU NATASHA)
+    if (task === "tts") {
+      const text = (body.text || "").trim();
+      const voice = body.voice === "adam" ? "adam" : "natasha";
+
+      if (!text) {
+        return json({ error: "Digite o roteiro do vídeo antes de gerar." }, 400);
+      }
+
+      // Mapeamento para vozes neurais naturais em português via fal.ai Kokoro TTS
+      const voiceId = voice === "adam" ? "pm_alex" : "pf_dora";
+
+      const ttsRes = await fetch("https://fal.run/fal-ai/kokoro/brazilian-portuguese", {
+        method: "POST",
+        headers: authHeaders,
+        body: JSON.stringify({
+          prompt: text,
+          voice: voiceId,
+          speed: 1.05
+        })
+      });
+
+      const ttsText = await ttsRes.text();
+      let ttsData = {};
+      try {
+        ttsData = JSON.parse(ttsText);
+      } catch {
+        return json({ error: `Resposta inválida do motor de voz (${ttsRes.status}).` }, 502);
+      }
+
+      if (!ttsRes.ok) {
+        return json(
+          { error: ttsData.detail || ttsData.message || "Erro ao gerar narração." },
+          ttsRes.status
+        );
+      }
+
+      const audioUrl = ttsData?.audio?.url || ttsData?.audio_url || ttsData?.url || "";
+      if (!audioUrl) {
+        return json({ error: "Áudio não retornado pelo servidor de voz." }, 502);
+      }
+
+      return json({ ok: true, audioUrl, voice });
+    }
+
+    // 2. GERAÇÃO DE CENAS VISUAIS COMERCIAIS 9:16 (MANTENDO O PRODUTO ORIGINAL)
+    if (task === "scene") {
       const imageBase64 = body.imageBase64 || "";
       const mimeType = body.mimeType || "image/jpeg";
-      const customPrompt = (body.prompt || "").trim();
+      const sceneIndex = Number(body.sceneIndex || 1);
+      const style = body.style || "vendas";
 
       if (!imageBase64) {
-        return json({ error: "Envie a foto do produto antes de gerar." }, 400);
+        return json({ error: "Envie a foto do produto." }, 400);
       }
 
       const dataUri = `data:${mimeType};base64,${imageBase64}`;
 
-      const payload =
-        mode === "video"
-          ? {
-              prompt:
-                customPrompt ||
-                "Fast dynamic commercial camera push-in and orbital sweep around the exact product from the input image, dramatic studio lighting shifts, crisp specular highlights, high-energy commercial motion, 9:16 vertical framing, no text overlays, no watermarks.",
-              image_url: dataUri,
-              duration: "5",
-              aspect_ratio: "9:16",
-              generate_audio: false
-            }
-          : {
-              prompt:
-                customPrompt ||
-                "Luxury commercial product photography keeping the exact uploaded product intact, placed on dark obsidian stone and brushed gold pedestal with dramatic rim lighting, deep shadows, high-contrast studio reflections, ultra sharp 8k look, zero text, zero watermarks, zero extra logos.",
-              image_urls: [dataUri],
-              aspect_ratio: "9:16",
-              num_images: 1,
-              output_format: "jpeg"
-            };
+      const scenePrompts = {
+        vendas: [
+          "Luxury commercial hero product shot keeping the exact uploaded product intact, placed on dark obsidian stone and brushed gold pedestal with dramatic rim lighting, high-contrast studio reflections, 9:16 vertical, zero text, zero watermarks, zero extra logos.",
+          "Dynamic close-up commercial showcase keeping the exact uploaded product intact, sleek dark metallic studio backdrop with warm golden light streaks, crisp specular highlights, 9:16 vertical, zero text, zero watermarks, zero extra logos.",
+          "High-converting e-commerce lifestyle tabletop showcase keeping the exact uploaded product intact, modern minimalist dark marble counter with soft ambient studio glow, 9:16 vertical, zero text, zero watermarks, zero extra logos."
+        ],
+        viral: [
+          "High-energy commercial studio showcase keeping the exact uploaded product intact, futuristic neon cyan and gold edge lighting on dark matte surface, ultra sharp focus, 9:16 vertical, zero text, zero watermarks.",
+          "Bold editorial product photography keeping the exact uploaded product intact, floating dramatic spotlight beam in dark luxury studio, crisp shadows, 9:16 vertical, zero text, zero watermarks.",
+          "Sleek modern tech-luxury product display keeping the exact uploaded product intact, reflective black glass surface with vivid rim highlights, 9:16 vertical, zero text, zero watermarks."
+        ],
+        pessoal: [
+          "Clean bright modern lifestyle product photography keeping the exact uploaded product intact, natural morning sunlight on warm travertine stone surface, soft shadows, 9:16 vertical, zero text, zero watermarks.",
+          "Aesthetic minimal studio photography keeping the exact uploaded product intact, soft neutral beige and warm wood backdrop, crisp natural detail, 9:16 vertical, zero text, zero watermarks.",
+          "Cozy contemporary home table setting keeping the exact uploaded product intact, soft depth of field and natural daylight, 9:16 vertical, zero text, zero watermarks."
+        ]
+      };
 
-      const submitRes = await fetch(`https://queue.fal.run/${model}`, {
+      const list = scenePrompts[style] || scenePrompts.vendas;
+      const chosenPrompt = list[(sceneIndex - 1) % list.length];
+
+      const imgRes = await fetch("https://fal.run/fal-ai/nano-banana/edit", {
         method: "POST",
         headers: authHeaders,
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          prompt: chosenPrompt,
+          image_urls: [dataUri],
+          aspect_ratio: "9:16",
+          num_images: 1,
+          output_format: "jpeg"
+        })
       });
 
-      const submitText = await submitRes.text();
-      let submitData = {};
+      const imgText = await imgRes.text();
+      let imgData = {};
       try {
-        submitData = JSON.parse(submitText);
+        imgData = JSON.parse(imgText);
       } catch {
-        return json({ error: `Resposta inválida da fal.ai ao iniciar (${submitRes.status}).` }, 502);
+        return json({ error: `Resposta inválida ao gerar cena ${sceneIndex}.` }, 502);
       }
 
-      if (!submitRes.ok) {
+      if (!imgRes.ok) {
         return json(
-          { error: submitData.detail || submitData.message || "Falha ao enviar pedido para a fal.ai." },
-          submitRes.status
+          { error: imgData.detail || imgData.message || `Erro ao gerar cena ${sceneIndex}.` },
+          imgRes.status
         );
       }
 
-      return json({
-        ok: true,
-        status: "IN_QUEUE",
-        requestId: submitData.request_id,
-        statusUrl: submitData.status_url,
-        responseUrl: submitData.response_url,
-        model
-      });
+      const imageUrl = imgData?.images?.[0]?.url || imgData?.image?.url || "";
+      if (!imageUrl) {
+        return json({ error: `Cena ${sceneIndex} não retornou imagem.` }, 502);
+      }
+
+      return json({ ok: true, imageUrl, sceneIndex });
     }
 
-    if (action === "status") {
-      const requestId = body.requestId;
-      const statusUrl =
-        body.statusUrl ||
-        (requestId ? `https://queue.fal.run/${model}/requests/${requestId}/status` : "");
-      const responseUrl =
-        body.responseUrl ||
-        (requestId ? `https://queue.fal.run/${model}/requests/${requestId}` : "");
-
-      if (!statusUrl || !responseUrl) {
-        return json({ error: "Identificador do pedido em fila em falta." }, 400);
-      }
-
-      const stRes = await fetch(statusUrl, {
-        method: "GET",
-        headers: { "Authorization": `Key ${env.FAL_KEY}` }
-      });
-
-      const stText = await stRes.text();
-      let stData = {};
-      try {
-        stData = JSON.parse(stText);
-      } catch {
-        return json({ status: "IN_PROGRESS" });
-      }
-
-      if (!stRes.ok) {
-        return json(
-          { error: stData.detail || stData.message || "Erro ao consultar estado na fal.ai." },
-          stRes.status
-        );
-      }
-
-      if (stData.status === "COMPLETED") {
-        const resFetch = await fetch(responseUrl, {
-          method: "GET",
-          headers: { "Authorization": `Key ${env.FAL_KEY}` }
-        });
-
-        const resText = await resFetch.text();
-        let resultData = {};
-        try {
-          resultData = JSON.parse(resText);
-        } catch {
-          return json({ error: "Resultado final inválido devolvido pela fal.ai." }, 502);
-        }
-
-        if (!resFetch.ok) {
-          return json(
-            { error: resultData.detail || resultData.message || "Erro ao obter resultado final." },
-            resFetch.status
-          );
-        }
-
-        const mediaUrl =
-          mode === "video"
-            ? resultData?.video?.url || resultData?.url || ""
-            : resultData?.images?.[0]?.url || resultData?.image?.url || "";
-
-        return json({
-          ok: true,
-          status: "COMPLETED",
-          mode,
-          url: mediaUrl
-        });
-      }
-
-      if (stData.status === "FAILED") {
-        return json(
-          { error: stData.error || "A geração falhou no motor da fal.ai." },
-          500
-        );
-      }
-
-      return json({
-        ok: true,
-        status: stData.status || "IN_PROGRESS"
-      });
-    }
-
-    return json({ error: "Ação inválida." }, 400);
+    return json({ error: "Tarefa inválida." }, 400);
   } catch (err) {
-    return json({ error: err.message || "Falha interna no servidor." }, 500);
+    return json({ error: err.message || "Erro interno no servidor." }, 500);
   }
 }
