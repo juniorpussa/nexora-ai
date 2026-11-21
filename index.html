@@ -54,7 +54,9 @@
     .toggle-row { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #cbd5e1; cursor: pointer; }
     .btn-generate { width: 100%; background: #22c55e; color: #041208; border: none; border-radius: 12px; padding: 15px; font-size: 14px; font-weight: 900; cursor: pointer; }
     .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-cancel { margin-top: 8px; background: rgba(248,113,113,0.14); color: #fca5a5; border: 1px solid rgba(248,113,113,0.35); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .action-inline { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
+    .btn-cancel { background: rgba(248,113,113,0.14); color: #fca5a5; border: 1px solid rgba(248,113,113,0.35); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .btn-use-ready { background: rgba(34,197,94,0.16); color: #86efac; border: 1px solid rgba(34,197,94,0.45); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
     .live-prompt-box { background: #080c14; border: 1px solid #1d283d; border-radius: 10px; padding: 10px; margin-bottom: 12px; font-size: 11px; color: #94a3b8; }
     .live-prompt-box summary { cursor: pointer; font-weight: 700; color: #7dd3fc; display: flex; justify-content: space-between; align-items: center; }
     .live-prompt-box pre { white-space: pre-wrap; margin-top: 8px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; color: #cbd5e1; max-height: 185px; overflow-y: auto; line-height: 1.45; }
@@ -66,8 +68,8 @@
     .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .dl-btn { display: block; text-align: center; background: #182338; color: #f8fafc; border: 1px solid #2d3f63; border-radius: 8px; padding: 9px 10px; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; }
     .dl-btn.main { background: #22c55e; color: #041208; border: none; grid-column: span 2; font-size: 13px; padding: 11px; }
-    .status-msg { font-size: 13px; color: #9fb0cc; line-height: 1.5; max-width: 400px; }
-    .status-log { font-size: 11.5px; color: #7dd3fc; margin-top: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.5; }
+    .status-msg { font-size: 13px; color: #9fb0cc; line-height: 1.5; max-width: 410px; }
+    .status-log { font-size: 11.5px; color: #7dd3fc; margin-top: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.6; }
     .progress-bar-wrap { width: 100%; max-width: 340px; height: 8px; background: #151e30; border-radius: 999px; overflow: hidden; margin-top: 8px; }
     .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #38bdf8); width: 0%; transition: width 0.3s ease; }
     .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; width: 100%; }
@@ -80,7 +82,7 @@
 <body>
   <div class="topbar">
     <div class="brand">NEXORA.AI <span>50 VÍDEOS ÚNICOS + 50 IMAGENS</span></div>
-    <div class="pill-info">Kling v2.6 Pro + Nano Banana • Arco Frontal ±30° (Anti-Morphing) • Fila Blindada com Auto-Retry</div>
+    <div class="pill-info">Kling v2.6 Pro + Nano Banana • Blocos Rápidos 5s (Zero Travamento) • Arco Frontal ±30°</div>
   </div>
 
   <div class="layout">
@@ -89,7 +91,7 @@
       <div class="mode-switch">
         <button type="button" class="mode-btn active" data-mode="video">
           <strong>Vídeo Hollywood 9:16 (Kling v2.6 Pro)</strong>
-          <small>50 filmes únicos • Arco frontal ±30° sem deformar o produto</small>
+          <small>50 filmes únicos • Blocos rápidos 5s anti-travamento (10s–30s)</small>
         </button>
         <button type="button" class="mode-btn" data-mode="image">
           <strong>Imagem 9:16 Ultra-Realista (Nano Banana)</strong>
@@ -109,12 +111,13 @@
         <div class="box-group">
           <div class="grid-2" id="videoOnlyTopFields">
             <div>
-              <label for="minDuration">Duração do Vídeo</label>
+              <label for="minDuration">Duração &amp; Estrutura (Anti-Travamento)</label>
               <select id="minDuration">
-                <option value="10" selected>10s — Padrão Hollywood (1 Clipe 10s Original MP4)</option>
-                <option value="15">15s — Estendido (10s + 5s Clímax mesmo universo)</option>
-                <option value="20">20s — Superprodução (2x 10s mesmo universo)</option>
-                <option value="30">30s — Completo (3x 10s mesmo universo)</option>
+                <option value="10_fast">10s — 2 Blocos Rápidos de 5s (Mais ágil + corte real)</option>
+                <option value="10_single">10s — 1 Bloco Contínuo de 10s (MP4 bruto sem costura)</option>
+                <option value="15_fast" selected>15s — 3 Blocos Rápidos de 5s (Ideal TikTok Shop)</option>
+                <option value="20_fast">20s — 4 Blocos Rápidos de 5s</option>
+                <option value="30_fast">30s — 6 Blocos Rápidos de 5s</option>
               </select>
             </div>
             <div>
@@ -195,14 +198,14 @@
         </div>
       </div>
 
-      <button type="button" class="btn-generate" id="btnBuild">Gerar Vídeo Hollywood Único (10s • Kling v2.6 Pro + SFX/Sub-Bass)</button>
+      <button type="button" class="btn-generate" id="btnBuild">Gerar Vídeo Hollywood (15s • 3 Blocos Rápidos de 5s)</button>
       <button type="button" class="btn-generate hidden" id="btnOnlyImg">Gerar Imagem Ultra-Realista 9:16 (Nano Banana)</button>
     </div>
 
     <div class="panel">
       <div class="step-label" id="previewTitle">Preview 9:16 &amp; Download MP4</div>
       <div class="preview-stage" id="stage">
-        <div class="status-msg"><strong>50 Vídeos Hollywood + 50 Imagens 100% únicos</strong> com trava de arco frontal ±30° (zero morphing) e fila com auto-retry.<br/>Suba a foto do produto, escolha um universo e clique em gerar.</div>
+        <div class="status-msg"><strong>50 Vídeos Hollywood + 50 Imagens 100% únicos</strong> com blocos rápidos de 5s (anti-travamento), fila controlada e trava de arco frontal ±30°.<br/>Suba a foto do produto, escolha um universo e clique em gerar.</div>
       </div>
     </div>
   </div>
@@ -267,73 +270,72 @@
     ].map(([id,cat,hasPerson,name,desc,prompt])=>({id,cat,hasPerson,name,desc,prompt}));
 
     // =========================================================================
-    // 50 MODELOS DE VÍDEO HOLLYWOOD ÚNICOS — ARCO FRONTAL ±30° (ZERO MORPHING!)
-    // Regra de Ouro:
-    //   • Câmera NUNCA gira atrás ou embaixo do produto (arco frontal travado ±25° a ±30°).
-    //   • Produto permanece na EXATA mesma orientação e geometria do frame 0 até 10s.
-    //   • Dinamismo vem de snap-zooms frontais, varreduras de luz, partículas/VFX físicos e recuo hero.
+    // 50 MODELOS DE VÍDEO HOLLYWOOD ÚNICOS — ARCO FRONTAL ±30° (ZERO MORPHING)
     // =========================================================================
     const VIDEO_MODELS = [
-      // === PERSONAGENS & CINEMA REAL (10) ===
-      [1,"Personagem",true,"#01 Executivo 007 na Cobertura","Empresário de terno na cobertura noturna com zoom direto e macro vivo","luxury penthouse executive commercial","Charismatic 32-year-old executive in tailored black suit facing camera inside a dark glass penthouse, holding the exact product steady upright dead-center toward the lens","Warm golden city skyline bokeh outside glass, crisp warm tungsten key light and cool slate rim light","(0.0s-2.0s) Starting seamlessly from the opening frontal frame, punch into a crisp snap-zoom straight onto the exact front face of the product as golden city bokeh gleams behind","(2.0s-4.8s) Tight controlled frontal arc (±25 degrees max, never going behind) keeping the executive facing forward and the exact product centered, rigid and razor-sharp","(4.8s-7.4s) Dynamic front-facing macro push gliding smoothly across the exact visible surface textures as a bright golden light beam sweeps across the product","(7.4s-10.0s) Snappy speed-ramp pullback returning cleanly to the authoritative frontal hero shot with product sharp in foreground","Deep punchy sub-bass drops on every zoom hit, crisp modern air-whoosh transitions and dark luxury trap percussion, zero speech"],
-      [2,"Personagem",true,"#02 Velocista Noturno em Estádio","Atleta sob refletores e chuva fina com snap-zoom e brilho neon verde","high-adrenaline athletic stadium commercial","Fit athletic sprinter in matte-black pro gear facing camera inside a dramatic misty night stadium, holding the exact product solidly centered toward the lens","Blinding stadium floodlights cutting through fine illuminated night rain mist with electric-green rim flares","(0.0s-2.0s) From the opening frontal frame, punch immediately into a razor-sharp snap-zoom onto the exact front of the product as stadium floodlights pulse behind","(2.0s-4.8s) Energetic controlled frontal arc (±28 degrees max, never rotating behind) keeping product dead-center and sharp while illuminated rain mist drifts past","(4.8s-7.4s) Dynamic front-angle macro push sweeping across authentic surface textures catching vivid neon-green rim light","(7.4s-10.0s) Snappy speed-ramp pullback locking firmly on the frontal hero shot of athlete and foreground product under blazing floodlights","High-impact modern sub-bass drops, sharp stadium whooshes and energetic Phonk kick impacts, zero speech"],
-      [3,"Personagem",true,"#03 Modelo Vogue Editorial Paris","Modelo chic em estúdio high-fashion com flashes rítmicos e macro de revista","high-fashion Parisian editorial commercial","Poised 26-year-old fashion model in sharp black couture blazer facing camera in a dark Parisian studio, presenting the exact product cleanly center-frame","Rhythmic editorial strobe flashes slicing velvety dark shadows with warm champagne rim highlights","(0.0s-2.0s) Starting cleanly from frame one, crisp editorial flash pulses launch a sharp snap-zoom straight onto the exact front of the product","(2.0s-4.8s) Sleek controlled frontal arc (±25 degrees max, staying strictly in front) while crisp white studio light bars gleam across the product","(4.8s-7.4s) Continuous front-facing 100mm fashion macro sweep gliding smoothly over immaculate finishes and true material grain","(7.4s-10.0s) Confident speed-ramp pullback returning smoothly to a magazine-cover frontal hero composition","Chic high-energy house-electro bass hits, crisp strobe air-whooshes and deep rhythmic kicks, zero speech"],
-      [4,"Personagem",true,"#04 Piloto de Supercarro à Noite","Cockpit em fibra de carbono à noite com luzes de túnel passando no vidro","midnight supercar cockpit commercial","Stylish driver in dark leather jacket seated inside a matte-black carbon-fiber supercar cockpit holding the exact product steady upright toward camera","Moving neon city tunnel light streaks flashing past tinted windshield, crisp red-amber cockpit rim glow","(0.0s-2.0s) From the opening cockpit frame, snap-zoom straight onto the exact front face of the product as neon tunnel streaks race outside","(2.0s-4.8s) Controlled tight frontal arc (±25 degrees max inside cockpit) keeping the product razor-sharp while moving red-and-white lights reflect across it","(4.8s-7.4s) Moving front-facing macro glide tracing real surface details and clean contours under shifting nocturnal light","(7.4s-10.0s) Crisp speed-ramp pullback returning to the commanding frontal cockpit hero frame","Punchy sub-bass drops, sharp turbo-whoosh transitions and aggressive dark Phonk kick impacts, zero speech"],
-      [5,"Personagem",true,"#05 Streetwear no Metrô Cyberpunk","Criador urbano estiloso com luzes frias de metrô passando ao fundo","urban street-culture rapid-cut commercial","Stylish 24-year-old Brazilian street-fashion creator in dark techwear jacket facing camera on a sleek midnight subway platform, presenting the exact product centered","Passing express train light streaks blurring behind, cool cyan fluorescent rim light and subtle urban mist","(0.0s-2.0s) Starting directly on the creator, punchy snap-zoom straight onto the exact front of the product as glowing train trails streak behind","(2.0s-4.8s) Controlled frontal arc (±28 degrees max, never rotating behind) keeping product locked sharp as electric cyan reflections skim its face","(4.8s-7.4s) Dynamic front-angle macro push drifting smoothly over rugged real textures with neon bokeh streaking behind","(7.4s-10.0s) Snappy speed-ramp pullback locking onto bold frontal street-hero framing","Hard-hitting urban 808 bass drops, fast pass-by air whooshes and punchy trap hits, zero speech"],
-      [6,"Personagem",true,"#06 Milionário no Iate Pôr do Sol","Deck de teca luxuoso, mar azul e luz dourada de cinema em movimento","aspirational mega-yacht sunset commercial","Confident 30-year-old man in crisp white resort shirt facing camera on a luxury mega-yacht teak deck, holding the exact product cleanly center-frame","Warm golden hour ocean sunbeams, shimmering turquoise sea bokeh and natural golden lens flare","(0.0s-2.0s) Starting from the sunlit yacht frame, crisp dynamic push-in straight onto the exact front of the product as warm sunlight glints across it","(2.0s-4.8s) Fluid controlled frontal arc (±25 degrees max) keeping product razor-sharp and dead-center against sparkling golden ocean bokeh","(4.8s-7.4s) Silky front-facing macro glide sweeping across genuine textures and true colors bathed in golden light","(7.4s-10.0s) Smooth speed-ramp pullback returning cleanly to the aspirational frontal yacht hero view","Uplifting luxury bass groove, crisp warm air-whooshes and clean deep kick drops, zero speech"],
-      [7,"Personagem",true,"#07 Pro Gamer em Arena Esports","Player focado sob luzes de palco de campeonato com brilho ciano e vermelho","high-voltage esports arena commercial","Focused esports champion in sleek dark pro jersey seated at a dark carbon tournament desk facing camera, presenting the exact product cleanly center-frame","Pulsing electric-blue and crimson arena spotlight beams slicing subtle stage mist behind","(0.0s-2.0s) Starting directly from the opening arena shot, instant snap-zoom onto the exact front of the product as stage beams sweep behind","(2.0s-4.8s) Fast controlled frontal arc (±25 degrees max, never behind) keeping product sharp while vivid stage rim reflections glide across its surface","(4.8s-7.4s) Continuous front-facing macro sweep inspecting exact visible details and crisp build quality","(7.4s-10.0s) Explosive speed-ramp pullback locking back into commanding frontal tournament hero framing","High-energy futuristic sub-bass hits, sharp digital whooshes and energetic electronic drum drops, zero speech"],
-      [8,"Personagem",true,"#08 Mulher Sofisticada Café Paris","Luz dourada da manhã em mesa de mármore com movimento editorial fluido","aspirational European lifestyle commercial","Radiant 28-year-old woman in chic beige trench coat seated at a Parisian marble cafe table presenting the exact product cleanly upright toward camera","Warm morning sun shafts, crisp architectural shadows and creamy European street bokeh","(0.0s-2.0s) Starting from the warm morning frame, crisp kinetic zoom straight onto the exact front of the product as golden sunlight shimmers","(2.0s-4.8s) Graceful controlled frontal arc (±25 degrees max) keeping product sharp while natural daylight reveals true colors","(4.8s-7.4s) Smooth front-facing macro pass gliding over real tactile finishes and spotless craftsmanship","(7.4s-10.0s) Stylish speed-ramp pullback returning cleanly to the aspirational frontal editorial shot","Trendy melodic commercial bass pulse with snappy clean air-whooshes and warm kick hits, zero speech"],
-      [9,"Personagem",true,"#09 Agente Tático no Heliponto","Especialista sob chuva noturna com holofote azul varrendo névoa","action-thriller helipad commercial","Rugged tactical specialist in matte-black rainproof jacket facing camera on a wet night skyscraper helipad, presenting the exact product dead-center","Sweeping helicopter blue searchlight beam cutting through drifting night mist and glistening rain bokeh","(0.0s-2.0s) From the opening frame, sweeping blue searchlight flash launches a sharp snap-zoom straight onto the exact front of the product","(2.0s-4.8s) Controlled frontal arc (±28 degrees max, never behind) keeping product razor-sharp while backlit rain streaks sparkle behind","(4.8s-7.4s) Gritty front-facing macro glide skimming over tough real textures bathed in crisp overhead rim light","(7.4s-10.0s) Authoritative speed-ramp pullback returning cleanly to the bold frontal action-hero composition","Heavy Hollywood action sub-bass slams, sweeping wind whooshes and punchy trailer percussion, zero speech"],
-      [10,"Personagem",true,"#10 DJ em Palco Neon Subterrâneo","Cabine dark de festival com feixes de laser sincronizados no fundo","underground festival laser-show commercial","Charismatic DJ in dark streetwear facing camera behind a sleek pitch-black festival booth, presenting the exact product steady dead-center","Syncopated emerald and violet volumetric laser beams fanning across dark backlit club haze behind","(0.0s-2.0s) Starting right from frame one, laser strobe burst launches a crisp snap-zoom onto the exact front of the product","(2.0s-4.8s) Energetic controlled frontal arc (±25 degrees max) keeping product razor-sharp while vibrant neon laser reflections dance across its front","(4.8s-7.4s) Dynamic front-facing macro push proving spotless finish amid swirling backlit smoke bokeh","(7.4s-10.0s) Massive bass-drop speed-ramp pullback locking back into frontal festival hero stance","Explosive festival techno-phonk sub-bass drop, clean riser whooshes and pounding kicks, zero speech"],
+      [1,"Personagem",true,"#01 Executivo 007 na Cobertura","Empresário de terno na cobertura noturna com zoom direto e macro vivo","luxury penthouse executive commercial","Charismatic 32-year-old executive in tailored black suit facing camera inside a dark glass penthouse, holding the exact product steady upright dead-center toward the lens","Warm golden city skyline bokeh outside glass, crisp warm tungsten key light and cool slate rim light","Starting seamlessly from the opening frontal frame, punch into a crisp snap-zoom straight onto the exact front face of the product as golden city bokeh gleams behind","Tight controlled frontal arc (±25 degrees max, never going behind) keeping the executive facing forward and the exact product centered, rigid and razor-sharp","Dynamic front-facing macro push gliding smoothly across the exact visible surface textures as a bright golden light beam sweeps across the product","Snappy speed-ramp pullback returning cleanly to the authoritative frontal hero shot with product sharp in foreground","Deep punchy sub-bass drops on every zoom hit, crisp modern air-whoosh transitions and dark luxury trap percussion, zero speech"],
+      [2,"Personagem",true,"#02 Velocista Noturno em Estádio","Atleta sob refletores e chuva fina com snap-zoom e brilho neon verde","high-adrenaline athletic stadium commercial","Fit athletic sprinter in matte-black pro gear facing camera inside a dramatic misty night stadium, holding the exact product solidly centered toward the lens","Blinding stadium floodlights cutting through fine illuminated night rain mist with electric-green rim flares","From the opening frontal frame, punch immediately into a razor-sharp snap-zoom onto the exact front of the product as stadium floodlights pulse behind","Energetic controlled frontal arc (±28 degrees max, never rotating behind) keeping product dead-center and sharp while illuminated rain mist drifts past","Dynamic front-angle macro push sweeping across authentic surface textures catching vivid neon-green rim light","Snappy speed-ramp pullback locking firmly on the frontal hero shot of athlete and foreground product under blazing floodlights","High-impact modern sub-bass drops, sharp stadium whooshes and energetic Phonk kick impacts, zero speech"],
+      [3,"Personagem",true,"#03 Modelo Vogue Editorial Paris","Modelo chic em estúdio high-fashion com flashes rítmicos e macro de revista","high-fashion Parisian editorial commercial","Poised 26-year-old fashion model in sharp black couture blazer facing camera in a dark Parisian studio, presenting the exact product cleanly center-frame","Rhythmic editorial strobe flashes slicing velvety dark shadows with warm champagne rim highlights","Starting cleanly from frame one, crisp editorial flash pulses launch a sharp snap-zoom straight onto the exact front of the product","Sleek controlled frontal arc (±25 degrees max, staying strictly in front) while crisp white studio light bars gleam across the product","Continuous front-facing 100mm fashion macro sweep gliding smoothly over immaculate finishes and true material grain","Confident speed-ramp pullback returning smoothly to a magazine-cover frontal hero composition","Chic high-energy house-electro bass hits, crisp strobe air-whooshes and deep rhythmic kicks, zero speech"],
+      [4,"Personagem",true,"#04 Piloto de Supercarro à Noite","Cockpit em fibra de carbono à noite com luzes de túnel passando no vidro","midnight supercar cockpit commercial","Stylish driver in dark leather jacket seated inside a matte-black carbon-fiber supercar cockpit holding the exact product steady upright toward camera","Moving neon city tunnel light streaks flashing past tinted windshield, crisp red-amber cockpit rim glow","From the opening cockpit frame, snap-zoom straight onto the exact front face of the product as neon tunnel streaks race outside","Controlled tight frontal arc (±25 degrees max inside cockpit) keeping the product razor-sharp while moving red-and-white lights reflect across it","Moving front-facing macro glide tracing real surface details and clean contours under shifting nocturnal light","Crisp speed-ramp pullback returning to the commanding frontal cockpit hero frame","Punchy sub-bass drops, sharp turbo-whoosh transitions and aggressive dark Phonk kick impacts, zero speech"],
+      [5,"Personagem",true,"#05 Streetwear no Metrô Cyberpunk","Criador urbano estiloso com luzes frias de metrô passando ao fundo","urban street-culture rapid-cut commercial","Stylish 24-year-old Brazilian street-fashion creator in dark techwear jacket facing camera on a sleek midnight subway platform, presenting the exact product centered","Passing express train light streaks blurring behind, cool cyan fluorescent rim light and subtle urban mist","Starting directly on the creator, punchy snap-zoom straight onto the exact front of the product as glowing train trails streak behind","Controlled frontal arc (±28 degrees max, never rotating behind) keeping product locked sharp as electric cyan reflections skim its face","Dynamic front-angle macro push drifting smoothly over rugged real textures with neon bokeh streaking behind","Snappy speed-ramp pullback locking onto bold frontal street-hero framing","Hard-hitting urban 808 bass drops, fast pass-by air whooshes and punchy trap hits, zero speech"],
+      [6,"Personagem",true,"#06 Milionário no Iate Pôr do Sol","Deck de teca luxuoso, mar azul e luz dourada de cinema em movimento","aspirational mega-yacht sunset commercial","Confident 30-year-old man in crisp white resort shirt facing camera on a luxury mega-yacht teak deck, holding the exact product cleanly center-frame","Warm golden hour ocean sunbeams, shimmering turquoise sea bokeh and natural golden lens flare","Starting from the sunlit yacht frame, crisp dynamic push-in straight onto the exact front of the product as warm sunlight glints across it","Fluid controlled frontal arc (±25 degrees max) keeping product razor-sharp and dead-center against sparkling golden ocean bokeh","Silky front-facing macro glide sweeping across genuine textures and true colors bathed in golden light","Smooth speed-ramp pullback returning cleanly to the aspirational frontal yacht hero view","Uplifting luxury bass groove, crisp warm air-whooshes and clean deep kick drops, zero speech"],
+      [7,"Personagem",true,"#07 Pro Gamer em Arena Esports","Player focado sob luzes de palco de campeonato com brilho ciano e vermelho","high-voltage esports arena commercial","Focused esports champion in sleek dark pro jersey seated at a dark carbon tournament desk facing camera, presenting the exact product cleanly center-frame","Pulsing electric-blue and crimson arena spotlight beams slicing subtle stage mist behind","Starting directly from the opening arena shot, instant snap-zoom onto the exact front of the product as stage beams sweep behind","Fast controlled frontal arc (±25 degrees max, never behind) keeping product sharp while vivid stage rim reflections glide across its surface","Continuous front-facing macro sweep inspecting exact visible details and crisp build quality","Explosive speed-ramp pullback locking back into commanding frontal tournament hero framing","High-energy futuristic sub-bass hits, sharp digital whooshes and energetic electronic drum drops, zero speech"],
+      [8,"Personagem",true,"#08 Mulher Sofisticada Café Paris","Luz dourada da manhã em mesa de mármore com movimento editorial fluido","aspirational European lifestyle commercial","Radiant 28-year-old woman in chic beige trench coat seated at a Parisian marble cafe table presenting the exact product cleanly upright toward camera","Warm morning sun shafts, crisp architectural shadows and creamy European street bokeh","Starting from the warm morning frame, crisp kinetic zoom straight onto the exact front of the product as golden sunlight shimmers","Graceful controlled frontal arc (±25 degrees max) keeping product sharp while natural daylight reveals true colors","Smooth front-facing macro pass gliding over real tactile finishes and spotless craftsmanship","Stylish speed-ramp pullback returning cleanly to the aspirational frontal editorial shot","Trendy melodic commercial bass pulse with snappy clean air-whooshes and warm kick hits, zero speech"],
+      [9,"Personagem",true,"#09 Agente Tático no Heliponto","Especialista sob chuva noturna com holofote azul varrendo névoa","action-thriller helipad commercial","Rugged tactical specialist in matte-black rainproof jacket facing camera on a wet night skyscraper helipad, presenting the exact product dead-center","Sweeping helicopter blue searchlight beam cutting through drifting night mist and glistening rain bokeh","From the opening frame, sweeping blue searchlight flash launches a sharp snap-zoom straight onto the exact front of the product","Controlled frontal arc (±28 degrees max, never behind) keeping product razor-sharp while backlit rain streaks sparkle behind","Gritty front-facing macro glide skimming over tough real textures bathed in crisp overhead rim light","Authoritative speed-ramp pullback returning cleanly to the bold frontal action-hero composition","Heavy Hollywood action sub-bass slams, sweeping wind whooshes and punchy trailer percussion, zero speech"],
+      [10,"Personagem",true,"#10 DJ em Palco Neon Subterrâneo","Cabine dark de festival com feixes de laser sincronizados no fundo","underground festival laser-show commercial","Charismatic DJ in dark streetwear facing camera behind a sleek pitch-black festival booth, presenting the exact product steady dead-center","Syncopated emerald and violet volumetric laser beams fanning across dark backlit club haze behind","Starting right from frame one, laser strobe burst launches a crisp snap-zoom onto the exact front of the product","Energetic controlled frontal arc (±25 degrees max) keeping product razor-sharp while vibrant neon laser reflections dance across its front","Dynamic front-facing macro push proving spotless finish amid swirling backlit smoke bokeh","Massive bass-drop speed-ramp pullback locking back into frontal festival hero stance","Explosive festival techno-phonk sub-bass drop, clean riser whooshes and pounding kicks, zero speech"],
 
-      // === SCI-FI, AÇÃO & ADRENALINA (10) ===
-      [11,"Acao",false,"#11 Reator Industrial (Strobe Vermelho)","Modelo Ref 1 blindado: strobes vermelhos, fumaça densa e arco frontal ±30°","high-voltage industrial reactor commercial","Exact product rigidly anchored upright and motionless dead-center on a heavy matte-black obsidian pedestal inside an industrial reactor core","Flashing red emergency strobe lights pulsing across thick rising white reactor vapor","(0.0s-2.0s) Starting from the opening reactor frame, sudden high-voltage snap-zoom cutting through red strobes and rising white smoke straight onto the exact front face of the product","(2.0s-4.8s) Fast controlled frontal arc (±30 degrees max left-to-right, strictly staying in front and NEVER rotating behind or flipping the product) catching intense crimson strobe pulses","(4.8s-7.4s) Crisp front-facing extreme macro push gliding smoothly over the exact visible textures and original markings illuminated by sweeping overhead light","(7.4s-10.0s) Explosive speed-ramp pull-back locking cleanly into the exact authoritative frontal hero stance amid lingering illuminated vapor","Crushing sub-bass drops synced to every snap-zoom, sharp metallic whoosh transitions and aggressive dark Phonk hits, zero speech"],
-      [12,"Acao",false,"#12 Cofre Tático Criogênico (Unboxing)","Modelo Ref 2 blindado: maleta titânio aberta, espuma carbono e jatos de vapor","military sci-fi tactical unboxing commercial","Exact product rigidly seated and motionless inside an open laser-cut black carbon foam tray of a matte-black titanium tactical vault case (already fully open)","Monolithic dark security bunker venting brisk horizontal blasts of white pneumatic cryogenic steam beneath a focused overhead spotlight","(0.0s-2.0s) Starting from the open vault frame, explosive snap-zoom slicing through clearing white cryogenic steam straight onto the exact front of the product in black carbon foam","(2.0s-4.8s) High-speed controlled frontal arc (±30 degrees max, never rotating behind) capturing sculpted front edges and tactile surfaces anchored rigidly inside the open vault","(4.8s-7.4s) Crisp front-angle extreme macro push diving straight into real original details illuminated by focused bunker spotlight","(7.4s-10.0s) Explosive speed-ramp pull-back locking into an authoritative centered frontal hero stance inside the open titanium vault","Violent pneumatic cryogenic steam blast, heavy futuristic sub-bass impacts and sharp whip whooshes, zero speech"],
-      [13,"Acao",false,"#13 Penhasco Basalto Pôr do Sol","Monolito escuro no alto de cânion ao entardecer com vento e névoa","epic basalt-cliff canyon commercial","Exact product anchored rigidly upright dead-center atop a sharp dark basalt cliff spire overlooking a twilight mountain canyon","Swirling golden canyon mist, fiery amber sunset rim horizon and crisp sunlit wind dust","(0.0s-2.0s) Starting from the dramatic cliff opening shot, fast crisp snap-zoom straight onto the exact front of the product as golden mist whips past behind","(2.0s-4.8s) Sweeping controlled frontal arc (±30 degrees max, staying strictly in front) showcasing sharp contours glowing against warm sunset sky","(4.8s-7.4s) Smooth-to-fast front-facing macro glide skimming real surface textures bathed in blazing golden rim light","(7.4s-10.0s) Smooth speed-ramp pullback locking monumental frontal hero scale atop the canyon rock","Epic modern cinematic sub-bass drops with clean wind-rush whooshes and bold drum impacts, zero speech"],
-      [14,"Acao",false,"#14 Estação Orbital Zero-G","Deck espacial escuro com a curvatura azul da Terra girando atrás","sci-fi zero-gravity orbital commercial","Exact product anchored rigidly centered on a sleek dark brushed-titanium pedestal before a giant spacecraft viewport","Glowing blue Earth curvature shifting smoothly outside, crisp cool-blue orbital rim light and fine floating light dust","(0.0s-2.0s) Starting from the orbital deck frame, crisp precision snap-zoom directly onto the exact front of the razor-sharp product","(2.0s-4.8s) Smooth controlled frontal arc (±28 degrees max, never orbiting behind) catching crisp Earth-blue rim reflections along the exact silhouette","(4.8s-7.4s) Surgical front-facing 100mm macro pass tracking authentic original lines and spotless materials against deep space contrast","(7.4s-10.0s) Majestic speed-ramp pullback locking symmetrical frontal hero alignment before the glowing blue planet","Sleek sci-fi sub-bass drops with crisp futuristic air-whooshes and clean electronic impacts, zero speech"],
-      [15,"Acao",false,"#15 Beco Cyberpunk sob Chuva Neon","Asfalto molhado de Neo-Tóquio com reflexos ciano/magenta e chuva fina","dark cyberpunk Neo-Tokyo street commercial","Exact product anchored rigidly upright on rain-slicked wet black urban asphalt slate in a dark neon alley","Electric cyan and hot-magenta neon bokeh shimmering on wet ground, slanted backlit rain mist","(0.0s-2.0s) Starting from the wet asphalt frame, sudden snap-zoom skimming glistening puddles directly onto the exact front face of the product","(2.0s-4.8s) Fast controlled frontal arc (±30 degrees max, never behind) keeping the product razor-sharp while vivid cyan-and-magenta reflections sweep its face","(4.8s-7.4s) Continuous front-angle rain-bokeh macro glide inspecting real original craftsmanship under grazing electric cyan light","(7.4s-10.0s) Explosive speed-ramp pullback locking commanding frontal hero pose mirrored on wet neon slate","Aggressive cyberpunk midtempo sub-bass drops with crisp wet-air whooshes and punchy hits, zero speech"],
-      [16,"Acao",false,"#16 Pit-Lane Noturno Fórmula 1","Asfalto de corrida noturno sob strobes brancos e fumaça de pneu","night motorsport F1 pit-lane commercial","Exact product firmly planted upright on textured dark motorsport tarmac with blurred night pit-lane strobes far behind","Flashing pit-lane speed strobes slicing brisk white tire smoke drifting behind the product","(0.0s-2.0s) From the opening track frame, instant high-speed snap-zoom cutting through backlit pit smoke straight onto the exact front of the product","(2.0s-4.8s) Rapid controlled frontal arc (±30 degrees max, strictly front-facing) flashing crisp white halogen highlights across original edges","(4.8s-7.4s) Low tarmac-level front macro push diving into tough build details under bright directional track beam","(7.4s-10.0s) Fast speed-ramp pullback locking fearless centered frontal hero stance amid glowing pit vapor","High-BPM motorsport Phonk bass drops with sharp flyby whooshes and heavy 808 hits, zero speech"],
-      [17,"Acao",false,"#17 Assalto ao Cofre com Lasers","Cofre blindado escuro cortado por feixes de laser vermelhos móveis","high-stakes laser-heist vault commercial","Exact product secured rigidly upright atop a matte-steel security monolith inside a pitch-black heist vault","Crisscrossing razor-thin crimson security laser beams sweeping smoothly through vault haze behind","(0.0s-2.0s) Starting from the laser-lit vault frame, sharp precision snap-zoom locking straight onto the exact front of the illuminated product","(2.0s-4.8s) Controlled frontal stealth arc (±28 degrees max, never rotating behind) reflecting thin glowing red laser glints across crisp front edges","(4.8s-7.4s) Pinpoint overhead spotlight front-facing macro glide inspecting razor-sharp original micro-details in spotless 4K","(7.4s-10.0s) Explosive speed-ramp pullback locking authoritative centered frontal hero pose framed by crimson lasers","Modern heist trap-electro 808 sub-bass drops with sharp synthetic whooshes, zero speech"],
-      [18,"Acao",false,"#18 Trem-Bala 350km/h Noturno","Plataforma metálica ao lado de janela panorâmica com luzes em alta velocidade","high-speed bullet-train kinetic commercial","Exact product anchored firmly upright on a sleek brushed-steel ledge beside a dark panoramic high-speed train window","Blinding horizontal night tunnel light streaks rocketing smoothly past the window behind","(0.0s-2.0s) From frame one, sharp snap-zoom straight onto the exact front of the rock-steady product while velocity light trails race outside","(2.0s-4.8s) Crisp controlled frontal tracking arc (±25 degrees max) as passing tunnel lights sweep bright reflections across the product","(4.8s-7.4s) Continuous front-facing macro push locking onto authentic surface textures contrasting with streaking speed bokeh","(7.4s-10.0s) Speed-ramp pullback stabilizing into commanding centered frontal hero framing","Driving dark drum-and-bass sub-bass drops with smooth high-speed pass-by whooshes, zero speech"],
-      [19,"Acao",false,"#19 Hangar de Caça Supersônico","Turbina a jato gigante atrás com brilho laranja de pós-combustão e vapor","supersonic fighter-jet hangar commercial","Exact product mounted rigidly upright on a dark titanium deck block directly in front of massive matte jet turbine blades","Blazing orange afterburner glow pulsing behind turbine blades with crisp backlit air vapor rushing past","(0.0s-2.0s) From the opening turbine frame, blazing snap-zoom straight onto the exact front of the razor-sharp product","(2.0s-4.8s) Controlled frontal banking arc (±28 degrees max, never behind) sweeping fiery orange rim highlights cleanly across product contours","(4.8s-7.4s) Continuous front-facing extreme macro glide revealing ultra-crisp craftsmanship haloed by glowing amber rim light","(7.4s-10.0s) Explosive speed-ramp pullback locking monumental centered frontal hero stance before the glowing jet turbine","Heavy industrial rock-phonk sub-bass impacts with razor air whooshes, zero speech"],
-      [20,"Acao",false,"#20 Terraço na Tempestade Elétrica","Chuva noturna pesada com clarões de relâmpago rasgando o céu atrás","midnight lightning-storm rooftop commercial","Exact product anchored rigidly upright on a wet dark basalt rooftop ledge overlooking a stormy midnight skyline","Slanted driving rain backlit by crisp white lightning flashes illuminating dark storm clouds behind","(0.0s-2.0s) From the opening storm frame, blinding lightning flash launches an immediate snap-zoom onto the exact front of the untouched product","(2.0s-4.8s) Controlled frontal storm arc (±28 degrees max, strictly front-facing) catching sharp white lightning glints dancing along the silhouette","(4.8s-7.4s) Dynamic front-angle macro push proving spotless original detail with sparkling rain bokeh frozen in flashes","(7.4s-10.0s) Epic speed-ramp pullback locking heroic centered frontal stance as lightning flashes in the dark sky","Thunderous sub-bass slam impacts with crisp storm whooshes and epic electronic hits, zero speech"],
+      [11,"Acao",false,"#11 Reator Industrial (Strobe Vermelho)","Modelo Ref 1 blindado: strobes vermelhos, fumaça densa e arco frontal ±30°","high-voltage industrial reactor commercial","Exact product rigidly anchored upright and motionless dead-center on a heavy matte-black obsidian pedestal inside an industrial reactor core","Flashing red emergency strobe lights pulsing across thick rising white reactor vapor","Starting from the opening reactor frame, sudden high-voltage snap-zoom cutting through red strobes and rising white smoke straight onto the exact front face of the product","Fast controlled frontal arc (±30 degrees max left-to-right, strictly staying in front and NEVER rotating behind or flipping the product) catching intense crimson strobe pulses","Crisp front-facing extreme macro push gliding smoothly over the exact visible textures and original markings illuminated by sweeping overhead light","Explosive speed-ramp pull-back locking cleanly into the exact authoritative frontal hero stance amid lingering illuminated vapor","Crushing sub-bass drops synced to every snap-zoom, sharp metallic whoosh transitions and aggressive dark Phonk hits, zero speech"],
+      [12,"Acao",false,"#12 Cofre Tático Criogênico (Unboxing)","Modelo Ref 2 blindado: maleta titânio aberta, espuma carbono e jatos de vapor","military sci-fi tactical unboxing commercial","Exact product rigidly seated and motionless inside an open laser-cut black carbon foam tray of a matte-black titanium tactical vault case (already fully open)","Monolithic dark security bunker venting brisk horizontal blasts of white pneumatic cryogenic steam beneath a focused overhead spotlight","Starting from the open vault frame, explosive snap-zoom slicing through clearing white cryogenic steam straight onto the exact front of the product in black carbon foam","High-speed controlled frontal arc (±30 degrees max, never rotating behind) capturing sculpted front edges and tactile surfaces anchored rigidly inside the open vault","Crisp front-angle extreme macro push diving straight into real original details illuminated by focused bunker spotlight","Explosive speed-ramp pull-back locking into an authoritative centered frontal hero stance inside the open titanium vault","Violent pneumatic cryogenic steam blast, heavy futuristic sub-bass impacts and sharp whip whooshes, zero speech"],
+      [13,"Acao",false,"#13 Penhasco Basalto Pôr do Sol","Monolito escuro no alto de cânion ao entardecer com vento e névoa","epic basalt-cliff canyon commercial","Exact product anchored rigidly upright dead-center atop a sharp dark basalt cliff spire overlooking a twilight mountain canyon","Swirling golden canyon mist, fiery amber sunset rim horizon and crisp sunlit wind dust","Starting from the dramatic cliff opening shot, fast crisp snap-zoom straight onto the exact front of the product as golden mist whips past behind","Sweeping controlled frontal arc (±30 degrees max, staying strictly in front) showcasing sharp contours glowing against warm sunset sky","Smooth-to-fast front-facing macro glide skimming real surface textures bathed in blazing golden rim light","Smooth speed-ramp pullback locking monumental frontal hero scale atop the canyon rock","Epic modern cinematic sub-bass drops with clean wind-rush whooshes and bold drum impacts, zero speech"],
+      [14,"Acao",false,"#14 Estação Orbital Zero-G","Deck espacial escuro com a curvatura azul da Terra girando atrás","sci-fi zero-gravity orbital commercial","Exact product anchored rigidly centered on a sleek dark brushed-titanium pedestal before a giant spacecraft viewport","Glowing blue Earth curvature shifting smoothly outside, crisp cool-blue orbital rim light and fine floating light dust","Starting from the orbital deck frame, crisp precision snap-zoom directly onto the exact front of the razor-sharp product","Smooth controlled frontal arc (±28 degrees max, never orbiting behind) catching crisp Earth-blue rim reflections along the exact silhouette","Surgical front-facing 100mm macro pass tracking authentic original lines and spotless materials against deep space contrast","Majestic speed-ramp pullback locking symmetrical frontal hero alignment before the glowing blue planet","Sleek sci-fi sub-bass drops with crisp futuristic air-whooshes and clean electronic impacts, zero speech"],
+      [15,"Acao",false,"#15 Beco Cyberpunk sob Chuva Neon","Asfalto molhado de Neo-Tóquio com reflexos ciano/magenta e chuva fina","dark cyberpunk Neo-Tokyo street commercial","Exact product anchored rigidly upright on rain-slicked wet black urban asphalt slate in a dark neon alley","Electric cyan and hot-magenta neon bokeh shimmering on wet ground, slanted backlit rain mist","Starting from the wet asphalt frame, sudden snap-zoom skimming glistening puddles directly onto the exact front face of the product","Fast controlled frontal arc (±30 degrees max, never behind) keeping the product razor-sharp while vivid cyan-and-magenta reflections sweep its face","Continuous front-angle rain-bokeh macro glide inspecting real original craftsmanship under grazing electric cyan light","Explosive speed-ramp pullback locking commanding frontal hero pose mirrored on wet neon slate","Aggressive cyberpunk midtempo sub-bass drops with crisp wet-air whooshes and punchy hits, zero speech"],
+      [16,"Acao",false,"#16 Pit-Lane Noturno Fórmula 1","Asfalto de corrida noturno sob strobes brancos e fumaça de pneu","night motorsport F1 pit-lane commercial","Exact product firmly planted upright on textured dark motorsport tarmac with blurred night pit-lane strobes far behind","Flashing pit-lane speed strobes slicing brisk white tire smoke drifting behind the product","From the opening track frame, instant high-speed snap-zoom cutting through backlit pit smoke straight onto the exact front of the product","Rapid controlled frontal arc (±30 degrees max, strictly front-facing) flashing crisp white halogen highlights across original edges","Low tarmac-level front macro push diving into tough build details under bright directional track beam","Fast speed-ramp pullback locking fearless centered frontal hero stance amid glowing pit vapor","High-BPM motorsport Phonk bass drops with sharp flyby whooshes and heavy 808 hits, zero speech"],
+      [17,"Acao",false,"#17 Assalto ao Cofre com Lasers","Cofre blindado escuro cortado por feixes de laser vermelhos móveis","high-stakes laser-heist vault commercial","Exact product secured rigidly upright atop a matte-steel security monolith inside a pitch-black heist vault","Crisscrossing razor-thin crimson security laser beams sweeping smoothly through vault haze behind","Starting from the laser-lit vault frame, sharp precision snap-zoom locking straight onto the exact front of the illuminated product","Controlled frontal stealth arc (±28 degrees max, never rotating behind) reflecting thin glowing red laser glints across crisp front edges","Pinpoint overhead spotlight front-facing macro glide inspecting razor-sharp original micro-details in spotless 4K","Explosive speed-ramp pullback locking authoritative centered frontal hero pose framed by crimson lasers","Modern heist trap-electro 808 sub-bass drops with sharp synthetic whooshes, zero speech"],
+      [18,"Acao",false,"#18 Trem-Bala 350km/h Noturno","Plataforma metálica ao lado de janela panorâmica com luzes em alta velocidade","high-speed bullet-train kinetic commercial","Exact product anchored firmly upright on a sleek brushed-steel ledge beside a dark panoramic high-speed train window","Blinding horizontal night tunnel light streaks rocketing smoothly past the window behind","From frame one, sharp snap-zoom straight onto the exact front of the rock-steady product while velocity light trails race outside","Crisp controlled frontal tracking arc (±25 degrees max) as passing tunnel lights sweep bright reflections across the product","Continuous front-facing macro push locking onto authentic surface textures contrasting with streaking speed bokeh","Speed-ramp pullback stabilizing into commanding centered frontal hero framing","Driving dark drum-and-bass sub-bass drops with smooth high-speed pass-by whooshes, zero speech"],
+      [19,"Acao",false,"#19 Hangar de Caça Supersônico","Turbina a jato gigante atrás com brilho laranja de pós-combustão e vapor","supersonic fighter-jet hangar commercial","Exact product mounted rigidly upright on a dark titanium deck block directly in front of massive matte jet turbine blades","Blazing orange afterburner glow pulsing behind turbine blades with crisp backlit air vapor rushing past","From the opening turbine frame, blazing snap-zoom straight onto the exact front of the razor-sharp product","Controlled frontal banking arc (±28 degrees max, never behind) sweeping fiery orange rim highlights cleanly across product contours","Continuous front-facing extreme macro glide revealing ultra-crisp craftsmanship haloed by glowing amber rim light","Explosive speed-ramp pullback locking monumental centered frontal hero stance before the glowing jet turbine","Heavy industrial rock-phonk sub-bass impacts with razor air whooshes, zero speech"],
+      [20,"Acao",false,"#20 Terraço na Tempestade Elétrica","Chuva noturna pesada com clarões de relâmpago rasgando o céu atrás","midnight lightning-storm rooftop commercial","Exact product anchored rigidly upright on a wet dark basalt rooftop ledge overlooking a stormy midnight skyline","Slanted driving rain backlit by crisp white lightning flashes illuminating dark storm clouds behind","From the opening storm frame, blinding lightning flash launches an immediate snap-zoom onto the exact front of the untouched product","Controlled frontal storm arc (±28 degrees max, strictly front-facing) catching sharp white lightning glints dancing along the silhouette","Dynamic front-angle macro push proving spotless original detail with sparkling rain bokeh frozen in flashes","Epic speed-ramp pullback locking heroic centered frontal stance as lightning flashes in the dark sky","Thunderous sub-bass slam impacts with crisp storm whooshes and epic electronic hits, zero speech"],
 
-      // === VFX 1000FPS & FÍSICA EXTREMA (10) ===
-      [21,"VFX",false,"#21 Estilhaço de Cristal 1000fps","Vidro explodindo em 3D ao redor do produto totalmente intacto","1000fps Phantom Flex crystal-shatter commercial","Exact product anchored rigidly upright dead-center on a pure black mirror pedestal inside a pitch-black high-speed studio","Sparkling clear crystal glass shards bursting outward around the untouched razor-sharp product","(0.0s-2.0s) Starting from the opening frame, crystal shards burst cleanly outward as camera executes a crisp snap-zoom onto the exact front face of the spotless product","(2.0s-4.8s) Controlled frontal bullet-time arc (±28 degrees max, never rotating behind) weaving cleanly past suspended glittering glass fragments","(4.8s-7.4s) Continuous front-facing macro glide showcasing authentic original textures as tiny bright shards drift past in shallow bokeh","(7.4s-10.0s) Speed-ramp pullback clearing shards away into an immaculate black-mirror centered frontal hero lock","Crisp crystalline shatter impact followed by punchy modern electronic sub-bass drops and razor whooshes, zero speech"],
-      [22,"VFX",false,"#22 Explosão de Gelo Ártico","Estilhaços congelantes e nuvem subzero explodindo atrás do produto","subzero arctic ice-burst commercial","Exact product seated rigidly upright on wet black slate inside a freezing subzero studio chamber","Translucent arctic ice chunks erupting outward amid crisp swirling white cryogenic mist and ice-blue rim lights","(0.0s-2.0s) From frame one, sharp ice-crack burst launches an instant snap-zoom through clearing frost mist onto the exact front of the product","(2.0s-4.8s) Controlled frontal cold-blue arc (±28 degrees max, never behind) tracking icy specular highlights smoothly across pristine front curves","(4.8s-7.4s) Moving front-facing 100mm macro push revealing rich original contrast with sparkling cold haze drifting behind","(7.4s-10.0s) Speed-ramp pullback locking authoritative centered frontal hero pose on glistening wet dark slate","Sharp glacial crack impact, crisp frost whooshes and heavy modern Phonk bass drops, zero speech"],
-      [23,"VFX",false,"#23 Cascata de Faíscas de Forja","Bigorna escura sob chuva incandescente de faíscas batendo ao fundo","molten metal-forge sparks commercial","Exact product anchored rigidly upright on a dark scorched steel anvil block inside a pitch-black industrial forge","Blazing golden-orange welding sparks showering and bouncing cleanly behind the product in shallow depth","(0.0s-2.0s) Starting from the forge frame, blazing curtain of sparks flashes bright as camera snap-zooms straight onto the exact front of the product","(2.0s-4.8s) Fast controlled frontal low-angle arc (±28 degrees max, never rotating behind) catching warm orange spark reflections dancing across front edges","(4.8s-7.4s) Continuous front-facing macro push highlighting rugged original build bathed in glowing ember rim light","(7.4s-10.0s) Monumental speed-ramp pullback locking rock-solid frontal hero stance beneath raining golden sparks","Punchy industrial rock-phonk sub-bass impacts with fiery whoosh transitions, zero speech"],
-      [24,"VFX",false,"#24 Onda de Choque em Água Negra","Coroa de água negra espelhada explodindo em gotas prateadas ao redor","high-speed black-water shockwave commercial","Exact product elevated rigidly upright on a sleek matte-black pedestal rising out of shallow glossy black mirror water","Radial liquid shockwave lifting sculpted silver-lit water crowns and crisp droplets symmetrically around the base","(0.0s-2.0s) From the opening dark-pool frame, radial water crown rises sharply as camera snap-zooms onto the exact front of the crystal-sharp product","(2.0s-4.8s) Controlled frontal bullet-time arc (±28 degrees max, never behind) gliding past glistening suspended droplets framing clean front curves","(4.8s-7.4s) Moving front-facing macro glide inspecting pristine dry original finishes with shimmering silver splash bokeh behind","(7.4s-10.0s) Speed-ramp pullback locking spotless centered frontal hero reflection as dark concentric ripples calm beneath","Punchy sub-bass shockwave boom, crisp water-whoosh transitions and sleek electronic drops, zero speech"],
-      [25,"VFX",false,"#25 Explosão de Pó de Ouro Líquido","Nuvens explosivas de pó metálico dourado em estúdio blackout","explosive luxury gold-powder VFX commercial","Exact product centered rigidly upright on a pitch-black obsidian monolith in a pure black luxury void","Symmetrical billows of shimmering metallic gold dust erupting smoothly behind the product under warm golden rim lights","(0.0s-2.0s) From frame one, gold powder billows outward behind as camera executes a crisp snap-zoom onto the exact front of the gleaming product","(2.0s-4.8s) Controlled frontal luxury arc (±28 degrees max, never behind) wrapping rich golden rim highlights across crisp original textures","(4.8s-7.4s) Dynamic front-facing macro push catching fine metallic shimmer drifting softly in background depth","(7.4s-10.0s) Regal speed-ramp pullback locking iconic centered frontal hero stance framed by luminous golden dust","Cinematic sub-bass boom, silky dust whooshes and high-status dark luxury trap 808 drops, zero speech"],
-      [26,"VFX",false,"#26 Campo Magnético & Rochas","Fragmentos escuros de basalto levitando suavemente ao fundo do produto","antigravity magnetic-debris VFX commercial","Exact product standing rigidly upright atop a dark monolith while small matte basalt shards levitate in antigravity behind it","Floating matte obsidian fragments slowly drifting behind lit by crisp electric cyan and warm gold rim shafts","(0.0s-2.0s) Starting from the opening monolith frame, basalt shards lift smoothly behind as camera snap-zooms onto the exact front of the product","(2.0s-4.8s) Controlled frontal kinetic arc (±28 degrees max, strictly front-facing) keeping product razor-sharp while dark fragments float in depth","(4.8s-7.4s) Continuous front-angle macro glide displaying spotless material integrity with floating bokeh behind","(7.4s-10.0s) Explosive speed-ramp pullback locking commanding centered frontal hero pose","Deep sci-fi sub-bass pulse, smooth rising whooshes and crisp electronic-trap drops, zero speech"],
-      [27,"VFX",false,"#27 Anel de Fogo em Ignição","Halo circular de fogo âmbar acendendo atrás do pedestal no blackout","ignition fire-ring VFX commercial","Exact product anchored rigidly upright on dark carbon-stone plinth inside a pitch-black concrete chamber","Dramatic ring of bright amber fire igniting behind the pedestal casting fierce glowing rim light","(0.0s-2.0s) Starting from the blackout frame, fire ring ignites sharply behind as camera snap-zooms onto the exact front of the product","(2.0s-4.8s) High-energy controlled frontal arc (±28 degrees max, never behind) catching warm flame reflections gliding along sculpted front contours","(4.8s-7.4s) Continuous front-facing low-angle macro push proving tough original precision against warm backlit fire bokeh","(7.4s-10.0s) Explosive speed-ramp pullback locking heroic centered frontal stance framed inside the blazing circular halo","Explosive flame-whoosh ignition followed by fierce modern Phonk-rock sub-bass drops, zero speech"],
-      [28,"VFX",false,"#28 Prisma Cromático & Feixe Laser","Feixe óptico branco dividindo reflexos prismáticos limpos no escuro","optical prism chromatic-beam commercial","Exact product centered rigidly upright on a clean matte-black optical bench inside a pitch-black crystal studio","Pure high-intensity white light beam casting crisp subtle prismatic streaks behind the product","(0.0s-2.0s) From frame one, optical light flare intensifies as camera executes a surgical snap-zoom onto the exact front of the product","(2.0s-4.8s) Controlled frontal precision arc (±25 degrees max) sweeping clean luminous specular bars across original product edges","(4.8s-7.4s) Surgical front-facing 100mm macro pass revealing crystal-clear original finish with subtle prismatic rim glints","(7.4s-10.0s) Speed-ramp pullback locking sleek iconic flagship frontal hero pose framed by crisp geometric light rays","Clean modern electronic sub-bass drops with crisp shimmering riser whooshes, zero speech"],
-      [29,"VFX",false,"#29 Câmara de Espelhos Geométricos","Painéis espelhados escuros multiplicando luzes em simetria cirúrgica","architectural mirror-chamber commercial","Exact product centered rigidly upright inside an architectural dark obsidian mirror chamber with angled reflective panels","Clean overhead cinema light bars sweeping smoothly across dark mirrored geometry","(0.0s-2.0s) Starting from the symmetrical mirror frame, crisp snap-zoom straight onto the real centered exact front of the product","(2.0s-4.8s) Controlled frontal geometric arc (±25 degrees max) showcasing crisp real contours echoed softly in dark side mirrors","(4.8s-7.4s) Moving front-facing macro glide highlighting authentic surface textures with deep mirrored reflections behind","(7.4s-10.0s) Speed-ramp pullback locking bold symmetrical frontal hero presentation inside the gleaming mirror stage","Sleek dark-electro sub-bass drops with sharp clean transition whooshes, zero speech"],
-      [30,"VFX",false,"#30 Vórtice de Fumaça Iluminada","Redemoinho controlado de fumaça branca e dourada girando ao fundo","illuminated smoke-vortex commercial","Exact product rooted rigidly upright dead-center on glossy obsidian slate inside a pitch-black wind studio","Sculpted luminous white-and-gold smoke ribbons swirling briskly behind the product in crisp rim light","(0.0s-2.0s) From the opening frame, glowing smoke parts cleanly around center as camera snap-zooms onto the exact front of the product","(2.0s-4.8s) Controlled frontal arc (±28 degrees max, never behind) moving smoothly opposite luminous smoke trails while product stays locked sharp","(4.8s-7.4s) Razor-sharp front-facing macro push skimming fine original product details framed by thin golden backlit haze","(7.4s-10.0s) Explosive speed-ramp pullback locking serene commanding frontal hero stance","Swirling air-vortex riser, deep punchy sub-bass drops and modern cinematic trap hits, zero speech"],
+      [21,"VFX",false,"#21 Estilhaço de Cristal 1000fps","Vidro explodindo em 3D ao redor do produto totalmente intacto","1000fps Phantom Flex crystal-shatter commercial","Exact product anchored rigidly upright dead-center on a pure black mirror pedestal inside a pitch-black high-speed studio","Sparkling clear crystal glass shards bursting outward around the untouched razor-sharp product","Starting from the opening frame, crystal shards burst cleanly outward as camera executes a crisp snap-zoom onto the exact front face of the spotless product","Controlled frontal bullet-time arc (±28 degrees max, never rotating behind) weaving cleanly past suspended glittering glass fragments","Continuous front-facing macro glide showcasing authentic original textures as tiny bright shards drift past in shallow bokeh","Speed-ramp pullback clearing shards away into an immaculate black-mirror centered frontal hero lock","Crisp crystalline shatter impact followed by punchy modern electronic sub-bass drops and razor whooshes, zero speech"],
+      [22,"VFX",false,"#22 Explosão de Gelo Ártico","Estilhaços congelantes e nuvem subzero explodindo atrás do produto","subzero arctic ice-burst commercial","Exact product seated rigidly upright on wet black slate inside a freezing subzero studio chamber","Translucent arctic ice chunks erupting outward amid crisp swirling white cryogenic mist and ice-blue rim lights","From frame one, sharp ice-crack burst launches an instant snap-zoom through clearing frost mist onto the exact front of the product","Controlled frontal cold-blue arc (±28 degrees max, never behind) tracking icy specular highlights smoothly across pristine front curves","Moving front-facing 100mm macro push revealing rich original contrast with sparkling cold haze drifting behind","Speed-ramp pullback locking authoritative centered frontal hero pose on glistening wet dark slate","Sharp glacial crack impact, crisp frost whooshes and heavy modern Phonk bass drops, zero speech"],
+      [23,"VFX",false,"#23 Cascata de Faíscas de Forja","Bigorna escura sob chuva incandescente de faíscas batendo ao fundo","molten metal-forge sparks commercial","Exact product anchored rigidly upright on a dark scorched steel anvil block inside a pitch-black industrial forge","Blazing golden-orange welding sparks showering and bouncing cleanly behind the product in shallow depth","Starting from the forge frame, blazing curtain of sparks flashes bright as camera snap-zooms straight onto the exact front of the product","Fast controlled frontal low-angle arc (±28 degrees max, never rotating behind) catching warm orange spark reflections dancing across front edges","Continuous front-facing macro push highlighting rugged original build bathed in glowing ember rim light","Monumental speed-ramp pullback locking rock-solid frontal hero stance beneath raining golden sparks","Punchy industrial rock-phonk sub-bass impacts with fiery whoosh transitions, zero speech"],
+      [24,"VFX",false,"#24 Onda de Choque em Água Negra","Coroa de água negra espelhada explodindo em gotas prateadas ao redor","high-speed black-water shockwave commercial","Exact product elevated rigidly upright on a sleek matte-black pedestal rising out of shallow glossy black mirror water","Radial liquid shockwave lifting sculpted silver-lit water crowns and crisp droplets symmetrically around the base","From the opening dark-pool frame, radial water crown rises sharply as camera snap-zooms onto the exact front of the crystal-sharp product","Controlled frontal bullet-time arc (±28 degrees max, never behind) gliding past glistening suspended droplets framing clean front curves","Moving front-facing macro glide inspecting pristine dry original finishes with shimmering silver splash bokeh behind","Speed-ramp pullback locking spotless centered frontal hero reflection as dark concentric ripples calm beneath","Punchy sub-bass shockwave boom, crisp water-whoosh transitions and sleek electronic drops, zero speech"],
+      [25,"VFX",false,"#25 Explosão de Pó de Ouro Líquido","Nuvens explosivas de pó metálico dourado em estúdio blackout","explosive luxury gold-powder VFX commercial","Exact product centered rigidly upright on a pitch-black obsidian monolith in a pure black luxury void","Symmetrical billows of shimmering metallic gold dust erupting smoothly behind the product under warm golden rim lights","From frame one, gold powder billows outward behind as camera executes a crisp snap-zoom onto the exact front of the gleaming product","Controlled frontal luxury arc (±28 degrees max, never behind) wrapping rich golden rim highlights across crisp original textures","Dynamic front-facing macro push catching fine metallic shimmer drifting softly in background depth","Regal speed-ramp pullback locking iconic centered frontal hero stance framed by luminous golden dust","Cinematic sub-bass boom, silky dust whooshes and high-status dark luxury trap 808 drops, zero speech"],
+      [26,"VFX",false,"#26 Campo Magnético & Rochas","Fragmentos escuros de basalto levitando suavemente ao fundo do produto","antigravity magnetic-debris VFX commercial","Exact product standing rigidly upright atop a dark monolith while small matte basalt shards levitate in antigravity behind it","Floating matte obsidian fragments slowly drifting behind lit by crisp electric cyan and warm gold rim shafts","Starting from the opening monolith frame, basalt shards lift smoothly behind as camera snap-zooms onto the exact front of the product","Controlled frontal kinetic arc (±28 degrees max, strictly front-facing) keeping product razor-sharp while dark fragments float in depth","Continuous front-angle macro glide displaying spotless material integrity with floating bokeh behind","Explosive speed-ramp pullback locking commanding centered frontal hero pose","Deep sci-fi sub-bass pulse, smooth rising whooshes and crisp electronic-trap drops, zero speech"],
+      [27,"VFX",false,"#27 Anel de Fogo em Ignição","Halo circular de fogo âmbar acendendo atrás do pedestal no blackout","ignition fire-ring VFX commercial","Exact product anchored rigidly upright on dark carbon-stone plinth inside a pitch-black concrete chamber","Dramatic ring of bright amber fire igniting behind the pedestal casting fierce glowing rim light","Starting from the blackout frame, fire ring ignites sharply behind as camera snap-zooms onto the exact front of the product","High-energy controlled frontal arc (±28 degrees max, never behind) catching warm flame reflections gliding along sculpted front contours","Continuous front-facing low-angle macro push proving tough original precision against warm backlit fire bokeh","Explosive speed-ramp pullback locking heroic centered frontal stance framed inside the blazing circular halo","Explosive flame-whoosh ignition followed by fierce modern Phonk-rock sub-bass drops, zero speech"],
+      [28,"VFX",false,"#28 Prisma Cromático & Feixe Laser","Feixe óptico branco dividindo reflexos prismáticos limpos no escuro","optical prism chromatic-beam commercial","Exact product centered rigidly upright on a clean matte-black optical bench inside a pitch-black crystal studio","Pure high-intensity white light beam casting crisp subtle prismatic streaks behind the product","From frame one, optical light flare intensifies as camera executes a surgical snap-zoom onto the exact front of the product","Controlled frontal precision arc (±25 degrees max) sweeping clean luminous specular bars across original product edges","Surgical front-facing 100mm macro pass revealing crystal-clear original finish with subtle prismatic rim glints","Speed-ramp pullback locking sleek iconic flagship frontal hero pose framed by crisp geometric light rays","Clean modern electronic sub-bass drops with crisp shimmering riser whooshes, zero speech"],
+      [29,"VFX",false,"#29 Câmara de Espelhos Geométricos","Painéis espelhados escuros multiplicando luzes em simetria cirúrgica","architectural mirror-chamber commercial","Exact product centered rigidly upright inside an architectural dark obsidian mirror chamber with angled reflective panels","Clean overhead cinema light bars sweeping smoothly across dark mirrored geometry","Starting from the symmetrical mirror frame, crisp snap-zoom straight onto the real centered exact front of the product","Controlled frontal geometric arc (±25 degrees max) showcasing crisp real contours echoed softly in dark side mirrors","Moving front-facing macro glide highlighting authentic surface textures with deep mirrored reflections behind","Speed-ramp pullback locking bold symmetrical frontal hero presentation inside the gleaming mirror stage","Sleek dark-electro sub-bass drops with sharp clean transition whooshes, zero speech"],
+      [30,"VFX",false,"#30 Vórtice de Fumaça Iluminada","Redemoinho controlado de fumaça branca e dourada girando ao fundo","illuminated smoke-vortex commercial","Exact product rooted rigidly upright dead-center on glossy obsidian slate inside a pitch-black wind studio","Sculpted luminous white-and-gold smoke ribbons swirling briskly behind the product in crisp rim light","From the opening frame, glowing smoke parts cleanly around center as camera snap-zooms onto the exact front of the product","Controlled frontal arc (±28 degrees max, never behind) moving smoothly opposite luminous smoke trails while product stays locked sharp","Razor-sharp front-facing macro push skimming fine original product details framed by thin golden backlit haze","Explosive speed-ramp pullback locking serene commanding frontal hero stance","Swirling air-vortex riser, deep punchy sub-bass drops and modern cinematic trap hits, zero speech"],
 
-      // === LUXO NOIR & EDITORIAL GLOBAL (10) ===
-      [31,"Luxo",false,"#31 Cofre Suíço 007 (Ouro Líquido)","Mármore Nero Marquina, feixe dourado cortando neblina noir","Swiss luxury neo-noir commercial","Exact product seated rigidly upright on polished Nero Marquina black marble inside a velvety pitch-black luxury vault","Single razor-thin liquid-gold spotlight beam sweeping smoothly across silky dark haze","(0.0s-2.0s) Starting cleanly from the noir marble frame, sleek snap-zoom onto the exact front of the product as the golden beam glides across its face","(2.0s-4.8s) Silky controlled frontal arc (±25 degrees max, never rotating behind) bathing every front curve in warm liquid-gold rim reflections","(4.8s-7.4s) Moving front-facing 100mm macro glide unveiling immaculate original finishes with velvety dark bokeh","(7.4s-10.0s) Regal speed-ramp pullback locking timeless symmetrical frontal hero pose with fine golden dust motes","Deep luxury dark-trap sub-bass swells and crisp satin whooshes, zero speech"],
-      [32,"Luxo",false,"#32 Blackout Keynote (Estilo Apple)","Palco black piano infinito com barras de luz pura correndo no escuro","flagship keynote blackout launch commercial","Exact product centered rigidly upright on glossy black piano-glass stage against an infinite pitch-black horizon","Surgical pure-white LED light bars gliding smoothly overhead painting razor-sharp liquid reflections","(0.0s-2.0s) From the pitch-black opening frame, overhead white light bar ignites as camera executes a surgical push-in onto the exact front of the product","(2.0s-4.8s) Ultra-precise controlled frontal robotic arc (±25 degrees max) sweeping pure white reflections across sleek front contours","(4.8s-7.4s) Continuous front-facing industrial-design macro glide highlighting zero-flaw original surfaces","(7.4s-10.0s) Iconic speed-ramp symmetrical pullback locking unforgettable flagship launch frontal hero reflection","Clean flagship keynote sub-bass drops and sleek minimal air whooshes, zero speech"],
-      [33,"Luxo",false,"#33 Unboxing Maleta Carbono VIP","Maleta rígida de carbono e Alcântara já aberta sob luz de galeria","bespoke carbon-collector unboxing commercial","Exact product seated rigidly and motionless inside an open matte carbon-fiber collector case lined with charcoal Alcantara foam","Dark VIP collector lounge with crisp overhead gallery spotlight and delicate backlit haze","(0.0s-2.0s) Starting directly over the open carbon VIP case, punchy snap-zoom straight onto the exact front of the product nested in dark foam","(2.0s-4.8s) Controlled frontal arc (±28 degrees max, never behind) revealing rich real colors and sculpted contours inside the open case","(4.8s-7.4s) Moving front-angle tight macro glide sweeping across precision original details and material contrast","(7.4s-10.0s) Commanding speed-ramp pullback locking luxury collector frontal hero framing inside the open carbon box","Upscale dark-trap sub-bass groove with crisp silky air-rush transitions, zero speech"],
-      [34,"Luxo",false,"#34 Veludo Esmeralda & Latão Nobre","Alta joalheria verde esmeralda escuro com brilho quente dourado","haute-boutique emerald-brass commercial","Exact product anchored rigidly upright on deep emerald-green velvet plinth framed with brushed antique brass bars","Moody Parisian high-jewelry vault lit by warm golden pinpoint spotlights","(0.0s-2.0s) Starting from the rich emerald-and-brass frame, crisp snap-zoom onto the exact front of the product as warm golden highlights glint","(2.0s-4.8s) Fluid controlled frontal editorial arc (±25 degrees max) showcasing sculptural depth against opulent dark emerald shadows","(4.8s-7.4s) Moving front-facing pinpoint-light macro pass catching crisp specular sheen across original finishes","(7.4s-10.0s) Refined speed-ramp pullback locking regal centered frontal showcase on emerald and brass","Chic luxury house-trap bass drops and clean editorial whooshes, zero speech"],
-      [35,"Luxo",false,"#35 Travertino Italiano & Luz Solar","Arquitetura mediterrânea de luxo com sombras solares vivas","Mediterranean architectural luxury commercial","Exact product resting cleanly upright on honed beige Italian travertine stone monolith","Warm golden architectural window light shifting smoothly across stone creating crisp high-fashion shadows","(0.0s-2.0s) From the sunlit travertine frame, brisk architectural push-in straight onto the exact front of the product bathed in crisp sunlight","(2.0s-4.8s) Stylish controlled frontal arc (±25 degrees max) contrasting warm sunlit surfaces and clean sculptural shadows","(4.8s-7.4s) Continuous front-facing crisp macro glide emphasizing authentic tactile grain and natural true colors","(7.4s-10.0s) Smooth speed-ramp pullback locking serene European luxury frontal hero composition","Warm classy Mediterranean deep-house bass drops with crisp transition whooshes, zero speech"],
-      [36,"Luxo",false,"#36 Dunas Douradas ao Pôr do Sol","Deserto cinematográfico estilo Duna com areia voando no vento","epic golden-desert Dune commercial","Exact product standing rigidly upright monumental on a wind-carved golden Sahara sand dune crest","Low blazing amber sunset, fine golden sand wisps blowing cinematically across the dune ridge behind","(0.0s-2.0s) Starting from the golden dune frame, crisp dynamic snap-zoom straight onto the exact front of the product as golden sand wisps blow past","(2.0s-4.8s) Sweeping controlled frontal desert arc (±28 degrees max, never behind) catching warm blazing sunset flare along crisp front edges","(4.8s-7.4s) Moving front-facing razor-sharp macro glide revealing pristine original build untouched by drifting golden sand bokeh","(7.4s-10.0s) Monumental speed-ramp pullback framing vast cinematic desert dunes behind centered frontal hero product","Epic modern cinematic percussion with deep bass swells and crisp wind whooshes, zero speech"],
-      [37,"Luxo",false,"#37 Vidro com Chuva & Cobertura","Bancada escura diante da cidade noturna dourada sob chuva fina","billionaire rainy-penthouse commercial","Exact product resting firmly upright on dark honed stone beside floor-to-ceiling rain-streaked penthouse glass","Golden midnight metropolis bokeh sparkling through glistening raindrops outside, focused warm interior spotlight","(0.0s-2.0s) Starting cleanly on the dark stone ledge, crisp snap-zoom onto the foreground exact front of the product as golden raindrop bokeh shimmers","(2.0s-4.8s) Smooth controlled frontal arc (±25 degrees max) wrapping warm city gold reflections across product contours","(4.8s-7.4s) Moving front-facing 100mm macro glide bathed in warm key light with sparkling midnight city lights blurred behind","(7.4s-10.0s) Poised speed-ramp pullback framing unmistakable billionaire lifestyle frontal hero composition","Upscale dark-R&B trap commercial bass drops and crisp air whooshes, zero speech"],
-      [38,"Luxo",false,"#38 Cristal Fumê & Raios Dourados","Monolito de vidro fumê pesado refratando feixes solares quentes","smoked-crystal refraction luxury commercial","Exact product centered rigidly upright atop a heavy thick smoked-crystal glass block in a dark studio","Intense golden volumetric sunbeams refracting warm highlights through the dark crystal base","(0.0s-2.0s) From the glowing crystal frame, crisp snap-zoom straight onto the exact front of the product as golden rays gleam through the base","(2.0s-4.8s) Controlled frontal sculptural arc (±28 degrees max) tracking warm refracted gold streaks across sleek front surfaces","(4.8s-7.4s) Continuous front-facing extreme macro glide proving spotless original quality glowing under warm grazing light","(7.4s-10.0s) Majestic speed-ramp pullback locking centered frontal luxury pose above glowing smoked crystal","Deep punchy luxury electronic bass drops with warm shimmer whooshes, zero speech"],
-      [39,"Luxo",false,"#39 Pico Nevado Alpino Solar","Neve pura sob sol cristalino e vento ártico de cinema","alpine luxury snow-peak commercial","Exact product anchored boldly upright on a sculpted pristine alpine snow ridge at crisp golden sunrise","Sparkling sunlit snow powder drifting briskly off the ridge behind, majestic icy peaks blurred in deep depth","(0.0s-2.0s) Starting from the sunlit alpine ridge frame, crisp snap-zoom straight onto the exact front of the product as sparkling snow dust drifts past","(2.0s-4.8s) Rapid controlled frontal mountain arc (±28 degrees max, never behind) catching pure diamond-bright sunlight across product edges","(4.8s-7.4s) Continuous front-facing ultra-sharp macro glide displaying rich original color pop against sparkling white snow bokeh","(7.4s-10.0s) Sweeping speed-ramp pullback framing breathtaking alpine summit behind centered frontal hero product","Sweeping epic modern electronic sub-bass impacts with crisp alpine air whooshes, zero speech"],
-      [40,"Luxo",false,"#40 Gala Champanhe & Flares Ouro","Clima de premiação VIP com flares anamórficos e bokeh luxuoso","opulent champagne-gala commercial","Exact product resting rigidly upright on glossy black obsidian pedestal inside a dark gala showcase theater","Rich floating champagne-gold bokeh spheres and sweeping warm horizontal anamorphic flares","(0.0s-2.0s) From the dark gala opening frame, warm golden flare sweeps across as camera snap-zooms onto the exact front of the gleaming product","(2.0s-4.8s) Fast controlled frontal glamorous arc (±28 degrees max) wrapping warm champagne highlights around front contours","(4.8s-7.4s) Continuous front-facing razor-sharp macro glide showcasing authentic metallic and matte material contrasts","(7.4s-10.0s) Show-stopping speed-ramp pullback locking VIP frontal hero stance bathed in warm golden bokeh","Elite rhythmic electronic sub-bass drops with warm cinematic risers, zero speech"],
+      [31,"Luxo",false,"#31 Cofre Suíço 007 (Ouro Líquido)","Mármore Nero Marquina, feixe dourado cortando neblina noir","Swiss luxury neo-noir commercial","Exact product seated rigidly upright on polished Nero Marquina black marble inside a velvety pitch-black luxury vault","Single razor-thin liquid-gold spotlight beam sweeping smoothly across silky dark haze","Starting cleanly from the noir marble frame, sleek snap-zoom onto the exact front of the product as the golden beam glides across its face","Silky controlled frontal arc (±25 degrees max, never rotating behind) bathing every front curve in warm liquid-gold rim reflections","Moving front-facing 100mm macro glide unveiling immaculate original finishes with velvety dark bokeh","Regal speed-ramp pullback locking timeless symmetrical frontal hero pose with fine golden dust motes","Deep luxury dark-trap sub-bass swells and crisp satin whooshes, zero speech"],
+      [32,"Luxo",false,"#32 Blackout Keynote (Estilo Apple)","Palco black piano infinito com barras de luz pura correndo no escuro","flagship keynote blackout launch commercial","Exact product centered rigidly upright on glossy black piano-glass stage against an infinite pitch-black horizon","Surgical pure-white LED light bars gliding smoothly overhead painting razor-sharp liquid reflections","From the pitch-black opening frame, overhead white light bar ignites as camera executes a surgical push-in onto the exact front of the product","Ultra-precise controlled frontal robotic arc (±25 degrees max) sweeping pure white reflections across sleek front contours","Continuous front-facing industrial-design macro glide highlighting zero-flaw original surfaces","Iconic speed-ramp symmetrical pullback locking unforgettable flagship launch frontal hero reflection","Clean flagship keynote sub-bass drops and sleek minimal air whooshes, zero speech"],
+      [33,"Luxo",false,"#33 Unboxing Maleta Carbono VIP","Maleta rígida de carbono e Alcântara já aberta sob luz de galeria","bespoke carbon-collector unboxing commercial","Exact product seated rigidly and motionless inside an open matte carbon-fiber collector case lined with charcoal Alcantara foam","Dark VIP collector lounge with crisp overhead gallery spotlight and delicate backlit haze","Starting directly over the open carbon VIP case, punchy snap-zoom straight onto the exact front of the product nested in dark foam","Controlled frontal arc (±28 degrees max, never behind) revealing rich real colors and sculpted contours inside the open case","Moving front-angle tight macro glide sweeping across precision original details and material contrast","Commanding speed-ramp pullback locking luxury collector frontal hero framing inside the open carbon box","Upscale dark-trap sub-bass groove with crisp silky air-rush transitions, zero speech"],
+      [34,"Luxo",false,"#34 Veludo Esmeralda & Latão Nobre","Alta joalheria verde esmeralda escuro com brilho quente dourado","haute-boutique emerald-brass commercial","Exact product anchored rigidly upright on deep emerald-green velvet plinth framed with brushed antique brass bars","Moody Parisian high-jewelry vault lit by warm golden pinpoint spotlights","Starting from the rich emerald-and-brass frame, crisp snap-zoom onto the exact front of the product as warm golden highlights glint","Fluid controlled frontal editorial arc (±25 degrees max) showcasing sculptural depth against opulent dark emerald shadows","Moving front-facing pinpoint-light macro pass catching crisp specular sheen across original finishes","Refined speed-ramp pullback locking regal centered frontal showcase on emerald and brass","Chic luxury house-trap bass drops and clean editorial whooshes, zero speech"],
+      [35,"Luxo",false,"#35 Travertino Italiano & Luz Solar","Arquitetura mediterrânea de luxo com sombras solares vivas","Mediterranean architectural luxury commercial","Exact product resting cleanly upright on honed beige Italian travertine stone monolith","Warm golden architectural window light shifting smoothly across stone creating crisp high-fashion shadows","From the sunlit travertine frame, brisk architectural push-in straight onto the exact front of the product bathed in crisp sunlight","Stylish controlled frontal arc (±25 degrees max) contrasting warm sunlit surfaces and clean sculptural shadows","Continuous front-facing crisp macro glide emphasizing authentic tactile grain and natural true colors","Smooth speed-ramp pullback locking serene European luxury frontal hero composition","Warm classy Mediterranean deep-house bass drops with crisp transition whooshes, zero speech"],
+      [36,"Luxo",false,"#36 Dunas Douradas ao Pôr do Sol","Deserto cinematográfico estilo Duna com areia voando no vento","epic golden-desert Dune commercial","Exact product standing rigidly upright monumental on a wind-carved golden Sahara sand dune crest","Low blazing amber sunset, fine golden sand wisps blowing cinematically across the dune ridge behind","Starting from the golden dune frame, crisp dynamic snap-zoom straight onto the exact front of the product as golden sand wisps blow past","Sweeping controlled frontal desert arc (±28 degrees max, never behind) catching warm blazing sunset flare along crisp front edges","Moving front-facing razor-sharp macro glide revealing pristine original build untouched by drifting golden sand bokeh","Monumental speed-ramp pullback framing vast cinematic desert dunes behind centered frontal hero product","Epic modern cinematic percussion with deep bass swells and crisp wind whooshes, zero speech"],
+      [37,"Luxo",false,"#37 Vidro com Chuva & Cobertura","Bancada escura diante da cidade noturna dourada sob chuva fina","billionaire rainy-penthouse commercial","Exact product resting firmly upright on dark honed stone beside floor-to-ceiling rain-streaked penthouse glass","Golden midnight metropolis bokeh sparkling through glistening raindrops outside, focused warm interior spotlight","Starting cleanly on the dark stone ledge, crisp snap-zoom onto the foreground exact front of the product as golden raindrop bokeh shimmers","Smooth controlled frontal arc (±25 degrees max) wrapping warm city gold reflections across product contours","Moving front-facing 100mm macro glide bathed in warm key light with sparkling midnight city lights blurred behind","Poised speed-ramp pullback framing unmistakable billionaire lifestyle frontal hero composition","Upscale dark-R&B trap commercial bass drops and crisp air whooshes, zero speech"],
+      [38,"Luxo",false,"#38 Cristal Fumê & Raios Dourados","Monolito de vidro fumê pesado refratando feixes solares quentes","smoked-crystal refraction luxury commercial","Exact product centered rigidly upright atop a heavy thick smoked-crystal glass block in a dark studio","Intense golden volumetric sunbeams refracting warm highlights through the dark crystal base","From the glowing crystal frame, crisp snap-zoom straight onto the exact front of the product as golden rays gleam through the base","Controlled frontal sculptural arc (±28 degrees max) tracking warm refracted gold streaks across sleek front surfaces","Continuous front-facing extreme macro glide proving spotless original quality glowing under warm grazing light","Majestic speed-ramp pullback locking centered frontal luxury pose above glowing smoked crystal","Deep punchy luxury electronic bass drops with warm shimmer whooshes, zero speech"],
+      [39,"Luxo",false,"#39 Pico Nevado Alpino Solar","Neve pura sob sol cristalino e vento ártico de cinema","alpine luxury snow-peak commercial","Exact product anchored boldly upright on a sculpted pristine alpine snow ridge at crisp golden sunrise","Sparkling sunlit snow powder drifting briskly off the ridge behind, majestic icy peaks blurred in deep depth","Starting from the sunlit alpine ridge frame, crisp snap-zoom straight onto the exact front of the product as sparkling snow dust drifts past","Rapid controlled frontal mountain arc (±28 degrees max, never behind) catching pure diamond-bright sunlight across product edges","Continuous front-facing ultra-sharp macro glide displaying rich original color pop against sparkling white snow bokeh","Sweeping speed-ramp pullback framing breathtaking alpine summit behind centered frontal hero product","Sweeping epic modern electronic sub-bass impacts with crisp alpine air whooshes, zero speech"],
+      [40,"Luxo",false,"#40 Gala Champanhe & Flares Ouro","Clima de premiação VIP com flares anamórficos e bokeh luxuoso","opulent champagne-gala commercial","Exact product resting rigidly upright on glossy black obsidian pedestal inside a dark gala showcase theater","Rich floating champagne-gold bokeh spheres and sweeping warm horizontal anamorphic flares","From the dark gala opening frame, warm golden flare sweeps across as camera snap-zooms onto the exact front of the gleaming product","Fast controlled frontal glamorous arc (±28 degrees max) wrapping warm champagne highlights around front contours","Continuous front-facing razor-sharp macro glide showcasing authentic metallic and matte material contrasts","Show-stopping speed-ramp pullback locking VIP frontal hero stance bathed in warm golden bokeh","Elite rhythmic electronic sub-bass drops with warm cinematic risers, zero speech"],
 
-      // === TIKTOK SHOP HARD-SELL & POV VIRAL (10) ===
-      [41,"Viral",true,"#41 POV Queda de Impacto na Mesa","Mãos colocando o produto com firmeza na mesa dark + zoom imediato","viral POV desk-drop hard-sell commercial","Clean first-person POV hands setting the exact product firmly upright dead-center onto a sleek dark carbon creator desk, then smoothly exiting frame","Punchy high-contrast studio overhead beam with crisp cyan and white rim separation","(0.0s-2.0s) Starting from frame one, decisive placement onto the dark carbon desk triggers an instant crisp snap-zoom onto the exact front of the product as hands clear frame","(2.0s-4.8s) Fast controlled frontal arc (±28 degrees max, never behind) over the unobstructed product catching sharp cyan-and-white studio rim highlights","(4.8s-7.4s) Continuous front-facing hyper-crisp macro glide proving real-world build quality and authentic surface finish","(7.4s-10.0s) Snappy speed-ramp pullback locking spotless centered frontal hero display","Punchy desk-impact sub-bass thud launching viral Phonk-trap drops with crisp whooshes, zero speech"],
-      [42,"Viral",false,"#42 Troca de Luz Viral na Batida","O mesmo produto intacto enquanto a luz do estúdio muda na batida","viral lighting-flip beat-sync commercial","Exact product locked rigidly upright dead-center on glossy dark slate stage while dynamic studio rim lighting shifts cleanly on the beat","Crisp rhythmic lighting transitions: warm gold rim -> electric cyan beam -> bright pure-white key -> bold crimson halo","(0.0s-2.0s) Starting from the dark slate frame, instant snap-zoom straight onto the exact front of the product as gold rim flips to bright studio white","(2.0s-4.8s) Controlled frontal kinetic arc (±28 degrees max, never rotating behind) while ambient rim glow shifts smoothly from electric cyan to crimson","(4.8s-7.4s) Continuous front-facing ultra-sharp macro proof pass under bright balanced key light showing true original colors","(7.4s-10.0s) Punchy speed-ramp pullback locking bright crystal-clear frontal flagship hero display","Addictive viral electronic-phonk sub-bass drops with snappy beat-synced whoosh accents, zero speech"],
-      [43,"Viral",false,"#43 Explosão de Pó de Magnésio Gym","Arena fitness dark, rim neon verde e nuvem branca de treino","athletic gym-chalk viral commercial","Exact product centered rigidly upright on a dark textured rubber gym bench inside a high-contrast training arena","Brisk burst of white athletic chalk dust rising behind the product under blazing neon-green rim lights and crisp overhead white key","(0.0s-2.0s) From the dark gym frame, white chalk dust bursts sharply behind as camera snap-zooms onto the exact front of the razor-sharp product","(2.0s-4.8s) Fast controlled frontal arc (±28 degrees max, never behind) flashing vivid neon-green rim light across rugged original edges","(4.8s-7.4s) Continuous front-facing macro push locking tightly onto durable texture and standout physical details","(7.4s-10.0s) Explosive speed-ramp pullback locking bold frontal hero stance amid neon-lit drifting chalk mist","Aggressive modern gym Phonk 808 drops with explosive whoosh impacts, zero speech"],
-      [44,"Viral",false,"#44 Vitrine Giratória Controlada","Leve balanço motorizado frontal com barras de luz correndo no escuro","controlled showcase-pedestal commercial","Exact product centered rigidly upright on a sleek glossy dark showcase pedestal","Clean crisp vertical cinema light tubes positioned symmetrically around dark cyclorama","(0.0s-2.0s) Starting from the frontal showcase frame, brisk snap-zoom straight onto the exact front of the product as vertical light bars glide across it","(2.0s-4.8s) Smooth controlled frontal arc (±30 degrees max, never rotating behind) showcasing crisp front geometry with bright vertical specular streaks","(4.8s-7.4s) Dynamic front-facing macro push tracking key original details illuminated by sweeping studio highlights","(7.4s-10.0s) Crisp brake-stop speed-ramp pullback locking spotless symmetrical frontal hero stance","Ultra-catchy commercial electronic bass drops with sleek light-sweep whooshes, zero speech"],
-      [45,"Viral",false,"#45 Vidro Molhado & Gotículas HD","Macro hipnótico sobre vidro escuro molhado com brilho ciano","hyper-tactile wet-glass visual commercial","Exact product seated rigidly upright center-stage on dark tempered glass covered in hyper-realistic crystal water droplets","Sharp electric-cyan and pure-white directional rim strobes making every water droplet sparkle","(0.0s-2.0s) Starting from the wet glass frame, crisp snap-zoom skimming glistening droplets straight onto the exact front of the sharp product","(2.0s-4.8s) Controlled frontal arc (±28 degrees max, never behind) sparkling vivid cyan-and-white catchlights across clean front contours","(4.8s-7.4s) Hypnotic front-facing 100mm macro pass proving spotless original finish framed by crystal droplet bokeh","(7.4s-10.0s) Clean speed-ramp pullback locking high-converting wet-mirror centered frontal hero presentation","Catchy viral commercial sub-bass drops with sharp modern zoom whooshes, zero speech"],
-      [46,"Viral",false,"#46 Metralhadora Phonk Vermelho/Preto","Halo vermelho agressivo nos 2s + zooms frontais na batida pesada","scroll-stopper crimson Phonk commercial","Exact product anchored rigidly upright on matte-black monolith inside a pitch-black high-contrast studio","Blazing crimson backlight halo pulsing hard against crisp pure-white front key highlights","(0.0s-2.0s) From the dark crimson-halo frame, intense strobe pulse triggers an aggressive snap-zoom onto the exact front of the product","(2.0s-4.8s) High-energy controlled frontal arc (±28 degrees max, strictly front-facing) banking around crisp edges gleaming with crimson and white rim light","(4.8s-7.4s) Moving front-facing extreme macro push inspecting razor-crisp original edges under bright front key light","(7.4s-10.0s) Massive bass-drop speed-ramp pullback locking unforgettable crimson-rimmed frontal hero stance","Hard-hitting Brazilian Phonk 808 drops with razor whip whooshes, zero speech"],
-      [47,"Viral",true,"#47 Unboxing Caixa Magnética Preta","Caixa rígida preta luxuosa abrindo limpa revelando o produto na espuma","viral luxury-box unboxing commercial","Exact product nestled rigidly inside a matte-black rigid magnetic luxury box on dark slate as clean editorial hands lift the lid completely out of frame","Focused warm-white overhead studio spotlight carving crisp commercial contrast","(0.0s-2.0s) Starting from the opening box frame, lid lifts cleanly out of frame triggering an instant snap-zoom onto the exact front of the product inside","(2.0s-4.8s) Hands completely gone as camera performs a crisp controlled frontal arc (±28 degrees max) over the pristine product nestled in foam","(4.8s-7.4s) Moving front-angle macro glide proving authentic original colors, fine finish and zero defects","(7.4s-10.0s) Confident speed-ramp pullback locking high-trust centered frontal unboxing hero display","Punchy modern commercial trap bass drops with crisp air-rush zooms, zero speech"],
-      [48,"Viral",false,"#48 Estúdio Claro Clean Ultra-Rápido","Fundo off-white de marca milionária com luz solar e sombras duras","high-converting clean DTC brand commercial","Exact product centered rigidly upright on crisp architectural off-white pedestal inside a bright sunlit flagship studio","Bold crisp diagonal architectural sunlight shadows gliding smoothly across spotless off-white backdrop","(0.0s-2.0s) Starting from the bright sunlit studio frame, snappy crisp snap-zoom straight onto the exact true-color front of the product","(2.0s-4.8s) Energetic controlled frontal arc (±28 degrees max, never behind) highlighting bold clean geometry with zero visual clutter","(4.8s-7.4s) Continuous front-facing ultra-clean daylight macro glide displaying genuine textures and premium build quality","(7.4s-10.0s) Crisp speed-ramp pullback locking unmistakable high-trust frontal flagship e-commerce hero shot","Upbeat modern trendy electronic pop-bass drops with clean snappy whooshes, zero speech"],
-      [49,"Viral",false,"#49 Rua Grafite & Flash Urbano","Concreto urbano com grafite desfocado ao fundo e flash editorial","street-art urban flash commercial","Exact product placed rigidly upright on a dark raw urban concrete block inside a colorful graffiti alleyway at dusk","Vibrant neon-colored graffiti bokeh blurred softly behind, punchy direct-flash commercial lighting popping product forward","(0.0s-2.0s) Starting from the urban concrete frame, punchy front flash launches a crisp snap-zoom onto the exact front of the product","(2.0s-4.8s) Fast controlled frontal street-style arc (±28 degrees max, never behind) catching vivid colorful ambient rim highlights along front edges","(4.8s-7.4s) Moving front-facing raw macro glide emphasizing solid original build and standout personality","(7.4s-10.0s) Energetic speed-ramp pullback locking rebellious high-converting frontal street hero pose","Raw urban Brazilian trap 808 drops with sharp flash whooshes, zero speech"],
-      [50,"Viral",false,"#50 Superprodução IMAX Definitiva","Fórmula máxima Hollywood: god-rays teal & ouro, vapor e brasas em 4K","ultimate IMAX blockbuster commercial","Exact product commanding rigidly upright center-stage atop a monumental black obsidian mirror pedestal","Epic dark IMAX soundstage pierced by dual teal-and-gold volumetric god-rays, brisk rising vapor and fine glowing embers","(0.0s-2.0s) Starting from the epic IMAX pedestal frame, explosive snap-zoom slicing through rising vapor straight onto the exact front of the product","(2.0s-4.8s) High-speed controlled frontal arc (±30 degrees max, strictly front-facing) sweeping dual teal-and-gold cinema flares cleanly across original contours","(4.8s-7.4s) Continuous front-facing extreme macro glide diving deep into immaculate original craftsmanship with sparkling ember bokeh","(7.4s-10.0s) Monumental speed-ramp pullback locking unstoppable centered frontal hero stance amid volumetric god-rays","Ultimate Hollywood IMAX sub-bass drops fused with modern Phonk hits and crisp whooshes, zero speech"]
+      [41,"Viral",true,"#41 POV Queda de Impacto na Mesa","Mãos colocando o produto com firmeza na mesa dark + zoom imediato","viral POV desk-drop hard-sell commercial","Clean first-person POV hands setting the exact product firmly upright dead-center onto a sleek dark carbon creator desk, then smoothly exiting frame","Punchy high-contrast studio overhead beam with crisp cyan and white rim separation","Starting from frame one, decisive placement onto the dark carbon desk triggers an instant crisp snap-zoom onto the exact front of the product as hands clear frame","Fast controlled frontal arc (±28 degrees max, never behind) over the unobstructed product catching sharp cyan-and-white studio rim highlights","Continuous front-facing hyper-crisp macro glide proving real-world build quality and authentic surface finish","Snappy speed-ramp pullback locking spotless centered frontal hero display","Punchy desk-impact sub-bass thud launching viral Phonk-trap drops with crisp whooshes, zero speech"],
+      [42,"Viral",false,"#42 Troca de Luz Viral na Batida","O mesmo produto intacto enquanto a luz do estúdio muda na batida","viral lighting-flip beat-sync commercial","Exact product locked rigidly upright dead-center on glossy dark slate stage while dynamic studio rim lighting shifts cleanly on the beat","Crisp rhythmic lighting transitions: warm gold rim -> electric cyan beam -> bright pure-white key -> bold crimson halo","Starting from the dark slate frame, instant snap-zoom straight onto the exact front of the product as gold rim flips to bright studio white","Controlled frontal kinetic arc (±28 degrees max, never rotating behind) while ambient rim glow shifts smoothly from electric cyan to crimson","Continuous front-facing ultra-sharp macro proof pass under bright balanced key light showing true original colors","Punchy speed-ramp pullback locking bright crystal-clear frontal flagship hero display","Addictive viral electronic-phonk sub-bass drops with snappy beat-synced whoosh accents, zero speech"],
+      [43,"Viral",false,"#43 Explosão de Pó de Magnésio Gym","Arena fitness dark, rim neon verde e nuvem branca de treino","athletic gym-chalk viral commercial","Exact product centered rigidly upright on a dark textured rubber gym bench inside a high-contrast training arena","Brisk burst of white athletic chalk dust rising behind the product under blazing neon-green rim lights and crisp overhead white key","From the dark gym frame, white chalk dust bursts sharply behind as camera snap-zooms onto the exact front of the razor-sharp product","Fast controlled frontal arc (±28 degrees max, never behind) flashing vivid neon-green rim light across rugged original edges","Continuous front-facing macro push locking tightly onto durable texture and standout physical details","Explosive speed-ramp pullback locking bold frontal hero stance amid neon-lit drifting chalk mist","Aggressive modern gym Phonk 808 drops with explosive whoosh impacts, zero speech"],
+      [44,"Viral",false,"#44 Vitrine Giratória Controlada","Leve balanço motorizado frontal com barras de luz correndo no escuro","controlled showcase-pedestal commercial","Exact product centered rigidly upright on a sleek glossy dark showcase pedestal","Clean crisp vertical cinema light tubes positioned symmetrically around dark cyclorama","Starting from the frontal showcase frame, brisk snap-zoom straight onto the exact front of the product as vertical light bars glide across it","Smooth controlled frontal arc (±30 degrees max, never rotating behind) showcasing crisp front geometry with bright vertical specular streaks","Dynamic front-facing macro push tracking key original details illuminated by sweeping studio highlights","Crisp brake-stop speed-ramp pullback locking spotless symmetrical frontal hero stance","Ultra-catchy commercial electronic bass drops with sleek light-sweep whooshes, zero speech"],
+      [45,"Viral",false,"#45 Vidro Molhado & Gotículas HD","Macro hipnótico sobre vidro escuro molhado com brilho ciano","hyper-tactile wet-glass visual commercial","Exact product seated rigidly upright center-stage on dark tempered glass covered in hyper-realistic crystal water droplets","Sharp electric-cyan and pure-white directional rim strobes making every water droplet sparkle","Starting from the wet glass frame, crisp snap-zoom skimming glistening droplets straight onto the exact front of the sharp product","Controlled frontal arc (±28 degrees max, never behind) sparkling vivid cyan-and-white catchlights across clean front contours","Hypnotic front-facing 100mm macro pass proving spotless original finish framed by crystal droplet bokeh","Clean speed-ramp pullback locking high-converting wet-mirror centered frontal hero presentation","Catchy viral commercial sub-bass drops with sharp modern zoom whooshes, zero speech"],
+      [46,"Viral",false,"#46 Metralhadora Phonk Vermelho/Preto","Halo vermelho agressivo nos 2s + zooms frontais na batida pesada","scroll-stopper crimson Phonk commercial","Exact product anchored rigidly upright on matte-black monolith inside a pitch-black high-contrast studio","Blazing crimson backlight halo pulsing hard against crisp pure-white front key highlights","From the dark crimson-halo frame, intense strobe pulse triggers an aggressive snap-zoom onto the exact front of the product","High-energy controlled frontal arc (±28 degrees max, strictly front-facing) banking around crisp edges gleaming with crimson and white rim light","Moving front-facing extreme macro push inspecting razor-crisp original edges under bright front key light","Massive bass-drop speed-ramp pullback locking unforgettable crimson-rimmed frontal hero stance","Hard-hitting Brazilian Phonk 808 drops with razor whip whooshes, zero speech"],
+      [47,"Viral",true,"#47 Unboxing Caixa Magnética Preta","Caixa rígida preta luxuosa abrindo limpa revelando o produto na espuma","viral luxury-box unboxing commercial","Exact product nestled rigidly inside a matte-black rigid magnetic luxury box on dark slate as clean editorial hands lift the lid completely out of frame","Focused warm-white overhead studio spotlight carving crisp commercial contrast","Starting from the opening box frame, lid lifts cleanly out of frame triggering an instant snap-zoom onto the exact front of the product inside","Hands completely gone as camera performs a crisp controlled frontal arc (±28 degrees max) over the pristine product nestled in foam","Moving front-angle macro glide proving authentic original colors, fine finish and zero defects","Confident speed-ramp pullback locking high-trust centered frontal unboxing hero display","Punchy modern commercial trap bass drops with crisp air-rush zooms, zero speech"],
+      [48,"Viral",false,"#48 Estúdio Claro Clean Ultra-Rápido","Fundo off-white de marca milionária com luz solar e sombras duras","high-converting clean DTC brand commercial","Exact product centered rigidly upright on crisp architectural off-white pedestal inside a bright sunlit flagship studio","Bold crisp diagonal architectural sunlight shadows gliding smoothly across spotless off-white backdrop","Starting from the bright sunlit studio frame, snappy crisp snap-zoom straight onto the exact true-color front of the product","Energetic controlled frontal arc (±28 degrees max, never behind) highlighting bold clean geometry with zero visual clutter","Continuous front-facing ultra-clean daylight macro glide displaying genuine textures and premium build quality","Crisp speed-ramp pullback locking unmistakable high-trust frontal flagship e-commerce hero shot","Upbeat modern trendy electronic pop-bass drops with clean snappy whooshes, zero speech"],
+      [49,"Viral",false,"#49 Rua Grafite & Flash Urbano","Concreto urbano com grafite desfocado ao fundo e flash editorial","street-art urban flash commercial","Exact product placed rigidly upright on a dark raw urban concrete block inside a colorful graffiti alleyway at dusk","Vibrant neon-colored graffiti bokeh blurred softly behind, punchy direct-flash commercial lighting popping product forward","Starting from the urban concrete frame, punchy front flash launches a crisp snap-zoom onto the exact front of the product","Fast controlled frontal street-style arc (±28 degrees max, never behind) catching vivid colorful ambient rim highlights along front edges","Moving front-facing raw macro glide emphasizing solid original build and standout personality","Energetic speed-ramp pullback locking rebellious high-converting frontal street hero pose","Raw urban Brazilian trap 808 drops with sharp flash whooshes, zero speech"],
+      [50,"Viral",false,"#50 Superprodução IMAX Definitiva","Fórmula máxima Hollywood: god-rays teal & ouro, vapor e brasas em 4K","ultimate IMAX blockbuster commercial","Exact product commanding rigidly upright center-stage atop a monumental black obsidian mirror pedestal","Epic dark IMAX soundstage pierced by dual teal-and-gold volumetric god-rays, brisk rising vapor and fine glowing embers","Starting from the epic IMAX pedestal frame, explosive snap-zoom slicing through rising vapor straight onto the exact front of the product","High-speed controlled frontal arc (±30 degrees max, strictly front-facing) sweeping dual teal-and-gold cinema flares cleanly across original contours","Continuous front-facing extreme macro glide diving deep into immaculate original craftsmanship with sparkling ember bokeh","Monumental speed-ramp pullback locking unstoppable centered frontal hero stance amid volumetric god-rays","Ultimate Hollywood IMAX sub-bass drops fused with modern Phonk hits and crisp whooshes, zero speech"]
     ].map(([id,cat,hasPerson,name,desc,genre,castPlace,setVfx,b1,b2,b3,b4,audio])=>({id,cat,hasPerson,name,desc,genre,castPlace,setVfx,b1,b2,b3,b4,audio}));
+
+    const DURATION_PLANS = {
+      "10_fast":   { totalSec: 10, blocks: [5, 5], label: "10s • 2 Blocos Rápidos de 5s" },
+      "10_single": { totalSec: 10, blocks: [10], label: "10s • 1 Bloco Contínuo de 10s" },
+      "15_fast":   { totalSec: 15, blocks: [5, 5, 5], label: "15s • 3 Blocos Rápidos de 5s" },
+      "20_fast":   { totalSec: 20, blocks: [5, 5, 5, 5], label: "20s • 4 Blocos Rápidos de 5s" },
+      "30_fast":   { totalSec: 30, blocks: [5, 5, 5, 5, 5, 5], label: "30s • 6 Blocos Rápidos de 5s" }
+    };
 
     const modeBtns = document.querySelectorAll(".mode-btn");
     const videoOnlyTopFields = document.getElementById("videoOnlyTopFields");
@@ -388,7 +390,7 @@
     }
     modeBtns.forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
 
-    // === NEGATIVE PROMPT BLINDADO (ANTI-MORPHING + ANTI-ROTAÇÃO TRASEIRA + ANTI-BORRÃO) ===
+    // === NEGATIVE PROMPT BLINDADO (ANTI-MORPHING + ARCO FRONTAL) ===
     function buildDynamicNegative(hasPerson, withAudio) {
       const base = [
         "voice", "vocals", "speech", "talking", "dialogue", "narrator",
@@ -425,6 +427,7 @@
       ].join("\n\n");
     }
 
+    // Prompts otimizados para blocos rápidos de 5s (cada bloco faz um Ato distinto no mesmo universo!) ou bloco contínuo de 10s
     function buildHollywoodVideoPrompt(m, partIndex, totalParts, clipSec) {
       const macroFocus = macroTarget.value.trim();
       const withAudio = enableAudio.checked;
@@ -434,26 +437,42 @@
         : `AUDIO: Completely mute silent video without audio, music, or speech.`;
 
       const frontalLock = m.hasPerson
-        ? "FRONTAL ARC & FIDELITY LOCK: Start seamlessly from frame 0. Stay strictly within a ±28° frontal camera arc — NEVER orbit behind the product, NEVER flip the product's orientation, NEVER invent extra buttons/lights, and keep the same person facing forward naturally."
+        ? "FRONTAL ARC & FIDELITY LOCK: Start seamlessly from frame 0. Stay strictly within a ±28° frontal camera arc — NEVER orbit behind the product, NEVER flip orientation, NEVER invent extra buttons/lights, and keep the same person facing forward naturally."
         : "FRONTAL ARC & FIDELITY LOCK: Start seamlessly from frame 0. Keep the product 100% rigid, stationary in its exact starting orientation and dead-center. Camera stays strictly within a ±30° frontal arc — NEVER rotate behind or underneath the product, NEVER flip it horizontal/vertical, NEVER deform the logo or invent extra buttons.";
 
       if (clipSec === 5) {
+        let actTitle = "ACT 1 — EXPLOSIVE HOOK & FRONTAL ARC";
+        let timeline = `- (0.0s-2.2s) ${m.b1}.\n- (2.2s-5.0s) ${m.b2}.`;
+
+        if (totalParts === 2 && partIndex === 1) {
+          actTitle = "ACT 2 — MACRO GLIDE & HERO CLIMAX";
+          timeline = `- (0.0s-2.4s) ${b3Text}.\n- (2.4s-5.0s) ${m.b4}.`;
+        } else if (totalParts >= 3) {
+          const role = partIndex === totalParts - 1 ? 2 : (partIndex % 3);
+          if (role === 1) {
+            actTitle = `ACT ${partIndex + 1} — FRONTAL ARC & EXTREME MACRO`;
+            timeline = `- (0.0s-2.2s) ${m.b2}.\n- (2.2s-5.0s) ${b3Text}.`;
+          } else if (role === 2) {
+            actTitle = `ACT ${partIndex + 1} — MACRO PROOF & HERO PULLBACK CLIMAX`;
+            timeline = `- (0.0s-2.2s) ${b3Text}.\n- (2.2s-5.0s) ${m.b4}.`;
+          }
+        }
+
         return [
-          `Vertical 9:16 ${m.genre}, 4K, 60fps, high-impact dynamic frontal commercial cinematography.`,
+          `Vertical 9:16 ${m.genre}, 4K, 60fps, crisp 5-second high-impact commercial cut.`,
           `PRODUCT LOCK: ${getProductSpec()}.`,
+          `STAGING: ${m.castPlace}.`,
           frontalLock,
-          `CAST & WORLD (${m.name} — Finale Climax): ${m.castPlace}. ${m.setVfx}.`,
-          `TIMELINE:\n- (0.0s-2.4s) ${b3Text}.\n- (2.4s-5.0s) ${m.b4}.`,
+          `${actTitle} (${m.name}):\n- Atmosphere: ${m.setVfx}.\n${timeline}`,
           audioLine,
           `Negative prompt: ${buildDynamicNegative(m.hasPerson, withAudio)}.`
         ].join("\n\n");
       }
 
-      const partNote = totalParts > 1 ? ` [Part ${partIndex + 1}/${totalParts} — maintain identical cast, set & product]` : "";
       return [
-        `Vertical 9:16 ${m.genre}, 4K, 60fps, crisp high-impact commercial cinematography${withAudio ? ", punchy SFX and sub-bass drops, zero speech" : ", completely mute silent video"}.`,
+        `Vertical 9:16 ${m.genre}, 4K, 60fps, crisp high-impact 10-second commercial cinematography${withAudio ? ", punchy SFX and sub-bass drops, zero speech" : ", completely mute silent video"}.`,
         `CORE MANDATORY PRODUCT SPECIFICATIONS:\n- ${getProductSpec()}.\n- Staging: ${m.castPlace}.\n- ${frontalLock}`,
-        `SCENARIO, VFX & FRONTAL CAMERA CHOREOGRAPHY (${m.name}${partNote}):\n- Atmosphere: ${m.setVfx}.\n- Beat 1 ${m.b1}.\n- Beat 2 ${m.b2}.\n- Beat 3 ${b3Text}.\n- Beat 4 ${m.b4}.`,
+        `SCENARIO, VFX & FRONTAL CAMERA CHOREOGRAPHY (${m.name}):\n- Atmosphere: ${m.setVfx}.\n- (0.0s-2.0s) ${m.b1}.\n- (2.0s-4.8s) ${m.b2}.\n- (4.8s-7.4s) ${b3Text}.\n- (7.4s-10.0s) ${m.b4}.`,
         audioLine,
         `Negative prompt: ${buildDynamicNegative(m.hasPerson, withAudio)}.`
       ].join("\n\n");
@@ -469,10 +488,10 @@
     }
 
     function refreshLivePrompt() {
-      const sec = Number(minDuration.value) || 10;
+      const plan = DURATION_PLANS[minDuration.value] || DURATION_PLANS["15_fast"];
       const audioTag = enableAudio.checked ? "+ SFX/Sub-Bass" : "(Mudo)";
-      btnBuild.textContent = `Gerar Vídeo Hollywood Único (${sec}s • Kling v2.6 Pro ${audioTag})`;
-      livePromptPreview.textContent = buildHollywoodVideoPrompt(selectedVidModel, 0, 1, 10);
+      btnBuild.textContent = `Gerar Vídeo Hollywood (${plan.label} ${audioTag})`;
+      livePromptPreview.textContent = buildHollywoodVideoPrompt(selectedVidModel, 0, plan.blocks.length, plan.blocks[0]);
     }
 
     function renderImagePresets() {
@@ -593,8 +612,8 @@
       uploadedMime = opt.mime;
     });
 
-    // === API COM TIMEOUT (20s) + POLLING BLINDADO COM AUTO-RETRY (NUNCA MAIS TRAVA!) ===
-    async function callApi(payload, timeoutMs = 22000, outerSignal = null) {
+    // === API COM TIMEOUT + RETRY ===
+    async function callApi(payload, timeoutMs = 24000, outerSignal = null) {
       const ctrl = new AbortController();
       const onOuterAbort = () => ctrl.abort();
       if (outerSignal) {
@@ -638,51 +657,57 @@
 
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-    async function pollFalJob(queued, label, onStatus, outerSignal) {
-      const started = performance.now();
+    async function pollFalJob(queued, onStateUpdate, outerSignal) {
       let consecutiveErrors = 0;
-
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 140; i++) {
         if (outerSignal && outerSignal.aborted) throw new Error("CANCELLED_BY_USER");
-        const elapsedSec = Math.round((performance.now() - started) / 1000);
-
         try {
           const res = await callApi(
             { task: "poll", statusUrl: queued.statusUrl, responseUrl: queued.responseUrl },
-            20000,
+            18000,
             outerSignal
           );
           consecutiveErrors = 0;
-
           if (res.status === "COMPLETED") return res;
-          if (onStatus) {
+          if (onStateUpdate) {
             const pos = typeof res.queuePosition === "number" ? ` (#${res.queuePosition + 1})` : "";
-            const stLabel = res.status === "IN_QUEUE" ? `fila${pos}` : "renderizando GPU";
-            onStatus(`${label}: ${stLabel} (${elapsedSec}s)`);
+            onStateUpdate(res.status === "IN_QUEUE" ? `na fila${pos}` : "renderizando GPU");
           }
         } catch (err) {
           if (err.message === "CANCELLED_BY_USER") throw err;
-          // Erros definitivos da fal.ai (403 saldo, 400 payload, FAILED) interrompem na hora
           if (err.status && err.status >= 400 && err.status < 500 && !err.transient) throw err;
           if (String(err.message || "").toLowerCase().includes("falha na geração")) throw err;
 
           consecutiveErrors++;
-          if (onStatus) onStatus(`${label}: reconectando (${consecutiveErrors}/10 • ${elapsedSec}s)...`);
-          if (consecutiveErrors >= 10) {
-            throw new Error(`Conexão perdida ao acompanhar ${label} após 10 tentativas. Verifique em fal.ai/dashboard/history se o vídeo terminou.`);
+          if (onStateUpdate) onStateUpdate(`reconectando (${consecutiveErrors}/8)...`);
+          if (consecutiveErrors >= 8) {
+            throw new Error("Instabilidade ao consultar a fila da fal.ai.");
           }
         }
-
         await sleep(3000);
       }
-      throw new Error(`Tempo esgotado em ${label}. Verifique em fal.ai/dashboard/history.`);
+      throw new Error("Tempo limite excedido na fila da fal.ai.");
     }
 
     async function fetchMediaBlob(url) {
-      try { const d = await fetch(url, { mode: "cors" }); if (d.ok) return await d.blob(); } catch {}
-      const p = await fetch(`/api/generate?proxyUrl=${encodeURIComponent(url)}`);
-      if (!p.ok) throw new Error("Falha ao baixar mídia da fal.ai.");
-      return await p.blob();
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const ctrl = new AbortController();
+          const t = setTimeout(() => ctrl.abort(), 25000);
+          const d = await fetch(url, { mode: "cors", signal: ctrl.signal });
+          clearTimeout(t);
+          if (d.ok) return await d.blob();
+        } catch {}
+        try {
+          const ctrl = new AbortController();
+          const t = setTimeout(() => ctrl.abort(), 25000);
+          const p = await fetch(`/api/generate?proxyUrl=${encodeURIComponent(url)}`, { signal: ctrl.signal });
+          clearTimeout(t);
+          if (p.ok) return await p.blob();
+        } catch {}
+        await sleep(1000);
+      }
+      throw new Error("Falha ao baixar clipe gerado da fal.ai.");
     }
 
     function buildSubtitles(text, totalDur) {
@@ -747,14 +772,20 @@
     }
 
     async function stitchClips(blobs, withSubs, textForSubs, audioCtx, keepRealAudio) {
+      // Se for 1 único bloco e sem legenda queimada, entrega o MP4 bruto original (zero perda!)
       if (blobs.length === 1 && !withSubs) {
         if (activeVideoBlobUrl) URL.revokeObjectURL(activeVideoBlobUrl);
         activeVideoBlobUrl = URL.createObjectURL(blobs[0]);
         return { videoUrl: activeVideoBlobUrl, videoBlob: blobs[0], ext: "mp4", label: "MP4 Original Kling v2.6 Pro", srt: makeSrt(buildSubtitles(textForSubs, 10)), sec: 10 };
       }
+
+      if (audioCtx && audioCtx.state === "suspended") {
+        await audioCtx.resume().catch(() => {});
+      }
+
       const items = [];
       for (const b of blobs) items.push(await loadVideoFromBlob(b));
-      const totalEst = items.reduce((s, x) => s + (Number.isFinite(x.vid.duration) && x.vid.duration > 0.5 ? x.vid.duration : 10), 0);
+      const totalEst = items.reduce((s, x) => s + (Number.isFinite(x.vid.duration) && x.vid.duration > 0.5 ? x.vid.duration : 5), 0);
       const subs = buildSubtitles(textForSubs, totalEst);
 
       ctx.fillStyle = "#000"; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -763,7 +794,7 @@
       const canvasStream = canvas.captureStream(30);
       const tracks = [...canvasStream.getVideoTracks()];
       let destNode = null, clockOsc = null;
-      if (audioCtx) {
+      if (audioCtx && audioCtx.state === "running") {
         destNode = audioCtx.createMediaStreamDestination();
         clockOsc = audioCtx.createOscillator();
         const g = audioCtx.createGain(); g.gain.value = 0.00001;
@@ -788,9 +819,9 @@
 
       for (let i = 0; i < items.length; i++) {
         const vid = items[i].vid;
-        const clipDur = Number.isFinite(vid.duration) && vid.duration > 0.5 ? vid.duration : 10;
+        const clipDur = Number.isFinite(vid.duration) && vid.duration > 0.5 ? vid.duration : 5;
         let srcNode = null;
-        if (keepRealAudio && audioCtx && destNode) {
+        if (keepRealAudio && audioCtx && audioCtx.state === "running" && destNode) {
           try { vid.muted = false; vid.volume = 1.0; srcNode = audioCtx.createMediaElementSource(vid); srcNode.connect(destNode); }
           catch { vid.muted = true; }
         } else { vid.muted = true; }
@@ -801,8 +832,9 @@
 
         await new Promise((resolve) => {
           let done = false;
+          const safetyTimer = setTimeout(() => endClip(), Math.round((clipDur + 1.8) * 1000));
           const endClip = () => {
-            if (done) return; done = true; stop(); vid.pause();
+            if (done) return; done = true; clearTimeout(safetyTimer); stop(); vid.pause();
             if (srcNode) { try { srcNode.disconnect(); } catch {} } resolve();
           };
           const stop = makeTicker(30, () => {
@@ -822,7 +854,7 @@
                 ctx.fillStyle = "#fde047"; ctx.fillText(lbl, canvas.width / 2, by + 2, maxW); ctx.restore();
               }
             }
-            if (vid.ended || cEl >= clipDur + 0.08) endClip();
+            if (vid.ended || cEl >= clipDur + 0.06) endClip();
           });
           vid.onended = endClip;
         });
@@ -848,11 +880,20 @@
       if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
       activeRunController = new AbortController();
       btnOnlyImg.disabled = true; btnBuild.disabled = true;
+      let uiClock = null;
+      const t0 = performance.now();
+      let stateTxt = "enviando...";
       try {
-        stage.innerHTML = `<div class="status-msg">Gerando imagem 9:16 no <strong>Nano Banana Edit</strong><br/>${selectedImgModel.name}</div><div class="status-log" id="imgLog">Enfileirando...</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button>`;
+        stage.innerHTML = `<div class="status-msg">Gerando imagem 9:16 no <strong>Nano Banana Edit</strong><br/>${selectedImgModel.name}</div><div class="status-log" id="imgLog">enviando... (0s)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div><div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>`;
         document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
+        uiClock = setInterval(() => {
+          const el = document.getElementById("imgLog");
+          if (el) el.textContent = `${stateTxt} (${Math.round((performance.now() - t0) / 1000)}s)`;
+        }, 1000);
+
         const q = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildStandaloneImagePrompt(selectedImgModel) }, 30000, activeRunController.signal);
-        const r = await pollFalJob(q, "Imagem 9:16", (m) => { const el = document.getElementById("imgLog"); if (el) el.textContent = m; }, activeRunController.signal);
+        const r = await pollFalJob(q, (st) => { stateTxt = st; }, activeRunController.signal);
+        clearInterval(uiClock);
         stage.innerHTML = `
           <img class="preview-916" src="${r.imageUrl}" alt="Imagem 9:16" />
           <div class="dl-box">
@@ -863,12 +904,13 @@
       } catch (err) {
         stage.innerHTML = `<div class="err-msg">${err.message === "CANCELLED_BY_USER" ? "Geração cancelada." : err.message}</div>`;
       } finally {
+        if (uiClock) clearInterval(uiClock);
         activeRunController = null;
         btnOnlyImg.disabled = false; btnBuild.disabled = false;
       }
     });
 
-    // === GERAR VÍDEO HOLLYWOOD ÚNICO (FILA COM AUTO-RETRY + RESGATE EM TEMPO REAL) ===
+    // === GERAR VÍDEO HOLLYWOOD COM FILA CONTROLADA (MÁX. 2 CONCORRENTES) + RELÓGIO VIVO ===
     btnBuild.addEventListener("click", async () => {
       if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
 
@@ -879,87 +921,157 @@
       const runSignal = activeRunController.signal;
       btnOnlyImg.disabled = true; btnBuild.disabled = true;
 
-      const targetSec = Number(minDuration.value) || 10;
+      const plan = DURATION_PLANS[minDuration.value] || DURATION_PLANS["15_fast"];
+      const clipPlan = plan.blocks;
       const withAudio = enableAudio.checked;
-      const clipPlan = targetSec === 10 ? [10] : (targetSec === 15 ? [10, 5] : (targetSec === 20 ? [10, 10] : [10, 10, 10]));
       const readyLinks = new Array(clipPlan.length).fill(null);
+      let finishEarlyRequested = false;
+      let uiClock = null;
 
       try {
+        // ETAPA 1: Cenário Mestre 9:16
+        const step1Start = performance.now();
+        let step1State = "enviando foto do produto...";
         stage.innerHTML = `
           <div class="status-msg"><strong>Etapa 1/3 • Montando Cena Mestre 9:16 (Nano Banana)</strong><br/>${selectedVidModel.name}</div>
-          <div class="status-log" id="stepLog">Enviando foto do produto...</div>
+          <div class="status-log" id="stepLog">enviando foto do produto... (0s)</div>
           <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:18%"></div></div>
-          <button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button>
+          <div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>
         `;
         document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
+        uiClock = setInterval(() => {
+          const el = document.getElementById("stepLog");
+          if (el) el.textContent = `${step1State} (${Math.round((performance.now() - step1Start) / 1000)}s)`;
+        }, 1000);
 
         const kfQueued = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildKeyframePrompt(selectedVidModel) }, 30000, runSignal);
-        const kfRes = await pollFalJob(kfQueued, "Cena Mestre", (m) => { const el = document.getElementById("stepLog"); if (el) el.textContent = m; }, runSignal);
+        const kfRes = await pollFalJob(kfQueued, (st) => { step1State = st; }, runSignal);
+        clearInterval(uiClock); uiClock = null;
         const masterSceneUrl = kfRes.imageUrl;
 
-        const statuses = clipPlan.map((d, i) => `Bloco ${i + 1} (${d}s): enviando...`);
-        const drawStep2 = (pct) => {
-          const readyHtml = readyLinks
-            .map((u, i) => (u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Baixar Bloco ${i + 1} pronto ✓</a>` : ""))
-            .filter(Boolean)
-            .join("");
-
-          stage.innerHTML = `
-            <div class="status-msg"><strong>Etapa 2/3 • Gravando no Kling v2.6 Pro</strong><br/>${selectedVidModel.name} • ${withAudio ? "SFX + Sub-Bass Ativos" : "Mudo"}</div>
-            <div class="status-log">${statuses.join("<br/>")}</div>
-            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
-            ${readyHtml ? `<div class="clip-list">${readyHtml}</div>` : ""}
-            <button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button>
-          `;
-          document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
-        };
-        drawStep2(40);
-
-        const negPrompt = buildDynamicNegative(selectedVidModel.hasPerson, withAudio);
-        const queuedClips = await Promise.all(
-          clipPlan.map((sec, idx) =>
-            callApi(
-              {
-                task: "submit_clip",
-                imageUrl: masterSceneUrl,
-                duration: String(sec),
-                generateAudio: withAudio,
-                motionPrompt: buildHollywoodVideoPrompt(selectedVidModel, idx, clipPlan.length, sec),
-                negativePrompt: negPrompt
-              },
-              30000,
-              runSignal
-            )
-          )
-        );
-
-        let doneCnt = 0;
-        const rawUrls = await Promise.all(
-          queuedClips.map(async (q, idx) => {
-            statuses[idx] = `Bloco ${idx + 1} (${clipPlan[idx]}s): na fila...`;
-            drawStep2(44 + Math.round((doneCnt / clipPlan.length) * 38));
-            const r = await pollFalJob(
-              q,
-              `Bloco ${idx + 1} (${clipPlan[idx]}s)`,
-              (m) => {
-                statuses[idx] = m;
-                drawStep2(44 + Math.round((doneCnt / clipPlan.length) * 38));
-              },
-              runSignal
-            );
-            doneCnt++;
-            readyLinks[idx] = r.videoUrl;
-            statuses[idx] = `Bloco ${idx + 1} (${clipPlan[idx]}s): pronto ✓`;
-            drawStep2(44 + Math.round((doneCnt / clipPlan.length) * 38));
-            return r.videoUrl;
-          })
-        );
+        // ETAPA 2: Fila controlada (máximo 2 blocos simultâneos no Kling v2.6 Pro para evitar travar na fal.ai)
+        const blockStates = clipPlan.map((sec, i) => ({
+          label: `Bloco ${i + 1} (${sec}s)`,
+          status: "aguardando vaga...",
+          startedAt: null,
+          done: false
+        }));
 
         stage.innerHTML = `
-          <div class="status-msg"><strong>Etapa 3/3 • Finalizando MP4 Hollywood (${targetSec}s)...</strong></div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:15%"></div></div>
+          <div class="status-msg"><strong>Etapa 2/3 • Gravando no Kling v2.6 Pro (${plan.label})</strong><br/>${selectedVidModel.name} • ${withAudio ? "SFX + Sub-Bass Ativos" : "Mudo"}</div>
+          <div class="status-log" id="liveBlockLog"></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="step2Bar" style="width:32%"></div></div>
+          <div class="clip-list" id="liveReadyLinks"></div>
+          <div class="action-inline">
+            <button type="button" class="btn-use-ready hidden" id="btnUseReady">Montar vídeo com os blocos prontos</button>
+            <button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button>
+          </div>
         `;
-        const blobs = await Promise.all(rawUrls.map((u) => fetchMediaBlob(u)));
+
+        const renderStep2Live = () => {
+          const logEl = document.getElementById("liveBlockLog");
+          const barEl = document.getElementById("step2Bar");
+          const linksEl = document.getElementById("liveReadyLinks");
+          const useBtn = document.getElementById("btnUseReady");
+          const now = performance.now();
+
+          if (logEl) {
+            logEl.innerHTML = blockStates.map((b) => {
+              if (b.done) return `${b.label}: pronto ✓`;
+              if (b.startedAt) return `${b.label}: ${b.status} (${Math.round((now - b.startedAt) / 1000)}s)`;
+              return `${b.label}: ${b.status}`;
+            }).join("<br/>");
+          }
+          const doneCount = readyLinks.filter(Boolean).length;
+          if (barEl) barEl.style.width = `${34 + Math.round((doneCount / clipPlan.length) * 48)}%`;
+          if (linksEl) {
+            linksEl.innerHTML = readyLinks
+              .map((u, i) => (u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Baixar Bloco ${i + 1} ✓</a>` : ""))
+              .filter(Boolean).join("");
+          }
+          if (useBtn) {
+            useBtn.classList.toggle("hidden", doneCount === 0 || doneCount === clipPlan.length);
+          }
+        };
+
+        document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
+        document.getElementById("btnUseReady")?.addEventListener("click", () => {
+          finishEarlyRequested = true;
+          activeRunController?.abort();
+        });
+
+        renderStep2Live();
+        uiClock = setInterval(renderStep2Live, 1000);
+
+        const negPrompt = buildDynamicNegative(selectedVidModel.hasPerson, withAudio);
+        const MAX_CONCURRENT = 2;
+        let nextIndex = 0;
+
+        async function runWorker() {
+          while (nextIndex < clipPlan.length) {
+            if (runSignal.aborted) return;
+            const idx = nextIndex++;
+            const sec = clipPlan[idx];
+            blockStates[idx].startedAt = performance.now();
+            blockStates[idx].status = "enviando à fal.ai...";
+            renderStep2Live();
+
+            let queued = null;
+            for (let attempt = 1; attempt <= 3; attempt++) {
+              try {
+                queued = await callApi(
+                  {
+                    task: "submit_clip",
+                    imageUrl: masterSceneUrl,
+                    duration: String(sec),
+                    generateAudio: withAudio,
+                    motionPrompt: buildHollywoodVideoPrompt(selectedVidModel, idx, clipPlan.length, sec),
+                    negativePrompt: negPrompt
+                  },
+                  28000,
+                  runSignal
+                );
+                break;
+              } catch (err) {
+                if (err.message === "CANCELLED_BY_USER") return;
+                if (err.status && err.status >= 400 && err.status < 500 && !err.transient) throw err;
+                if (attempt === 3) throw err;
+                blockStates[idx].status = `tentando enviar novamente (${attempt}/3)...`;
+                await sleep(2000);
+              }
+            }
+
+            if (!queued || runSignal.aborted) return;
+            blockStates[idx].status = "na fila...";
+            const r = await pollFalJob(queued, (st) => { blockStates[idx].status = st; }, runSignal);
+            readyLinks[idx] = r.videoUrl;
+            blockStates[idx].done = true;
+            blockStates[idx].status = "pronto ✓";
+            renderStep2Live();
+          }
+        }
+
+        const workerCount = Math.min(MAX_CONCURRENT, clipPlan.length);
+        try {
+          await Promise.all(Array.from({ length: workerCount }, () => runWorker()));
+        } catch (workerErr) {
+          if (!finishEarlyRequested) throw workerErr;
+        }
+
+        clearInterval(uiClock); uiClock = null;
+
+        const finalRawUrls = readyLinks.filter(Boolean);
+        if (!finalRawUrls.length) {
+          throw new Error(finishEarlyRequested ? "Nenhum bloco pronto ainda." : "CANCELLED_BY_USER");
+        }
+
+        // ETAPA 3: Baixar clipes e montar MP4 final
+        const estFinalSec = finalRawUrls.length * clipPlan[0];
+        stage.innerHTML = `
+          <div class="status-msg"><strong>Etapa 3/3 • Unindo ${finalRawUrls.length} bloco(s) no MP4 final (~${estFinalSec}s)...</strong></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:12%"></div></div>
+        `;
+        const blobs = await Promise.all(finalRawUrls.map((u) => fetchMediaBlob(u)));
         const out = await stitchClips(blobs, burnSubs.checked, scriptText.value.trim(), audioCtx, withAudio);
         const srtUrl = URL.createObjectURL(new Blob([out.srt], { type: "text/plain;charset=utf-8" }));
         const fname = `nexora-hollywood-${selectedVidModel.id}-${out.sec}s.${out.ext}`;
@@ -967,14 +1079,14 @@
         stage.innerHTML = `
           <video id="outPlayer" class="player-916" src="${out.videoUrl}" controls playsinline></video>
           <div class="dl-box">
-            <div class="dl-title">${selectedVidModel.name} • ${out.sec}s • ${withAudio ? "SFX + Sub-Bass Ativos" : "Mudo"} • ${out.label}</div>
+            <div class="dl-title">${selectedVidModel.name} • ${out.sec}s • ${finalRawUrls.length} bloco(s) • ${withAudio ? "SFX + Sub-Bass" : "Mudo"} • ${out.label}</div>
             <div class="dl-grid">
               <button type="button" id="btnDlVideo" class="dl-btn main">Baixar Vídeo Hollywood (.${out.ext.toUpperCase()} • ${out.sec}s)</button>
               <a class="dl-btn" href="${srtUrl}" download="legendas.srt">Legenda (.SRT)</a>
               <button type="button" id="btnPlayAgain" class="dl-btn">Reproduzir com Som</button>
             </div>
             <div class="clip-list">
-              ${rawUrls.map((u, idx) => `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer" download="kling-bloco-${idx + 1}.mp4">MP4 Bruto ${idx + 1} (${clipPlan[idx]}s)</a>`).join("")}
+              ${finalRawUrls.map((u, idx) => `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer" download="kling-bloco-${idx + 1}.mp4">MP4 Bruto ${idx + 1}</a>`).join("")}
             </div>
           </div>
           <div class="thumb-strip"><img src="${masterSceneUrl}" alt="Cena Mestre 9:16" title="Keyframe Mestre 9:16" /></div>
@@ -994,10 +1106,10 @@
         const msg = err.message === "CANCELLED_BY_USER" ? "Geração cancelada pelo usuário." : (err.message || "Erro ao gerar vídeo.");
         const rescued = readyLinks
           .map((u, i) => (u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Baixar Bloco ${i + 1} salvo ✓</a>` : ""))
-          .filter(Boolean)
-          .join("");
+          .filter(Boolean).join("");
         stage.innerHTML = `<div class="err-msg">${msg}</div>${rescued ? `<div class="clip-list">${rescued}</div>` : ""}`;
       } finally {
+        if (uiClock) clearInterval(uiClock);
         activeRunController = null;
         if (audioCtx) { try { await audioCtx.close(); } catch {} }
         btnOnlyImg.disabled = false; btnBuild.disabled = false;
