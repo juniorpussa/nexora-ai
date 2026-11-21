@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
-  async function fetchWithTimeout(url, options, timeoutMs = 20000, stageName = "serviço") {
+  async function fetchWithTimeout(url, options, timeoutMs = 15000, stageName = "serviço") {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -46,12 +46,156 @@ export async function onRequestPost(context) {
       return parsed;
     } catch (err) {
       if (err?.name === "AbortError") {
-        throw new Error(`O ${stageName} não respondeu a tempo (limite de ${Math.round(timeoutMs / 1000)}s).`);
+        throw new Error(`${stageName} excedeu o tempo limite.`);
       }
       throw err;
     } finally {
       clearTimeout(timer);
     }
+  }
+
+  function extractAudioUrl(data) {
+    return (
+      data?.audio?.url ||
+      data?.audio_url ||
+      data?.url ||
+      data?.output?.audio?.url ||
+      ""
+    );
+  }
+
+  async function arrayBufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+    }
+    return btoa(binary);
+  }
+
+  function buildVoiceServices(text, voice, envVars, authHeaders) {
+    const shortText = text.slice(0, 420);
+    const services = [];
+
+    // 1. Kokoro Brazilian Portuguese (fal.ai)
+    services.push({
+      id: "kokoro-ptbr",
+      label: "Kokoro PT-BR (fal.ai)",
+      run: async () => {
+        const voiceId = voice === "adam" ? "pm_alex" : "pf_dora";
+        const data = await fetchWithTimeout(
+          "https://fal.run/fal-ai/kokoro/brazilian-portuguese",
+          {
+            method: "POST",
+            headers: authHeaders,
+            body: JSON.stringify({
+              prompt: shortText,
+              voice: voiceId,
+              speed: 1.08
+            })
+          },
+          12000,
+          "Kokoro PT-BR"
+        );
+        return extractAudioUrl(data);
+      }
+    });
+
+    // 2. MiniMax Speech-02 HD (fal.ai)
+    services.push({
+      id: "minimax-speech-02-hd",
+      label: "MiniMax Speech-02 HD (fal.ai)",
+      run: async () => {
+        const minimaxVoice = voice === "adam" ? "Deep_Voice_Man" : "Sweet_Girl_2";
+        const data = await fetchWithTimeout(
+          "https://fal.run/fal-ai/minimax/speech-02-hd",
+          {
+            method: "POST",
+            headers: authHeaders,
+            body: JSON.stringify({
+              text: shortText,
+              voice_setting: {
+                voice_id: minimaxVoice,
+                speed: 1.08,
+                vol: 1.0,
+                pitch: 0
+              },
+              output_format: "mp3"
+            })
+          },
+          15000,
+          "MiniMax Speech-02 HD"
+        );
+        return extractAudioUrl(data);
+      }
+    });
+
+    // 3. Chatterbox Multilingual (fal.ai)
+    services.push({
+      id: "chatterbox-multilingual",
+      label: "Chatterbox Multilingual (fal.ai)",
+      run: async () => {
+        const data = await fetchWithTimeout(
+          "https://fal.run/fal-ai/chatterbox/text-to-speech/multilingual",
+          {
+            method: "POST",
+            headers: authHeaders,
+            body: JSON.stringify({
+              text: shortText,
+              language: "pt"
+            })
+          },
+          15000,
+          "Chatterbox Multilingual"
+        );
+        return extractAudioUrl(data);
+      }
+    });
+
+    // 4. ElevenLabs (opcional, se ELEVENLABS_API_KEY estiver configurada na Cloudflare Pages)
+    if (envVars.ELEVENLABS_API_KEY) {
+      services.push({
+        id: "elevenlabs-tts",
+        label: "ElevenLabs TTS",
+        run: async () => {
+          const defaultAdam = envVars.ELEVENLABS_VOICE_ADAM || "pNInz6obpgDQGcFmaJgB";
+          const defaultNatasha = envVars.ELEVENLABS_VOICE_NATASHA || "EXAVITQu4vr4xnSDxMaL";
+          const elVoiceId = voice === "adam" ? defaultAdam : defaultNatasha;
+
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 15000);
+          try {
+            const res = await fetch(
+              `https://api.elevenlabs.io/v1/text-to-speech/${elVoiceId}`,
+              {
+                method: "POST",
+                headers: {
+                  "xi-api-key": envVars.ELEVENLABS_API_KEY,
+                  "Content-Type": "application/json",
+                  "Accept": "audio/mpeg"
+                },
+                body: JSON.stringify({
+                  text: shortText,
+                  model_id: "eleven_multilingual_v2"
+                }),
+                signal: controller.signal
+              }
+            );
+            if (!res.ok) {
+              throw new Error(`ElevenLabs falhou (${res.status})`);
+            }
+            const buf = await res.arrayBuffer();
+            const b64 = await arrayBufferToBase64(buf);
+            return `data:audio/mpeg;base64,${b64}`;
+          } finally {
+            clearTimeout(timer);
+          }
+        }
+      });
+    }
+
+    return services;
   }
 
   try {
@@ -75,30 +219,37 @@ export async function onRequestPost(context) {
         return json({ error: "Digite o roteiro do vídeo antes de gerar." }, 400);
       }
 
-      const voiceId = voice === "adam" ? "pm_alex" : "pf_dora";
-      const trimmedPrompt = text.slice(0, 420);
+      const services = buildVoiceServices(text, voice, env, authHeaders);
+      const voicesAvailable = services.map((s) => ({ id: s.id, label: s.label }));
+      const attemptedErrors = [];
 
-      const ttsData = await fetchWithTimeout(
-        "https://fal.run/fal-ai/kokoro/brazilian-portuguese",
-        {
-          method: "POST",
-          headers: authHeaders,
-          body: JSON.stringify({
-            prompt: trimmedPrompt,
-            voice: voiceId,
-            speed: 1.08
-          })
-        },
-        18000,
-        "motor de voz"
-      );
+      let audioUrl = "";
+      let providerUsed = "none";
 
-      const audioUrl = ttsData?.audio?.url || ttsData?.audio_url || ttsData?.url || "";
-      if (!audioUrl) {
-        return json({ error: "Áudio não retornado pelo servidor de voz." }, 502);
+      // Passa automaticamente para o próximo serviço assim que um falhar ou estourar tempo
+      for (const svc of services) {
+        try {
+          const url = await svc.run();
+          if (url) {
+            audioUrl = url;
+            providerUsed = svc.id;
+            break;
+          }
+          attemptedErrors.push(`${svc.label}: sem áudio retornado`);
+        } catch (err) {
+          attemptedErrors.push(`${svc.label}: ${err?.message || "falha"}`);
+        }
       }
 
-      return json({ ok: true, audioUrl, voice });
+      return json({
+        ok: true,
+        audioUrl,
+        voice,
+        provider: providerUsed,
+        voicesAvailable,
+        attemptedErrors,
+        ttsFallback: !audioUrl
+      });
     }
 
     if (task === "scene") {
