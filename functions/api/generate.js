@@ -1,274 +1,165 @@
-export async function onRequestPost(context) {
-  const { request, env } = context;
+const DEFAULT_NEGATIVE =
+  "voice, vocals, speech, talking, dialogue, slow motion, boring smooth glide, ordinary cardboard box, wooden table, living room, daylight, hands, fingers, skin, gloves, people, scratches, morphing, distorted product, altered logo, invented glowing LEDs not in reference, text, brand watermark, shopping cart arrows, split screen, grey borders, letterbox bars, blur, lowres, cartoon, CGI plastic";
 
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type"
-  };
+function json(body, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+  });
+}
 
-  if (request.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders });
-  }
-
-  const json = (obj, status = 200) =>
-    new Response(JSON.stringify(obj), {
-      status,
-      headers: { ...corsHeaders, "Content-Type": "application/json" }
-    });
-
-  function formatError(err) {
-    if (!err) return "Erro desconhecido";
-    if (typeof err === "string") return err;
-    if (typeof err.message === "string" && err.message.trim()) return err.message;
-    try {
-      return JSON.stringify(err);
-    } catch {
-      return "Falha inesperada";
-    }
-  }
-
-  async function fetchWithTimeout(url, options, timeoutMs = 25000, stageName = "serviço") {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      const res = await fetch(url, {
-        ...options,
-        signal: controller.signal
-      });
-      const rawText = await res.text();
-      let parsed = null;
-      try {
-        parsed = JSON.parse(rawText);
-      } catch {
-        parsed = null;
-      }
-      if (!res.ok) {
-        const rawDetail = parsed?.detail || parsed?.message || parsed?.error || rawText;
-        const detailStr =
-          typeof rawDetail === "string" ? rawDetail : JSON.stringify(rawDetail || {});
-        throw new Error(`Falha no ${stageName} (${res.status}): ${detailStr.slice(0, 220)}`);
-      }
-      if (!parsed) {
-        throw new Error(`Resposta inválida do ${stageName}.`);
-      }
-      return parsed;
-    } catch (err) {
-      if (err?.name === "AbortError") {
-        throw new Error(`${stageName} demorou mais do que o tempo limite.`);
-      }
-      throw new Error(formatError(err));
-    } finally {
-      clearTimeout(timer);
-    }
-  }
-
-  function extractAudioUrl(data) {
-    return (
-      data?.audio?.url ||
-      data?.audio_url ||
-      data?.url ||
-      data?.output?.audio?.url ||
-      ""
-    );
-  }
-
-  function extractVideoUrl(data) {
-    return (
-      data?.video?.url ||
-      data?.video_url ||
-      data?.output?.video?.url ||
-      data?.url ||
-      ""
-    );
-  }
-
-  function normalizePtBrScript(raw) {
-    return raw
-      .replace(/\s+/g, " ")
-      .replace(/([.!?])\s*/g, "$1 ")
-      .trim()
-      .slice(0, 420);
-  }
-
+function formatFalError(status, raw) {
+  let msg = raw || `Erro HTTP ${status} na fal.ai`;
   try {
-    if (!env.FAL_KEY) {
-      return json({ error: "Variável FAL_KEY não configurada na Cloudflare Pages." }, 500);
+    const d = JSON.parse(raw);
+    msg = d?.detail || d?.error?.message || d?.message || msg;
+    if (typeof msg === "object") msg = JSON.stringify(msg);
+  } catch {}
+  const low = String(msg).toLowerCase();
+  if (status === 403 && (low.includes("exhausted") || low.includes("locked") || low.includes("balance"))) {
+    return "Saldo esgotado na fal.ai (HTTP 403). Recarregue em fal.ai/dashboard/billing e tente novamente.";
+  }
+  return `fal.ai (HTTP ${status}): ${String(msg).slice(0, 260)}`;
+}
+
+function isQueueUrl(u) {
+  return typeof u === "string" && u.startsWith("https://queue.fal.run/");
+}
+
+function isAllowedMedia(u) {
+  try {
+    const p = new URL(u);
+    if (p.protocol !== "https:") return false;
+    return (
+      p.hostname === "fal.media" ||
+      p.hostname.endsWith(".fal.media") ||
+      p.hostname.endsWith(".fal.ai") ||
+      p.hostname === "storage.googleapis.com"
+    );
+  } catch {
+    return false;
+  }
+}
+
+export async function onRequestOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
     }
+  });
+}
 
-    const body = await request.json();
-    const task = body.task || "scene";
-
-    const authHeaders = {
-      "Authorization": `Key ${env.FAL_KEY}`,
-      "Content-Type": "application/json"
-    };
-
-    if (task === "tts") {
-      const rawText = (body.text || "").trim();
-      const voice = body.voice === "natasha" ? "natasha" : "adam";
-
-      if (!rawText) {
-        return json({ error: "Digite o roteiro do vídeo antes de gerar." }, 400);
-      }
-
-      const scriptPtBr = normalizePtBrScript(rawText);
-      const isMale = voice === "adam";
-      let audioUrl = "";
-      let providerUsed = "none";
-      const errors = [];
-
-      // 1. Kokoro PT-BR (ambas persuasivas e dinâmicas em speed 1.18)
-      try {
-        const voiceId = isMale ? "pm_alex" : "pf_dora";
-        const kokoroData = await fetchWithTimeout(
-          "https://fal.run/fal-ai/kokoro/brazilian-portuguese",
-          {
-            method: "POST",
-            headers: authHeaders,
-            body: JSON.stringify({
-              prompt: scriptPtBr,
-              voice: voiceId,
-              speed: 1.18
-            })
-          },
-          22000,
-          "Kokoro PT-BR"
-        );
-        audioUrl = extractAudioUrl(kokoroData);
-        if (audioUrl) providerUsed = `kokoro-${voiceId}`;
-      } catch (err) {
-        errors.push(`Kokoro: ${formatError(err)}`);
-      }
-
-      // 2. MiniMax Speech-02 HD (reserva mantendo energia e dinamismo em ambas)
-      if (!audioUrl) {
-        try {
-          const minimaxVoice = isMale ? "Deep_Voice_Man" : "Sweet_Girl_2";
-          const minimaxData = await fetchWithTimeout(
-            "https://fal.run/fal-ai/minimax/speech-02-hd",
-            {
-              method: "POST",
-              headers: authHeaders,
-              body: JSON.stringify({
-                text: scriptPtBr,
-                voice_setting: {
-                  voice_id: minimaxVoice,
-                  speed: 1.18,
-                  vol: 1.0,
-                  pitch: isMale ? -1 : 1
-                },
-                output_format: "mp3"
-              })
-            },
-            25000,
-            "MiniMax Speech-02 HD"
-          );
-          audioUrl = extractAudioUrl(minimaxData);
-          if (audioUrl) providerUsed = `minimax-${minimaxVoice}`;
-        } catch (err) {
-          errors.push(`MiniMax: ${formatError(err)}`);
-        }
-      }
-
-      return json({
-        ok: true,
-        audioUrl,
-        voice,
-        provider: providerUsed,
-        ttsFallback: !audioUrl,
-        voiceNote: errors.join(" | ")
-      });
-    }
-
-    if (task === "scene") {
-      const imageBase64 = body.imageBase64 || "";
-      const mimeType = body.mimeType || "image/jpeg";
-      const sceneIndex = Number(body.sceneIndex || 1);
-      const imagePrompt = (body.imagePrompt || "").trim();
-
-      if (!imageBase64) {
-        return json({ error: "Envie a foto do produto." }, 400);
-      }
-
-      const dataUri = `data:${mimeType};base64,${imageBase64}`;
-
-      const angleVariations = [
-        "dramatic low-angle hero commercial framing, razor-sharp product focus, studio lighting, floating embers and dark atmospheric mist",
-        "dynamic close-up three-quarter macro angle highlighting surface texture, metallic rim light and dramatic light streaks",
-        "high-contrast wide-angle dramatic studio shot with deep cinematic shadows, volumetric light beam and crisp rim light"
-      ];
-      const angle = angleVariations[(sceneIndex - 1) % angleVariations.length];
-
-      const baseDirection =
-        imagePrompt ||
-        "dark obsidian stone pedestal with brushed gold trim, dramatic studio rim lighting, floating sparks and smoke";
-
-      const fullPrompt = `Hollywood commercial product photography keeping the exact uploaded product 100% identical and faithful in shape, color and design, ${baseDirection}, ${angle}, 9:16 vertical framing, ultra-sharp photorealistic detail, zero added text, zero watermarks, zero extra logos.`;
-
-      const imgData = await fetchWithTimeout(
-        "https://fal.run/fal-ai/nano-banana/edit",
-        {
-          method: "POST",
-          headers: authHeaders,
-          body: JSON.stringify({
-            prompt: fullPrompt,
-            image_urls: [dataUri],
-            aspect_ratio: "9:16",
-            num_images: 1,
-            output_format: "jpeg"
-          })
-        },
-        45000,
-        `gerador da cena ${sceneIndex}`
-      );
-
-      const imageUrl = imgData?.images?.[0]?.url || imgData?.image?.url || "";
-      if (!imageUrl) {
-        return json({ error: `Cena ${sceneIndex} não retornou imagem.` }, 502);
-      }
-
-      return json({ ok: true, imageUrl, sceneIndex });
-    }
-
-    if (task === "clip") {
-      const imageUrl = (body.imageUrl || "").trim();
-      const motionPrompt = (body.motionPrompt || "").trim();
-
-      if (!imageUrl) {
-        return json({ error: "URL da cena ausente para animação." }, 400);
-      }
-
-      const fullMotionPrompt =
-        motionPrompt ||
-        "Hollywood commercial camera orbit and dynamic push-in around the exact product, swirling dark smoke, glowing sparks and shifting dramatic studio rim light, keeping the product 100% faithful, 9:16 vertical motion, zero text.";
-
-      const clipData = await fetchWithTimeout(
-        "https://fal.run/fal-ai/kling-video/v1.6/standard/image-to-video",
-        {
-          method: "POST",
-          headers: authHeaders,
-          body: JSON.stringify({
-            prompt: fullMotionPrompt,
-            image_url: imageUrl,
-            duration: "5",
-            aspect_ratio: "9:16"
-          })
-        },
-        55000,
-        "animador de cena (Image-to-Video)"
-      );
-
-      const videoUrl = extractVideoUrl(clipData);
-      if (!videoUrl) {
-        return json({ error: "Clipe animado não retornado." }, 502);
-      }
-
-      return json({ ok: true, videoUrl });
-    }
-
-    return json({ error: "Tarefa inválida." }, 400);
+export async function onRequestGet(context) {
+  const proxyUrl = new URL(context.request.url).searchParams.get("proxyUrl");
+  if (!proxyUrl || !isAllowedMedia(proxyUrl)) return json({ error: "URL de mídia inválida." }, 400);
+  try {
+    const up = await fetch(proxyUrl);
+    if (!up.ok) return json({ error: `Erro ao baixar mídia (HTTP ${up.status}).` }, up.status);
+    const headers = new Headers();
+    headers.set("Content-Type", up.headers.get("Content-Type") || "application/octet-stream");
+    headers.set("Access-Control-Allow-Origin", "*");
+    return new Response(up.body, { status: 200, headers });
   } catch (err) {
-    return json({ error: formatError(err) }, 500);
+    return json({ error: err.message || "Erro no proxy de mídia." }, 502);
+  }
+}
+
+export async function onRequestPost(context) {
+  try {
+    const falKey = context.env.FAL_KEY;
+    if (!falKey) return json({ error: "Variável FAL_KEY não configurada no Cloudflare Pages." }, 500);
+
+    const body = await context.request.json();
+    const task = body?.task || "submit_scene";
+    const headers = { Authorization: `Key ${falKey}`, "Content-Type": "application/json" };
+
+    // 1) KEYFRAME 9:16 ULTRA-REALISTA (Nano Banana Edit)
+    if (task === "submit_scene" || task === "scene") {
+      const prompt = body.imagePrompt || body.prompt || "";
+      const mime = body.mimeType || "image/jpeg";
+      const imageInput = body.imageUrl || (body.imageBase64 ? `data:${mime};base64,${body.imageBase64}` : "");
+      if (!prompt || !imageInput) return json({ error: "Envie a foto do produto e o prompt." }, 400);
+
+      const res = await fetch("https://queue.fal.run/fal-ai/nano-banana/edit", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          prompt,
+          image_urls: [imageInput],
+          aspect_ratio: "9:16",
+          num_images: 1,
+          output_format: "jpeg"
+        })
+      });
+      const raw = await res.text();
+      if (!res.ok) return json({ error: formatFalError(res.status, raw) }, res.status);
+      const q = JSON.parse(raw);
+      return json({ requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
+    }
+
+    // 2) VÍDEO 3D HOLLYWOOD + TRILHA/SFX (Kling v2.6 Pro Image-to-Video)
+    if (task === "submit_clip" || task === "clip") {
+      const prompt = body.motionPrompt || body.prompt || "";
+      const imageUrl = body.imageUrl || (body.imageBase64 ? `data:${body.mimeType || "image/jpeg"};base64,${body.imageBase64}` : "");
+      const duration = String(body.duration === "10" || body.duration === 10 ? "10" : "5");
+      const generateAudio = body.generateAudio !== false;
+      const negativePrompt = body.negativePrompt || DEFAULT_NEGATIVE;
+
+      if (!prompt || !imageUrl) return json({ error: "Envie a cena base e o prompt de vídeo." }, 400);
+
+      const res = await fetch("https://queue.fal.run/fal-ai/kling-video/v2.6/pro/image-to-video", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          prompt,
+          image_url: imageUrl,
+          duration,
+          aspect_ratio: "9:16",
+          generate_audio: generateAudio,
+          negative_prompt: negativePrompt
+        })
+      });
+      const raw = await res.text();
+      if (!res.ok) return json({ error: formatFalError(res.status, raw) }, res.status);
+      const q = JSON.parse(raw);
+      return json({ requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
+    }
+
+    // 3) CONSULTA DE STATUS NA FILA (SEM TIMEOUT NA CLOUDFLARE)
+    if (task === "poll") {
+      const { statusUrl, responseUrl } = body;
+      if (!isQueueUrl(statusUrl) || !isQueueUrl(responseUrl)) return json({ error: "URLs da fila inválidas." }, 400);
+
+      const stRes = await fetch(statusUrl, { method: "GET", headers: { Authorization: `Key ${falKey}` } });
+      const stRaw = await stRes.text();
+      if (!stRes.ok) return json({ error: formatFalError(stRes.status, stRaw) }, stRes.status);
+      const st = JSON.parse(stRaw);
+      const status = st.status || "IN_PROGRESS";
+
+      if (status === "FAILED" || status === "CANCELLED") {
+        return json({ status, error: st.error || "Falha na geração da fal.ai." }, 500);
+      }
+      if (status !== "COMPLETED") {
+        return json({ status, queuePosition: typeof st.queue_position === "number" ? st.queue_position : null });
+      }
+
+      const finRes = await fetch(responseUrl, { method: "GET", headers: { Authorization: `Key ${falKey}` } });
+      const finRaw = await finRes.text();
+      if (!finRes.ok) return json({ error: formatFalError(finRes.status, finRaw) }, finRes.status);
+      const result = JSON.parse(finRaw);
+      const payload = result?.response || result;
+      const imageUrl = payload?.images?.[0]?.url || payload?.image?.url || null;
+      const videoUrl = payload?.video?.url || payload?.videos?.[0]?.url || null;
+
+      if (!imageUrl && !videoUrl) return json({ error: "A fal.ai concluiu sem retornar mídia." }, 502);
+      return json({ status: "COMPLETED", imageUrl, videoUrl });
+    }
+
+    return json({ error: `Tarefa desconhecida: ${task}` }, 400);
+  } catch (err) {
+    return json({ error: err.message || "Erro interno no Worker." }, 500);
   }
 }
