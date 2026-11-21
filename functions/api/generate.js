@@ -1,5 +1,5 @@
 const DEFAULT_NEGATIVE =
-  "voice, vocals, speech, talking, dialogue, slow motion, boring smooth glide, ordinary cardboard box, wooden table, living room, daylight, hands, fingers, skin, gloves, people, scratches, morphing, distorted product, altered logo, invented glowing LEDs not in reference, text, brand watermark, shopping cart arrows, split screen, grey borders, letterbox bars, blur, lowres, cartoon, CGI plastic";
+  "oversized product, giant product, floating in mid-air, spinning 360 degrees, rear view, invented blue LEDs, added side lights, extra buttons, deformed logo, morphing, distorted product, black bars, letterbox, grey borders, split screen, laser beam, excessive motion blur, text, watermark, shopping cart arrows, blur, lowres, cartoon";
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -100,12 +100,12 @@ export async function onRequestPost(context) {
       return json({ requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
     }
 
-    // 2) VÍDEO 3D HOLLYWOOD + TRILHA/SFX (Kling v2.6 Pro Image-to-Video)
+    // 2) CLIPE 3D HOLLYWOOD (Kling v2.6 Pro Image-to-Video)
     if (task === "submit_clip" || task === "clip") {
       const prompt = body.motionPrompt || body.prompt || "";
       const imageUrl = body.imageUrl || (body.imageBase64 ? `data:${body.mimeType || "image/jpeg"};base64,${body.imageBase64}` : "");
       const duration = String(body.duration === "10" || body.duration === 10 ? "10" : "5");
-      const generateAudio = body.generateAudio !== false;
+      const generateAudio = Boolean(body.generateAudio);
       const negativePrompt = body.negativePrompt || DEFAULT_NEGATIVE;
 
       if (!prompt || !imageUrl) return json({ error: "Envie a cena base e o prompt de vídeo." }, 400);
@@ -128,7 +128,58 @@ export async function onRequestPost(context) {
       return json({ requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
     }
 
-    // 3) CONSULTA DE STATUS NA FILA (SEM TIMEOUT NA CLOUDFLARE)
+    // 3) TRILHA SONORA DE ESTÚDIO REAL CONTÍNUA (Lyria 2 → CassetteAI → Stable Audio)
+    if (task === "submit_music") {
+      const prompt = body.musicPrompt || body.prompt || "High-energy Hollywood dark phonk electronic commercial beat, massive 808 sub-bass drops, sharp trap drums, instrumental only";
+      const dur = Math.min(35, Math.max(10, Number(body.duration) || 15));
+
+      const endpoints = [
+        {
+          name: "Lyria 2",
+          url: "https://queue.fal.run/fal-ai/lyria2",
+          payload: {
+            prompt,
+            negative_prompt: "vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, low quality, muffled"
+          }
+        },
+        {
+          name: "CassetteAI",
+          url: "https://queue.fal.run/fal-ai/cassetteai/music-generator",
+          payload: { prompt, duration: dur }
+        },
+        {
+          name: "Stable Audio",
+          url: "https://queue.fal.run/fal-ai/stable-audio",
+          payload: { prompt, seconds_total: dur, steps: 50 }
+        }
+      ];
+
+      let lastErr = "Nenhum gerador de trilha disponível.";
+      for (const ep of endpoints) {
+        const res = await fetch(ep.url, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(ep.payload)
+        });
+        const raw = await res.text();
+        if (res.ok) {
+          const q = JSON.parse(raw);
+          return json({
+            engine: ep.name,
+            requestId: q.request_id,
+            statusUrl: q.status_url,
+            responseUrl: q.response_url
+          });
+        }
+        lastErr = formatFalError(res.status, raw);
+        if (res.status === 403) {
+          return json({ error: lastErr }, 403);
+        }
+      }
+      return json({ error: lastErr }, 502);
+    }
+
+    // 4) CONSULTA DE STATUS NA FILA (IMAGEM, VÍDEO E TRILHA)
     if (task === "poll") {
       const { statusUrl, responseUrl } = body;
       if (!isQueueUrl(statusUrl) || !isQueueUrl(responseUrl)) return json({ error: "URLs da fila inválidas." }, 400);
@@ -151,11 +202,15 @@ export async function onRequestPost(context) {
       if (!finRes.ok) return json({ error: formatFalError(finRes.status, finRaw) }, finRes.status);
       const result = JSON.parse(finRaw);
       const payload = result?.response || result;
+
       const imageUrl = payload?.images?.[0]?.url || payload?.image?.url || null;
       const videoUrl = payload?.video?.url || payload?.videos?.[0]?.url || null;
+      const audioUrl = payload?.audio?.url || payload?.audio_file?.url || payload?.music?.url || null;
 
-      if (!imageUrl && !videoUrl) return json({ error: "A fal.ai concluiu sem retornar mídia." }, 502);
-      return json({ status: "COMPLETED", imageUrl, videoUrl });
+      if (!imageUrl && !videoUrl && !audioUrl) {
+        return json({ error: "A fal.ai concluiu sem retornar mídia." }, 502);
+      }
+      return json({ status: "COMPLETED", imageUrl, videoUrl, audioUrl });
     }
 
     return json({ error: `Tarefa desconhecida: ${task}` }, 400);
