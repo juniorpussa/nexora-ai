@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — 50 Modelos Hollywood de Imagem &amp; Vídeo 9:16 (MP4)</title>
+  <title>NEXORA.AI — 50 Modelos Hollywood de Vídeo &amp; Imagem 9:16 (MP4)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, sans-serif; }
     body { background: #06080d; color: #f4f6fb; min-height: 100vh; padding: 18px; }
@@ -16,24 +16,35 @@
     .panel { background: #0d121d; border: 1px solid #1b2538; border-radius: 16px; padding: 18px; }
     .step-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #22c55e; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
     .step-label small { color: #94a3b8; font-weight: 600; text-transform: none; }
+
+    .mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .mode-btn { background: #080c14; border: 1.5px solid #233048; border-radius: 12px; padding: 12px 14px; cursor: pointer; text-align: left; color: #cbd5e1; transition: 0.15s; }
+    .mode-btn:hover { border-color: #3b4f75; }
+    .mode-btn.active { border-color: #22c55e; background: #0d2217; color: #fff; }
+    .mode-btn strong { display: block; font-size: 14px; margin-bottom: 2px; }
+    .mode-btn small { font-size: 11px; color: #94a3b8; }
+    .mode-btn.active small { color: #86efac; }
+
+    .hidden { display: none !important; }
+
     .row-top { display: grid; grid-template-columns: 190px 1fr; gap: 12px; margin-bottom: 16px; }
     @media (max-width: 600px) { .row-top { grid-template-columns: 1fr; } }
-    .upload-area { border: 1.5px dashed #2b3954; border-radius: 12px; padding: 12px; text-align: center; background: #080c14; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 146px; transition: border-color 0.15s; }
+    .upload-area { border: 1.5px dashed #2b3954; border-radius: 12px; padding: 12px; text-align: center; background: #080c14; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; transition: border-color 0.15s; }
     .upload-area:hover { border-color: #22c55e; }
     .upload-area input { display: none; }
     .upload-area img { max-height: 92px; border-radius: 8px; margin-top: 8px; display: none; object-fit: contain; }
-    .box-group { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .box-group { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
     .box-group label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
     select, textarea, input[type="text"] { width: 100%; background: #111827; border: 1px solid #29364f; border-radius: 9px; color: #f8fafc; padding: 9px 11px; font-size: 13px; outline: none; }
     select:focus, textarea:focus, input[type="text"]:focus { border-color: #22c55e; }
-    textarea { min-height: 86px; resize: vertical; line-height: 1.45; }
+    textarea { min-height: 78px; resize: vertical; line-height: 1.45; }
 
     .catalog-box { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; margin-bottom: 14px; }
     .filter-bar { display: grid; grid-template-columns: 1fr 185px; gap: 8px; margin-bottom: 10px; }
     @media (max-width: 560px) { .filter-bar { grid-template-columns: 1fr; } }
-    .preset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; max-height: 178px; overflow-y: auto; padding-right: 4px; }
+    .preset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; max-height: 240px; overflow-y: auto; padding-right: 4px; }
     @media (max-width: 560px) { .preset-grid { grid-template-columns: 1fr; } }
     .preset-item { background: #101725; border: 1px solid #233048; border-radius: 9px; padding: 8px 10px; cursor: pointer; text-align: left; color: #e2e8f0; transition: 0.12s; }
     .preset-item:hover { border-color: #3b4f75; }
@@ -46,11 +57,8 @@
     .meta-bar { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-top: 6px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
     .options-row { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; align-items: center; }
     .toggle-row { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #cbd5e1; cursor: pointer; }
-    .btn-row { display: grid; grid-template-columns: 1fr 1.65fr; gap: 10px; }
-    @media (max-width: 560px) { .btn-row { grid-template-columns: 1fr; } }
-    .btn-sec { background: #182338; color: #f8fafc; border: 1px solid #2f4266; border-radius: 12px; padding: 14px; font-size: 13px; font-weight: 800; cursor: pointer; }
-    .btn-generate { background: #22c55e; color: #041208; border: none; border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 900; cursor: pointer; }
-    .btn-generate:disabled, .btn-sec:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-generate { width: 100%; background: #22c55e; color: #041208; border: none; border-radius: 12px; padding: 15px; font-size: 14px; font-weight: 900; cursor: pointer; }
+    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .preview-stage { background: #070a10; border: 1px solid #1b2436; border-radius: 14px; min-height: 620px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; gap: 12px; }
     video.player-916, img.preview-916 { width: 100%; max-width: 300px; aspect-ratio: 9/16; object-fit: cover; border-radius: 14px; background: #000; border: 1px solid #26334d; }
@@ -59,15 +67,15 @@
     .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .dl-btn { display: block; text-align: center; background: #182338; color: #f8fafc; border: 1px solid #2d3f63; border-radius: 8px; padding: 9px 10px; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; }
     .dl-btn.main { background: #22c55e; color: #041208; border: none; grid-column: span 2; font-size: 13px; padding: 11px; }
-    .status-msg { font-size: 13px; color: #9fb0cc; line-height: 1.5; max-width: 380px; }
+    .status-msg { font-size: 13px; color: #9fb0cc; line-height: 1.5; max-width: 390px; }
     .progress-bar-wrap { width: 100%; max-width: 320px; height: 8px; background: #151e30; border-radius: 999px; overflow: hidden; margin-top: 8px; }
-    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #38bdf8); width: 0%; transition: width 0.25s ease; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #38bdf8); width: 0%; transition: width 0.2s ease; }
     .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; width: 100%; }
     .prompt-details { width: 100%; background: #080c14; border: 1px solid #1d283d; border-radius: 10px; padding: 10px; text-align: left; font-size: 11px; color: #94a3b8; }
     .prompt-details summary { cursor: pointer; font-weight: 700; color: #cbd5e1; }
     .prompt-details pre { white-space: pre-wrap; margin-top: 8px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; color: #9fb0cc; max-height: 180px; overflow-y: auto; line-height: 1.45; }
-    .thumb-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 100%; margin-top: 4px; }
-    .thumb-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 6px; border: 1px solid #26334d; }
+    .thumb-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; width: 100%; margin-top: 4px; }
+    .thumb-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 5px; border: 1px solid #26334d; }
   </style>
 </head>
 <body>
@@ -78,7 +86,19 @@
 
   <div class="layout">
     <div class="panel">
-      <div class="step-label">1. Produto, Duração &amp; Motor de Movimento</div>
+      <div class="step-label">1. O que você quer gerar agora?</div>
+      <div class="mode-switch">
+        <button type="button" class="mode-btn active" data-mode="video">
+          <strong>Gerar Vídeo Hollywood (10s–30s)</strong>
+          <small>6 ângulos dinâmicos + cortes rápidos + MP4 exato</small>
+        </button>
+        <button type="button" class="mode-btn" data-mode="image">
+          <strong>Gerar Imagem 9:16 Ultra-Realista</strong>
+          <small>Usa exclusivamente os 50 modelos de imagem</small>
+        </button>
+      </div>
+
+      <div class="step-label">2. Produto &amp; Configurações</div>
       <div class="row-top">
         <label class="upload-area" for="productImg">
           <strong style="font-size:13px;">Foto do Produto</strong>
@@ -88,98 +108,102 @@
         </label>
 
         <div class="box-group">
-          <div class="grid-2">
+          <div class="grid-2" id="videoOnlyTopFields">
             <div>
-              <label for="minDuration">Duração do Vídeo (10s a 30s)</label>
+              <label for="minDuration">Duração Exata (10s a 30s)</label>
               <select id="minDuration">
-                <option value="10">10 segundos (Impacto Ultra Rápido)</option>
-                <option value="15" selected>15 segundos (Padrão Hollywood / TikTok Shop)</option>
-                <option value="20">20 segundos (Vitrine &amp; Detalhes)</option>
-                <option value="30">30 segundos (Superprodução Completa)</option>
+                <option value="10">10 segundos exatos (Gancho Ultra Rápido)</option>
+                <option value="15" selected>15 segundos exatos (Padrão Hollywood / TikTok Shop)</option>
+                <option value="20">20 segundos exatos (Vitrine &amp; Detalhes)</option>
+                <option value="30">30 segundos exatos (Superprodução Completa)</option>
               </select>
             </div>
             <div>
               <label for="motionEngine">Motor de Movimento</label>
               <select id="motionEngine">
-                <option value="cinema" selected>Cinema 30fps + VFX (Rápido / Zero Travamento)</option>
-                <option value="i2v_1">Híbrido: Cinema + 1 Clipe IA (fal.ai)</option>
-                <option value="i2v_4">Full IA: 4 Clipes Image-to-Video (fal.ai)</option>
+                <option value="cinema" selected>Hollywood Turbo 30fps (6 Ângulos + Whip/Zoom/VFX)</option>
+                <option value="i2v_2">Híbrido: +2 Clipes IA Reais (fal.ai)</option>
+                <option value="i2v_6">Full IA: 6 Clipes Image-to-Video (fal.ai)</option>
               </select>
             </div>
           </div>
           <div>
-            <label for="productDetailHint">Detalhes do Produto (Opcional — reforça a fidelidade Hollywood)</label>
+            <label for="productDetailHint">Detalhes do Produto (Opcional — reforça fidelidade 100%)</label>
             <input type="text" id="productDetailHint" placeholder="Ex: caixa preta fosca com 4 parafusos, botões neon amarelo, display LCD digital, pulseira silicone texturizada" />
           </div>
         </div>
       </div>
 
-      <div class="step-label">
-        <span>2. Modelo de Cenário &amp; Fotografia Ultra-Realista (50 Opções)</span>
-        <small id="selectedImgLabel">Selecionado: #01 Estúdio Dark Obsidiana &amp; Ouro</small>
-      </div>
-      <div class="catalog-box">
-        <div class="filter-bar">
-          <input type="text" id="imgSearch" placeholder="Buscar entre os 50 modelos de imagem..." />
-          <select id="imgCatFilter">
-            <option value="TODOS">Todas Categorias (50)</option>
-            <option value="Luxo">Luxo &amp; Pedestal (10)</option>
-            <option value="Viral">Viral &amp; Alto Contraste (10)</option>
-            <option value="Vendas">Conversão &amp; Vitrine (10)</option>
-            <option value="Lifestyle">Lifestyle Ultra-Realista (10)</option>
-            <option value="Tech">Tech &amp; Futurista (10)</option>
-          </select>
+      <!-- CATÁLOGO EXCLUSIVO DE IMAGENS (SÓ APARECE NO MODO IMAGEM) -->
+      <div id="imgCatalogSection" class="hidden">
+        <div class="step-label">
+          <span>3. Modelo de Imagem Ultra-Realista (50 Opções)</span>
+          <small id="selectedImgLabel">Selecionado: #01 Estúdio Dark Obsidiana &amp; Ouro</small>
         </div>
-        <div class="preset-grid" id="imgPresetGrid"></div>
-      </div>
-
-      <div class="step-label">
-        <span>3. Direção de Vídeo Hollywood &amp; Ritmo (50 Opções)</span>
-        <small id="selectedVidLabel">Selecionado: #01 Metralhadora TikTok Shop</small>
-      </div>
-      <div class="catalog-box">
-        <div class="filter-bar">
-          <input type="text" id="vidSearch" placeholder="Buscar entre os 50 modelos de vídeo Hollywood..." />
-          <select id="vidCatFilter">
-            <option value="TODOS">Todos Ritmos (50)</option>
-            <option value="Agressivo">Ação &amp; Cortes Rápidos (10)</option>
-            <option value="Zoom">Crash Zoom &amp; Impacto (10)</option>
-            <option value="Vendas">Comercial Alta Conversão (10)</option>
-            <option value="Cinema">Superprodução Hollywood (10)</option>
-            <option value="Viral">Retenção &amp; VFX Viral (10)</option>
-          </select>
+        <div class="catalog-box">
+          <div class="filter-bar">
+            <input type="text" id="imgSearch" placeholder="Buscar entre os 50 modelos de imagem..." />
+            <select id="imgCatFilter">
+              <option value="TODOS">Todas Categorias (50)</option>
+              <option value="Luxo">Luxo &amp; Pedestal (10)</option>
+              <option value="Viral">Viral &amp; Alto Contraste (10)</option>
+              <option value="Vendas">Conversão &amp; Vitrine (10)</option>
+              <option value="Lifestyle">Lifestyle Ultra-Realista (10)</option>
+              <option value="Tech">Tech &amp; Futurista (10)</option>
+            </select>
+          </div>
+          <div class="preset-grid" id="imgPresetGrid"></div>
         </div>
-        <div class="preset-grid" id="vidPresetGrid"></div>
       </div>
 
-      <div class="step-label">4. Texto para Legenda Compacta (Opcional)</div>
-      <textarea id="scriptText">Para tudo e olha esse nível de acabamento antes de gastar dinheiro à toa. Qualidade absurda em cada detalhe, presença surreal e entrega imediata.</textarea>
-      <div class="meta-bar">
-        <span id="wordCount">0 palavras</span>
-        <span id="estTime">Timeline em 4 Atos Hollywood • 15s</span>
+      <!-- CATÁLOGO EXCLUSIVO DE VÍDEOS (SÓ APARECE NO MODO VÍDEO) -->
+      <div id="vidCatalogSection">
+        <div class="step-label">
+          <span>3. Modelo de Vídeo Hollywood &amp; Ritmo (50 Opções)</span>
+          <small id="selectedVidLabel">Selecionado: #01 Metralhadora TikTok Shop</small>
+        </div>
+        <div class="catalog-box">
+          <div class="filter-bar">
+            <input type="text" id="vidSearch" placeholder="Buscar entre os 50 modelos de vídeo Hollywood..." />
+            <select id="vidCatFilter">
+              <option value="TODOS">Todos Ritmos (50)</option>
+              <option value="Agressivo">Ação &amp; Cortes Rápidos (10)</option>
+              <option value="Zoom">Crash Zoom &amp; Impacto (10)</option>
+              <option value="Vendas">Comercial Alta Conversão (10)</option>
+              <option value="Cinema">Superprodução Hollywood (10)</option>
+              <option value="Viral">Retenção &amp; VFX Viral (10)</option>
+            </select>
+          </div>
+          <div class="preset-grid" id="vidPresetGrid"></div>
+        </div>
+
+        <div class="step-label">4. Texto para Legenda Compacta (Opcional)</div>
+        <textarea id="scriptText">Para tudo e olha esse nível de acabamento antes de gastar dinheiro à toa. Qualidade absurda em cada detalhe, presença surreal e entrega imediata.</textarea>
+        <div class="meta-bar">
+          <span id="wordCount">0 palavras</span>
+          <span id="estTime">6 Ângulos de Ação • Duração Cravada: 15s</span>
+        </div>
+
+        <div class="options-row">
+          <label class="toggle-row">
+            <input type="checkbox" id="burnSubs" />
+            <span>Queimar legenda compacta no vídeo (zona segura)</span>
+          </label>
+          <label class="toggle-row">
+            <input type="checkbox" id="enableVfx" checked />
+            <span>VFX Hollywood Máximo (whip blur, pulso RGB, rim light, partículas)</span>
+          </label>
+        </div>
       </div>
 
-      <div class="options-row">
-        <label class="toggle-row">
-          <input type="checkbox" id="burnSubs" />
-          <span>Queimar legenda compacta no vídeo (zona segura)</span>
-        </label>
-        <label class="toggle-row">
-          <input type="checkbox" id="enableVfx" checked />
-          <span>Ativar efeitos Hollywood (rim light, partículas, varredura de luz)</span>
-        </label>
-      </div>
-
-      <div class="btn-row">
-        <button type="button" class="btn-sec" id="btnOnlyImg">Gerar Só Imagem 9:16</button>
-        <button type="button" class="btn-generate" id="btnBuild">Gerar Vídeo Hollywood MP4 (10s–30s)</button>
-      </div>
+      <button type="button" class="btn-generate" id="btnBuild">Gerar Vídeo Hollywood MP4 (15s Exatos)</button>
+      <button type="button" class="btn-generate hidden" id="btnOnlyImg">Gerar Imagem Ultra-Realista 9:16</button>
     </div>
 
     <div class="panel">
-      <div class="step-label">5. Preview 9:16 &amp; Exportação MP4</div>
+      <div class="step-label" id="previewTitle">Preview 9:16 &amp; Exportação MP4</div>
       <div class="preview-stage" id="stage">
-        <div class="status-msg">Suba a foto do produto, escolha o cenário + um dos <strong>50 modelos de vídeo Hollywood</strong> e clique em <strong>Gerar Vídeo Hollywood MP4</strong>.</div>
+        <div class="status-msg">Modo <strong>Vídeo Hollywood</strong> ativo. Suba a foto do produto, escolha um dos <strong>50 modelos de vídeo</strong> e clique para gerar <strong>6 ângulos dinâmicos em movimento</strong> com duração exata.</div>
       </div>
     </div>
   </div>
@@ -246,65 +270,111 @@
 
     const VIDEO_MODELS = [
       // === AGRESSIVO (10) ===
-      { id: 1, cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Whip-pan de abertura + hard cut + crash zoom + rim neon", lighting: "high-contrast athletic commercial lighting with neon green and crisp white rim lights", transition: "whipPan", fx: "neonPulse", accent: "#22ff88", energy: 1.0, zoomAmt: 0.24, pan: 52, beats: ["fast low whip-pan teaser revealing product silhouette out of dramatic dark shadows", "hard cut crisp centered hero shot in razor-sharp focus with dramatic rim light", "extreme macro glide over surface texture, precision edges and material finish", "elevated epic hero shot with floating metallic light particles and bold depth"] },
-      { id: 2, cat: "Agressivo", name: "#02 Corte Relâmpago Blockbuster", desc: "Troca seca de ângulos com flash de impacto cinema", lighting: "dramatic blockbuster tungsten and ice-blue dual rim lighting, crisp shadows", transition: "hardFlash", fx: "shatterSpark", accent: "#38bdf8", energy: 1.05, zoomAmt: 0.26, pan: 48, beats: ["explosive low-angle dramatic silhouette bathed in backlight beams", "hard flash cut into ultra-crisp front hero reveal with intense specular shine", "razor-sharp diagonal macro detail showcasing craftsmanship and micro-textures", "high-impact 3/4 blockbuster climax shot with floating sparks and misty depth"] },
-      { id: 3, cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura de choque com push-in veloz e partículas", lighting: "aggressive high-contrast key light with electric amber and crimson rim highlights", transition: "crashZoom", fx: "embers", accent: "#ff6b35", energy: 1.0, zoomAmt: 0.28, pan: 56, beats: ["dramatic tight dark teaser framed from steep low angle with glowing rim edge", "sudden hard cut to full illuminated hero product standing commanding center-frame", "ultra-close macro sweep gliding across tactile ridges, contours and finishes", "powerful upward hero climax framed with glowing embers and volumetric beam"] },
-      { id: 4, cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Sequência cinética limpa com speed ramping firme", lighting: "razor-sharp commercial studio lighting with vibrant cyan rim accents", transition: "speedRamp", fx: "lightSweep", accent: "#00e5ff", energy: 0.95, zoomAmt: 0.22, pan: 46, beats: ["dynamic angled introduction shot with kinetic light streak across dark backdrop", "clean hard cut to pristine hero display with crystal-clear product visibility", "precision macro detail of key functional parts and premium material weave", "bold centered flagship finale with clean specular sweep across the product"] },
-      { id: 5, cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Impacto fotográfico de estúdio com cortes secos", lighting: "high-fashion strobe commercial lighting, deep blacks and gleaming metallic highlights", transition: "hardFlash", fx: "flashStrobe", accent: "#ffffff", energy: 0.98, zoomAmt: 0.24, pan: 44, beats: ["high-contrast moody profile silhouette lit by single sharp side strobe", "instant strobe reveal showing full product front with razor-sharp clarity", "tight macro texture close-up catching gleaming specular reflections", "editorial hero finale with bold high-contrast rim light and reflective base"] },
-      { id: 6, cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Whip-pan alternado com energia máxima de retenção", lighting: "electric neon magenta and cyan studio rim lights against deep obsidian dark", transition: "whipPan", fx: "neonPulse", accent: "#f43f5e", energy: 1.08, zoomAmt: 0.25, pan: 60, beats: ["fast kinetic side approach emerging from moody neon-tinted studio mist", "hard cut to vibrant front hero reveal with razor-sharp contrast", "extreme close-up tracking across sleek edges and tactile surface details", "dynamic 3/4 tilted hero showcase with glowing rim haze and sharp focus"] },
-      { id: 7, cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Aceleração progressiva até o clímax hero final", lighting: "intense warm gold and deep crimson directional cinema lighting", transition: "speedRamp", fx: "embers", accent: "#f59e0b", energy: 1.0, zoomAmt: 0.26, pan: 50, beats: ["tense shadowy establishing angle with crisp spotlight slicing the floor", "sharp reveal into full hero focus with gleaming surface highlights", "intimate macro close-up highlighting heavy-duty construction and fine finish", "monumental low-angle finale with drifting golden embers and rim flare"] },
-      { id: 8, cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Varredura lateral agressiva estilo comercial automotivo", lighting: "automotive cinema studio overhead LED light strips with crisp edge reflections", transition: "whipPan", fx: "lightSweep", accent: "#60a5fa", energy: 0.96, zoomAmt: 0.22, pan: 64, beats: ["wide dramatic side-profile silhouette with sleek linear light reflection", "whip-pan cut to commanding front-facing hero presentation", "sweeping macro track gliding linearly along the product contour", "clean dramatic 3/4 wide hero shot with reflective floor symmetry"] },
-      { id: 9, cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Crash zoom seco com recorte cirúrgico no produto", lighting: "punchy bright key light with emerald green and pure white edge highlights", transition: "crashZoom", fx: "neonPulse", accent: "#10b981", energy: 1.0, zoomAmt: 0.27, pan: 46, beats: ["dramatic dark close silhouette breaking into bright rim spotlight", "bold centered front hero reveal with crystal-clear textures and zero glare", "razor-sharp macro inspection of signature material grain and hardware", "commanding hero shot framed with subtle volumetric haze and crisp reflection"] },
-      { id: 10, cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Superprodução frenética com variação total de planos", lighting: "blockbuster sci-fi teal and orange volumetric cinema lighting", transition: "hardFlash", fx: "shatterSpark", accent: "#fb923c", energy: 1.05, zoomAmt: 0.25, pan: 54, beats: ["cinematic high-angle descent toward the product emerging from dark smoke", "hard impact cut to sharp front hero portrait with glowing orange rim light", "ultra-detailed macro angle capturing micro-reflections and rugged craftsmanship", "epic hero finale floating above glossy dark surface with cinematic sparks"] },
+      { id: 1, cat: "Agressivo", name: "#01 Metralhadora TikTok Shop", desc: "Cortes rápidos 0.7s + whip-pan + crash zoom + rim neon", env: "dark textured athletic studio surface with subtle carbon reflection and moody atmospheric depth", lighting: "high-contrast athletic commercial lighting with neon green and crisp white rim lights", transition: "whipPan", fx: "neonPulse", accent: "#22ff88", energy: 1.15, cutBase: 0.85, zoomAmt: 0.34, pan: 72 },
+      { id: 2, cat: "Agressivo", name: "#02 Corte Relâmpago Blockbuster", desc: "Troca seca de ângulos com flash de impacto cinema", env: "sleek dark wet obsidian studio floor with subtle volumetric fog and architectural depth", lighting: "dramatic blockbuster tungsten and ice-blue dual rim lighting, crisp shadows", transition: "hardFlash", fx: "shatterSpark", accent: "#38bdf8", energy: 1.18, cutBase: 0.82, zoomAmt: 0.36, pan: 68 },
+      { id: 3, cat: "Agressivo", name: "#03 Gancho Explosivo 2s", desc: "Abertura de choque com push-in veloz e faíscas", env: "rugged dark volcanic basalt monolith surrounded by moody dark studio haze", lighting: "aggressive high-contrast key light with electric amber and crimson rim highlights", transition: "crashZoom", fx: "embers", accent: "#ff6b35", energy: 1.16, cutBase: 0.84, zoomAmt: 0.38, pan: 74 },
+      { id: 4, cat: "Agressivo", name: "#04 Ritmo Turbo Vendas", desc: "Sequência cinética limpa com speed ramping firme", env: "modern matte black metallic showcase stage with clean specular floor reflections", lighting: "razor-sharp commercial studio lighting with vibrant cyan rim accents", transition: "speedRamp", fx: "lightSweep", accent: "#00e5ff", energy: 1.08, cutBase: 0.90, zoomAmt: 0.32, pan: 64 },
+      { id: 5, cat: "Agressivo", name: "#05 Flash Cut Comercial", desc: "Impacto fotográfico de estúdio com cortes secos", env: "high-fashion glossy black mirror runway pedestal in deep pitch-black studio", lighting: "high-fashion strobe commercial lighting, deep blacks and gleaming metallic highlights", transition: "hardFlash", fx: "flashStrobe", accent: "#ffffff", energy: 1.12, cutBase: 0.86, zoomAmt: 0.34, pan: 62 },
+      { id: 6, cat: "Agressivo", name: "#06 Pulso Frenético Viral", desc: "Whip-pan alternado com energia máxima de retenção", env: "dark futuristic wet glass stage reflecting moody studio neon accents", lighting: "electric neon magenta and cyan studio rim lights against deep obsidian dark", transition: "whipPan", fx: "neonPulse", accent: "#f43f5e", energy: 1.20, cutBase: 0.78, zoomAmt: 0.35, pan: 78 },
+      { id: 7, cat: "Agressivo", name: "#07 Escala de Urgência", desc: "Aceleração progressiva até o clímax hero final", env: "sculpted dark charcoal stone plinth with deep dramatic studio depth", lighting: "intense warm gold and deep crimson directional cinema lighting", transition: "speedRamp", fx: "embers", accent: "#f59e0b", energy: 1.12, cutBase: 0.88, zoomAmt: 0.35, pan: 68 },
+      { id: 8, cat: "Agressivo", name: "#08 Impacto Duplo Lateral", desc: "Varredura lateral agressiva estilo comercial automotivo", env: "automotive commercial dark concrete soundstage with sleek overhead reflection strips", lighting: "automotive cinema studio overhead LED light strips with crisp edge reflections", transition: "whipPan", fx: "lightSweep", accent: "#60a5fa", energy: 1.10, cutBase: 0.92, zoomAmt: 0.31, pan: 82 },
+      { id: 9, cat: "Agressivo", name: "#09 Pressão de Oferta", desc: "Crash zoom seco com recorte cirúrgico no produto", env: "matte dark graphite commercial podium in high-contrast studio void", lighting: "punchy bright key light with emerald green and pure white edge highlights", transition: "crashZoom", fx: "neonPulse", accent: "#10b981", energy: 1.14, cutBase: 0.85, zoomAmt: 0.37, pan: 64 },
+      { id: 10, cat: "Agressivo", name: "#10 Avalanche Visual 9:16", desc: "Superprodução frenética com variação total de planos", env: "blockbuster dark metallic cinema set with drifting low smoke and wet reflections", lighting: "blockbuster sci-fi teal and orange volumetric cinema lighting", transition: "hardFlash", fx: "shatterSpark", accent: "#fb923c", energy: 1.18, cutBase: 0.82, zoomAmt: 0.35, pan: 72 },
 
       // === ZOOM (10) ===
-      { id: 11, cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Crash zoom seco em cada virada de ato", lighting: "punchy cinema key light with cold steel-blue rim highlights", transition: "crashZoom", fx: "shatterSpark", accent: "#38bdf8", energy: 1.02, zoomAmt: 0.30, pan: 40, beats: ["wide ominous studio shot ready for high-speed zoom punch onto product", "tight commanding hero reveal with crisp front detail and bold contrast", "extreme macro close-up locked onto the richest texture of the product", "dramatic pullback hero shot surrounded by subtle kinetic light motes"] },
-      { id: 12, cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Precisão macro cirúrgica com foco ultra-raso", lighting: "surgical precision white spotlight with razor thin golden rim edge", transition: "speedRamp", fx: "lightSweep", accent: "#fde047", energy: 0.88, zoomAmt: 0.30, pan: 36, beats: ["ultra-sharp selective focus silhouette emerging from soft dark bokeh", "precision front hero frame with crystal-clear optical definition", "extreme 100mm cinema macro lens shot isolating fine texture and material grain", "balanced luxury hero shot with sweeping specular reflection beam"] },
-      { id: 13, cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Impacto pesado com micro-tremor e faíscas", lighting: "dark athletic arena spotlight with vivid lime-yellow rim lighting", transition: "crashZoom", fx: "embers", accent: "#a3e635", energy: 1.08, zoomAmt: 0.29, pan: 46, beats: ["low-angle moody silhouette under harsh overhead stadium beam", "bass-drop hard cut revealing pristine product in explosive front sharpness", "tactile macro glide highlighting durable edges and intricate surface pattern", "powerful hero finale with rising atmospheric sparks and deep ground reflection"] },
-      { id: 14, cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Speed ramping elástico que prende o olhar", lighting: "clean modern studio key light with electric violet and silver rim accents", transition: "speedRamp", fx: "neonPulse", accent: "#a855f7", energy: 0.96, zoomAmt: 0.28, pan: 44, beats: ["angled high-style intro frame bathed in sleek violet rim glow", "elastic speed-ramp reveal into razor-sharp centered hero presentation", "silky macro inspection of polished surfaces and precision contours", "elevated flagship hero shot with floating ambient light dust"] },
-      { id: 15, cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Zoom profundo com iluminação volumétrica pesada", lighting: "ultra-high contrast volumetric light shafts slicing dark studio atmosphere", transition: "hardFlash", fx: "lensFlare", accent: "#38bdf8", energy: 0.98, zoomAmt: 0.29, pan: 42, beats: ["dramatic backlit silhouette framed inside bright volumetric light beam", "high-definition front hero cut with 8K optical sharpness", "razor-sharp macro detail revealing micro-textures under grazing side light", "grand hero climax framed with subtle anamorphic blue cinema flare"] },
-      { id: 16, cat: "Zoom", name: "#16 Foco Magnético", desc: "Convergência contínua puxando o olho ao produto", lighting: "warm tungsten spotlight with deep dark vignette and golden edge sheen", transition: "speedRamp", fx: "bokehGold", accent: "#fbbf24", energy: 0.90, zoomAmt: 0.27, pan: 38, beats: ["atmospheric wide establishing shot pulling attention dead-center", "focused front hero reveal with rich warm shadows and pure highlights", "intimate macro close-up gliding smoothly across signature finish", "magnetic final hero shot with warm golden bokeh floating in background"] },
-      { id: 17, cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Estética escura agressiva com brilho metálico frio", lighting: "dark underground phonk noir lighting with blood-red and icy-white rim lights", transition: "crashZoom", fx: "embers", accent: "#ef4444", energy: 1.06, zoomAmt: 0.29, pan: 48, beats: ["menacing low-angle dark profile emerging from heavy floor mist", "aggressive hard cut hero shot lit by crimson rim and crisp white key", "gritty ultra-sharp macro detail emphasizing rugged edges and build", "bold dark hero climax with drifting red embers and mirror-black reflection"] },
-      { id: 18, cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Corte instantâneo com salto de lente 35mm → 100mm", lighting: "crisp commercial white key with electric cyan backlight halo", transition: "hardFlash", fx: "flashStrobe", accent: "#22d3ee", energy: 1.04, zoomAmt: 0.30, pan: 44, beats: ["crisp wide 35mm establishing angle on dark architectural surface", "instant snap-cut to dominant centered hero portrait", "razor-tight 100mm macro shot capturing microscopic finish quality", "clean hero finale with sharp white halo reflection"] },
-      { id: 19, cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão rápida de câmera com anamorphic flare", lighting: "intense sci-fi silver and electric blue anamorphic cinema lighting", transition: "crashZoom", fx: "lensFlare", accent: "#60a5fa", energy: 1.0, zoomAmt: 0.26, pan: 48, beats: ["tight dark rim-lit edge shot ready to explode outward", "dramatic pullback hero reveal with sweeping horizontal cinema flare", "precision macro glide tracing metallic and matte contrast", "commanding flagship hero finale with glowing energy haze"] },
-      { id: 20, cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância entre abertura ampla e macro extremo", lighting: "dramatic studio dual-key lighting with warm gold and cool slate tones", transition: "whipPan", fx: "lightSweep", accent: "#f59e0b", energy: 0.96, zoomAmt: 0.28, pan: 46, beats: ["ultra-close dramatic edge tease before sweeping back", "crisp full-frame hero showcase centered with commanding presence", "diagonal macro texture sweep gleaming under directional key light", "clean architectural hero finish with smooth light sweep"] },
+      { id: 11, cat: "Zoom", name: "#11 Crash Zoom Punch", desc: "Crash zoom seco + impacto RGB em cada virada", env: "brushed dark steel industrial pedestal in moody deep studio space", lighting: "punchy cinema key light with cold steel-blue rim highlights", transition: "crashZoom", fx: "shatterSpark", accent: "#38bdf8", energy: 1.18, cutBase: 0.88, zoomAmt: 0.40, pan: 58 },
+      { id: 12, cat: "Zoom", name: "#12 Sniper Close-Up", desc: "Precisão macro cirúrgica com foco ultra-raso", env: "pitch-black precision optical stage with dark velvet and glass reflection", lighting: "surgical precision white spotlight with razor thin golden rim edge", transition: "speedRamp", fx: "lightSweep", accent: "#fde047", energy: 1.02, cutBase: 0.98, zoomAmt: 0.38, pan: 54 },
+      { id: 13, cat: "Zoom", name: "#13 Terremoto Bass Drop", desc: "Impacto pesado com micro-tremor e faíscas", env: "dark high-contrast athletic arena floor with gritty matte stone texture", lighting: "dark athletic arena spotlight with vivid lime-yellow rim lighting", transition: "crashZoom", fx: "embers", accent: "#a3e635", energy: 1.22, cutBase: 0.84, zoomAmt: 0.40, pan: 64 },
+      { id: 14, cat: "Zoom", name: "#14 Zoom Elástico Dinâmico", desc: "Speed ramping elástico que prende o olhar", env: "sleek dark anodized aluminum platform with smooth mirror depth", lighting: "clean modern studio key light with electric violet and silver rim accents", transition: "speedRamp", fx: "neonPulse", accent: "#a855f7", energy: 1.10, cutBase: 0.92, zoomAmt: 0.37, pan: 62 },
+      { id: 15, cat: "Zoom", name: "#15 Choque Visual 4K", desc: "Zoom profundo com flare anamórfico pesado", env: "dramatic dark slate cinema stage filled with crisp volumetric air haze", lighting: "ultra-high contrast volumetric light shafts slicing dark studio atmosphere", transition: "hardFlash", fx: "lensFlare", accent: "#38bdf8", energy: 1.12, cutBase: 0.90, zoomAmt: 0.38, pan: 60 },
+      { id: 16, cat: "Zoom", name: "#16 Foco Magnético", desc: "Convergência contínua puxando o olho ao produto", env: "polished dark walnut and smoked glass gallery pedestal with creamy dark bokeh", lighting: "warm tungsten spotlight with deep dark vignette and golden edge sheen", transition: "speedRamp", fx: "bokehGold", accent: "#fbbf24", energy: 1.02, cutBase: 0.98, zoomAmt: 0.36, pan: 54 },
+      { id: 17, cat: "Zoom", name: "#17 Impacto Phonk Dark", desc: "Estética escura agressiva com brilho metálico frio", env: "wet dark asphalt and raw carbon surface with heavy underground mist", lighting: "dark underground phonk noir lighting with blood-red and icy-white rim lights", transition: "crashZoom", fx: "embers", accent: "#ef4444", energy: 1.20, cutBase: 0.82, zoomAmt: 0.40, pan: 66 },
+      { id: 18, cat: "Zoom", name: "#18 Snap Zoom Instantâneo", desc: "Corte instantâneo com salto de lente 35mm → 100mm", env: "clean architectural dark concrete stage with crisp specular highlights", lighting: "crisp commercial white key with electric cyan backlight halo", transition: "hardFlash", fx: "flashStrobe", accent: "#22d3ee", energy: 1.16, cutBase: 0.86, zoomAmt: 0.40, pan: 62 },
+      { id: 19, cat: "Zoom", name: "#19 Onda de Choque", desc: "Expansão rápida de câmera com anamorphic flare", env: "futuristic dark chrome soundstage with subtle reflective energy horizon", lighting: "intense sci-fi silver and electric blue anamorphic cinema lighting", transition: "crashZoom", fx: "lensFlare", accent: "#60a5fa", energy: 1.14, cutBase: 0.90, zoomAmt: 0.36, pan: 66 },
+      { id: 20, cat: "Zoom", name: "#20 Zoom Reverso & Ataque", desc: "Alternância entre abertura ampla e macro extremo", env: "sleek dark marble and matte titanium commercial display stage", lighting: "dramatic studio dual-key lighting with warm gold and cool slate tones", transition: "whipPan", fx: "lightSweep", accent: "#f59e0b", energy: 1.12, cutBase: 0.88, zoomAmt: 0.38, pan: 64 },
 
       // === VENDAS (10) ===
-      { id: 21, cat: "Vendas", name: "#21 Conversão Direct Pro", desc: "Ritmo comercial limpo de altíssima conversão", lighting: "bright balanced luxury commercial studio lighting with crisp edge highlight", transition: "speedRamp", fx: "lightSweep", accent: "#22c55e", energy: 0.85, zoomAmt: 0.20, pan: 42, beats: ["clean dramatic hook angle showcasing silhouette and immediate value", "crystal-clear centered front hero reveal displaying true colors and design", "tactile macro close-up proving build quality and premium finish", "trust-building flagship hero showcase with soft specular gleam"] },
-      { id: 22, cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Apresentação de loja conceito em movimento fluido", lighting: "upscale boutique flagship lighting, warm key light and spotless reflections", transition: "smoothGlide", fx: "bokehGold", accent: "#fde047", energy: 0.72, zoomAmt: 0.18, pan: 46, beats: ["inviting 3/4 showcase angle with soft boutique depth of field", "pristine front hero display with true-to-life natural color accuracy", "macro detail glide highlighting fine stitching, bezel or material finish", "refined final showcase with subtle warm luxury glow"] },
-      { id: 23, cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Foco total em acabamento, brilho e contorno real", lighting: "precision product-photography softbox lighting revealing real surface texture", transition: "smoothGlide", fx: "lightSweep", accent: "#ffffff", energy: 0.75, zoomAmt: 0.19, pan: 42, beats: ["sculpted three-quarter profile showing full depth and proportion", "spotless front hero angle highlighting key features cleanly", "ultra-sharp close-up texture inspection showing zero flaws", "elevated commercial finale with crisp reflection and clean framing"] },
-      { id: 24, cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Ritmo ágil de resposta direta com impacto visual", lighting: "vibrant high-contrast commercial key with electric gold rim highlight", transition: "whipPan", fx: "shatterSpark", accent: "#facc15", energy: 0.95, zoomAmt: 0.23, pan: 50, beats: ["snappy kinetic intro reveal breaking out of crisp shadow", "bold front-facing hero presentation built to stop the scroll", "sharp macro detail pass highlighting standout build quality", "high-energy hero closing frame with sparkling metallic light accents"] },
-      { id: 25, cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento orgânico dinâmico com estética premium", lighting: "crisp natural daylight mixed with subtle warm studio fill light", transition: "speedRamp", fx: "cleanLuxury", accent: "#f8fafc", energy: 0.82, zoomAmt: 0.20, pan: 48, beats: ["natural handheld-feel angled reveal with creamy depth of field", "clean straight-on hero presentation in ultra-realistic lighting", "close-up macro pass showing real-world texture and ergonomics", "bright confident hero finale with authentic realistic shadows"] },
-      { id: 26, cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Sequência clara exibindo cada ângulo-chave", lighting: "clean directional studio lighting separating product cleanly from backdrop", transition: "smoothGlide", fx: "lightSweep", accent: "#38bdf8", energy: 0.78, zoomAmt: 0.20, pan: 44, beats: ["clean elevated establishing angle showing full product geometry", "razor-sharp front hero reveal with balanced specular highlights", "focused macro detail on core functional feature and texture", "crisp symmetrical finale with sweeping studio highlight"] },
-      { id: 27, cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Cadência crescente que culmina no hero épico", lighting: "rich commercial studio lighting with warm amber and white dual rim light", transition: "speedRamp", fx: "bokehGold", accent: "#f59e0b", energy: 0.88, zoomAmt: 0.22, pan: 44, beats: ["dramatic low-key tease illuminating the product's signature edge", "sharp reveal into rich full-color hero composition", "macro glide showing premium material contrast and precision", "desirable luxury hero climax with warm golden depth bokeh"] },
-      { id: 28, cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições limpas de super-catálogo internacional", lighting: "flagship international e-commerce lighting with immaculate white rim", transition: "smoothGlide", fx: "cleanLuxury", accent: "#e2e8f0", energy: 0.76, zoomAmt: 0.18, pan: 46, beats: ["minimalist architectural 3/4 introduction on clean pedestal", "perfectly centered front catalog hero frame with zero distortion", "precision macro detail capturing tactile craftsmanship", "polished flagship closing angle with crisp contact shadow"] },
-      { id: 29, cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Leve, ágil e com alto contraste para feed", lighting: "punchy daylight-balanced studio glow with vivid specular catchlights", transition: "whipPan", fx: "lightSweep", accent: "#34d399", energy: 0.88, zoomAmt: 0.22, pan: 48, beats: ["quick playful angled intro popping cleanly from background", "bright crisp front hero reveal with instant visual appeal", "tight tactile macro view highlighting smart details", "clean vibrant hero finish that holds attention"] },
-      { id: 30, cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Gancho forte nos primeiros 3s + prova visual clara", lighting: "high-contrast commercial key with sharp cold-white rim separation", transition: "hardFlash", fx: "lightSweep", accent: "#38bdf8", energy: 0.92, zoomAmt: 0.22, pan: 44, beats: ["attention-grabbing high-contrast silhouette snapping into light", "unmistakable front hero reveal with hyper-sharp clarity", "proof-of-quality macro close-up displaying fine finish", "authoritative hero climax with clean luminous edge sweep"] },
+      { id: 21, cat: "Vendas", name: "#21 Conversão Direct Pro", desc: "Ritmo comercial ágil de altíssima conversão", env: "sleek dark-slate flagship e-commerce pedestal with clean subtle contact reflection", lighting: "bright balanced luxury commercial studio lighting with crisp edge highlight", transition: "speedRamp", fx: "lightSweep", accent: "#22c55e", energy: 1.0, cutBase: 1.02, zoomAmt: 0.28, pan: 58 },
+      { id: 22, cat: "Vendas", name: "#22 Vitrine Que Vende Sozinha", desc: "Apresentação de loja conceito em movimento fluido", env: "upscale luxury boutique display counter with warm soft architectural bokeh", lighting: "upscale boutique flagship lighting, warm key light and spotless reflections", transition: "smoothGlide", fx: "bokehGold", accent: "#fde047", energy: 0.88, cutBase: 1.18, zoomAmt: 0.26, pan: 62 },
+      { id: 23, cat: "Vendas", name: "#23 Demonstração de Valor", desc: "Foco total em acabamento, brilho e contorno real", env: "neutral premium architectural stone plinth in high-definition studio", lighting: "precision product-photography softbox lighting revealing real surface texture", transition: "speedRamp", fx: "lightSweep", accent: "#ffffff", energy: 0.92, cutBase: 1.12, zoomAmt: 0.27, pan: 58 },
+      { id: 24, cat: "Vendas", name: "#24 Oferta Relâmpago Shop", desc: "Ritmo ágil de resposta direta com impacto visual", env: "polished dark obsidian showcase block with high-contrast commercial depth", lighting: "vibrant high-contrast commercial key with electric gold rim highlight", transition: "whipPan", fx: "shatterSpark", accent: "#facc15", energy: 1.10, cutBase: 0.90, zoomAmt: 0.32, pan: 68 },
+      { id: 25, cat: "Vendas", name: "#25 Review Viral Autêntico", desc: "Movimento orgânico dinâmico com estética premium", env: "modern lifestyle designer desk surface with creamy realistic depth of field", lighting: "crisp natural daylight mixed with subtle warm studio fill light", transition: "speedRamp", fx: "cleanLuxury", accent: "#f8fafc", energy: 0.96, cutBase: 1.05, zoomAmt: 0.28, pan: 64 },
+      { id: 26, cat: "Vendas", name: "#26 Destaque de Benefício", desc: "Sequência clara exibindo cada ângulo-chave", env: "clean dual-tier architectural slate and brushed metal showcase podium", lighting: "clean directional studio lighting separating product cleanly from backdrop", transition: "speedRamp", fx: "lightSweep", accent: "#38bdf8", energy: 0.94, cutBase: 1.08, zoomAmt: 0.28, pan: 60 },
+      { id: 27, cat: "Vendas", name: "#27 Fechamento Irresistível", desc: "Cadência crescente que culmina no hero épico", env: "rich dark marble display pedestal with warm luxury depth backdrop", lighting: "rich commercial studio lighting with warm amber and white dual rim light", transition: "speedRamp", fx: "bokehGold", accent: "#f59e0b", energy: 1.02, cutBase: 0.98, zoomAmt: 0.30, pan: 60 },
+      { id: 28, cat: "Vendas", name: "#28 Catálogo Dinâmico Express", desc: "Transições limpas de super-catálogo internacional", env: "minimalist flagship warm-stone pedestal with seamless gradient cyclorama", lighting: "flagship international e-commerce lighting with immaculate white rim", transition: "smoothGlide", fx: "cleanLuxury", accent: "#e2e8f0", energy: 0.90, cutBase: 1.15, zoomAmt: 0.26, pan: 62 },
+      { id: 29, cat: "Vendas", name: "#29 Achadinho Viral do Dia", desc: "Leve, ágil e com alto contraste para feed", env: "bright modern clean commercial countertop with sharp depth separation", lighting: "punchy daylight-balanced studio glow with vivid specular catchlights", transition: "whipPan", fx: "lightSweep", accent: "#34d399", energy: 1.04, cutBase: 0.96, zoomAmt: 0.31, pan: 66 },
+      { id: 30, cat: "Vendas", name: "#30 Anúncio Direct Response", desc: "Gancho forte nos primeiros 2s + prova visual clara", env: "high-contrast dark matte display stage with crisp mirror base reflection", lighting: "high-contrast commercial key with sharp cold-white rim separation", transition: "hardFlash", fx: "lightSweep", accent: "#38bdf8", energy: 1.08, cutBase: 0.92, zoomAmt: 0.31, pan: 62 },
 
       // === CINEMA (10) ===
-      { id: 31, cat: "Cinema", name: "#31 Comercial de Luxo (Rolex/Chanel)", desc: "Movimento sedoso 85mm com reflexos dourados", lighting: "ultra-luxury Swiss watch commercial lighting, velvety shadows and warm liquid gold rim lights", transition: "smoothGlide", fx: "bokehGold", accent: "#eab308", energy: 0.65, zoomAmt: 0.17, pan: 46, beats: ["mysterious dark silhouette with a single golden light beam tracing the contour", "silky reveal into an immaculate luxury hero portrait on dark mirror base", "breathtaking 100mm macro glide across precision micro-finishes and sheen", "majestic floating luxury hero finale surrounded by subtle golden dust"] },
-      { id: 32, cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Volumetria pesada, anamorphic flare e escala épica", lighting: "Hollywood IMAX blockbuster teal-and-amber volumetric lighting with dramatic haze", transition: "hardFlash", fx: "lensFlare", accent: "#f97316", energy: 0.90, zoomAmt: 0.24, pan: 46, beats: ["epic low-angle silhouette emerging from dense volumetric smoke and backlight", "dramatic blockbuster hero reveal with sweeping anamorphic lens flare", "intense macro close-up catching dramatic grazing light across texture", "monumental hero shot rising above reflective floor with floating embers"] },
-      { id: 33, cat: "Cinema", name: "#33 Desfile Editorial Paris", desc: "Panorâmica fluida de alta moda com sombras limpas", lighting: "high-fashion Parisian editorial lighting, sculptural chiaroscuro shadows and warm glow", transition: "smoothGlide", fx: "cleanLuxury", accent: "#fde68a", energy: 0.66, zoomAmt: 0.16, pan: 54, beats: ["graceful wide editorial side profile bathed in architectural light", "commanding front editorial hero shot with refined contrast", "silky macro study of texture, material sheen and craftsmanship", "timeless luxury closing frame with soft atmospheric depth"] },
-      { id: 34, cat: "Cinema", name: "#34 Joia em Exposição", desc: "Brilho especular controlado e macro joalheiro", lighting: "haute joaillerie pinpoint spotlights creating crisp diamond-like specular highlights", transition: "smoothGlide", fx: "bokehGold", accent: "#fef08a", energy: 0.68, zoomAmt: 0.19, pan: 40, beats: ["dramatic dark jewel-box reveal with glinting edge highlight", "radiant front hero showcase with razor-sharp reflective polish", "extreme jewelry-grade macro shot revealing immaculate detail", "dazzling final hero pose with floating warm micro-glints"] },
-      { id: 35, cat: "Cinema", name: "#35 Lançamento Flagship (Apple Style)", desc: "Estética de keynote global, limpa e hipnótica", lighting: "ultra-clean flagship keynote blackout lighting with surgical pure-white rim highlights", transition: "smoothGlide", fx: "lightSweep", accent: "#e2e8f0", energy: 0.70, zoomAmt: 0.20, pan: 44, beats: ["minimalist pitch-black contour reveal lit by razor-thin edge line", "hypnotic centered flagship reveal emerging cleanly from darkness", "precision industrial-design macro glide across sleek surfaces", "iconic symmetrical hero finale with sweeping liquid light bar"] },
-      { id: 36, cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Sombras profundas, fumaça sutil e feixe cortante", lighting: "classic neo-noir chiaroscuro lighting with single hard overhead beam and silver rim", transition: "speedRamp", fx: "iceSparks", accent: "#cbd5e1", energy: 0.78, zoomAmt: 0.21, pan: 42, beats: ["moody noir silhouette carved by a sharp diagonal beam of light", "high-contrast hero reveal emerging starkly from pitch-black shadows", "dramatic silver-lit macro inspection of dark textures and edges", "brooding cinematic finale with fine drifting mist particles"] },
-      { id: 37, cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Sensação de órbita 360° em 4 ângulos distintos", lighting: "360-degree studio cyclorama rim lighting with seamless glossy floor reflection", transition: "smoothGlide", fx: "lightSweep", accent: "#38bdf8", energy: 0.78, zoomAmt: 0.19, pan: 58, beats: ["sweeping left three-quarter orbit angle with rim illumination", "dominant dead-center hero view with balanced wrap lighting", "right-side macro contour sweep revealing full depth and build", "high-angle cinematic hero finale completing the visual orbit"] },
-      { id: 38, cat: "Cinema", name: "#38 Spotlight VIP", desc: "Holofote teatral cênico com partículas douradas", lighting: "theatrical overhead cone spotlight cutting through subtle haze with warm gold rim", transition: "smoothGlide", fx: "bokehGold", accent: "#fbbf24", energy: 0.74, zoomAmt: 0.20, pan: 44, beats: ["dramatic spotlight beam descending onto dark silhouette", "full illuminated hero reveal standing center stage", "crisp macro close-up glowing softly under focused spotlight", "grand VIP hero climax framed by golden floating particles"] },
-      { id: 39, cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Linhas geométricas firmes e luz de museu", lighting: "museum-grade architectural directional lighting with crisp geometric shadows", transition: "smoothGlide", fx: "cleanLuxury", accent: "#94a3b8", energy: 0.68, zoomAmt: 0.17, pan: 48, beats: ["rigid symmetrical low-angle establishing frame on dark monolith", "exact centered hero study with museum-level clarity", "razor-sharp macro geometry emphasizing edges and material precision", "serene monumental closing frame with architectural shadow balance"] },
-      { id: 40, cat: "Cinema", name: "#40 Gala & Ouro", desc: "Clima de premiação com brilho quente cinematográfico", lighting: "opulent champagne-gold cinematic lighting with rich dark velvet contrast", transition: "smoothGlide", fx: "bokehGold", accent: "#f5b841", energy: 0.70, zoomAmt: 0.19, pan: 46, beats: ["opulent warm backlit teaser emerging through golden haze", "regal centered hero reveal gleaming with warm specular highlights", "luxurious macro glide across rich textures and golden reflections", "show-stopping gala hero finale with softly drifting gold embers"] },
+      { id: 31, cat: "Cinema", name: "#31 Comercial de Luxo (Rolex/Chanel)", desc: "Movimento sedoso 85mm com reflexos dourados", env: "black mirror obsidian and brushed gold luxury horology showcase stage", lighting: "ultra-luxury Swiss watch commercial lighting, velvety shadows and warm liquid gold rim lights", transition: "smoothGlide", fx: "bokehGold", accent: "#eab308", energy: 0.86, cutBase: 1.32, zoomAmt: 0.26, pan: 62 },
+      { id: 32, cat: "Cinema", name: "#32 Trailer Blockbuster 9:16", desc: "Volumetria pesada, anamorphic flare e escala épica", env: "monumental dark wet basalt cinema soundstage shrouded in atmospheric mist", lighting: "Hollywood IMAX blockbuster teal-and-amber volumetric lighting with dramatic haze", transition: "hardFlash", fx: "lensFlare", accent: "#f97316", energy: 1.08, cutBase: 1.02, zoomAmt: 0.34, pan: 64 },
+      { id: 33, cat: "Cinema", name: "#33 Desfile Editorial Paris", desc: "Panorâmica fluida de alta moda com sombras limpas", env: "honed Italian travertine and dark marble Parisian haute-couture studio", lighting: "high-fashion Parisian editorial lighting, sculptural chiaroscuro shadows and warm glow", transition: "smoothGlide", fx: "cleanLuxury", accent: "#fde68a", energy: 0.85, cutBase: 1.35, zoomAmt: 0.25, pan: 68 },
+      { id: 34, cat: "Cinema", name: "#34 Joia em Exposição", desc: "Brilho especular controlado e macro joalheiro", env: "deep midnight velvet and smoked crystal haute joaillerie vitrine", lighting: "haute joaillerie pinpoint spotlights creating crisp diamond-like specular highlights", transition: "smoothGlide", fx: "bokehGold", accent: "#fef08a", energy: 0.88, cutBase: 1.28, zoomAmt: 0.28, pan: 56 },
+      { id: 35, cat: "Cinema", name: "#35 Lançamento Flagship (Apple Style)", desc: "Estética de keynote global, limpa e hipnótica", env: "pure pitch-black piano-glass keynote stage with infinite dark horizon", lighting: "ultra-clean flagship keynote blackout lighting with surgical pure-white rim highlights", transition: "speedRamp", fx: "lightSweep", accent: "#e2e8f0", energy: 0.92, cutBase: 1.22, zoomAmt: 0.28, pan: 60 },
+      { id: 36, cat: "Cinema", name: "#36 Noir Alto Contraste", desc: "Sombras profundas, fumaça sutil e feixe cortante", env: "wet dark slate architectural floor with moody neo-noir drifting mist", lighting: "classic neo-noir chiaroscuro lighting with single hard overhead beam and silver rim", transition: "speedRamp", fx: "iceSparks", accent: "#cbd5e1", energy: 0.96, cutBase: 1.18, zoomAmt: 0.30, pan: 58 },
+      { id: 37, cat: "Cinema", name: "#37 Câmera Orbitante Dinâmica", desc: "Órbita 360° ágil alternando todos os ângulos", env: "seamless circular glossy obsidian turntable in dark cinema cyclorama", lighting: "360-degree studio cyclorama rim lighting with seamless glossy floor reflection", transition: "whipPan", fx: "lightSweep", accent: "#38bdf8", energy: 0.98, cutBase: 1.12, zoomAmt: 0.28, pan: 76 },
+      { id: 38, cat: "Cinema", name: "#38 Spotlight VIP", desc: "Holofote teatral cênico com partículas douradas", env: "exclusive dark theater velvet and black marble VIP presentation stage", lighting: "theatrical overhead cone spotlight cutting through subtle haze with warm gold rim", transition: "speedRamp", fx: "bokehGold", accent: "#fbbf24", energy: 0.94, cutBase: 1.18, zoomAmt: 0.29, pan: 60 },
+      { id: 39, cat: "Cinema", name: "#39 Precisão Arquitetônica", desc: "Linhas geométricas firmes e luz de museu", env: "smooth architectural graphite concrete monolith inside modern luxury museum", lighting: "museum-grade architectural directional lighting with crisp geometric shadows", transition: "smoothGlide", fx: "cleanLuxury", accent: "#94a3b8", energy: 0.88, cutBase: 1.28, zoomAmt: 0.26, pan: 64 },
+      { id: 40, cat: "Cinema", name: "#40 Gala & Ouro", desc: "Clima de premiação com brilho quente cinematográfico", env: "opulent black Nero Marquina marble stage with warm brushed gold reflections", lighting: "opulent champagne-gold cinematic lighting with rich dark velvet contrast", transition: "smoothGlide", fx: "bokehGold", accent: "#f5b841", energy: 0.90, cutBase: 1.26, zoomAmt: 0.28, pan: 62 },
 
       // === VIRAL (10) ===
-      { id: 41, cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Retenção máxima com quebra visual a cada ato", lighting: "hyper-vivid commercial studio lighting with electric cyan and lime rim highlights", transition: "whipPan", fx: "neonPulse", accent: "#00ff9d", energy: 1.02, zoomAmt: 0.25, pan: 52, beats: ["high-velocity angled hook frame engineered to halt scrolling immediately", "crisp high-contrast front hero reveal popping off dark background", "hyper-detailed macro pass delivering visual satisfaction on textures", "punchy flagship hero finale with glowing cyber rim accents"] },
-      { id: 42, cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Início e final harmônicos para replay automático", lighting: "seamless glossy dark studio lighting with balanced cool-white and gold rim", transition: "smoothGlide", fx: "lightSweep", accent: "#38bdf8", energy: 0.86, zoomAmt: 0.21, pan: 48, beats: ["sleek centered dark hero approach designed to match final frame seamlessly", "crisp angled commercial showcase revealing dimension and depth", "silky macro texture cruise across finest product details", "seamless returning centered hero frame with clean light sweep"] },
-      { id: 43, cat: "Viral", name: "#43 Dopamina Rápida", desc: "Ação contínua, micro-flashes e ritmo acelerado", lighting: "vibrant punchy commercial neon-blue and fiery-orange rim lighting", transition: "hardFlash", fx: "shatterSpark", accent: "#fb923c", energy: 1.08, zoomAmt: 0.26, pan: 54, beats: ["explosive tight hook reveal with vivid orange-blue rim clash", "instant flash cut to ultra-crisp full front hero display", "snappy macro detail shot bursting with specular contrast", "electrifying final hero shot with kinetic sparks and crisp edges"] },
-      { id: 44, cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Iluminação dramática com speed-ramp de tendência", lighting: "cinematic high-contrast twilight blue and warm gold rim lights", transition: "speedRamp", fx: "lensFlare", accent: "#60a5fa", energy: 0.96, zoomAmt: 0.24, pan: 52, beats: ["dramatic moody teaser emerging from deep blue atmospheric shadow", "speed-ramp burst into gleaming golden-rimmed hero display", "crisp tactile macro glide with shallow cinema bokeh", "viral-ready elevated hero finale with clean anamorphic flare"] },
-      { id: 45, cat: "Viral", name: "#45 Quebra de Padrão", desc: "Alterna ângulo baixo, frontal, macro e topo", lighting: "bold avant-garde commercial lighting with razor magenta and ice-white rim", transition: "whipPan", fx: "neonPulse", accent: "#e879f9", energy: 0.98, zoomAmt: 0.25, pan: 56, beats: ["unexpected ultra-low dramatic angle looking up at product monolith", "snap cut into immaculate straight-on hero presentation", "extreme diagonal macro study catching unexpected light angles", "commanding high-three-quarter finale with vivid rim separation"] },
-      { id: 46, cat: "Viral", name: "#46 POV Energia Próxima", desc: "Proximidade tátil e impacto de câmera realista", lighting: "crisp natural commercial key light with subtle warm rim contour", transition: "speedRamp", fx: "cleanLuxury", accent: "#f8fafc", energy: 0.88, zoomAmt: 0.22, pan: 48, beats: ["intimate close-range approach pulling viewer straight to the product", "razor-sharp eye-level hero showcase with authentic lighting", "tactile macro glide showcasing real grip, weave or metallic sheen", "confident close hero finale with crisp depth separation"] },
-      { id: 47, cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura de impacto extremo nos 2 primeiros segundos", lighting: "extreme high-contrast studio blackout with blazing neon-yellow rim light", transition: "crashZoom", fx: "flashStrobe", accent: "#facc15", energy: 1.05, zoomAmt: 0.27, pan: 48, beats: ["blazing backlit dark silhouette breaking into intense rim glow", "hard punch-in to pristine centered hero product with razor detail", "ultra-sharp macro pass across standout buttons, edges and textures", "unforgettable high-contrast hero finish with electric edge gleam"] },
-      { id: 48, cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Visual street/tech com brilho molhado e ritmo seco", lighting: "moody urban night wet-reflection lighting with cyan and amber street bokeh", transition: "whipPan", fx: "iceSparks", accent: "#22d3ee", energy: 0.96, zoomAmt: 0.23, pan: 52, beats: ["gritty low urban angle over wet reflective slate with bokeh background", "crisp hard cut hero shot illuminated by electric street-style rim lights", "sharp macro glide revealing tough surface texture and sheen", "stylish urban hero climax with cool drifting light particles"] },
-      { id: 49, cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Tour completo acelerado em 4 perspectivas únicas", lighting: "bright studio perimeter rim lights sculpting every face of the product", transition: "whipPan", fx: "lightSweep", accent: "#38bdf8", energy: 0.96, zoomAmt: 0.22, pan: 58, beats: ["sleek left-angle profile presentation with crisp perimeter light", "clean front hero shot displaying full symmetry and design", "right-angle macro close-up highlighting material craftsmanship", "elevated 3/4 hero finale tying every angle together"] },
-      { id: 50, cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Fórmula Hollywood definitiva: gancho + hero + macro + clímax", lighting: "Hollywood flagship commercial lighting with dual gold-and-cyan volumetric rim lights", transition: "speedRamp", fx: "embers", accent: "#22c55e", energy: 0.95, zoomAmt: 0.24, pan: 50, beats: ["cinematic fast whip-pan teaser revealing product edge out of dark haze", "hard cut to immaculate flagship hero product in 8K razor clarity", "silky 100mm macro texture glide catching gleaming metallic light", "epic blockbuster hero finale floating with volumetric rays and fine embers"] }
+      { id: 41, cat: "Viral", name: "#41 Algoritmo Lock 100%", desc: "Retenção máxima com quebra visual constante", env: "glossy dark reflective cyber-studio pedestal with crisp depth haze", lighting: "hyper-vivid commercial studio lighting with electric cyan and lime rim highlights", transition: "whipPan", fx: "neonPulse", accent: "#00ff9d", energy: 1.18, cutBase: 0.82, zoomAmt: 0.35, pan: 72 },
+      { id: 42, cat: "Viral", name: "#42 Loop Infinito Perfeito", desc: "Ritmo hipnótico contínuo para replay automático", env: "sleek dark reflective infinity cyclorama with balanced specular floor", lighting: "seamless glossy dark studio lighting with balanced cool-white and gold rim", transition: "speedRamp", fx: "lightSweep", accent: "#38bdf8", energy: 1.04, cutBase: 0.96, zoomAmt: 0.30, pan: 64 },
+      { id: 43, cat: "Viral", name: "#43 Dopamina Rápida", desc: "Ação contínua, micro-flashes e ritmo acelerado", env: "high-energy dark glass and brushed metal studio stage with vivid bokeh", lighting: "vibrant punchy commercial neon-blue and fiery-orange rim lighting", transition: "hardFlash", fx: "shatterSpark", accent: "#fb923c", energy: 1.22, cutBase: 0.76, zoomAmt: 0.36, pan: 74 },
+      { id: 44, cat: "Viral", name: "#44 Trend Reels Explosivo", desc: "Iluminação dramática com speed-ramp de tendência", env: "moody twilight slate pedestal with cinematic misty studio horizon", lighting: "cinematic high-contrast twilight blue and warm gold rim lights", transition: "speedRamp", fx: "lensFlare", accent: "#60a5fa", energy: 1.12, cutBase: 0.88, zoomAmt: 0.34, pan: 70 },
+      { id: 45, cat: "Viral", name: "#45 Quebra de Padrão", desc: "Salta entre ângulo baixo, flutuante, macro e topo", env: "bold geometric matte black monolith set in dramatic dark gallery", lighting: "bold avant-garde commercial lighting with razor magenta and ice-white rim", transition: "whipPan", fx: "neonPulse", accent: "#e879f9", energy: 1.15, cutBase: 0.84, zoomAmt: 0.35, pan: 76 },
+      { id: 46, cat: "Viral", name: "#46 POV Energia Próxima", desc: "Proximidade tátil e impacto de câmera realista", env: "sleek dark leather and stone lifestyle surface with natural shallow depth", lighting: "crisp natural commercial key light with subtle warm rim contour", transition: "speedRamp", fx: "cleanLuxury", accent: "#f8fafc", energy: 1.04, cutBase: 0.94, zoomAmt: 0.31, pan: 66 },
+      { id: 47, cat: "Viral", name: "#47 Hyper-Scroll Stopper", desc: "Abertura de impacto extremo nos 2 primeiros segundos", env: "pitch-black matte carbon fiber stage with surgical high-contrast depth", lighting: "extreme high-contrast studio blackout with blazing neon-yellow rim light", transition: "crashZoom", fx: "flashStrobe", accent: "#facc15", energy: 1.20, cutBase: 0.80, zoomAmt: 0.38, pan: 68 },
+      { id: 48, cat: "Viral", name: "#48 Batida Urbana Viral", desc: "Visual street/tech com brilho molhado e ritmo seco", env: "wet dark rain-kissed urban asphalt slate with creamy neon city bokeh", lighting: "moody urban night wet-reflection lighting with cyan and amber street bokeh", transition: "whipPan", fx: "iceSparks", accent: "#22d3ee", energy: 1.12, cutBase: 0.88, zoomAmt: 0.33, pan: 70 },
+      { id: 49, cat: "Viral", name: "#49 Showcase 360 Acelerado", desc: "Tour acelerado girando pelos 6 ângulos únicos", env: "polished dark smoked-glass studio platform surrounded by perimeter glow", lighting: "bright studio perimeter rim lights sculpting every face of the product", transition: "whipPan", fx: "lightSweep", accent: "#38bdf8", energy: 1.14, cutBase: 0.84, zoomAmt: 0.32, pan: 78 },
+      { id: 50, cat: "Viral", name: "#50 Máxima Retenção Pro", desc: "Fórmula Hollywood definitiva: gancho + ação + macro + clímax", env: "flagship obsidian and brushed titanium Hollywood soundstage with mirror floor", lighting: "Hollywood flagship commercial lighting with dual gold-and-cyan volumetric rim lights", transition: "speedRamp", fx: "embers", accent: "#22c55e", energy: 1.14, cutBase: 0.86, zoomAmt: 0.35, pan: 70 }
     ];
+
+    // 6 ÂNGULOS E POSES RADICALMENTE DISTINTOS PARA DAR MOVIMENTO REAL AO PRODUTO
+    const SIX_ACTION_SHOTS = [
+      {
+        code: "HOOK LOW-TILT",
+        lens: "ARRI Alexa 65, 28mm anamorphic cinema lens, bold 15-degree Dutch tilt",
+        beat: "dramatic extreme low-angle three-quarter opening shot with dynamic Dutch tilt, product looming powerfully out of deep atmospheric shadows with blazing rim light carving its silhouette",
+        motion: "High-speed whip-pan and aggressive crash push-in toward the exact product as volumetric rim light slashes across its edges."
+      },
+      {
+        code: "HERO FRONTAL",
+        lens: "ARRI Alexa 65, 50mm master prime cinema lens, razor-sharp 8K focus",
+        beat: "pristine centered front hero presentation of the exact product in full dramatic commercial illumination, razor-sharp edges, rich realistic materials and spotless glossy reflection beneath",
+        motion: "Explosive speed-ramp push-in locking dead-center on the exact front face of the product with gleaming studio light sweep."
+      },
+      {
+        code: "AÇÃO FLUTUANTE 35°",
+        lens: "ARRI Alexa 65, 40mm cinema prime, frozen high-speed 1/4000s shutter action",
+        beat: "dynamic mid-air levitating action shot with the exact product suspended in space tilted dramatically at a 35-degree kinetic angle, surrounded by drifting volumetric light haze and micro sparks (no hands, pure blockbuster floating product shot)",
+        motion: "Dynamic orbital camera sweep around the exact product levitating and gently rotating in mid-air amidst drifting sparks and rim light."
+      },
+      {
+        code: "MACRO EXTREMO 100MM",
+        lens: "ARRI Alexa 65, 100mm extreme cinema macro lens, ultra-shallow f/2.0 bokeh",
+        beat: "hyper-detailed extreme macro close-up skimming diagonally across the product's signature surface textures, precision edges, buttons and craftsmanship under grazing specular side light",
+        motion: "Silky high-contrast macro glide skimming closely over the exact product textures and contours with bright light glinting across edges."
+      },
+      {
+        code: "PERFIL LATERAL RIM",
+        lens: "ARRI Alexa 65, 65mm anamorphic prime, deep cinematic contrast",
+        beat: "sleek opposite-side three-quarter profile view showcasing the product's full 3D depth, ergonomic contour and side details, fiercely backlit with glowing neon/metallic rim highlights",
+        motion: "Fast lateral tracking camera sweep gliding across the exact side profile of the product with dramatic backlight flare."
+      },
+      {
+        code: "CLÍMAX HERO ÉPICO",
+        lens: "ARRI Alexa 65, 50mm IMAX commercial prime, monumental hero perspective",
+        beat: "epic elevated flagship hero climax shot with the exact product commanding the center frame over a dark glossy reflective surface, volumetric god-rays cutting behind it and fine glowing particles floating in depth",
+        motion: "Majestic rising crane hero pullback revealing the exact product bathed in volumetric light shafts and floating golden/colored particles."
+      }
+    ];
+
+    const modeBtns = document.querySelectorAll(".mode-btn");
+    const videoOnlyTopFields = document.getElementById("videoOnlyTopFields");
+    const imgCatalogSection = document.getElementById("imgCatalogSection");
+    const vidCatalogSection = document.getElementById("vidCatalogSection");
+    const previewTitle = document.getElementById("previewTitle");
 
     const productImg = document.getElementById("productImg");
     const thumbPreview = document.getElementById("thumbPreview");
@@ -320,7 +390,7 @@
     const btnBuild = document.getElementById("btnBuild");
     const stage = document.getElementById("stage");
     const canvas = document.getElementById("renderCanvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false });
     const formatPill = document.getElementById("formatPill");
 
     const imgSearch = document.getElementById("imgSearch");
@@ -333,42 +403,60 @@
     const vidPresetGrid = document.getElementById("vidPresetGrid");
     const selectedVidLabel = document.getElementById("selectedVidLabel");
 
+    let activeMode = "video";
     let selectedImgModel = IMAGE_MODELS[0];
     let selectedVidModel = VIDEO_MODELS[0];
     let uploadedBase64 = "";
     let uploadedMime = "image/jpeg";
     let activeVideoBlobUrl = "";
 
-    // === DETECÇÃO DE EXPORTAÇÃO NATIVA MP4 + FALLBACK WEBM CORRIGIDO ===
+    // === TROCA LIMPA DE MODO (VÍDEO vs IMAGEM — ZERO MISTURA) ===
+    function setMode(mode) {
+      activeMode = mode === "image" ? "image" : "video";
+      modeBtns.forEach((b) => b.classList.toggle("active", b.dataset.mode === activeMode));
+
+      if (activeMode === "video") {
+        videoOnlyTopFields.classList.remove("hidden");
+        vidCatalogSection.classList.remove("hidden");
+        imgCatalogSection.classList.add("hidden");
+        btnBuild.classList.remove("hidden");
+        btnOnlyImg.classList.add("hidden");
+        previewTitle.textContent = "Preview 9:16 & Exportação MP4";
+      } else {
+        videoOnlyTopFields.classList.add("hidden");
+        vidCatalogSection.classList.add("hidden");
+        imgCatalogSection.classList.remove("hidden");
+        btnBuild.classList.add("hidden");
+        btnOnlyImg.classList.remove("hidden");
+        previewTitle.textContent = "Preview da Imagem 9:16";
+      }
+    }
+    modeBtns.forEach((btn) => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
+
+    // === DETECÇÃO DE EXPORTAÇÃO NATIVA MP4 (COM RELÓGIO DE ÁUDIO) + FALLBACK WEBM ===
     function pickSupportedRecorderProfile() {
-      const mp4Candidates = [
-        "video/mp4;codecs=avc1.42E01E",
-        "video/mp4;codecs=avc1.4D401E",
-        "video/mp4;codecs=avc1",
-        "video/mp4"
+      const candidates = [
+        { mimeType: "video/mp4;codecs=avc1.42E01E,mp4a.40.2", ext: "mp4", baseType: "video/mp4", withAudio: true, label: "MP4 Nativo (H.264)" },
+        { mimeType: "video/mp4;codecs=avc1,mp4a.40.2", ext: "mp4", baseType: "video/mp4", withAudio: true, label: "MP4 Nativo (H.264)" },
+        { mimeType: "video/mp4", ext: "mp4", baseType: "video/mp4", withAudio: true, label: "MP4 Nativo" },
+        { mimeType: "video/mp4;codecs=avc1.42E01E", ext: "mp4", baseType: "video/mp4", withAudio: false, label: "MP4 Nativo (H.264)" },
+        { mimeType: "video/webm;codecs=vp8,opus", ext: "webm", baseType: "video/webm", withAudio: true, label: "WebM (Duração Travada)" },
+        { mimeType: "video/webm;codecs=vp9,opus", ext: "webm", baseType: "video/webm", withAudio: true, label: "WebM (Duração Travada)" },
+        { mimeType: "video/webm;codecs=vp8", ext: "webm", baseType: "video/webm", withAudio: false, label: "WebM (Duração Corrigida)" },
+        { mimeType: "video/webm", ext: "webm", baseType: "video/webm", withAudio: false, label: "WebM (Duração Corrigida)" }
       ];
-      for (const mimeType of mp4Candidates) {
-        if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(mimeType)) {
-          return { mimeType, ext: "mp4", baseType: "video/mp4", label: "MP4 Nativo (H.264)" };
+      for (const c of candidates) {
+        if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(c.mimeType)) {
+          return c;
         }
       }
-      const webmCandidates = [
-        "video/webm;codecs=vp9",
-        "video/webm;codecs=vp8",
-        "video/webm"
-      ];
-      for (const mimeType of webmCandidates) {
-        if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(mimeType)) {
-          return { mimeType, ext: "webm", baseType: "video/webm", label: "WebM (Duração Corrigida)" };
-        }
-      }
-      return { mimeType: "", ext: "webm", baseType: "video/webm", label: "Vídeo Padrão" };
+      return { mimeType: "", ext: "webm", baseType: "video/webm", withAudio: false, label: "Vídeo Padrão" };
     }
 
     const activeCodecProfile = pickSupportedRecorderProfile();
-    formatPill.textContent = `50 Cenários • 50 Direções Hollywood • Exportação: ${activeCodecProfile.label}`;
+    formatPill.textContent = `6 Ângulos Hollywood • Cortes Rápidos 30fps • Exportação: ${activeCodecProfile.label}`;
 
-    // === CORRETOR DE METADADOS DE DURAÇÃO PARA FALLBACK .WEBM ===
+    // === CORRETOR DE DURAÇÃO PARA FALLBACK WEBM ===
     function readVint(bytes, pos) {
       if (pos >= bytes.length) return null;
       const first = bytes[pos];
@@ -381,9 +469,7 @@
       }
       if (length > 8 || pos + length > bytes.length) return null;
       let value = first & (mask - 1);
-      for (let i = 1; i < length; i++) {
-        value = value * 256 + bytes[pos + i];
-      }
+      for (let i = 1; i < length; i++) value = value * 256 + bytes[pos + i];
       const isUnknown = length === 8 && first === 0x01 && bytes.slice(pos + 1, pos + 8).every((b) => b === 0xff);
       return { value, length, isUnknown };
     }
@@ -393,8 +479,6 @@
         const buffer = await blob.arrayBuffer();
         const bytes = new Uint8Array(buffer);
         const searchLimit = Math.min(bytes.length - 12, 8192);
-
-        // Localiza Segment (0x18 0x53 0x80 0x67) para verificar se tem tamanho indefinido
         let segPos = -1;
         for (let i = 0; i < Math.min(searchLimit, 512); i++) {
           if (bytes[i] === 0x18 && bytes[i + 1] === 0x53 && bytes[i + 2] === 0x80 && bytes[i + 3] === 0x67) {
@@ -405,8 +489,6 @@
         if (segPos < 0) return blob;
         const segSize = readVint(bytes, segPos + 4);
         if (!segSize) return blob;
-
-        // Localiza Info (0x15 0x49 0xA9 0x66)
         let infoPos = -1;
         for (let i = segPos + 4 + segSize.length; i < searchLimit; i++) {
           if (bytes[i] === 0x15 && bytes[i + 1] === 0x49 && bytes[i + 2] === 0xA9 && bytes[i + 3] === 0x66) {
@@ -417,17 +499,11 @@
         if (infoPos < 0) return blob;
         const infoSize = readVint(bytes, infoPos + 4);
         if (!infoSize) return blob;
-
         const infoDataStart = infoPos + 4 + infoSize.length;
-        const infoDataEnd = infoSize.isUnknown
-          ? Math.min(bytes.length, infoDataStart + 1024)
-          : Math.min(bytes.length, infoDataStart + infoSize.value);
-
-        // Verifica TimecodeScale (0x2A 0xD7 0xB1) — padrão 1000000 ns (1ms)
+        const infoDataEnd = infoSize.isUnknown ? Math.min(bytes.length, infoDataStart + 1024) : Math.min(bytes.length, infoDataStart + infoSize.value);
         let timecodeScaleNs = 1000000;
         let existingDurPos = -1;
         let existingDurLen = 0;
-
         for (let i = infoDataStart; i < infoDataEnd - 4; i++) {
           if (bytes[i] === 0x2A && bytes[i + 1] === 0xD7 && bytes[i + 2] === 0xB1) {
             const sz = readVint(bytes, i + 3);
@@ -445,10 +521,7 @@
             }
           }
         }
-
         const scaledDuration = (durationMs * 1000000) / timecodeScaleNs;
-
-        // Caso 1: campo Duration já existe — sobrescreve no lugar
         if (existingDurPos > 0) {
           const out = new Uint8Array(bytes);
           const view = new DataView(out.buffer);
@@ -456,15 +529,10 @@
           else view.setFloat32(existingDurPos, scaledDuration, false);
           return new Blob([out], { type: blob.type });
         }
-
-        // Caso 2: campo Duration não existe — injeta 11 bytes dentro de Info (somente se Segment for unknown size)
         if (!segSize.isUnknown) return blob;
         const durEl = new Uint8Array(11);
-        durEl[0] = 0x44;
-        durEl[1] = 0x89;
-        durEl[2] = 0x88; // VINT size = 8 bytes (float64)
+        durEl[0] = 0x44; durEl[1] = 0x89; durEl[2] = 0x88;
         new DataView(durEl.buffer).setFloat64(3, scaledDuration, false);
-
         if (infoSize.isUnknown) {
           const out = new Uint8Array(bytes.length + 11);
           out.set(bytes.subarray(0, infoDataStart), 0);
@@ -472,14 +540,10 @@
           out.set(bytes.subarray(infoDataStart), infoDataStart + 11);
           return new Blob([out], { type: blob.type });
         }
-
         const newInfoVal = infoSize.value + 11;
-        const maxForLen = Math.pow(2, 7 * infoSize.length) - 2;
-        if (newInfoVal > maxForLen) return blob;
-
+        if (newInfoVal > Math.pow(2, 7 * infoSize.length) - 2) return blob;
         const out = new Uint8Array(bytes.length + 11);
         out.set(bytes.subarray(0, infoDataStart), 0);
-        // Atualiza VINT do tamanho de Info mantendo o mesmo número de bytes
         const sizeStart = infoPos + 4;
         let tmp = newInfoVal;
         for (let k = infoSize.length - 1; k >= 0; k--) {
@@ -487,7 +551,6 @@
           tmp = Math.floor(tmp / 256);
         }
         out[sizeStart] |= 0x80 >> (infoSize.length - 1);
-
         out.set(durEl, infoDataStart);
         out.set(bytes.subarray(infoDataStart), infoDataStart + 11);
         return new Blob([out], { type: blob.type });
@@ -496,107 +559,139 @@
       }
     }
 
-    // === CONSTRUTOR DE TIMELINE HOLLYWOOD PARA TODOS OS 50 MODELOS ===
-    function getActTimings(totalSeconds) {
-      const t1 = Math.round(totalSeconds * 0.20 * 10) / 10;
-      const t2 = Math.round(totalSeconds * 0.47 * 10) / 10;
-      const t3 = Math.round(totalSeconds * 0.74 * 10) / 10;
-      return [
-        { act: 1, start: 0, end: t1, role: "OPENING HOOK" },
-        { act: 2, start: t1, end: t2, role: "HARD CUT HERO REVEAL" },
-        { act: 3, start: t2, end: t3, role: "MACRO TEXTURE GLIDE" },
-        { act: 4, start: t3, end: totalSeconds, role: "EPIC HERO CLIMAX" }
-      ];
-    }
-
-    function buildHollywoodScenePrompt(imgModel, vidModel, actIndex, totalSeconds) {
-      const acts = getActTimings(totalSeconds);
-      const act = acts[actIndex] || acts[0];
-      const beatDesc = vidModel.beats[actIndex] || vidModel.beats[0];
+    // === CONSTRUTORES DE PROMPTS ISOLADOS (IMAGEM vs VÍDEO HOLLYWOOD 6 ÂNGULOS) ===
+    function getProductSpecText() {
       const detailHint = productDetailHint.value.trim();
-      const productSpec = detailHint
+      return detailHint
         ? `Product matches uploaded reference 100% identically: ${detailHint}. Preserve exact shape, proportions, geometry, buttons, textures, materials and colors with zero alteration.`
         : `Product matches uploaded reference 100% identically: preserve exact shape, silhouette, geometry, proportions, surface textures, colors and branding details with zero alteration.`;
+    }
 
-      const lensByAct = [
-        "Shot on ARRI Alexa 65, 35mm anamorphic cinema lens, dramatic shallow depth of field",
-        "Shot on ARRI Alexa 65, 50mm master prime cinema lens, razor-sharp commercial clarity",
-        "Shot on ARRI Alexa 65, 100mm extreme macro cinema lens, microscopic surface detail and creamy bokeh",
-        "Shot on ARRI Alexa 65, 65mm hero commercial lens, dramatic depth, volumetric light rays"
-      ][actIndex];
-
+    function buildStandaloneImagePrompt(imgModel) {
       return [
-        `Hollywood blockbuster commercial still frame, 9:16 vertical full-bleed framing (no split screen, no borders), style: ${vidModel.name} (${vidModel.cat}).`,
-        `Lighting & Atmosphere: ${vidModel.lighting}. Environment: ${imgModel.prompt}.`,
-        `${productSpec}`,
-        `Timeline Beat (${act.start}s-${act.end}s — ${act.role}): ${beatDesc}. ${lensByAct}. Ultra-realistic photorealistic 8K commercial production, physical light physics, crisp specular highlights.`,
+        `Ultra-realistic commercial product hero photograph, 9:16 vertical full-bleed framing (no split screen, no borders), style: ${imgModel.name} (${imgModel.cat}).`,
+        `Environment & Lighting: ${imgModel.prompt}.`,
+        getProductSpecText(),
+        `Shot on Phase One IQ4 150MP / ARRI Alexa 65 commercial lens, razor-sharp focus on the centered product, true-to-life material textures, realistic contact shadows, physically accurate specular reflections, 8K flagship studio quality.`,
+        `Strict Negative Constraints: NO altered product shape or colors, NO deformed or missing product parts, NO text, NO typography, NO watermarks, NO shopping cart icons or arrows, NO cartoon or CGI plastic look, NO split frames, NO borders.`
+      ].join("\n\n");
+    }
+
+    function buildHollywoodShotPrompt(vidModel, shotIndex) {
+      const shot = SIX_ACTION_SHOTS[shotIndex] || SIX_ACTION_SHOTS[0];
+      return [
+        `Hollywood blockbuster high-octane commercial frame, 9:16 vertical full-bleed framing (no split screen, no borders), style: ${vidModel.name} (${vidModel.cat}).`,
+        `Set & Environment: ${vidModel.env}.`,
+        `Cinematography & Lighting: ${vidModel.lighting}. ${shot.lens}.`,
+        getProductSpecText(),
+        `Action Shot ${shotIndex + 1}/6 (${shot.code}): ${shot.beat}. Ultra-realistic photorealistic 8K commercial production, real optical physics, intense specular edge highlights.`,
         `Strict Negative Constraints: NO altered product shape or colors, NO deformed or missing product parts, NO text, NO typography, NO watermarks, NO shopping cart icons or arrows, NO cartoon or CGI plastic look, NO split frames, NO borders, NO hands obscuring the product.`
       ].join("\n\n");
     }
 
-    function buildHollywoodMotionPrompt(imgModel, vidModel, actIndex, totalSeconds) {
-      const acts = getActTimings(totalSeconds);
-      const act = acts[actIndex] || acts[0];
-      const beatDesc = vidModel.beats[actIndex] || vidModel.beats[0];
-      const camChoreography = [
-        "Fast cinematic whip-pan and dynamic push-in revealing the exact product with shifting volumetric rim light and floating atmospheric dust.",
-        "Hard impact push-in with smooth speed ramping locking onto the exact centered hero product with sweeping specular reflections.",
-        "Silky ultra-smooth macro camera glide skimming across the exact product textures and edges with gleaming directional light.",
-        "Majestic slow orbital rise around the exact hero product as volumetric light shafts and fine glowing particles drift smoothly."
-      ][actIndex];
-
+    function buildHollywoodMotionPrompt(vidModel, shotIndex) {
+      const shot = SIX_ACTION_SHOTS[shotIndex] || SIX_ACTION_SHOTS[0];
       return [
-        `Fast-paced Hollywood commercial shot, 9:16 vertical, Timeline Beat (${act.start}s-${act.end}s): ${beatDesc}.`,
-        `Camera & VFX: ${camChoreography} Lighting: ${vidModel.lighting}. Environment: ${imgModel.prompt}.`,
+        `Fast-paced Hollywood commercial clip, 9:16 vertical, Action Shot (${shot.code}): ${shot.motion}`,
+        `Set: ${vidModel.env}. Lighting: ${vidModel.lighting}.`,
         `Strict Negative Constraints: Keep the exact reference product 100% identical in shape, colors, proportions and details throughout the entire motion. NO morphing, NO melting, NO text, NO watermarks, NO arrows, NO cartoon artifacts.`
       ].join(" ");
     }
 
-    function buildFullTimelinePreview(imgModel, vidModel, totalSeconds) {
-      const acts = getActTimings(totalSeconds);
+    // === CONSTRUTOR DE TIMELINE DE CORTES RÁPIDOS HOLLYWOOD (EXATOS 10s–30s) ===
+    function buildDynamicCutTimeline(totalSeconds, vidModel, sceneCount) {
+      const cuts = [];
+      const base = vidModel.cutBase || 0.9;
+      const moves = ["whipIn", "crashPunch", "floatTilt", "macroGlide", "orbitSweep", "zoomAttack", "reversePull", "climaxHold"];
+
+      // Ordem inteligente: começa com gancho explosivo nos 2s, salta entre poses dinâmicas, macro e fecha no Clímax Épico (última cena)
+      const orderPattern = [0, 2, 1, 3, 4, 2, 3, 1, 4, 0, 2, 3, 4, 1];
+      let t = 0;
+      let idx = 0;
+      const climaxDur = Math.min(2.6, Math.max(1.8, totalSeconds * 0.16));
+      const mainEnd = Math.max(2, totalSeconds - climaxDur);
+
+      while (t < mainEnd - 0.35) {
+        // Gancho nos primeiros 2.2s é 25% mais rápido para travar o scroll
+        const isHook = t < 2.2;
+        const speedMult = isHook ? 0.72 : (idx % 3 === 1 ? 1.15 : 0.92);
+        let dur = Math.max(0.55, Math.min(2.1, base * speedMult));
+
+        if (t + dur > mainEnd) {
+          dur = mainEnd - t;
+        }
+        if (dur < 0.45 && cuts.length > 0) {
+          cuts[cuts.length - 1].end = mainEnd;
+          t = mainEnd;
+          break;
+        }
+
+        let sceneIdx = orderPattern[idx % orderPattern.length] % sceneCount;
+        // Nunca repete a mesma cena duas vezes seguidas
+        if (cuts.length > 0 && cuts[cuts.length - 1].sceneIdx === sceneIdx && sceneCount > 1) {
+          sceneIdx = (sceneIdx + 1) % sceneCount;
+        }
+
+        const moveType = isHook
+          ? (idx % 2 === 0 ? "whipIn" : "crashPunch")
+          : moves[idx % (moves.length - 1)];
+
+        cuts.push({
+          start: t,
+          end: t + dur,
+          sceneIdx,
+          moveType,
+          impact: isHook || idx % 2 === 1
+        });
+        t += dur;
+        idx++;
+      }
+
+      // Clímax final sempre na cena épica (último índice gerado)
+      const climaxScene = Math.max(0, sceneCount - 1);
+      cuts.push({
+        start: t,
+        end: totalSeconds,
+        sceneIdx: climaxScene,
+        moveType: "climaxHold",
+        impact: true
+      });
+
+      return cuts;
+    }
+
+    function buildTimelinePreviewText(vidModel, cuts, totalSeconds) {
       const lines = [
-        `HOLLYWOOD COMMERCIAL — 9:16 VERTICAL — ${totalSeconds}s`,
-        `Cenário: ${imgModel.name}`,
-        `Direção: ${vidModel.name} (${vidModel.lighting})`,
+        `HOLLYWOOD COMMERCIAL — 9:16 VERTICAL — ${totalSeconds}s EXATOS (${cuts.length} CORTES DINÂMICOS)`,
+        `Modelo: ${vidModel.name} (${vidModel.cat})`,
+        `Cenário: ${vidModel.env}`,
+        `Iluminação: ${vidModel.lighting}`,
         `Transição: ${vidModel.transition} | VFX: ${vidModel.fx}`,
         ``,
-        `TIMELINE EM 4 ATOS:`
+        `TIMELINE DE CORTES & MOVIMENTO:`
       ];
-      acts.forEach((a, idx) => {
-        lines.push(`(${a.start}s-${a.end}s) [${a.role}] ${vidModel.beats[idx]}`);
+      cuts.forEach((c, i) => {
+        const shot = SIX_ACTION_SHOTS[c.sceneIdx] || SIX_ACTION_SHOTS[0];
+        lines.push(`#${String(i + 1).padStart(2, "0")} (${c.start.toFixed(1)}s–${c.end.toFixed(1)}s) [${shot.code}] → Mov: ${c.moveType}`);
       });
-      lines.push(``, `STRICT NEGATIVE CONSTRAINTS: 100% fidelidade ao produto original, ZERO texto embutido, ZERO marca d'água, ZERO seta de sacolinha, ZERO distorção.`);
+      lines.push(``, `STRICT NEGATIVE CONSTRAINTS: 100% fidelidade ao produto original, ZERO texto embutido, ZERO marca d'água, ZERO seta de sacolinha.`);
       return lines.join("\n");
     }
 
-    // === RENDERIZAÇÃO DOS CATÁLOGOS (50 + 50) ===
+    // === CATÁLOGOS (50 + 50) ===
     function renderImagePresets() {
       const q = imgSearch.value.trim().toLowerCase();
       const cat = imgCatFilter.value;
-      const list = IMAGE_MODELS.filter((m) => {
-        const matchCat = cat === "TODOS" || m.cat === cat;
-        const matchQ = !q || m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q);
-        return matchCat && matchQ;
-      });
-
-      imgPresetGrid.innerHTML = list
-        .map(
-          (m) => `
-          <button type="button" class="preset-item ${m.id === selectedImgModel.id ? "active" : ""}" data-img-id="${m.id}">
-            <div class="preset-top">
-              <strong>${m.name}</strong>
-              <span class="badge-cat">${m.cat}</span>
-            </div>
-            <p>${m.desc}</p>
-          </button>
-        `
-        )
-        .join("");
-
+      const list = IMAGE_MODELS.filter((m) => (cat === "TODOS" || m.cat === cat) && (!q || m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q)));
+      imgPresetGrid.innerHTML = list.map((m) => `
+        <button type="button" class="preset-item ${m.id === selectedImgModel.id ? "active" : ""}" data-img-id="${m.id}">
+          <div class="preset-top"><strong>${m.name}</strong><span class="badge-cat">${m.cat}</span></div>
+          <p>${m.desc}</p>
+        </button>
+      `).join("");
       imgPresetGrid.querySelectorAll(".preset-item").forEach((btn) => {
         btn.addEventListener("click", () => {
-          const id = Number(btn.dataset.imgId);
-          selectedImgModel = IMAGE_MODELS.find((x) => x.id === id) || IMAGE_MODELS[0];
+          selectedImgModel = IMAGE_MODELS.find((x) => x.id === Number(btn.dataset.imgId)) || IMAGE_MODELS[0];
           selectedImgLabel.textContent = `Selecionado: ${selectedImgModel.name}`;
           renderImagePresets();
         });
@@ -606,30 +701,16 @@
     function renderVideoPresets() {
       const q = vidSearch.value.trim().toLowerCase();
       const cat = vidCatFilter.value;
-      const list = VIDEO_MODELS.filter((m) => {
-        const matchCat = cat === "TODOS" || m.cat === cat;
-        const matchQ = !q || m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q);
-        return matchCat && matchQ;
-      });
-
-      vidPresetGrid.innerHTML = list
-        .map(
-          (m) => `
-          <button type="button" class="preset-item ${m.id === selectedVidModel.id ? "active" : ""}" data-vid-id="${m.id}">
-            <div class="preset-top">
-              <strong>${m.name}</strong>
-              <span class="badge-cat">${m.cat}</span>
-            </div>
-            <p>${m.desc}</p>
-          </button>
-        `
-        )
-        .join("");
-
+      const list = VIDEO_MODELS.filter((m) => (cat === "TODOS" || m.cat === cat) && (!q || m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q)));
+      vidPresetGrid.innerHTML = list.map((m) => `
+        <button type="button" class="preset-item ${m.id === selectedVidModel.id ? "active" : ""}" data-vid-id="${m.id}">
+          <div class="preset-top"><strong>${m.name}</strong><span class="badge-cat">${m.cat}</span></div>
+          <p>${m.desc}</p>
+        </button>
+      `).join("");
       vidPresetGrid.querySelectorAll(".preset-item").forEach((btn) => {
         btn.addEventListener("click", () => {
-          const id = Number(btn.dataset.vidId);
-          selectedVidModel = VIDEO_MODELS.find((x) => x.id === id) || VIDEO_MODELS[0];
+          selectedVidModel = VIDEO_MODELS.find((x) => x.id === Number(btn.dataset.vidId)) || VIDEO_MODELS[0];
           selectedVidLabel.textContent = `Selecionado: ${selectedVidModel.name}`;
           renderVideoPresets();
         });
@@ -647,7 +728,8 @@
       const words = scriptText.value.trim().split(/\s+/).filter(Boolean);
       const sec = Number(minDuration.value) || 15;
       wordCount.textContent = `${words.length} palavras`;
-      estTime.textContent = `Timeline em 4 Atos Hollywood • ${sec}s`;
+      estTime.textContent = `6 Ângulos de Ação • Duração Cravada: ${sec}s`;
+      btnBuild.textContent = `Gerar Vídeo Hollywood MP4 (${sec}s Exatos)`;
     }
     scriptText.addEventListener("input", updateCounter);
     minDuration.addEventListener("change", updateCounter);
@@ -683,17 +765,10 @@
     function buildSubtitles(text, totalDuration) {
       const words = text.trim().split(/\s+/).filter(Boolean);
       const chunks = [];
-      for (let i = 0; i < words.length; i += 3) {
-        chunks.push(words.slice(i, i + 3).join(" "));
-      }
+      for (let i = 0; i < words.length; i += 3) chunks.push(words.slice(i, i + 3).join(" "));
       if (!chunks.length) return [];
       const slice = totalDuration / chunks.length;
-      return chunks.map((line, idx) => ({
-        index: idx + 1,
-        start: idx * slice,
-        end: (idx + 1) * slice,
-        text: line
-      }));
+      return chunks.map((line, idx) => ({ index: idx + 1, start: idx * slice, end: (idx + 1) * slice, text: line }));
     }
 
     function formatSrtTime(sec) {
@@ -705,9 +780,7 @@
     }
 
     function createSrtContent(subs) {
-      return subs
-        .map((s) => `${s.index}\n${formatSrtTime(s.start)} --> ${formatSrtTime(s.end)}\n${s.text}\n`)
-        .join("\n");
+      return subs.map((s) => `${s.index}\n${formatSrtTime(s.start)} --> ${formatSrtTime(s.end)}\n${s.text}\n`).join("\n");
     }
 
     function loadImage(url) {
@@ -720,6 +793,41 @@
       });
     }
 
+    // Pré-escala cada imagem em canvas offscreen 900x1600 (garante 30fps travados sem queda de FPS!)
+    function preScaleToOffscreen(img) {
+      const oc = document.createElement("canvas");
+      oc.width = 900;
+      oc.height = 1600;
+      const octx = oc.getContext("2d", { alpha: false });
+      const targetRatio = oc.width / oc.height;
+      const srcRatio = img.naturalWidth / img.naturalHeight;
+      let sw = img.naturalWidth, sh = img.naturalHeight, sx = 0, sy = 0;
+      if (srcRatio > targetRatio) {
+        sw = sh * targetRatio;
+        sx = (img.naturalWidth - sw) / 2;
+      } else {
+        sh = sw / targetRatio;
+        sy = (img.naturalHeight - sh) / 2;
+      }
+      octx.drawImage(img, sx, sy, sw, sh, 0, 0, oc.width, oc.height);
+      return oc;
+    }
+
+    // Pré-renderiza vinheta estática uma única vez
+    function createVignetteCache() {
+      const vc = document.createElement("canvas");
+      vc.width = canvas.width;
+      vc.height = canvas.height;
+      const vctx = vc.getContext("2d");
+      const vig = vctx.createRadialGradient(vc.width / 2, vc.height / 2, vc.width * 0.34, vc.width / 2, vc.height / 2, vc.height * 0.68);
+      vig.addColorStop(0, "rgba(0,0,0,0)");
+      vig.addColorStop(1, "rgba(0,0,0,0.48)");
+      vctx.fillStyle = vig;
+      vctx.fillRect(0, 0, vc.width, vc.height);
+      return vc;
+    }
+    const vignetteCanvas = createVignetteCache();
+
     async function tryLoadMotionVideo(videoUrl) {
       if (!videoUrl) return null;
       try {
@@ -731,14 +839,8 @@
         vid.playsInline = true;
         await new Promise((resolve) => {
           const timer = setTimeout(() => resolve(), 6000);
-          vid.onloadeddata = () => {
-            clearTimeout(timer);
-            resolve();
-          };
-          vid.onerror = () => {
-            clearTimeout(timer);
-            resolve();
-          };
+          vid.onloadeddata = () => { clearTimeout(timer); resolve(); };
+          vid.onerror = () => { clearTimeout(timer); resolve(); };
         });
         if (vid.readyState >= 2) {
           await vid.play().catch(() => {});
@@ -750,16 +852,15 @@
       }
     }
 
-    // === COMPOSITOR CINEMA 9:16 COM ENQUADRAMENTO COVER TRAVADO (ZERO BORDA PRETA) ===
-    function drawFullFrameCover(context2d, source, srcW, srcH, scale, panX, panY, angleRad = 0, alpha = 1) {
+    // Desenho Cover Travado (Zero borda preta mesmo com rotação/shake/whip-pan)
+    function drawCoverFrame(context2d, source, srcW, srcH, scale, panX, panY, angleRad = 0, alpha = 1) {
       if (!source || !srcW || !srcH) return;
       const cw = canvas.width;
       const ch = canvas.height;
       const canvasRatio = cw / ch;
       const srcRatio = srcW / srcH;
 
-      let baseW = cw;
-      let baseH = ch;
+      let baseW = cw, baseH = ch;
       if (srcRatio > canvasRatio) {
         baseH = ch;
         baseW = baseH * srcRatio;
@@ -768,14 +869,8 @@
         baseH = baseW / srcRatio;
       }
 
-      // Garante cobertura total mesmo com pan + leve inclinação cinematográfica
-      const minSafeScale =
-        1.03 +
-        (Math.abs(panX) * 2.15) / cw +
-        (Math.abs(panY) * 2.15) / ch +
-        Math.abs(angleRad) * 2.4;
+      const minSafeScale = 1.04 + (Math.abs(panX) * 2.2) / cw + (Math.abs(panY) * 2.2) / ch + Math.abs(angleRad) * 2.6;
       const finalScale = Math.max(scale, minSafeScale);
-
       const w = baseW * finalScale;
       const h = baseH * finalScale;
 
@@ -793,85 +888,141 @@
         arr.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          r: fxType === "bokehGold" ? 4 + Math.random() * 14 : 1.5 + Math.random() * 3.8,
-          vx: (Math.random() - 0.5) * (fxType === "shatterSpark" ? 130 : 28),
-          vy: fxType === "embers" || fxType === "bokehGold" ? -(24 + Math.random() * 68) : (Math.random() - 0.5) * 42,
-          alpha: 0.25 + Math.random() * 0.65,
+          r: fxType === "bokehGold" ? 4 + Math.random() * 12 : 1.5 + Math.random() * 3.5,
+          vx: (Math.random() - 0.5) * (fxType === "shatterSpark" ? 160 : 38),
+          vy: fxType === "embers" || fxType === "bokehGold" ? -(35 + Math.random() * 90) : (Math.random() - 0.5) * 55,
+          alpha: 0.3 + Math.random() * 0.65,
           phase: Math.random() * Math.PI * 2
         });
       }
       return arr;
     }
 
-    function drawHollywoodVfx(context2d, elapsed, actIndex, actProgress, cutEdgeDelta, vidStyle, particles) {
+    function easeOutCubic(t) { return 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3); }
+    function easeOutExpo(t) { const x = Math.min(1, Math.max(0, t)); return x === 1 ? 1 : 1 - Math.pow(2, -10 * x); }
+    function easeInOutQuad(t) { const x = Math.min(1, Math.max(0, t)); return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+    function speedRampCurve(t) {
+      const x = Math.min(1, Math.max(0, t));
+      if (x < 0.22) return easeOutCubic(x / 0.22) * 0.45;
+      if (x < 0.80) return 0.45 + ((x - 0.22) / 0.58) * 0.28;
+      return 0.73 + Math.pow((x - 0.80) / 0.20, 2.2) * 0.27;
+    }
+
+    // Relógio em Web Worker (impede Chrome de travar FPS se usuário trocar de aba!)
+    function createPrecisionTicker(fps, onTick) {
+      const intervalMs = 1000 / fps;
+      try {
+        const code = `let id=setInterval(()=>postMessage(1),${intervalMs});onmessage=()=>{clearInterval(id);close();};`;
+        const blob = new Blob([code], { type: "application/javascript" });
+        const url = URL.createObjectURL(blob);
+        const worker = new Worker(url);
+        worker.onmessage = onTick;
+        return () => {
+          worker.postMessage("stop");
+          worker.terminate();
+          URL.revokeObjectURL(url);
+        };
+      } catch {
+        const id = setInterval(onTick, intervalMs);
+        return () => clearInterval(id);
+      }
+    }
+
+    // Trilha de áudio silenciosa para travar duração exata no MediaRecorder (impede 15s virar 9s!)
+    function createSilentAudioClock(audioCtx) {
+      if (!audioCtx) return null;
+      try {
+        const dest = audioCtx.createMediaStreamDestination();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = 440;
+        gain.gain.value = 0.00001; // Inaudível, mas mantém o relógio de 48kHz vivo
+        osc.connect(gain);
+        gain.connect(dest);
+        osc.start();
+        return {
+          track: dest.stream.getAudioTracks()[0],
+          stop: () => {
+            try { osc.stop(); } catch {}
+            try { osc.disconnect(); gain.disconnect(); } catch {}
+          }
+        };
+      } catch {
+        return null;
+      }
+    }
+
+    function drawHollywoodVfx(context2d, elapsed, cutIdx, cutProgress, cutElapsed, cutImpact, vidStyle, particles, source, srcW, srcH, scale, panX, panY, angleRad) {
       const cw = canvas.width;
       const ch = canvas.height;
       const accent = vidStyle.accent || "#22c55e";
 
-      // 1. Rim Light Atmosférico Sutil nas Bordas
-      context2d.save();
-      context2d.globalCompositeOperation = "screen";
-      const rimAlpha = vidStyle.fx === "cleanLuxury" ? 0.08 : 0.17;
-      const rimGrad = context2d.createRadialGradient(
-        cw * (actIndex % 2 === 0 ? 0.12 : 0.88),
-        ch * (actIndex === 2 ? 0.35 : 0.22),
-        30,
-        cw * 0.5,
-        ch * 0.5,
-        ch * 0.72
-      );
-      rimGrad.addColorStop(0, accent);
-      rimGrad.addColorStop(1, "rgba(0,0,0,0)");
-      context2d.globalAlpha = rimAlpha;
-      context2d.fillStyle = rimGrad;
-      context2d.fillRect(0, 0, cw, ch);
-      context2d.restore();
-
-      // 2. Varredura Especular de Luz (Light Sweep) — especialmente forte no Ato 3 (Macro) e Ato 4 (Hero)
-      if (vidStyle.fx === "lightSweep" || vidStyle.fx === "lensFlare" || actIndex === 2 || actIndex === 3) {
-        const sweepT = (actProgress * 1.45) - 0.2;
-        if (sweepT >= -0.2 && sweepT <= 1.2) {
-          context2d.save();
-          context2d.globalCompositeOperation = "screen";
-          const sx = sweepT * (cw + 420) - 210;
-          const beam = context2d.createLinearGradient(sx - 130, 0, sx + 130, ch * 0.6);
-          beam.addColorStop(0, "rgba(255,255,255,0)");
-          beam.addColorStop(0.5, vidStyle.fx === "lensFlare" ? accent : "rgba(255,255,255,0.22)");
-          beam.addColorStop(1, "rgba(255,255,255,0)");
-          context2d.globalAlpha = vidStyle.fx === "lensFlare" ? 0.22 : 0.16;
-          context2d.fillStyle = beam;
-          context2d.fillRect(0, 0, cw, ch);
-          context2d.restore();
-        }
-      }
-
-      // 3. Flare Anamórfico Horizontal nos cortes de modelos Cinema/Blockbuster
-      if (vidStyle.fx === "lensFlare" && cutEdgeDelta < 0.35) {
-        const strength = (1 - cutEdgeDelta / 0.35) * 0.55;
+      // 1. Pulso de Aberração Cromática (RGB Split) nos cortes de impacto
+      if (cutImpact && cutElapsed < 0.14 && source && srcW && srcH) {
+        const splitAmt = (1 - cutElapsed / 0.14) * 14 * (vidStyle.energy || 1);
         context2d.save();
         context2d.globalCompositeOperation = "screen";
-        const fy = ch * 0.44;
-        const flare = context2d.createLinearGradient(0, fy, cw, fy);
-        flare.addColorStop(0, "rgba(0,0,0,0)");
-        flare.addColorStop(0.35, accent);
-        flare.addColorStop(0.5, "#ffffff");
-        flare.addColorStop(0.65, accent);
-        flare.addColorStop(1, "rgba(0,0,0,0)");
-        context2d.globalAlpha = strength;
-        context2d.fillStyle = flare;
-        context2d.fillRect(0, fy - 14, cw, 28);
+        drawCoverFrame(context2d, source, srcW, srcH, scale * 1.015, panX + splitAmt, panY, angleRad, 0.24);
+        drawCoverFrame(context2d, source, srcW, srcH, scale * 1.015, panX - splitAmt, panY, angleRad, 0.20);
         context2d.restore();
       }
 
-      // 4. Partículas Cinematográficas (Embers, Bokeh Dourado, Sparks, Ice Dust)
+      // 2. Varredura Especular Diagonal (Light Sweep) cruzando o produto
+      const sweepT = cutProgress * 1.55 - 0.25;
+      if (sweepT >= -0.25 && sweepT <= 1.25 && (vidStyle.fx !== "cleanLuxury" || cutIdx % 2 === 0)) {
+        context2d.save();
+        context2d.globalCompositeOperation = "screen";
+        const sx = sweepT * (cw + 460) - 230;
+        const beam = context2d.createLinearGradient(sx - 120, 0, sx + 120, ch * 0.55);
+        beam.addColorStop(0, "rgba(255,255,255,0)");
+        beam.addColorStop(0.5, vidStyle.fx === "lensFlare" ? accent : "rgba(255,255,255,0.24)");
+        beam.addColorStop(1, "rgba(255,255,255,0)");
+        context2d.globalAlpha = vidStyle.fx === "lensFlare" ? 0.28 : 0.18;
+        context2d.fillStyle = beam;
+        context2d.fillRect(0, 0, cw, ch);
+        context2d.restore();
+      }
+
+      // 3. Rim Light Pulsante nas Bordas
+      context2d.save();
+      context2d.globalCompositeOperation = "screen";
+      const pulse = 0.12 + 0.08 * Math.sin(elapsed * 6);
+      const edgeX = cutIdx % 2 === 0 ? 0 : cw;
+      const edgeGrad = context2d.createLinearGradient(edgeX, 0, cw - edgeX, ch * 0.4);
+      edgeGrad.addColorStop(0, accent);
+      edgeGrad.addColorStop(0.45, "rgba(0,0,0,0)");
+      context2d.globalAlpha = vidStyle.fx === "cleanLuxury" ? 0.08 : pulse;
+      context2d.fillStyle = edgeGrad;
+      context2d.fillRect(0, 0, cw, ch);
+      context2d.restore();
+
+      // 4. Anamorphic Lens Flare nos impactos
+      if ((vidStyle.fx === "lensFlare" || vidStyle.fx === "shatterSpark") && cutElapsed < 0.26) {
+        const str = (1 - cutElapsed / 0.26) * 0.65;
+        context2d.save();
+        context2d.globalCompositeOperation = "screen";
+        const fy = ch * 0.46;
+        const flare = context2d.createLinearGradient(0, fy, cw, fy);
+        flare.addColorStop(0, "rgba(0,0,0,0)");
+        flare.addColorStop(0.32, accent);
+        flare.addColorStop(0.5, "#ffffff");
+        flare.addColorStop(0.68, accent);
+        flare.addColorStop(1, "rgba(0,0,0,0)");
+        context2d.globalAlpha = str;
+        context2d.fillStyle = flare;
+        context2d.fillRect(0, fy - 12, cw, 24);
+        context2d.restore();
+      }
+
+      // 5. Partículas Dinâmicas (Faíscas, Embers, Bokeh Dourado)
       if (vidStyle.fx !== "cleanLuxury" && particles.length) {
         context2d.save();
         context2d.globalCompositeOperation = "screen";
         for (const p of particles) {
           const px = ((p.x + p.vx * elapsed) % cw + cw) % cw;
           const py = ((p.y + p.vy * elapsed) % ch + ch) % ch;
-          const twinkle = 0.55 + 0.45 * Math.sin(elapsed * 4 + p.phase);
-          context2d.globalAlpha = p.alpha * twinkle * (vidStyle.fx === "bokehGold" ? 0.26 : 0.62);
+          const twinkle = 0.5 + 0.5 * Math.sin(elapsed * 5 + p.phase);
+          context2d.globalAlpha = p.alpha * twinkle * (vidStyle.fx === "bokehGold" ? 0.30 : 0.68);
           context2d.fillStyle = p.phase > 4.2 ? "#ffffff" : accent;
           context2d.beginPath();
           context2d.arc(px, py, p.r, 0, Math.PI * 2);
@@ -880,64 +1031,50 @@
         context2d.restore();
       }
 
-      // 5. Impacto de Transição (Flash seco ou Whip-Pan streak)
-      if (cutEdgeDelta < 0.14 && (vidStyle.transition === "hardFlash" || vidStyle.transition === "crashZoom" || vidStyle.fx === "flashStrobe")) {
-        const flashAlpha = (1 - cutEdgeDelta / 0.14) * (vidStyle.transition === "hardFlash" ? 0.42 : 0.24);
+      // 6. Flash de Corte Seco (Optical Hit)
+      if (cutImpact && cutElapsed < 0.11 && (vidStyle.transition === "hardFlash" || vidStyle.transition === "crashZoom" || vidStyle.fx === "flashStrobe")) {
         context2d.save();
         context2d.globalCompositeOperation = "screen";
         context2d.fillStyle = "#ffffff";
-        context2d.globalAlpha = flashAlpha;
+        context2d.globalAlpha = (1 - cutElapsed / 0.11) * (vidStyle.transition === "hardFlash" ? 0.50 : 0.28);
         context2d.fillRect(0, 0, cw, ch);
         context2d.restore();
       }
 
-      // 6. Vinheta Cinematográfica Sutil (foco total no produto no centro)
-      context2d.save();
-      const vig = context2d.createRadialGradient(cw / 2, ch / 2, cw * 0.34, cw / 2, ch / 2, ch * 0.68);
-      vig.addColorStop(0, "rgba(0,0,0,0)");
-      vig.addColorStop(1, "rgba(0,0,0,0.46)");
-      context2d.fillStyle = vig;
-      context2d.fillRect(0, 0, cw, ch);
-      context2d.restore();
+      // 7. Vinheta Cinematográfica Pré-Renderizada (Custo zero de CPU!)
+      context2d.drawImage(vignetteCanvas, 0, 0);
     }
 
-    function easeOutCubic(t) {
-      return 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
-    }
-
-    function easeInOutQuad(t) {
-      const x = Math.min(1, Math.max(0, t));
-      return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
-    }
-
-    function speedRampEase(t) {
-      const x = Math.min(1, Math.max(0, t));
-      if (x < 0.28) return Math.pow(x / 0.28, 2.4) * 0.52;
-      return 0.52 + easeOutCubic((x - 0.28) / 0.72) * 0.48;
-    }
-
-    async function renderHollywoodVideo(images, motionClips, targetSeconds, withBurnedSubs, withVfx, vidStyle, textForSubs) {
+    async function renderHollywoodVideo(preScaledCanvases, motionClips, targetSeconds, withBurnedSubs, withVfx, vidStyle, textForSubs, audioCtx) {
       const finalDuration = Math.min(30, Math.max(10, Number(targetSeconds) || 15));
       const finalSubs = buildSubtitles(textForSubs, finalDuration);
-      const acts = getActTimings(finalDuration);
+      const cuts = buildDynamicCutTimeline(finalDuration, vidStyle, preScaledCanvases.length);
       const particles = createParticles(vidStyle.fx === "bokehGold" ? 20 : 28, vidStyle.fx);
 
-      // Frame inicial seguro antes de iniciar o MediaRecorder
+      // Frame 0 seguro antes de iniciar o gravador
       ctx.fillStyle = "#04060a";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      if (images[0] && images[0].naturalWidth && images[0].naturalHeight) {
-        drawFullFrameCover(ctx, images[0], images[0].naturalWidth, images[0].naturalHeight, 1.08, 0, 0, 0, 1);
+      if (preScaledCanvases[0]) {
+        drawCoverFrame(ctx, preScaledCanvases[0], preScaledCanvases[0].width, preScaledCanvases[0].height, 1.08, 0, 0, 0, 1);
       }
 
       const canvasStream = canvas.captureStream(30);
       const profile = activeCodecProfile;
-      const recorderOptions = { videoBitsPerSecond: 6000000 };
+      const silentClock = profile.withAudio ? createSilentAudioClock(audioCtx) : null;
+
+      let combinedStream = canvasStream;
+      if (silentClock && silentClock.track) {
+        combinedStream = new MediaStream([...canvasStream.getVideoTracks(), silentClock.track]);
+      }
+
+      const recorderOptions = { videoBitsPerSecond: 6500000 };
       if (profile.mimeType) recorderOptions.mimeType = profile.mimeType;
 
       let recorder;
       try {
-        recorder = new MediaRecorder(canvasStream, recorderOptions);
+        recorder = new MediaRecorder(combinedStream, recorderOptions);
       } catch {
+        // Fallback seguro caso o browser rejeite áudio+vídeo no codec
         recorder = profile.mimeType
           ? new MediaRecorder(canvasStream, { mimeType: profile.mimeType })
           : new MediaRecorder(canvasStream);
@@ -950,127 +1087,159 @@
 
       const donePromise = new Promise((resolve) => {
         recorder.onstop = () => {
+          if (silentClock) silentClock.stop();
           const outType = profile.baseType || recorder.mimeType || "video/webm";
           resolve(new Blob(chunks, { type: outType }));
         };
       });
 
-      recorder.start(250);
+      recorder.start(200);
 
       const startTime = performance.now();
       const progressBar = document.getElementById("renderProgressFill");
+      const progressText = document.getElementById("renderProgressSec");
+      let finished = false;
 
       await new Promise((resolve) => {
-        function drawFrame(now) {
-          const elapsed = (now - startTime) / 1000;
+        const stopTicker = createPrecisionTicker(30, () => {
+          if (finished) return;
+          const elapsed = (performance.now() - startTime) / 1000;
+
           if (progressBar) {
             progressBar.style.width = `${Math.min(100, Math.round((elapsed / finalDuration) * 100))}%`;
           }
+          if (progressText) {
+            progressText.textContent = `${Math.min(finalDuration, elapsed).toFixed(1)}s / ${finalDuration}.0s`;
+          }
 
-          if (elapsed >= finalDuration) {
+          if (elapsed >= finalDuration + 0.12) {
+            finished = true;
+            stopTicker();
             if (Array.isArray(motionClips)) {
               motionClips.forEach((v) => { if (v && typeof v.pause === "function") v.pause(); });
             }
-            if (recorder.state !== "inactive") {
-              recorder.stop();
-            }
+            if (recorder.state !== "inactive") recorder.stop();
             resolve();
             return;
           }
 
-          // Identifica em qual dos 4 Atos Hollywood estamos
-          let actIndex = 0;
-          for (let i = 0; i < acts.length; i++) {
-            if (elapsed >= acts[i].start && elapsed < acts[i].end) {
-              actIndex = i;
+          const clampedElapsed = Math.min(finalDuration - 0.001, elapsed);
+          let cutIdx = cuts.length - 1;
+          for (let i = 0; i < cuts.length; i++) {
+            if (clampedElapsed >= cuts[i].start && clampedElapsed < cuts[i].end) {
+              cutIdx = i;
               break;
             }
-            if (i === acts.length - 1) actIndex = i;
           }
 
-          const act = acts[actIndex];
-          const actDur = Math.max(0.5, act.end - act.start);
-          const actElapsed = Math.max(0, elapsed - act.start);
-          const actProgress = Math.min(1, actElapsed / actDur);
+          const cut = cuts[cutIdx];
+          const cutDur = Math.max(0.25, cut.end - cut.start);
+          const cutElapsed = Math.max(0, clampedElapsed - cut.start);
+          const p = Math.min(1, cutElapsed / cutDur);
 
-          const sceneIdx = actIndex % Math.max(1, images.length);
-          const prevIdx = Math.max(0, actIndex - 1) % Math.max(1, images.length);
-          const img = images[sceneIdx];
-          const prevImg = images[prevIdx];
-          const clipVid = Array.isArray(motionClips) ? motionClips[sceneIdx] : null;
+          const srcCanvas = preScaledCanvases[cut.sceneIdx] || preScaledCanvases[0];
+          const prevCanvas = preScaledCanvases[Math.max(0, cutIdx - 1) < cuts.length ? cuts[Math.max(0, cutIdx - 1)].sceneIdx : 0];
+          const clipVid = Array.isArray(motionClips) ? motionClips[cut.sceneIdx] : null;
           const hasRealMotion = Boolean(clipVid && clipVid.readyState >= 2 && clipVid.videoWidth && clipVid.videoHeight);
+          const activeSrc = hasRealMotion ? clipVid : srcCanvas;
+          const activeW = hasRealMotion ? clipVid.videoWidth : (srcCanvas ? srcCanvas.width : 900);
+          const activeH = hasRealMotion ? clipVid.videoHeight : (srcCanvas ? srcCanvas.height : 1600);
 
-          // Coreografia distinta por Ato (elimina repetição!)
-          const energy = vidStyle.energy || 0.9;
-          const ramp = speedRampEase(actProgress);
-          const smooth = easeInOutQuad(actProgress);
+          const energy = vidStyle.energy || 1.0;
+          const zAmt = vidStyle.zoomAmt || 0.32;
+          const panAmt = vidStyle.pan || 64;
+          const ramp = speedRampCurve(p);
+          const smooth = easeInOutQuad(p);
+          const dir = cutIdx % 2 === 0 ? 1 : -1;
 
-          let scale = 1.06;
+          // Coreografia agressiva de movimento por tipo de corte
+          let scale = 1.08;
           let panX = 0;
           let panY = 0;
           let angleRad = 0;
+          let whipBlurX = 0;
 
           if (hasRealMotion) {
-            scale = 1.04 + smooth * 0.06;
-          } else if (actIndex === 0) {
-            // ATO 1: GANCHO / WHIP-PAN DE ENTRADA + PUSH-IN
-            const whipOffset = vidStyle.transition === "whipPan" && actElapsed < 0.22
-              ? (1 - easeOutCubic(actElapsed / 0.22)) * 95
-              : 0;
-            scale = 1.06 + ramp * (vidStyle.zoomAmt * 0.85);
-            panX = -vidStyle.pan * 0.5 + ramp * vidStyle.pan + whipOffset;
-            panY = (1 - ramp) * 20;
-            angleRad = (1 - ramp) * 0.014 * energy;
-          } else if (actIndex === 1) {
-            // ATO 2: HARD CUT HERO REVEAL — impacto seco + micro-punch + estabilização hero
-            const punchDecay = actElapsed < 0.26 ? (1 - easeOutCubic(actElapsed / 0.26)) : 0;
-            const microShakeX = vidStyle.transition === "crashZoom" && punchDecay > 0 ? Math.sin(elapsed * 75) * 8 * punchDecay : 0;
-            const microShakeY = vidStyle.transition === "crashZoom" && punchDecay > 0 ? Math.cos(elapsed * 68) * 6 * punchDecay : 0;
-            scale = 1.24 - easeOutCubic(actProgress) * 0.14 + punchDecay * 0.08;
-            panX = microShakeX + (smooth - 0.5) * (vidStyle.pan * 0.45);
-            panY = microShakeY - (smooth - 0.5) * 18;
-            angleRad = -0.008 * energy * (1 - smooth);
-          } else if (actIndex === 2) {
-            // ATO 3: MACRO GLIDE NAS TEXTURAS — aproximação profunda + travessia sedosa
-            scale = 1.18 + smooth * (vidStyle.zoomAmt * 0.72);
-            panX = (0.5 - smooth) * (vidStyle.pan * 1.15);
-            panY = (smooth - 0.5) * 34;
-            angleRad = (smooth - 0.5) * 0.012 * energy;
+            scale = 1.05 + smooth * 0.08;
+          } else if (cut.moveType === "whipIn") {
+            const whipT = cutElapsed < 0.16 ? (1 - easeOutExpo(cutElapsed / 0.16)) : 0;
+            whipBlurX = whipT * 115 * dir;
+            scale = 1.08 + ramp * zAmt * 0.85;
+            panX = whipBlurX + dir * (ramp - 0.5) * panAmt;
+            panY = (0.5 - ramp) * 28;
+            angleRad = dir * (whipT * 0.045 + (0.5 - ramp) * 0.018 * energy);
+          } else if (cut.moveType === "crashPunch") {
+            const punch = cutElapsed < 0.20 ? (1 - easeOutExpo(cutElapsed / 0.20)) : 0;
+            const shakeX = punch > 0 ? Math.sin(elapsed * 95) * 12 * punch * energy : 0;
+            const shakeY = punch > 0 ? Math.cos(elapsed * 85) * 9 * punch * energy : 0;
+            scale = 1.12 + punch * 0.28 + (1 - p) * 0.10;
+            panX = shakeX + dir * (smooth - 0.5) * 32;
+            panY = shakeY + (0.5 - smooth) * 22;
+            angleRad = dir * punch * 0.03;
+          } else if (cut.moveType === "floatTilt") {
+            // Simula levitação 3D / balanço cinematográfico no produto
+            const floatWave = Math.sin(p * Math.PI * 2);
+            scale = 1.12 + smooth * (zAmt * 0.65);
+            panX = Math.sin(p * Math.PI) * panAmt * 0.6 * dir;
+            panY = floatWave * 24;
+            angleRad = Math.sin(p * Math.PI) * 0.032 * dir * energy;
+          } else if (cut.moveType === "macroGlide") {
+            // Macro profundo deslizando sobre texturas
+            scale = 1.24 + ramp * (zAmt * 0.65);
+            panX = (0.5 - smooth) * panAmt * 1.25 * dir;
+            panY = (smooth - 0.5) * 42;
+            angleRad = (smooth - 0.5) * 0.022 * dir;
+          } else if (cut.moveType === "orbitSweep") {
+            // Varredura lateral de órbita
+            scale = 1.16 + Math.sin(p * Math.PI) * 0.14;
+            panX = (smooth - 0.5) * panAmt * 1.3 * dir;
+            panY = -Math.sin(p * Math.PI) * 26;
+            angleRad = (0.5 - smooth) * 0.028 * dir;
+          } else if (cut.moveType === "zoomAttack") {
+            // Ataque progressivo até o próximo corte
+            scale = 1.06 + Math.pow(p, 1.8) * (zAmt * 1.15);
+            panX = dir * p * 26;
+            panY = -p * 20;
+            angleRad = dir * p * 0.02;
+          } else if (cut.moveType === "reversePull") {
+            // Pullback explosivo revelando tudo
+            scale = 1.38 - easeOutCubic(p) * 0.30;
+            panX = (1 - easeOutCubic(p)) * 42 * dir;
+            panY = (1 - easeOutCubic(p)) * 22;
+            angleRad = (1 - easeOutCubic(p)) * -0.025 * dir;
           } else {
-            // ATO 4: EPIC HERO CLIMAX — recuo majestoso / órbita de fechamento
-            scale = 1.22 - smooth * 0.13;
-            panX = Math.sin(smooth * Math.PI) * (vidStyle.pan * 0.35);
-            panY = (1 - smooth) * 16;
-            angleRad = 0;
+            // Clímax Hero Épico final (impacto + estabilização majestosa)
+            const hit = cutElapsed < 0.25 ? (1 - easeOutExpo(cutElapsed / 0.25)) : 0;
+            scale = 1.26 + hit * 0.14 - smooth * 0.18;
+            panX = Math.sin(smooth * Math.PI) * 22;
+            panY = (1 - smooth) * 22;
+            angleRad = hit * 0.02;
           }
 
           ctx.fillStyle = "#04060a";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          // Crossfade suave opcional para modelos Cinema / Vendas na virada de ato
-          const isSmoothFade = vidStyle.transition === "smoothGlide" && actIndex > 0 && actElapsed < 0.24 && prevImg && prevImg.naturalWidth;
-          if (isSmoothFade) {
-            const fadeT = easeOutCubic(actElapsed / 0.24);
-            drawFullFrameCover(ctx, prevImg, prevImg.naturalWidth, prevImg.naturalHeight, 1.12, 0, 0, 0, 1);
-            if (hasRealMotion) {
-              drawFullFrameCover(ctx, clipVid, clipVid.videoWidth, clipVid.videoHeight, scale, panX, panY, angleRad, fadeT);
-            } else if (img && img.naturalWidth) {
-              drawFullFrameCover(ctx, img, img.naturalWidth, img.naturalHeight, scale, panX, panY, angleRad, fadeT);
-            }
-          } else if (hasRealMotion) {
-            drawFullFrameCover(ctx, clipVid, clipVid.videoWidth, clipVid.videoHeight, scale, panX, panY, angleRad, 1);
-          } else if (img && img.naturalWidth && img.naturalHeight) {
-            drawFullFrameCover(ctx, img, img.naturalWidth, img.naturalHeight, scale, panX, panY, angleRad, 1);
+          // Whip-Pan Motion Blur real na virada de cena
+          if (Math.abs(whipBlurX) > 12 && withVfx) {
+            drawCoverFrame(ctx, activeSrc, activeW, activeH, scale, panX - whipBlurX * 0.55, panY, angleRad, 1);
+            drawCoverFrame(ctx, activeSrc, activeW, activeH, scale, panX - whipBlurX * 0.25, panY, angleRad, 0.55);
+            drawCoverFrame(ctx, activeSrc, activeW, activeH, scale, panX, panY, angleRad, 0.65);
+          } else if (vidStyle.transition === "smoothGlide" && cutIdx > 0 && cutElapsed < 0.20 && prevCanvas) {
+            const fadeT = easeOutCubic(cutElapsed / 0.20);
+            drawCoverFrame(ctx, prevCanvas, prevCanvas.width, prevCanvas.height, 1.14, 0, 0, 0, 1);
+            drawCoverFrame(ctx, activeSrc, activeW, activeH, scale, panX, panY, angleRad, fadeT);
+          } else {
+            drawCoverFrame(ctx, activeSrc, activeW, activeH, scale, panX, panY, angleRad, 1);
           }
 
-          // Camada Hollywood VFX
+          // VFX Hollywood
           if (withVfx) {
-            drawHollywoodVfx(ctx, elapsed, actIndex, actProgress, actElapsed, vidStyle, particles);
+            drawHollywoodVfx(ctx, clampedElapsed, cutIdx, p, cutElapsed, cut.impact, vidStyle, particles, activeSrc, activeW, activeH, scale, panX, panY, angleRad);
           }
 
-          // Legenda Compacta (Zona Segura — apenas se ativada)
+          // Legenda Compacta (Zona Segura)
           if (withBurnedSubs) {
-            const activeSub = finalSubs.find((s) => elapsed >= s.start && elapsed <= s.end);
+            const activeSub = finalSubs.find((s) => clampedElapsed >= s.start && clampedElapsed <= s.end);
             if (activeSub) {
               ctx.save();
               ctx.font = "800 22px Inter, Arial, sans-serif";
@@ -1082,7 +1251,7 @@
               const boxX = (canvas.width - boxW) / 2;
               const boxY = canvas.height - 380;
 
-              ctx.fillStyle = "rgba(4, 7, 13, 0.72)";
+              ctx.fillStyle = "rgba(4, 7, 13, 0.74)";
               if (typeof ctx.roundRect === "function") {
                 ctx.beginPath();
                 ctx.roundRect(boxX, boxY - 21, boxW, 32, 7);
@@ -1090,29 +1259,20 @@
               } else {
                 ctx.fillRect(boxX, boxY - 21, boxW, 32);
               }
-
               ctx.fillStyle = "#fde047";
               ctx.fillText(label, canvas.width / 2, boxY + 2, maxTextW);
               ctx.restore();
             }
           }
-
-          requestAnimationFrame(drawFrame);
-        }
-        requestAnimationFrame(drawFrame);
+        });
       });
 
       let videoBlob = await donePromise;
-      const actualDurationMs = Math.round(finalDuration * 1000);
-
-      // Se caiu no fallback .webm, injeta duração real no cabeçalho EBML
       if (profile.ext === "webm") {
-        videoBlob = await patchWebmDurationIfNeeded(videoBlob, actualDurationMs);
+        videoBlob = await patchWebmDurationIfNeeded(videoBlob, Math.round(finalDuration * 1000));
       }
 
-      if (activeVideoBlobUrl) {
-        URL.revokeObjectURL(activeVideoBlobUrl);
-      }
+      if (activeVideoBlobUrl) URL.revokeObjectURL(activeVideoBlobUrl);
       activeVideoBlobUrl = URL.createObjectURL(videoBlob);
 
       return {
@@ -1122,7 +1282,7 @@
         formatLabel: profile.label,
         srtContent: createSrtContent(finalSubs),
         finalDuration,
-        animatedCount: Array.isArray(motionClips) ? motionClips.filter((v) => v && v.readyState >= 2).length : 0
+        cuts
       };
     }
 
@@ -1137,7 +1297,7 @@
       setTimeout(() => URL.revokeObjectURL(url), 5000);
     }
 
-    // === BOTÃO: GERAR SÓ IMAGEM 9:16 ===
+    // === MODO IMAGEM ===
     btnOnlyImg.addEventListener("click", async () => {
       if (!uploadedBase64) {
         stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro para manter 100% de fidelidade.</div>`;
@@ -1146,23 +1306,22 @@
       btnOnlyImg.disabled = true;
       btnBuild.disabled = true;
       try {
-        const dur = Number(minDuration.value) || 15;
-        const heroPrompt = buildHollywoodScenePrompt(selectedImgModel, selectedVidModel, 1, dur);
-        stage.innerHTML = `<div class="status-msg">Gerando imagem 9:16 Hollywood no modelo <strong>${selectedImgModel.name}</strong>...</div>`;
+        const imgPrompt = buildStandaloneImagePrompt(selectedImgModel);
+        stage.innerHTML = `<div class="status-msg">Gerando imagem 9:16 exclusiva no modelo <strong>${selectedImgModel.name}</strong>...</div>`;
         const sc = await callApi({
           task: "scene",
           imageBase64: uploadedBase64,
           mimeType: uploadedMime,
           sceneIndex: 1,
-          imagePrompt: heroPrompt,
-          prompt: heroPrompt
+          imagePrompt: imgPrompt,
+          prompt: imgPrompt
         });
         stage.innerHTML = `
           <img class="preview-916" src="${sc.imageUrl}" alt="Imagem gerada" />
           <div class="dl-box">
-            <div class="dl-title">${selectedImgModel.name} • Direção: ${selectedVidModel.name}</div>
+            <div class="dl-title">${selectedImgModel.name} (${selectedImgModel.cat})</div>
             <div class="dl-grid">
-              <a class="dl-btn main" href="${sc.imageUrl}" target="_blank" rel="noopener noreferrer" download="nexora-hollywood-916.jpg">Abrir / Salvar Imagem 9:16</a>
+              <a class="dl-btn main" href="${sc.imageUrl}" target="_blank" rel="noopener noreferrer" download="nexora-imagem-916.jpg">Abrir / Salvar Imagem 9:16</a>
             </div>
           </div>
         `;
@@ -1174,12 +1333,22 @@
       }
     });
 
-    // === BOTÃO: GERAR VÍDEO HOLLYWOOD COMPLETO (MP4) ===
+    // === MODO VÍDEO HOLLYWOOD (6 ÂNGULOS EM LOTES PARALELOS + DURAÇÃO EXATA) ===
     btnBuild.addEventListener("click", async () => {
       if (!uploadedBase64) {
-        stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro para gerar as 4 cenas Hollywood com 100% de fidelidade.</div>`;
+        stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro para gerar os 6 ângulos Hollywood com 100% de fidelidade.</div>`;
         return;
       }
+
+      // Inicializa AudioContext durante o clique (gesto do usuário) para destravar o relógio mestre
+      let audioCtx = null;
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) {
+          audioCtx = new AC();
+          if (audioCtx.state === "suspended") await audioCtx.resume();
+        }
+      } catch {}
 
       btnOnlyImg.disabled = true;
       btnBuild.disabled = true;
@@ -1187,53 +1356,74 @@
       const text = scriptText.value.trim();
 
       try {
-        const loadedImages = [];
-        const sceneUrls = [];
-        const acts = getActTimings(targetSec);
+        const totalShots = SIX_ACTION_SHOTS.length; // 6 ângulos distintos
+        const sceneUrls = new Array(totalShots).fill(null);
+        let doneCount = 0;
 
-        // 1) Gera as 4 cenas Hollywood distintas (1 por Ato da Timeline)
-        for (let i = 0; i < 4; i++) {
-          const pct = Math.round(((i + 0.5) / 5) * 100);
+        // Gera em 3 lotes paralelos de 2 (2x mais rápido e seguro contra rate limit)
+        for (let batchStart = 0; batchStart < totalShots; batchStart += 2) {
+          const batchIndices = [batchStart, batchStart + 1].filter((i) => i < totalShots);
+          const names = batchIndices.map((i) => SIX_ACTION_SHOTS[i].code).join(" + ");
           stage.innerHTML = `
             <div class="status-msg">
-              <strong>Etapa 1/2 • Gerando Ato ${i + 1}/4 (${acts[i].role})</strong><br/>
-              ${selectedImgModel.name} + ${selectedVidModel.name}
+              <strong>Etapa 1/2 • Gerando Ângulos ${batchStart + 1}–${Math.min(totalShots, batchStart + 2)}/${totalShots}</strong><br/>
+              ${names} • ${selectedVidModel.name}
             </div>
-            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${Math.round((doneCount / totalShots) * 65) + 8}%"></div></div>
           `;
-          const scenePrompt = buildHollywoodScenePrompt(selectedImgModel, selectedVidModel, i, targetSec);
-          const sc = await callApi({
-            task: "scene",
-            imageBase64: uploadedBase64,
-            mimeType: uploadedMime,
-            sceneIndex: i + 1,
-            imagePrompt: scenePrompt,
-            prompt: scenePrompt
-          });
-          sceneUrls.push(sc.imageUrl);
-          const imgObj = await loadImage(sc.imageUrl);
-          loadedImages.push(imgObj);
+
+          await Promise.all(
+            batchIndices.map(async (shotIdx) => {
+              const scenePrompt = buildHollywoodShotPrompt(selectedVidModel, shotIdx);
+              try {
+                const sc = await callApi({
+                  task: "scene",
+                  imageBase64: uploadedBase64,
+                  mimeType: uploadedMime,
+                  sceneIndex: shotIdx + 1,
+                  imagePrompt: scenePrompt,
+                  prompt: scenePrompt
+                });
+                sceneUrls[shotIdx] = sc.imageUrl;
+              } catch (err) {
+                if (shotIdx === 0) throw err;
+                sceneUrls[shotIdx] = null;
+              } finally {
+                doneCount++;
+              }
+            })
+          );
         }
 
-        // 2) Opcional: Image-to-Video (somente se o usuário escolher modo Híbrido ou Full IA)
-        const motionClips = [null, null, null, null];
+        const validUrls = sceneUrls.filter(Boolean);
+        if (!validUrls.length) throw new Error("Nenhuma cena pôde ser gerada pela API.");
+
+        // Carrega e pré-escala todas as imagens para offscreen 900x1600 (garante 30fps travados!)
+        stage.innerHTML = `
+          <div class="status-msg"><strong>Preparando motor 30fps de alta velocidade...</strong></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:72%"></div></div>
+        `;
+        const loadedImgs = await Promise.all(validUrls.map((u) => loadImage(u)));
+        const preScaledCanvases = loadedImgs.map((img) => preScaleToOffscreen(img));
+
+        // Opcional: Clipes IA Image-to-Video (fal.ai)
+        const motionClips = new Array(validUrls.length).fill(null);
         const engine = motionEngine.value;
-        const clipsToGenerate = engine === "i2v_4" ? 4 : (engine === "i2v_1" ? 1 : 0);
+        const clipsToGenerate = engine === "i2v_6" ? validUrls.length : (engine === "i2v_2" ? Math.min(2, validUrls.length) : 0);
 
         if (clipsToGenerate > 0) {
           for (let c = 0; c < clipsToGenerate; c++) {
             stage.innerHTML = `
               <div class="status-msg">
-                <strong>Etapa 1.5/2 • Animando Ato ${c + 1}/${clipsToGenerate} via Image-to-Video...</strong><br/>
-                Aplicando coreografia Hollywood no produto real.
+                <strong>Etapa 1.5/2 • Animando Ângulo ${c + 1}/${clipsToGenerate} via Image-to-Video...</strong>
               </div>
-              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:78%"></div></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:82%"></div></div>
             `;
             try {
-              const motionPrompt = buildHollywoodMotionPrompt(selectedImgModel, selectedVidModel, c, targetSec);
+              const motionPrompt = buildHollywoodMotionPrompt(selectedVidModel, c);
               const clipRes = await callApi({
                 task: "clip",
-                imageUrl: sceneUrls[c],
+                imageUrl: validUrls[c],
                 motionPrompt,
                 prompt: motionPrompt
               });
@@ -1246,34 +1436,35 @@
           }
         }
 
-        // 3) Renderização Final 30fps em MP4 Nativo (ou WebM com Duração Corrigida)
+        // Etapa 2/2: Renderização 30fps cravada com duração exata
         stage.innerHTML = `
           <div class="status-msg">
-            <strong>Etapa 2/2 • Renderizando vídeo final ${activeCodecProfile.label} (${targetSec}s)...</strong><br/>
-            Aplicando direção <strong>${selectedVidModel.name}</strong> em 720x1280 (30fps).
+            <strong>Etapa 2/2 • Renderizando ${activeCodecProfile.label} (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
+            Aplicando cortes rápidos Hollywood, whip-pan blur e VFX em 30fps...
           </div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:5%"></div></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:2%"></div></div>
         `;
 
         const result = await renderHollywoodVideo(
-          loadedImages,
+          preScaledCanvases,
           motionClips,
           targetSec,
           burnSubs.checked,
           enableVfx.checked,
           selectedVidModel,
-          text
+          text,
+          audioCtx
         );
 
         const srtBlob = new Blob([result.srtContent], { type: "text/plain;charset=utf-8" });
         const srtUrl = URL.createObjectURL(srtBlob);
         const fileName = `nexora-hollywood-${result.finalDuration}s.${result.fileExt}`;
-        const timelineSummary = buildFullTimelinePreview(selectedImgModel, selectedVidModel, targetSec);
+        const timelineSummary = buildTimelinePreviewText(selectedVidModel, result.cuts, targetSec);
 
         stage.innerHTML = `
           <video id="outPlayer" class="player-916" src="${result.videoUrl}" controls playsinline></video>
           <div class="dl-box">
-            <div class="dl-title">${selectedVidModel.name} • ${result.finalDuration}s • ${result.formatLabel}</div>
+            <div class="dl-title" id="realDurTitle">${selectedVidModel.name} • ${result.finalDuration}s • ${result.cuts.length} cortes • ${result.formatLabel}</div>
             <div class="dl-grid">
               <button type="button" id="btnDlVideo" class="dl-btn main">Baixar Vídeo (.${result.fileExt.toUpperCase()} • ${result.finalDuration}s)</button>
               <a class="dl-btn" href="${srtUrl}" download="legendas.srt">Legenda (.SRT)</a>
@@ -1281,16 +1472,22 @@
             </div>
           </div>
           <div class="thumb-strip">
-            ${sceneUrls.map((u, idx) => `<img src="${u}" alt="Ato ${idx + 1}" title="Ato ${idx + 1}: ${acts[idx].role}" />`).join("")}
+            ${validUrls.map((u, idx) => `<img src="${u}" alt="Ângulo ${idx + 1}" title="${SIX_ACTION_SHOTS[idx]?.code || "Cena"}" />`).join("")}
           </div>
           <details class="prompt-details">
-            <summary>Ver Timeline &amp; Direção Hollywood aplicada</summary>
+            <summary>Ver Timeline Hollywood (${result.cuts.length} cortes dinâmicos)</summary>
             <pre>${timelineSummary}</pre>
           </details>
         `;
 
         const outPlayer = document.getElementById("outPlayer");
+        const realDurTitle = document.getElementById("realDurTitle");
         if (outPlayer) {
+          outPlayer.addEventListener("loadedmetadata", () => {
+            if (Number.isFinite(outPlayer.duration) && outPlayer.duration > 0 && realDurTitle) {
+              realDurTitle.textContent = `${selectedVidModel.name} • ${outPlayer.duration.toFixed(1)}s reais • ${result.cuts.length} cortes • ${result.formatLabel}`;
+            }
+          });
           outPlayer.muted = true;
           outPlayer.play().catch(() => {});
         }
@@ -1308,6 +1505,9 @@
       } catch (err) {
         stage.innerHTML = `<div class="err-msg">${err.message || "Erro ao montar vídeo."}</div>`;
       } finally {
+        if (audioCtx) {
+          try { await audioCtx.close(); } catch {}
+        }
         btnOnlyImg.disabled = false;
         btnBuild.disabled = false;
       }
