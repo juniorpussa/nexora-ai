@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
-  async function fetchWithTimeout(url, options, timeoutMs = 18000, stageName = "serviço") {
+  async function fetchWithTimeout(url, options, timeoutMs = 15000, stageName = "serviço") {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -69,68 +69,41 @@ export async function onRequestPost(context) {
       .replace(/\s+/g, " ")
       .replace(/([.!?])\s*/g, "$1 ")
       .trim()
-      .slice(0, 420);
+      .slice(0, 380);
   }
 
-  function buildVoiceServices(scriptPtBr, voice, authHeaders) {
-    const isMale = voice === "adam";
-    const services = [];
+  async function arrayBufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+    }
+    return btoa(binary);
+  }
 
-    services.push({
-      id: isMale ? "kokoro-ptbr-male-pm_alex" : "kokoro-ptbr-female-pf_dora",
-      label: isMale ? "Kokoro PT-BR Masculino (pm_alex)" : "Kokoro PT-BR Feminino (pf_dora)",
-      gender: isMale ? "male" : "female",
-      run: async () => {
-        const voiceId = isMale ? "pm_alex" : "pf_dora";
-        const data = await fetchWithTimeout(
-          "https://fal.run/fal-ai/kokoro/brazilian-portuguese",
-          {
-            method: "POST",
-            headers: authHeaders,
-            body: JSON.stringify({
-              prompt: scriptPtBr,
-              voice: voiceId,
-              speed: 1.05
-            })
-          },
-          18000,
-          "Kokoro PT-BR"
-        );
-        return extractAudioUrl(data);
-      }
-    });
-
-    services.push({
-      id: isMale ? "minimax-male-deep_voice_man" : "minimax-female-sweet_girl_2",
-      label: isMale ? "MiniMax Masculino (Deep_Voice_Man)" : "MiniMax Feminino (Sweet_Girl_2)",
-      gender: isMale ? "male" : "female",
-      run: async () => {
-        const minimaxVoice = isMale ? "Deep_Voice_Man" : "Sweet_Girl_2";
-        const data = await fetchWithTimeout(
-          "https://fal.run/fal-ai/minimax/speech-02-hd",
-          {
-            method: "POST",
-            headers: authHeaders,
-            body: JSON.stringify({
-              text: scriptPtBr,
-              voice_setting: {
-                voice_id: minimaxVoice,
-                speed: 1.05,
-                vol: 1.0,
-                pitch: isMale ? -1 : 0
-              },
-              language_boost: "Portuguese_Brazil",
-              output_format: "mp3"
-            })
-          },
-          22000,
-          "MiniMax Speech-02 HD"
-        );
-        return extractAudioUrl(data);
-      }
-    });
-
-    return services;
+  async function fetchPtBrFallbackAudioDataUri(text) {
+    const q = encodeURIComponent(text.slice(0, 200));
+    const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=pt-BR&client=tw-ob&q=${q}`;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 12000);
+    try {
+      const res = await fetch(url, {
+        headers: {
+          "User-Agent": "Mozilla/5.0"
+        },
+        signal: controller.signal
+      });
+      if (!res.ok) return "";
+      const buf = await res.arrayBuffer();
+      if (!buf || buf.byteLength < 500) return "";
+      const b64 = await arrayBufferToBase64(buf);
+      return `data:audio/mpeg;base64,${b64}`;
+    } catch {
+      return "";
+    } finally {
+      clearTimeout(timer);
+    }
   }
 
   try {
@@ -155,40 +128,76 @@ export async function onRequestPost(context) {
       }
 
       const scriptPtBr = normalizePtBrScript(rawText);
-      const services = buildVoiceServices(scriptPtBr, voice, authHeaders);
-      const voicesAvailable = services.map((s) => ({
-        id: s.id,
-        label: s.label,
-        gender: s.gender
-      }));
-      const attemptedErrors = [];
-
+      const isMale = voice === "adam";
       let audioUrl = "";
       let providerUsed = "none";
 
-      for (const svc of services) {
+      // 1. Kokoro PT-BR
+      try {
+        const voiceId = isMale ? "pm_alex" : "pf_dora";
+        const kokoroData = await fetchWithTimeout(
+          "https://fal.run/fal-ai/kokoro/brazilian-portuguese",
+          {
+            method: "POST",
+            headers: authHeaders,
+            body: JSON.stringify({
+              prompt: scriptPtBr,
+              voice: voiceId,
+              speed: 1.06
+            })
+          },
+          15000,
+          "Kokoro PT-BR"
+        );
+        audioUrl = extractAudioUrl(kokoroData);
+        if (audioUrl) providerUsed = "kokoro-ptbr";
+      } catch {
+        audioUrl = "";
+      }
+
+      // 2. MiniMax Speech-02 HD
+      if (!audioUrl) {
         try {
-          const url = await svc.run();
-          if (url) {
-            audioUrl = url;
-            providerUsed = svc.id;
-            break;
-          }
-          attemptedErrors.push(`${svc.label}: sem áudio retornado`);
-        } catch (err) {
-          attemptedErrors.push(`${svc.label}: ${err?.message || "falha"}`);
+          const minimaxVoice = isMale ? "Deep_Voice_Man" : "Sweet_Girl_2";
+          const minimaxData = await fetchWithTimeout(
+            "https://fal.run/fal-ai/minimax/speech-02-hd",
+            {
+              method: "POST",
+              headers: authHeaders,
+              body: JSON.stringify({
+                text: scriptPtBr,
+                voice_setting: {
+                  voice_id: minimaxVoice,
+                  speed: 1.06,
+                  vol: 1.0,
+                  pitch: isMale ? -1 : 0
+                },
+                language_boost: "Portuguese_Brazil",
+                output_format: "mp3"
+              })
+            },
+            18000,
+            "MiniMax Speech-02 HD"
+          );
+          audioUrl = extractAudioUrl(minimaxData);
+          if (audioUrl) providerUsed = "minimax-speech-02-hd";
+        } catch {
+          audioUrl = "";
         }
+      }
+
+      // 3. Fallback real em áudio PT-BR para garantir narração dentro do vídeo
+      if (!audioUrl) {
+        audioUrl = await fetchPtBrFallbackAudioDataUri(scriptPtBr);
+        if (audioUrl) providerUsed = "ptbr-tts-fallback";
       }
 
       return json({
         ok: true,
         audioUrl,
         voice,
-        gender: voice === "adam" ? "male" : "female",
         provider: providerUsed,
-        voicesAvailable,
-        attemptedErrors,
-        ttsFallback: !audioUrl
+        ttsFallback: providerUsed !== "kokoro-ptbr"
       });
     }
 
