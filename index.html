@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — 50 Vídeos Hollywood Dinâmicos (Beat-Sync + Trilha Única + SFX)</title>
+  <title>NEXORA.AI — Hollywood Zero Repetição + Trilha de Estúdio IA</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, sans-serif; }
     body { background: #06080d; color: #f4f6fb; min-height: 100vh; padding: 16px; }
@@ -25,7 +25,7 @@
     .hidden { display: none !important; }
     .row-top { display: grid; grid-template-columns: 175px 1fr; gap: 12px; margin-bottom: 14px; }
     @media (max-width: 600px) { .row-top { grid-template-columns: 1fr; } }
-    .upload-area { border: 1.5px dashed #2b3954; border-radius: 12px; padding: 10px; text-align: center; background: #080c14; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 168px; }
+    .upload-area { border: 1.5px dashed #2b3954; border-radius: 12px; padding: 10px; text-align: center; background: #080c14; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 164px; }
     .upload-area:hover { border-color: #22c55e; }
     .upload-area input { display: none; }
     .upload-area img { max-height: 92px; border-radius: 8px; margin-top: 8px; display: none; object-fit: contain; }
@@ -35,7 +35,7 @@
     @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
     select, textarea, input[type="text"], input[type="file"].inline-file { width: 100%; background: #111827; border: 1px solid #29364f; border-radius: 9px; color: #f8fafc; padding: 8px 10px; font-size: 12.5px; outline: none; }
     select:focus, textarea:focus, input[type="text"]:focus { border-color: #22c55e; }
-    textarea { min-height: 56px; resize: vertical; line-height: 1.4; }
+    textarea { min-height: 54px; resize: vertical; line-height: 1.4; }
     .catalog-box { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 11px; margin-bottom: 12px; }
     .filter-bar { display: grid; grid-template-columns: 1fr 205px auto; gap: 8px; margin-bottom: 9px; }
     @media (max-width: 640px) { .filter-bar { grid-template-columns: 1fr; } }
@@ -58,7 +58,6 @@
     .action-inline { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
     .btn-cancel { background: rgba(248,113,113,0.14); color: #fca5a5; border: 1px solid rgba(248,113,113,0.35); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
     .btn-use-ready { background: rgba(34,197,94,0.16); color: #86efac; border: 1px solid rgba(34,197,94,0.45); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
-    .btn-preview-track { background: #182338; color: #7dd3fc; border: 1px solid #2d3f63; border-radius: 8px; padding: 7px 11px; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap; }
     .preview-stage { background: #070a10; border: 1px solid #1b2436; border-radius: 14px; min-height: 640px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; gap: 12px; }
     video.player-916, img.preview-916 { width: 100%; max-width: 300px; aspect-ratio: 9/16; object-fit: cover; border-radius: 14px; background: #000; border: 1px solid #26334d; }
     .dl-box { width: 100%; background: #0c121e; border: 1px solid #22304a; border-radius: 12px; padding: 12px; text-align: left; }
@@ -71,16 +70,17 @@
     .progress-bar-wrap { width: 100%; max-width: 340px; height: 8px; background: #151e30; border-radius: 999px; overflow: hidden; margin-top: 8px; }
     .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #38bdf8); width: 0%; transition: width 0.25s ease; }
     .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; width: 100%; }
+    .warn-note { font-size: 11.5px; color: #fde047; margin-top: 6px; }
     .clip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; justify-content: center; }
     .clip-chip { background: #131d30; border: 1px solid #283a5c; color: #cbd5e1; border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 700; text-decoration: none; }
-    .thumb-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(56px, 1fr)); gap: 6px; width: 100%; margin-top: 4px; }
-    .thumb-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 6px; border: 1px solid #26334d; }
+    .thumb-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(46px, 1fr)); gap: 5px; width: 100%; margin-top: 4px; }
+    .thumb-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 5px; border: 1px solid #26334d; }
   </style>
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>HOLLYWOOD BEAT-SYNC 9:16</span></div>
-    <div class="pill-info">Escala Real 1:1 • Cortes Rápidos na Batida • 1 Trilha Contínua + SFX • Auto-Crop Zero Barras</div>
+    <div class="brand">NEXORA.AI <span>ZERO REPETIÇÃO • HOLLYWOOD 14 MBPS</span></div>
+    <div class="pill-info">100% Cenas Únicas • Trilha de Estúdio IA Contínua (Lyria 2) • Speed-Ramp + Crash Zoom + SFX</div>
   </div>
 
   <div class="layout">
@@ -88,20 +88,20 @@
       <div class="step-label">1. Modo de Produção</div>
       <div class="mode-switch">
         <button type="button" class="mode-btn active" data-mode="video">
-          <strong>Vídeo Hollywood Beat-Sync (Kling 3D + Editor Pro)</strong>
-          <small>10–14 cortes rápidos na batida • 1 trilha contínua + SFX + VFX</small>
+          <strong>Vídeo Hollywood Zero Repetição (Kling 3D + Lyria 2)</strong>
+          <small>Cada corte é uma cena 100% inédita • Trilha de estúdio contínua</small>
         </button>
         <button type="button" class="mode-btn" data-mode="image">
           <strong>Imagem 9:16 Ultra-Realista (Nano Banana)</strong>
-          <small>50 fotos únicas • Escala real anatômica 1:1</small>
+          <small>50 fotos únicas • Escala real apoiada em superfície</small>
         </button>
       </div>
 
-      <div class="step-label">2. Produto, Escala Real &amp; Duração</div>
+      <div class="step-label">2. Produto, Orientação Real &amp; Cenas Únicas</div>
       <div class="row-top">
         <label class="upload-area" for="productImg">
           <strong style="font-size:13px;">Foto do Produto</strong>
-          <span style="font-size:11px;color:#94a3b8;margin-top:3px;">Fidelidade 100% real</span>
+          <span style="font-size:11px;color:#94a3b8;margin-top:3px;">100% fiel ao original</span>
           <input type="file" id="productImg" accept="image/*" />
           <img id="thumbPreview" alt="Produto" />
         </label>
@@ -109,31 +109,31 @@
         <div class="box-group">
           <div class="grid-2">
             <div>
-              <label for="productScale">Tamanho Real do Produto (Trava Proporção)</label>
-              <select id="productScale">
-                <option value="palm" selected>Compacto — Cabe em 1 mão (Mouse, Relógio, Perfume, Fone, Óculos)</option>
-                <option value="medium">Médio — 1 mão firme (Garrafa, Copo, Tênis, Controle, Caixa)</option>
-                <option value="large">Grande — Apoiado em bancada/corpo (Mochila, Bolsa, Aparelho)</option>
+              <label for="productOrientation">Como o Produto Fica Apoiado</label>
+              <select id="productOrientation">
+                <option value="flat" selected>Deitado na base natural (Mouse, Tênis, Óculos, Controle, Caixa)</option>
+                <option value="upright">Em pé na própria base (Relógio em suporte, Perfume, Garrafa, Pote)</option>
+                <option value="flat_lay">Vista de cima / em bandeja (Joia, Relógio em caixa, Kit)</option>
               </select>
             </div>
             <div id="durFieldWrap">
-              <label for="minDuration">Duração Final (Cortes Rápidos Beat-Sync)</label>
+              <label for="minDuration">Duração (Zero Repetição de Cenas!)</label>
               <select id="minDuration">
-                <option value="10">10s — 8 Cortes Dinâmicos (2 Ângulos 3D)</option>
-                <option value="15" selected>15s — 12 Cortes Dinâmicos (3 Ângulos 3D • Ideal)</option>
-                <option value="20">20s — 16 Cortes Dinâmicos (4 Ângulos 3D)</option>
-                <option value="30">30s — 22 Cortes Dinâmicos (4 Ângulos 3D Estendido)</option>
+                <option value="10">10s — 3 Cenas 100% Únicas (0% repetição)</option>
+                <option value="15" selected>15s — 5 Cenas 100% Únicas (0% repetição • Ideal TikTok Shop)</option>
+                <option value="20">20s — 6 Cenas 100% Únicas (0% repetição)</option>
+                <option value="30">30s — 8 Cenas 100% Únicas (0% repetição)</option>
               </select>
             </div>
           </div>
           <div class="grid-2">
             <div>
-              <label for="productDetailHint">Nome &amp; Detalhes Reais (Evita LEDs/Botões inventados)</label>
-              <input type="text" id="productDetailHint" placeholder="Ex: mouse ergonômico preto fosco, scroll prata, logo M, sem LEDs laterais" />
+              <label for="productDetailHint">Nome &amp; Detalhes Exatos (Trava logo e bloqueia LEDs falsos)</label>
+              <input type="text" id="productDetailHint" placeholder="Ex: mouse ergonômico preto fosco, scroll prata, logo M, ZERO LED lateral" />
             </div>
             <div id="macroFieldWrap">
-              <label for="macroTarget">Foco do Macro (Opcional)</label>
-              <input type="text" id="macroTarget" placeholder="Ex: scroll metálico e botões / mostrador esqueleto" />
+              <label for="macroTarget">Detalhes para os Macros (Opcional)</label>
+              <input type="text" id="macroTarget" placeholder="Ex: scroll metálico, botões centrais e logo M / mostrador esqueleto" />
             </div>
           </div>
         </div>
@@ -177,53 +177,51 @@
               <option value="Acao">Sci-Fi, Ação &amp; Adrenalina (10)</option>
               <option value="VFX">VFX 1000fps &amp; Física Extrema (10)</option>
               <option value="Luxo">Luxo Noir &amp; Editorial Global (10)</option>
-              <option value="Viral">TikTok Shop Hard-Sell &amp; POV (10)</option>
+              <option value="Viral">TikTok Shop Hard-Sell &amp; Vitrine (10)</option>
             </select>
             <button type="button" class="btn-rand" id="btnRandVid">🎲 Sortear</button>
           </div>
           <div class="preset-grid" id="vidPresetGrid"></div>
         </div>
 
-        <div class="step-label">4. Trilha Sonora Única Contínua + SFX + Dinamismo</div>
+        <div class="step-label">4. Trilha Sonora de Estúdio Real (1 Faixa Contínua) + Dinamismo</div>
         <div class="audio-panel">
           <div class="grid-2">
             <div>
-              <label for="trackStyle">Trilha Sonora Contínua (Mesma do 0s ao Fim!)</label>
-              <div style="display:flex;gap:6px;">
-                <select id="trackStyle">
-                  <option value="phonk" selected>Phonk Dark Agressivo (136 BPM • TikTok Shop)</option>
-                  <option value="trap007">Trap Luxo 007 Noir (128 BPM • High-Ticket)</option>
-                  <option value="cyber">Cyberpunk Bass Drop (132 BPM • Tech/Sci-Fi)</option>
-                  <option value="trailer">Blockbuster Hollywood (122 BPM • Épico)</option>
-                  <option value="house">Tech House Viral (126 BPM • Lifestyle/Moda)</option>
-                  <option value="mute">Sem Trilha (Só SFX de Cortes)</option>
-                </select>
-                <button type="button" class="btn-preview-track" id="btnPreviewTrack">▶ Ouvir 4s</button>
-              </div>
+              <label for="musicPreset">Trilha Sonora Contínua de Estúdio (IA Real fal.ai)</label>
+              <select id="musicPreset">
+                <option value="phonk_bra" selected>Phonk Brasileiro Agressivo + 808 Pesado (Alta Conversão TikTok)</option>
+                <option value="trap_007">Dark Trap Luxo 007 + Brass Orquestral (High-Ticket)</option>
+                <option value="cyber_bass">Cyberpunk Electro Midtempo + Drops Pesados (Tech/Sci-Fi)</option>
+                <option value="trailer_imax">Trailer Hollywood IMAX + Percussão Épica + Sub-Bass</option>
+                <option value="house_vip">Tech House Viral + Bassline Pulsante (Moda/Lifestyle)</option>
+                <option value="custom">Usar Minha Própria Trilha (.MP3 / .WAV ao lado)</option>
+                <option value="mute">Mudo (Sem Trilha — p/ editar no CapCut)</option>
+              </select>
             </div>
             <div>
-              <label for="customAudioFile">Ou Subir Sua Própria Trilha (.MP3 / .WAV)</label>
+              <label for="customAudioFile">Ou Subir Sua Trilha Real (.MP3 / .WAV)</label>
               <input type="file" id="customAudioFile" class="inline-file" accept="audio/*" />
             </div>
           </div>
 
           <div class="options-row">
-            <label class="toggle-row"><input type="checkbox" id="enableSfx" checked /><span><strong>SFX em cada corte</strong> (Whoosh + Sub-Bass Drop + Impact Hit)</span></label>
-            <label class="toggle-row"><input type="checkbox" id="enableVfx" checked /><span><strong>VFX Dinâmico</strong> (Crash Zoom + Whip Blur + RGB Split + Flash)</span></label>
+            <label class="toggle-row"><input type="checkbox" id="enableDynamicCam" checked /><span><strong>Dinamismo Máximo</strong> (Speed-Ramping + Crash Zoom + Whip-Pan nos cortes)</span></label>
+            <label class="toggle-row"><input type="checkbox" id="enableSfxWhoosh" checked /><span><strong>SFX de Cinema nos cortes</strong> (Whoosh + Sub-Bass Drop limpo)</span></label>
             <label class="toggle-row"><input type="checkbox" id="burnSubs" /><span>Queimar legenda compacta</span></label>
           </div>
-          <textarea id="scriptText" placeholder="Legenda opcional (usada se marcar 'Queimar legenda' ou no arquivo .SRT)">Olha esse nível de acabamento antes de gastar dinheiro à toa. Qualidade absurda em cada detalhe!</textarea>
+          <textarea id="scriptText" placeholder="Legenda opcional (.SRT ou queimada)">Olha esse nível de acabamento antes de comprar qualquer coisa parecida. Qualidade absurda em cada detalhe!</textarea>
         </div>
       </div>
 
-      <button type="button" class="btn-generate" id="btnBuild">Gerar Vídeo Hollywood Beat-Sync (15s • 12 Cortes + 1 Trilha Contínua)</button>
+      <button type="button" class="btn-generate" id="btnBuild">Gerar Comercial Hollywood (15s • 5 Cenas Únicas + Trilha de Estúdio IA)</button>
       <button type="button" class="btn-generate hidden" id="btnOnlyImg">Gerar Imagem Ultra-Realista 9:16 (Nano Banana)</button>
     </div>
 
     <div class="panel">
       <div class="step-label" id="previewTitle">Preview 9:16 &amp; Download MP4</div>
       <div class="preview-stage" id="stage">
-        <div class="status-msg"><strong>Motor Beat-Sync Hollywood pronto:</strong><br/>• Proporção real 1:1 (1 mão, nunca gigante)<br/>• 10 a 14 cortes rápidos sincronizados na batida<br/>• <strong>1 única trilha sonora contínua</strong> + SFX em cada corte<br/>• Auto-crop anti-barras pretas</div>
+        <div class="status-msg"><strong>Zero Repetição + Trilha Real de Estúdio:</strong><br/>• 15s gera <strong>5 ângulos e clipes 3D 100% inéditos</strong> (nenhum repete)<br/>• <strong>1 única trilha de estúdio IA (Lyria 2)</strong> do 0s ao fim + SFX nos cortes<br/>• Speed-ramping + Crash Zooms em 14 Mbps</div>
       </div>
     </div>
   </div>
@@ -232,135 +230,207 @@
 
   <script>
     // =========================================================================
-    // 50 MODELOS DE IMAGEM 100% ÚNICOS (COM TRAVA DE ESCALA REAL 1:1)
+    // 50 MODELOS DE IMAGEM 100% ÚNICOS (PRODUTO APOIADO EM ESCALA REAL 1:1)
     // =========================================================================
     const IMAGE_MODELS = [
-      [1,"Personagem",true,"#01 Executivo em Cobertura Noturna","Empresário de terno exibindo o produto em 1 mão na cobertura","charismatic Brazilian male executive in tailored charcoal suit holding the exact real-sized product naturally in ONE hand inside a dark luxury glass penthouse at night, warm golden skyline bokeh, dramatic editorial rim lighting"],
-      [2,"Personagem",true,"#02 Modelo Editorial Moda Paris","Modelo feminina chic em estúdio high-fashion com luz recortada","stunning high-fashion editorial female model in sleek black blazer holding the exact real-sized product naturally in ONE hand toward camera, dramatic Parisian chiaroscuro studio lighting"],
-      [3,"Personagem",true,"#03 Atleta Sprinter em Estádio Dark","Velocista sob refletores noturnos com suor e névoa de estádio","intense athletic sprinter in dark performance gear holding the exact real-sized product in ONE hand inside a misty night stadium bathed in overhead floodlights and neon-green rim accents"],
-      [4,"Personagem",true,"#04 Piloto em Interior de Supercarro","Cockpit de carbono à noite com produto apoiado em escala real","sleek luxury sports car cockpit at night, driver in dark leather jacket showcasing the exact real-sized product beside carbon-fiber steering wheel, moody red-amber glow"],
-      [5,"Personagem",true,"#05 Criador Streetwear Metrô Neon","Jovem estiloso com jaqueta urbana sob luzes frias cinematográficas","trendy Brazilian streetwear model in dark bomber jacket holding the exact real-sized product naturally in ONE hand inside a sleek neon-lit urban subway station"],
-      [6,"Personagem",true,"#06 Mulher Elegante Café Europeu","Luz dourada da manhã em mesa de mármore com clima aspiracional","stylish confident woman in neutral linen outfit beside the exact real-sized product resting on a sunlit European marble sidewalk cafe table, creamy golden morning bokeh"],
-      [7,"Personagem",true,"#07 Pro Gamer Arena Cyberpunk","Player em setup profissional com iluminação ciano e magenta","focused pro esports creator at a sleek dark carbon gaming desk with the exact real-sized product placed naturally in foreground, subtle electric cyan and violet arena rim lights"],
-      [8,"Personagem",true,"#08 Milionário em Iate ao Pôr do Sol","Deck de teca, mar azul profundo e luz dourada de cinema","confident man in crisp white resort shirt holding the exact real-sized product naturally in ONE hand on a luxury yacht teak deck at golden sunset over deep blue ocean"],
-      [9,"Personagem",true,"#09 Agente Tático em Heliponto","Jaqueta tática preta na chuva noturna diante de helicóptero","mysterious tactical specialist in matte-black weatherproof jacket holding the exact real-sized product in ONE hand on a wet night rooftop helipad, dramatic blue searchlight mist"],
-      [10,"Personagem",true,"#10 Spa Wellness Luz Natural","Pele iluminada e cenário minimalista travertino de alto padrão","serene modern woman in minimalist cream robe holding the exact real-sized product naturally in ONE hand inside a sun-drenched travertine luxury spa sanctuary"],
-      [11,"Acao",false,"#11 Reator Industrial Strobe Vermelho","Pedestal obsidiana com luzes de emergência e fumaça densa","exact product anchored on black obsidian pedestal inside a dark industrial reactor core, flashing crimson emergency strobes slicing rising white steam"],
+      [1,"Personagem",true,"#01 Executivo em Cobertura Noturna","Empresário de terno atrás da mesa de mármore com produto em 1º plano","exact real-sized product resting solidly in foreground on a polished dark marble table inside a luxury night penthouse while a charismatic Brazilian male executive in a tailored black suit stands softly out of focus behind looking toward camera, golden city skyline bokeh"],
+      [2,"Personagem",true,"#02 Modelo Editorial Moda Paris","Modelo feminina chic em estúdio high-fashion com produto em 1º plano","exact real-sized product resting cleanly in foreground on a glossy black studio plinth while a poised high-fashion editorial model in black couture blazer stands gracefully behind in soft bokeh, Parisian chiaroscuro lighting"],
+      [3,"Personagem",true,"#03 Atleta Sprinter em Estádio Dark","Velocista sob refletores noturnos com produto apoiado em 1º plano","exact real-sized product resting solidly on a dark matte athletic bench in foreground while a fit sprinter in black training gear stands in dramatic soft focus behind inside a misty night stadium with neon-green rim highlights"],
+      [4,"Personagem",true,"#04 Piloto em Interior de Supercarro","Cockpit de carbono à noite com produto apoiado no console em escala real","exact real-sized product resting solidly on a dark stitched-leather and carbon-fiber supercar center console at night, driver in dark leather jacket softly blurred beside the wheel, moody red-amber cabin glow"],
+      [5,"Personagem",true,"#05 Criador Streetwear Metrô Neon","Jovem estiloso atrás do corrimão/bancada de aço com luzes frias","exact real-sized product resting cleanly on a dark brushed steel ledge in foreground while a stylish Brazilian streetwear creator in dark jacket stands in soft focus behind inside a neon-lit midnight subway station"],
+      [6,"Personagem",true,"#06 Mulher Elegante Café Europeu","Luz dourada da manhã em mesa de mármore com clima aspiracional","exact real-sized product resting cleanly on a sunlit Parisian marble cafe table in foreground while a stylish woman in beige linen sits warmly blurred behind, golden morning bokeh"],
+      [7,"Personagem",true,"#07 Pro Gamer Arena Cyberpunk","Setup dark carbono com jogador focado ao fundo sob luz ciano","exact real-sized product resting solidly on a matte dark carbon esports desk in foreground while a focused pro gamer sits softly blurred behind under electric cyan and crimson stage lights"],
+      [8,"Personagem",true,"#08 Milionário em Iate ao Pôr do Sol","Mesa de teca no deck do iate com mar azul e luz dourada","exact real-sized product resting solidly on a polished teak yacht table in foreground while a confident man in crisp white resort shirt stands blurred behind overlooking golden sunset ocean"],
+      [9,"Personagem",true,"#09 Agente Tático em Heliponto","Chapa de aço molhada no heliponto noturno com agente ao fundo","exact real-sized product anchored solidly on a wet dark steel helipad case in foreground while a matte-black tactical specialist stands softly out of focus behind amid blue searchlight mist"],
+      [10,"Personagem",true,"#10 Spa Wellness Luz Natural","Bancada travertino ensolarada com modelo serena ao fundo","exact real-sized product resting cleanly on a sunlit honed travertine marble vanity in foreground while a serene woman in cream robe stands softly blurred behind, warm organic shadows"],
+      [11,"Acao",false,"#11 Reator Industrial Strobe Vermelho","Pedestal obsidiana com luzes de emergência e fumaça densa","exact product resting solidly on a dark matte obsidian pedestal inside an industrial reactor core, flashing crimson emergency lights cutting rising white steam"],
       [12,"Acao",false,"#12 Cofre Tático Criogênico Aberto","Maleta de titânio aberta na espuma carbono com vapor gelado","exact product seated rigidly inside an open matte-black titanium tactical vault case with laser-cut black carbon foam, white cryogenic vapor venting across dark bunker"],
-      [13,"Acao",false,"#13 Explosão de Cristal 1000fps","Vidro estilhaçando em mil pedaços ao redor do produto intacto","high-speed 1000fps freeze-frame of crystal glass shattering violently outward in 3D space around the spotless untouched exact product in pitch-black studio"],
-      [14,"Acao",false,"#14 Magma Vulcânico & Brasas","Rocha basáltica rachada com brilho incandescente e faíscas","exact product commanding a fractured black volcanic basalt rock with glowing molten amber cracks and rising fiery embers in dark hazy studio"],
-      [15,"Acao",false,"#15 Asfalto Molhado Neo-Tóquio","Chuva noturna refletindo neon ciano e rosa em perspectiva","exact product resting on rain-slicked wet black urban asphalt reflecting electric cyan and magenta cyberpunk street bokeh through fine rain mist"],
-      [16,"Acao",false,"#16 Tempestade & Relâmpago Noturno","Chuva forte em terraço escuro iluminado por raio elétrico","exact product standing bold on wet dark slate rooftop during midnight thunderstorm, dramatic blinding white lightning bolt flashing in dark sky behind"],
-      [17,"Acao",false,"#17 Forja de Aço & Faíscas","Bigorna escura sob cascata de faíscas incandescentes","exact product anchored on dark forged steel block inside an industrial foundry bathed in cascading golden-orange welding sparks and rim light"],
-      [18,"Acao",false,"#18 Onda de Choque Água Negra","Explosão simétrica de água escura em gotas de prata","exact product emerging crisp above black mirror water exploding radially in sculpted silver liquid crowns under sharp white strobe lighting"],
+      [13,"Acao",false,"#13 Explosão de Cristal 1000fps","Vidro estilhaçando em mil pedaços ao redor do produto intacto","high-speed 1000fps freeze-frame of crystal glass shattering violently outward behind the spotless untouched exact product resting on black mirror glass"],
+      [14,"Acao",false,"#14 Magma Vulcânico & Brasas","Rocha basáltica rachada com brilho incandescente e faíscas","exact product resting solidly on a fractured black volcanic basalt rock with glowing molten amber cracks and rising fiery embers in dark hazy studio"],
+      [15,"Acao",false,"#15 Asfalto Molhado Neo-Tóquio","Chuva noturna refletindo neon ciano e rosa em perspectiva","exact product resting solidly on rain-slicked wet black urban asphalt reflecting electric cyan and magenta cyberpunk street bokeh through fine rain mist"],
+      [16,"Acao",false,"#16 Tempestade & Relâmpago Noturno","Chuva forte em terraço escuro iluminado por raio elétrico","exact product resting bold on wet dark slate rooftop during midnight thunderstorm, dramatic blinding white lightning bolt flashing in dark sky behind"],
+      [17,"Acao",false,"#17 Forja de Aço & Faíscas","Bigorna escura sob cascata de faíscas incandescentes","exact product anchored on dark forged steel block inside an industrial foundry bathed in cascading golden-orange welding sparks behind"],
+      [18,"Acao",false,"#18 Onda de Choque Água Negra","Explosão simétrica de água escura em gotas de prata","exact product resting crisp on raised matte plinth above black mirror water exploding radially in sculpted silver liquid crowns"],
       [19,"Acao",false,"#19 Órbita Espacial Zero-G","Diante da curvatura azul da Terra em deck espacial","exact product resting cleanly on dark titanium ledge before a futuristic spacecraft viewport showing glowing blue Earth horizon curvature"],
-      [20,"Acao",false,"#20 Cofre Laser Vermelho","Feixes de laser cruzando neblina densa em banco blindado","exact product secured on brushed steel security monolith inside pitch-black heist vault crisscrossed by razor-thin crimson security laser beams behind"],
-      [21,"Luxo",false,"#21 Obsidiana Negra & Ouro Escovado","Pedestal dark com filete dourado e reflexo profundo","exact product on dark obsidian pedestal trimmed with brushed gold, deep glossy black mirror floor reflection, warm volumetric golden rim light"],
-      [22,"Luxo",false,"#22 Mármore Nero Marquina Noir","Mármore preto polido com veios brancos e holofote joalheiro","exact product on polished Nero Marquina black marble slab with crisp white veins, pinpoint overhead boutique spotlight and velvety dark background"],
-      [23,"Luxo",false,"#23 Veludo Esmeralda & Latão","Palco verde esmeralda escuro com moldura dourada nobre","exact product on deep emerald velvet showcase block framed in antique brushed brass, warm golden studio key light, opulent luxury mood"],
+      [20,"Acao",false,"#20 Cofre Laser Vermelho","Feixes de laser cruzando neblina densa em banco blindado","exact product secured on brushed steel security monolith inside pitch-black heist vault crisscrossed by thin crimson security laser beams behind"],
+      [21,"Luxo",false,"#21 Obsidiana Negra & Ouro Escovado","Pedestal dark com filete dourado e reflexo profundo","exact product resting on dark obsidian pedestal trimmed with brushed gold, deep glossy black mirror floor reflection, warm volumetric golden rim light"],
+      [22,"Luxo",false,"#22 Mármore Nero Marquina Noir","Mármore preto polido com veios brancos e holofote joalheiro","exact product resting on polished Nero Marquina black marble slab with crisp white veins, pinpoint overhead boutique spotlight and velvety dark background"],
+      [23,"Luxo",false,"#23 Veludo Esmeralda & Latão","Palco verde esmeralda escuro com moldura dourada nobre","exact product resting on deep emerald velvet showcase block framed in antique brushed brass, warm golden studio key light"],
       [24,"Luxo",false,"#24 Bloco de Cristal Fumê","Vidro fumê pesado sob iluminação dourada suave","exact product resting atop heavy smoked crystal glass monolith bathed in warm golden studio rim lighting in dark studio"],
-      [25,"Luxo",false,"#25 Nogueira Nobre & Bronze","Madeira escura acetinada com luz quente de biblioteca VIP","exact product displayed on dark walnut wood and brushed bronze showcase table, warm moody editorial lighting, creamy shallow bokeh"],
+      [25,"Luxo",false,"#25 Nogueira Nobre & Bronze","Madeira escura acetinada com luz quente de biblioteca VIP","exact product resting on dark walnut wood and brushed bronze showcase table, warm moody editorial lighting, creamy shallow bokeh"],
       [26,"Luxo",false,"#26 Espelho Negro Joalheria","Reflexo espelhado cirúrgico com brilho de diamante","exact product centered on pure black mirror glass surface with razor-sharp white and gold rim highlights, haute joaillerie photography"],
-      [27,"Luxo",false,"#27 Travertino Italiano & Sombra","Pedra bege nobre cortada por sombras arquitetônicas solares","exact product on honed Italian travertine stone pedestal with dramatic diagonal warm Mediterranean window shadows, high-fashion minimalism"],
-      [28,"Luxo",false,"#28 Gala Champanhe & Bokeh Ouro","Fundo escuro repleto de pontos luminosos dourados","exact product showcased on black lacquer plinth with opulent floating champagne-gold bokeh lights and warm anamorphic cinema sheen"],
-      [29,"Luxo",false,"#29 Monolito Grafite de Museu","Concreto arquitetônico escuro sob luz direcional limpa","exact product on smooth dark graphite concrete museum monolith, focused rectangular overhead softbox carving sculptural shadows"],
-      [30,"Luxo",false,"#30 Cromo Líquido Espelhado","Superfície metálica fluida com reflexos futuristas limpos","exact product commanding a polished liquid-chrome sculptural pedestal reflecting sleek pure-white and silver cinema light streaks"],
+      [27,"Luxo",false,"#27 Travertino Italiano & Sombra","Pedra bege nobre cortada por sombras arquitetônicas solares","exact product resting on honed Italian travertine stone pedestal with dramatic diagonal warm Mediterranean window shadows"],
+      [28,"Luxo",false,"#28 Gala Champanhe & Bokeh Ouro","Fundo escuro repleto de pontos luminosos dourados","exact product showcased on black lacquer plinth with opulent floating champagne-gold bokeh lights in velvety dark depth"],
+      [29,"Luxo",false,"#29 Monolito Grafite de Museu","Concreto arquitetônico escuro sob luz direcional limpa","exact product resting on smooth dark graphite concrete museum monolith, focused overhead softbox carving sculptural shadows"],
+      [30,"Luxo",false,"#30 Cromo Líquido Espelhado","Superfície metálica fluida com reflexos futuristas limpos","exact product resting on a polished liquid-chrome sculptural pedestal reflecting sleek pure-white and silver cinema light streaks"],
       [31,"Cenario",false,"#31 Dunas do Saara Pôr do Sol","Areia dourada esculpida pelo vento com sol baixo dramático","exact product resting cleanly on sculpted golden Sahara desert sand dune at sunset, long dramatic warm shadows and glowing amber horizon"],
       [32,"Cenario",false,"#32 Praia de Areia Negra Islândia","Pedras vulcânicas molhadas, névoa nórdica e mar cinza","exact product placed on wet black volcanic basalt stone on an Icelandic black-sand beach, misty dramatic ocean waves blurred in background"],
-      [33,"Cenario",false,"#33 Pico Nevado Alpino","Neve cristalina sob céu azul profundo e luz solar pura","exact product standing crisp on sculpted alpine snow ridge with sunlit snow crystals sparkling and dramatic mountain peaks in deep bokeh"],
-      [34,"Cenario",false,"#34 Varanda Tropical & Folhagens","Pedra calcária clara com sombras suaves de palmeiras","exact product on natural limestone patio table bathed in fresh tropical sunlight with dappled palm-leaf shadows and airy luxury resort vibe"],
-      [35,"Cenario",false,"#35 Cozinha Gourmet Quartzo","Bancada moderna iluminada com luz natural limpa","exact product on bright upscale quartz gourmet kitchen island bathed in crisp morning daylight with softly blurred contemporary interior"],
-      [36,"Cenario",false,"#36 Quarto Minimalista Noturno","Criado-mudo acolhedor com abajur quente e linho nobre","exact product on warm modern luxury bedroom nightstand glowing under soft amber bedside lamp light, dark serene linen textures behind"],
-      [37,"Cenario",false,"#37 Banheiro Spa Mármore & Vapor","Ambiente spa cinco estrelas com luz matinal e vapor leve","exact product on white veined marble luxury spa vanity with soft morning window light, gentle steam atmosphere and warm brass fixtures blurred"],
-      [38,"Cenario",false,"#38 Loft Industrial Concreto","Mesa de aço e concreto com janela ampla ao entardecer","exact product on raw architectural concrete table inside a New York industrial loft at golden sunset, warm dramatic window light rays"],
-      [39,"Cenario",false,"#39 Escritório Executivo Couro","Tapete de couro preto costurado e luminária arquitetônica","exact product on sleek dark stitched-leather executive desk pad illuminated by focused warm architectural desk lamp, dark modern office"],
-      [40,"Cenario",false,"#40 Jardim Botânico Luz Dourada","Pedra musgosa limpa sob raios de sol da manhã","exact product resting cleanly on smooth dark natural river stone surrounded by lush out-of-focus botanical foliage and golden morning sunbeams"],
+      [33,"Cenario",false,"#33 Pico Nevado Alpino","Neve cristalina sob céu azul profundo e luz solar pura","exact product resting crisp on sculpted alpine snow ridge with sunlit snow crystals sparkling and dramatic mountain peaks in deep bokeh"],
+      [34,"Cenario",false,"#34 Varanda Tropical & Folhagens","Pedra calcária clara com sombras suaves de palmeiras","exact product resting on natural limestone patio table bathed in fresh tropical sunlight with dappled palm-leaf shadows"],
+      [35,"Cenario",false,"#35 Cozinha Gourmet Quartzo","Bancada moderna iluminada com luz natural limpa","exact product resting on bright upscale quartz gourmet kitchen island bathed in crisp morning daylight"],
+      [36,"Cenario",false,"#36 Quarto Minimalista Noturno","Criado-mudo acolhedor com abajur quente e linho nobre","exact product resting on warm modern luxury bedroom nightstand glowing under soft amber bedside lamp light"],
+      [37,"Cenario",false,"#37 Banheiro Spa Mármore & Vapor","Ambiente spa cinco estrelas com luz matinal e vapor leve","exact product resting on white veined marble luxury spa vanity with soft morning window light and gentle steam atmosphere"],
+      [38,"Cenario",false,"#38 Loft Industrial Concreto","Mesa de aço e concreto com janela ampla ao entardecer","exact product resting on raw architectural concrete table inside a New York industrial loft at golden sunset"],
+      [39,"Cenario",false,"#39 Escritório Executivo Couro","Tapete de couro preto costurado e luminária arquitetônica","exact product resting on sleek dark stitched-leather executive desk pad illuminated by focused warm architectural desk lamp"],
+      [40,"Cenario",false,"#40 Jardim Botânico Luz Dourada","Pedra musgosa limpa sob raios de sol da manhã","exact product resting cleanly on smooth dark natural river stone surrounded by lush out-of-focus botanical foliage and morning sunbeams"],
       [41,"Vitrine",false,"#41 Estúdio Off-White Clean Pro","Fundo claro de marca global com sombra de contato real","exact product centered on clean architectural off-white luxury studio pedestal with soft natural contact shadow and balanced commercial key light"],
-      [42,"Vitrine",false,"#42 Vitrine Boutique Iluminada","Prateleira de loja conceito que passa confiança imediata","exact product showcased on upscale modern retail display counter with warm recessed architectural shelf lighting and creamy boutique bokeh"],
-      [43,"Vitrine",false,"#43 Mármore Carrara Branco","Clássico de alta conversão limpo e extremamente nítido","exact product on bright white Italian Carrara marble countertop with crisp daylight window reflection and spotless luxury e-commerce finish"],
-      [44,"Vitrine",false,"#44 Bloco Acrílico Cristal","Expositor transparente flutuante com brilho lateral limpo","exact product elevated on thick crystal-clear optical acrylic display block over soft neutral studio gradient with sharp specular edges"],
-      [45,"Vitrine",false,"#45 Areia Minimalista Quente","Estética orgânica bege quente que converte muito no feed","exact product on warm sand-toned sculpted minimalist plaster podium with gentle architectural sunlight shadows, modern DTC brand look"],
-      [46,"Vitrine",false,"#46 Pódio Duplo Catálogo Flagship","Composição em camadas de pedra e aço escovado","exact product centered on two-tier architectural slate and brushed metal commercial podium, crisp international flagship studio lighting"],
-      [47,"Vitrine",false,"#47 Madeira Clara Escandinava","Mesa de carvalho claro com luz natural confiável","exact product on light oak Scandinavian wooden table bathed in clean soft morning light against neutral minimalist architectural wall"],
-      [48,"Vitrine",false,"#48 Azul Marinho Executivo","Tom azul profundo de autoridade com recorte prateado","exact product on deep midnight-navy matte display pedestal with crisp pure-white and silver commercial rim lighting, high authority feel"],
-      [49,"Vitrine",false,"#49 Fibra de Carbono & Luz Fria","Base esportiva/tech com precisão fotográfica 8K","exact product on woven dark matte carbon-fiber surface with surgical cool-white and steel rim highlights, sharp flagship tech photo"],
-      [50,"Vitrine",false,"#50 Blackout Keynote Lançamento","Preto absoluto estilo palco de lançamento mundial","exact product isolated on glossy black piano-glass stage in pure pitch-black void with razor-sharp surgical white rim outline"]
+      [42,"Vitrine",false,"#42 Vitrine Boutique Iluminada","Prateleira de loja conceito que passa confiança imediata","exact product showcased on upscale modern retail display counter with warm recessed architectural shelf lighting"],
+      [43,"Vitrine",false,"#43 Mármore Carrara Branco","Clássico de alta conversão limpo e extremamente nítido","exact product resting on bright white Italian Carrara marble countertop with crisp daylight window reflection"],
+      [44,"Vitrine",false,"#44 Bloco Acrílico Cristal","Expositor transparente flutuante com brilho lateral limpo","exact product resting on thick crystal-clear optical acrylic display block over soft neutral studio gradient"],
+      [45,"Vitrine",false,"#45 Areia Minimalista Quente","Estética orgânica bege quente que converte muito no feed","exact product resting on warm sand-toned sculpted minimalist plaster podium with gentle architectural sunlight shadows"],
+      [46,"Vitrine",false,"#46 Pódio Duplo Catálogo Flagship","Composição em camadas de pedra e aço escovado","exact product centered on two-tier architectural slate and brushed metal commercial podium, crisp flagship lighting"],
+      [47,"Vitrine",false,"#47 Madeira Clara Escandinava","Mesa de carvalho claro com luz natural confiável","exact product resting on light oak Scandinavian wooden table bathed in clean soft morning light"],
+      [48,"Vitrine",false,"#48 Azul Marinho Executivo","Tom azul profundo de autoridade com recorte prateado","exact product resting on deep midnight-navy matte display pedestal with crisp pure-white and silver commercial rim lighting"],
+      [49,"Vitrine",false,"#49 Fibra de Carbono & Luz Fria","Base esportiva/tech com precisão fotográfica 8K","exact product resting on woven dark matte carbon-fiber surface with surgical cool-white and steel rim highlights"],
+      [50,"Vitrine",false,"#50 Blackout Keynote Lançamento","Preto absoluto estilo palco de lançamento mundial","exact product resting cleanly on glossy black piano-glass stage in pure pitch-black void with razor-sharp white rim outline"]
     ].map(([id,cat,hasPerson,name,desc,prompt])=>({id,cat,hasPerson,name,desc,prompt}));
 
     // =========================================================================
-    // 50 UNIVERSOS HOLLYWOOD ÚNICOS (ESCALA REAL 1:1 + COR DE VFX + MOVIMENTO 3D)
-    // Formato: [id, cat, hasPerson, accent, name, desc, genre, castPlace, setVfx, b1, b2, b3, b4]
+    // 50 UNIVERSOS HOLLYWOOD ÚNICOS (CADA UM GERA ATÉ 8 PLANOS 100% INÉDITOS!)
     // =========================================================================
     const VIDEO_MODELS = [
-      [1,"Personagem",true,"#f59e0b","#01 Executivo 007 na Cobertura","Empresário na cobertura noturna segurando em 1 mão (escala real) + mesa escura + macro","luxury penthouse executive commercial","Charismatic 32-year-old executive in tailored black suit inside a dark luxury penthouse, naturally holding the exact real-sized product in ONE hand (true palm scale, NEVER giant) at chest level","Warm golden city skyline bokeh outside glass windows, crisp warm key light and dark luxury ambiance","Fast dynamic push-in straight onto the exact real-sized product held in one hand as city lights gleam behind","Dynamic low 3/4 lateral tracking glide past the exact product resting solidly on dark polished marble penthouse table with midnight skyline behind","Tight energetic macro dolly across authentic surface textures keeping product completely flat/upright and rigid","Authoritative pullback locking on frontal hero shot of executive and product in sharp focus"],
-      [2,"Personagem",true,"#22ff88","#02 Velocista Noturno em Estádio","Atleta sob refletores e chuva fina segurando em 1 mão + pista molhada + macro","high-adrenaline athletic stadium commercial","Fit athletic sprinter in matte-black pro gear inside a misty night stadium holding the exact real-sized product naturally in ONE hand","Blinding stadium floodlights cutting through fine night rain mist with electric-green rim highlights","Sharp high-energy push-in onto the exact real-sized product as stadium floodlights pulse behind","Fast 3/4 tracking dolly past the exact product resting solidly on wet dark stadium track with neon-green rim mist","Tight moving macro glide revealing tough surface textures catching crisp green rim glints","Snappy pullback locking firmly on the frontal athletic hero frame"],
-      [3,"Personagem",true,"#fde047","#03 Modelo Vogue Editorial Paris","Modelo chic em estúdio high-fashion com 1 mão + mármore negro + macro","high-fashion Parisian editorial commercial","Poised 26-year-old fashion model in sharp black couture blazer in a dark Parisian studio presenting the exact real-sized product effortlessly in ONE hand","Crisp editorial studio key lights carving velvety shadows with subtle champagne rim highlights","Crisp editorial push-in straight onto the exact real-sized product while model stays poised","Sleek 3/4 dolly glide showing the exact product resting on black lacquer studio pedestal","Moving 100mm fashion macro sweep across immaculate surface grain and subtle glossy sheen","Confident pullback returning to magazine-cover frontal hero composition"],
-      [4,"Personagem",true,"#ef4444","#04 Piloto de Supercarro à Noite","Cockpit carbono à noite + console de couro + macro de precisão","midnight supercar cockpit commercial","Stylish driver in dark leather jacket inside a matte carbon supercar cockpit holding the exact real-sized product in ONE hand beside steering wheel","Neon city tunnel lights streaking past tinted windshield, moody red-amber cockpit glow","Dynamic push-in onto the exact real-sized product inside the dark cockpit as city lights streak outside","Fast 3/4 dolly glide showing the exact product anchored solidly on dark stitched-leather and carbon console","Moving macro glide tracing clean contours and real surface details under nocturnal glow","Crisp pullback locking onto commanding frontal cockpit hero frame"],
-      [5,"Personagem",true,"#22d3ee","#05 Streetwear no Metrô Cyberpunk","Criador urbano estiloso em 1 mão + aço escovado + macro neon","urban street-culture rapid-cut commercial","Stylish 24-year-old Brazilian streetwear creator in dark techwear jacket on a midnight subway platform holding the exact real-sized product casually in ONE hand","Blurred passing express train light streaks behind, cool cyan fluorescent rim light and subtle mist","Punchy push-in straight onto the exact real-sized product as glowing train trails streak behind","Fast 3/4 lateral dolly over the exact product resting on dark brushed steel subway rail with cyan sheen","Dynamic macro glide displaying rugged authentic textures against vivid neon bokeh","Snappy pullback locking onto bold frontal street-hero framing"],
-      [6,"Personagem",true,"#fbbf24","#06 Milionário no Iate Pôr do Sol","Deck de teca luxuoso ao pôr do sol + madeira teca + macro dourado","aspirational mega-yacht sunset commercial","Confident 30-year-old man in crisp white resort shirt on a luxury yacht teak deck holding the exact real-sized product naturally in ONE hand","Warm golden hour ocean sunlight, shimmering turquoise sea bokeh and natural golden warmth","Crisp dynamic push-in straight onto the exact real-sized product glowing in warm sunset light","Fluid 3/4 dolly glide showing the exact product resting solidly on polished teak wood against golden sea horizon","Silky macro glide sweeping across genuine textures and natural colors in warm daylight","Smooth pullback returning to the aspirational frontal yacht hero view"],
-      [7,"Personagem",true,"#38bdf8","#07 Pro Gamer em Arena Esports","Player focado sob luzes de palco + setup carbono + macro","high-voltage esports arena commercial","Focused esports champion in sleek dark pro jersey at a dark carbon tournament desk with the exact real-sized product right in foreground","Electric-blue and crimson arena lights glowing through subtle stage haze behind","Instant crisp push-in onto the exact real-sized product as tournament stage beams sweep behind","Fast 3/4 lateral dolly across the exact product resting cleanly on matte dark carbon gaming desk","Continuous macro glide inspecting authentic details and crisp build quality","Explosive pullback locking back into commanding frontal tournament hero framing"],
-      [8,"Personagem",true,"#f59e0b","#08 Mulher Sofisticada Café Paris","Luz dourada da manhã + mesa mármore + macro natural","aspirational European lifestyle commercial","Radiant 28-year-old woman in chic beige trench coat at a Parisian marble cafe table presenting the exact real-sized product gracefully in ONE hand","Warm morning sunlight, crisp architectural shadows and creamy European street bokeh","Crisp kinetic push-in straight onto the exact real-sized product bathed in natural morning light","Graceful 3/4 dolly glide showing the exact product resting on bright veined marble cafe table","Smooth macro pass gliding over real tactile finishes and spotless craftsmanship","Stylish pullback returning cleanly to the aspirational frontal editorial shot"],
-      [9,"Personagem",true,"#60a5fa","#09 Agente Tático no Heliponto","Especialista sob chuva noturna + chapa aço molhada + macro","action-thriller helipad commercial","Rugged tactical specialist in matte-black rainproof jacket on a wet night skyscraper helipad holding the exact real-sized product firmly in ONE hand","Atmospheric blue helipad lighting cutting through drifting night mist and fine rain bokeh","Sharp dramatic push-in onto the exact real-sized product held steady in the misty night","Controlled 3/4 tactical dolly across the exact product anchored on dark wet helipad steel plate","Gritty macro glide skimming over tough real textures bathed in crisp overhead rim light","Authoritative pullback returning to bold frontal action-hero composition"],
-      [10,"Personagem",true,"#e879f9","#10 DJ em Palco Neon Subterrâneo","Cabine dark de festival + console preto + macro neon","underground festival laser-show commercial","Charismatic DJ in dark streetwear behind a sleek pitch-black festival booth holding the exact real-sized product cleanly in ONE hand","Emerald and violet stage atmosphere glowing through dark backlit club haze behind","Crisp rhythmic push-in onto the exact real-sized product while vibrant festival bokeh pulses behind","Energetic 3/4 lateral dolly showing the exact product resting solidly on glossy black DJ console","Dynamic macro push proving spotless finish amid colorful dark stage bokeh","Massive pullback locking back into frontal festival hero stance"],
+      [1,"Personagem",true,"#01 Executivo 007 na Cobertura","Mesa de mármore escuro em 1º plano + empresário de terno na cobertura noturna","luxury penthouse executive commercial","dark polished Nero Marquina marble penthouse table","Charismatic 32-year-old executive in tailored black suit standing poised softly out of focus behind the marble table","Warm golden sunset city skyline bokeh through floor-to-ceiling windows, soft golden key lighting and dark luxury depth"],
+      [2,"Personagem",true,"#02 Velocista Noturno em Estádio","Bancada dark da pista em 1º plano + atleta sob refletores e chuva fina","high-adrenaline athletic stadium commercial","dark wet matte athletic track bench","Fit athletic sprinter in matte-black pro training gear standing poised in soft focus behind the bench under night stadium towers","Blinding stadium floodlights cutting through fine night rain mist with crisp neon-green rim atmosphere"],
+      [3,"Personagem",true,"#03 Modelo Vogue Editorial Paris","Pódio black piano em 1º plano + modelo chic em estúdio high-fashion","high-fashion Parisian editorial commercial","glossy black lacquer studio plinth","Poised 26-year-old fashion model in sharp black couture blazer standing gracefully in soft bokeh behind the plinth","Dramatic Parisian editorial studio lighting with crisp champagne specular highlights and velvety shadows"],
+      [4,"Personagem",true,"#04 Piloto de Supercarro à Noite","Console em couro e carbono em 1º plano + piloto à noite com luzes de túnel","midnight supercar cockpit commercial","matte carbon-fiber and stitched black leather supercar center console","Stylish driver in dark leather jacket seated softly out of focus beside the steering wheel in the dark cockpit","Passing warm city tunnel lights glowing through tinted windows, moody red-amber luxury cockpit ambiance"],
+      [5,"Personagem",true,"#05 Streetwear no Metrô Cyberpunk","Corrimão de aço escuro em 1º plano + criador urbano e metrô passando atrás","urban street-culture rapid-cut commercial","brushed dark industrial steel subway ledge","Stylish 24-year-old Brazilian streetwear creator in dark techwear jacket standing casually in soft focus behind","Blurred passing express train light streaks behind, cool cyan fluorescent rim light and subtle urban mist"],
+      [6,"Personagem",true,"#06 Milionário no Iate Pôr do Sol","Mesa de madeira teca em 1º plano + empresário no deck sobre o mar dourado","aspirational mega-yacht sunset commercial","polished luxury yacht teak wood table","Confident 30-year-old man in crisp white resort shirt standing relaxed in soft bokeh on the yacht deck behind","Warm golden hour ocean sunlight, shimmering turquoise sea bokeh and rich cinema sunset tones"],
+      [7,"Personagem",true,"#07 Pro Gamer em Arena Esports","Bancada de carbono em 1º plano + pro player sob holofotes de campeonato","high-voltage esports arena commercial","matte dark carbon-fiber esports tournament desk","Focused esports champion in sleek dark pro jersey seated softly blurred behind the desk","Atmospheric electric-blue and crimson tournament stage lights glowing softly through subtle arena haze"],
+      [8,"Personagem",true,"#08 Mulher Sofisticada Café Paris","Mesa de mármore parisiense em 1º plano + modelo elegante na luz matinal","aspirational European lifestyle commercial","bright white veined Parisian marble cafe table","Radiant 28-year-old woman in chic beige trench coat seated warmly out of focus behind the marble table","Warm golden morning sunlight, crisp architectural shadows and creamy European street bokeh"],
+      [9,"Personagem",true,"#09 Agente Tático no Heliponto","Case blindado molhado em 1º plano + agente tático na chuva noturna","action-thriller helipad commercial","wet matte-black armored tactical case on dark rooftop helipad","Rugged tactical specialist in dark rainproof jacket standing poised in soft focus behind amid night mist","Dramatic blue helipad searchlight ambiance cutting through fine night rain bokeh"],
+      [10,"Personagem",true,"#10 DJ em Palco Neon Subterrâneo","Console preto brilhante em 1º plano + DJ na cabine com lasers atrás","underground festival laser-show commercial","glossy pitch-black festival DJ booth console","Charismatic DJ in dark streetwear standing energetically in soft focus behind the booth","Emerald and violet volumetric club haze glowing brightly in deep background bokeh"],
+      [11,"Acao",false,"#11 Reator Industrial (Strobe Vermelho)","Pedestal obsidiana, luzes de emergência vermelhas e vapor subindo","high-voltage industrial reactor commercial","heavy matte-black obsidian pedestal inside an industrial reactor core","","Flashing crimson emergency industrial lights pulsing gently across thick rising white reactor vapor behind"],
+      [12,"Acao",false,"#12 Cofre Tático Criogênico (Unboxing)","Maleta titânio aberta na espuma carbono + jatos de vapor criogênico","military sci-fi tactical unboxing commercial","open matte-black titanium tactical vault case lined with laser-cut black carbon foam (already open)","","Monolithic dark security bunker venting brisk white cryogenic steam clouds beneath a crisp overhead spotlight"],
+      [13,"Acao",false,"#13 Penhasco Basalto Pôr do Sol","Rocha basáltica escura no topo de cânion ao entardecer com névoa dourada","epic basalt-cliff canyon commercial","flat dark basalt stone ledge overlooking a twilight canyon","","Swirling golden canyon mist, rich amber sunset horizon and sunlit wind dust drifting past behind"],
+      [14,"Acao",false,"#14 Estação Orbital Zero-G","Deck de titânio diante de janela espacial mostrando a curvatura azul da Terra","sci-fi zero-gravity orbital commercial","brushed dark aerospace titanium observation deck ledge","","Glowing blue Earth curvature rotating slowly outside giant viewport with crisp cool-blue orbital rim light"],
+      [15,"Acao",false,"#15 Beco Cyberpunk sob Chuva Neon","Asfalto preto molhado refletindo neon ciano e magenta sob garoa fina","dark cyberpunk Neo-Tokyo street commercial","rain-slicked wet black urban asphalt slate","","Electric cyan and hot-magenta neon bokeh shimmering on wet ground with fine backlit night mist"],
+      [16,"Acao",false,"#16 Pit-Lane Noturno Fórmula 1","Asfalto de pista noturna sob holofotes e fumaça branca de pneu","night motorsport F1 pit-lane commercial","textured dark motorsport tarmac pit-lane surface","","Bright pit-lane floodlights slicing brisk white tire smoke drifting behind in deep dark depth"],
+      [17,"Acao",false,"#17 Assalto ao Cofre com Lasers","Monolito de aço escovado em cofre escuro com grade de lasers vermelhos atrás","high-stakes laser-heist vault commercial","reinforced matte-steel security monolith inside a pitch-black heist vault","","Thin crimson security laser lines glowing cleanly in the distant hazy vault behind the pedestal"],
+      [18,"Acao",false,"#18 Trem-Bala 350km/h Noturno","Bancada de aço ao lado de janela panorâmica com luzes passando rápido","high-speed bullet-train kinetic commercial","sleek brushed-steel display ledge beside a panoramic dark train window","","Smooth horizontal night city light streaks racing rapidly outside the panoramic glass behind"],
+      [19,"Acao",false,"#19 Hangar de Caça Supersônico","Deck de titânio diante de turbina a jato gigante com brilho laranja","supersonic fighter-jet hangar commercial","dark titanium deck block directly ahead of massive matte jet turbine blades","","Warm orange afterburner glow pulsing softly behind massive blades with backlit vapor drifting past"],
+      [20,"Acao",false,"#20 Terraço na Tempestade Elétrica","Ardósia escura molhada sob chuva noturna e relâmpagos rasgando o céu","midnight lightning-storm rooftop commercial","wet dark basalt rooftop ledge overlooking a stormy midnight skyline","","Slanted driving rain backlit by dramatic white lightning flashes illuminating dark storm clouds behind"],
+      [21,"VFX",false,"#21 Estilhaço de Cristal 1000fps","Espelho negro com cacos de cristal brilhando em suspensão ao fundo","1000fps Phantom Flex crystal-shatter commercial","glossy pure-black mirror pedestal inside a pitch-black studio","","Sparkling clear crystal glass shards suspended and bursting cleanly outward in background depth"],
+      [22,"VFX",false,"#22 Explosão de Gelo Ártico","Ardósia molhada com estilhaços de gelo e nuvem fria azul atrás","subzero arctic ice-burst commercial","wet black volcanic slate pedestal inside a freezing dark studio","","Translucent arctic ice chunks and brisk white cryogenic frost mist swirling behind under cool blue light"],
+      [23,"VFX",false,"#23 Cascata de Faíscas de Forja","Bloco de aço escuro sob chuva incandescente de faíscas batendo atrás","molten metal-forge sparks commercial","dark scorched forged-steel anvil block inside a cavernous foundry","","Golden-orange welding sparks showering and bouncing cleanly behind the product in shallow depth"],
+      [24,"VFX",false,"#24 Onda de Choque em Água Negra","Pedestal emergindo de espelho d'água negro com coroa de gotas prateadas","high-speed black-water shockwave commercial","sleek raised matte-black plinth rising out of shallow black mirror water","","Sculpted silver-lit liquid splashes and crisp water droplets rising symmetrically around the base"],
+      [25,"VFX",false,"#25 Explosão de Pó de Ouro Líquido","Obsidiana preta com nuvens finas de pó metálico dourado subindo atrás","explosive luxury gold-powder VFX commercial","pitch-black obsidian monolith in a pure black luxury void","","Symmetrical billows of fine shimmering metallic gold dust rising cleanly behind under warm golden rim light"],
+      [26,"VFX",false,"#26 Campo Magnético & Rochas","Monolito escuro com fragmentos de basalto levitando suavemente atrás","antigravity magnetic-debris VFX commercial","heavy matte-black architectural monolith","","Small dark matte basalt shards floating slowly in antigravity behind lit by cyan and gold rim light"],
+      [27,"VFX",false,"#27 Anel de Fogo em Ignição","Pedestal de carbono diante de halo circular de fogo âmbar ao fundo","ignition fire-ring VFX commercial","dark matte carbon-stone plinth inside a pitch-black concrete chamber","","Dramatic circular ring of warm amber fire burning cleanly far behind casting rich rim light"],
+      [28,"VFX",false,"#28 Prisma Cromático & Estúdio","Bancada óptica preta com reflexos prismáticos suaves no fundo escuro","optical prism studio commercial","clean matte-black optical bench inside a pitch-black crystal studio","","Soft subtle rainbow prismatic light refractions glowing cleanly across the dark backdrop behind"],
+      [29,"VFX",false,"#29 Câmara de Espelhos Geométricos","Palco de obsidiana cercado por painéis espelhados escuros simétricos","architectural mirror-chamber commercial","glossy obsidian slab inside an architectural dark mirror chamber","","Clean overhead studio softboxes casting sleek reflections across dark angled mirror geometry"],
+      [30,"VFX",false,"#30 Vórtice de Fumaça Iluminada","Ardósia espelhada com fitas de fumaça branca e dourada girando atrás","illuminated smoke-vortex commercial","glossy black obsidian slate inside a pitch-black wind studio","","Sculpted luminous white-and-gold smoke ribbons swirling briskly behind the product in crisp rim light"],
+      [31,"Luxo",false,"#31 Cofre Suíço 007 (Ouro Líquido)","Mármore Nero Marquina polido com iluminação dourada recortada","Swiss luxury neo-noir commercial","polished Nero Marquina black marble slab inside a velvety dark vault","","Sculptural warm liquid-gold studio rim lighting grazing softly through silky dark haze"],
+      [32,"Luxo",false,"#32 Blackout Keynote (Estilo Apple)","Palco black piano infinito com reflexos suaves de luz branca pura","flagship keynote blackout launch commercial","glossy black piano-glass stage against an infinite pitch-black horizon","","Surgical pure-white overhead softbox bars casting clean liquid reflections across black glass"],
+      [33,"Luxo",false,"#33 Unboxing Maleta Carbono VIP","Caixa coletora rígida de carbono e Alcântara aberta sob holofote","bespoke carbon-collector unboxing commercial","open matte carbon-fiber luxury collector box lined with dark charcoal Alcantara foam","","Dark VIP gallery lighting with crisp focused overhead spotlight and subtle backlit depth"],
+      [34,"Luxo",false,"#34 Veludo Esmeralda & Latão Nobre","Pódio verde esmeralda escuro com filetes de latão dourado","haute-boutique emerald-brass commercial","deep emerald-green velvet podium trimmed with brushed antique brass bars","","Moody Parisian high-jewelry vault lit by warm golden overhead spotlights"],
+      [35,"Luxo",false,"#35 Travertino Italiano & Luz Solar","Pedra travertino bege nobre cortada por sombras solares arquitetônicas","Mediterranean architectural luxury commercial","honed beige Italian travertine stone monolith","","Warm golden Mediterranean architectural sunlight casting crisp diagonal high-fashion shadows"],
+      [36,"Luxo",false,"#36 Dunas Douradas ao Pôr do Sol","Duna do Saara ao pôr do sol com areia fina soprando ao fundo","epic golden-desert Dune commercial","wind-carved golden Sahara sand dune crest","","Low warm amber sunset, fine golden sand wisps blowing cinematically across distant dune ridges"],
+      [37,"Luxo",false,"#37 Vidro com Chuva & Cobertura","Pedra escura diante de janela com gotas de chuva e cidade dourada","billionaire rainy-penthouse commercial","dark honed stone ledge beside floor-to-ceiling rain-streaked penthouse glass","","Golden midnight metropolis bokeh sparkling through glistening raindrops outside, warm interior spotlight"],
+      [38,"Luxo",false,"#38 Cristal Fumê & Luz Dourada","Monolito pesado de vidro fumê sob iluminação dourada suave","smoked-crystal luxury commercial","heavy thick smoked-crystal glass display monolith","","Warm golden studio backlighting glowing softly through the smoked crystal glass base"],
+      [39,"Luxo",false,"#39 Pico Nevado Alpino Solar","Cume nevado alpino sob sol dourado cristalino e pó de neve","alpine luxury snow-peak commercial","sculpted pristine alpine snow ridge at crisp golden sunrise","","Sparkling sunlit snow powder drifting off distant ridges, majestic icy peaks blurred in depth"],
+      [40,"Luxo",false,"#40 Gala Champanhe & Bokeh Ouro","Obsidiana preta diante de pontos luminosos champanhe-ouro","opulent champagne-gala commercial","glossy black obsidian pedestal inside a dark gala showcase hall","","Rich floating champagne-gold bokeh spheres glowing softly in the velvety dark background"],
+      [41,"Viral",false,"#41 Mesa Creator Carbono Dark","Bancada de carbono stealth com luz ciano-branca de alto contraste","stealth creator-desk hard-sell commercial","sleek matte dark carbon-fiber creator desk pad","","Punchy high-contrast overhead studio beam with crisp cyan and white ambient rim glow behind"],
+      [42,"Viral",false,"#42 Palco Dual Rim Ouro & Ciano","Ardósia espelhada com contraste quente/frio impossível de ignorar","viral dual-rim showcase commercial","glossy dark slate flagship stage","","Bold dual warm-gold and electric-cyan studio rim lighting separating the product sharply from dark depth"],
+      [43,"Viral",false,"#43 Arena Fitness Neon Verde","Bancada escura de treino com pó de magnésio e rim verde neon","athletic gym-chalk viral commercial","textured dark matte rubber athletic gym bench","","Brisk white chalk dust suspended behind under vivid neon-green rim lights and crisp white overhead key"],
+      [44,"Viral",false,"#44 Vitrine Estúdio LED Vertical","Pedestal preto espelhado com tubos verticais de luz limpa ao fundo","flagship LED-studio showcase commercial","sleek glossy dark studio showcase pedestal","","Clean vertical cinema softbox tubes positioned symmetrically in the dark background"],
+      [45,"Viral",false,"#45 Vidro Molhado & Gotículas HD","Vidro temperado escuro coberto de gotículas cristalinas sob luz ciano","hyper-tactile wet-glass commercial","dark tempered glass slab covered in crisp hyper-realistic water droplets","","Electric-cyan and pure-white directional rim highlights making surrounding glass droplets sparkle"],
+      [46,"Viral",false,"#46 Halo Vermelho Blackout","Monolito preto fosco recortado por halo vermelho atrás e luz branca limpa","scroll-stopper crimson-halo commercial","deep matte-black architectural monolith in pitch-black studio","","Deep crimson backlight halo glowing cleanly behind paired with crisp pure-white front key lighting"],
+      [47,"Viral",false,"#47 Unboxing Caixa Magnética Preta","Caixa rígida preta magnética já aberta na espuma sob holofote","viral luxury-box unboxing commercial","open matte-black rigid magnetic collector box lined with dark custom foam on slate","","Focused warm-white overhead studio spotlight carving clean commercial contrast"],
+      [48,"Viral",false,"#48 Estúdio Off-White Clean Pro","Pedestal off-white de marca milionária com luz natural e sombras duras","high-converting clean DTC brand commercial","crisp architectural off-white matte studio pedestal","","Clean diagonal architectural sunlight shadows across spotless off-white backdrop, true-to-life colors"],
+      [49,"Viral",false,"#49 Concreto Urbano & Grafite","Bloco de concreto street com grafite vibrante desfocado ao entardecer","street-art urban flash commercial","raw dark urban concrete block in a colorful dusk graffiti alley","","Vibrant neon-colored graffiti bokeh blurred softly behind with punchy crisp commercial front light"],
+      [50,"Viral",false,"#50 Superprodução IMAX Definitiva","Obsidiana espelhada sob atmosfera teal & ouro, vapor e brasas em 4K","ultimate IMAX blockbuster commercial","monumental black obsidian mirror pedestal","","Epic dark IMAX soundstage illuminated by atmospheric teal-and-gold volumetric haze, rising vapor and fine embers"]
+    ].map(([id,cat,hasPerson,name,desc,genre,surface,castBg,lighting])=>({id,cat,hasPerson,name,desc,genre,surface,castBg,lighting}));
 
-      [11,"Acao",false,"#ef4444","#11 Reator Industrial (Strobe Vermelho)","Pedestal obsidiana, strobes vermelhos pulsando e fumaça densa","high-voltage industrial reactor commercial","Exact product anchored rigidly on a heavy matte-black obsidian pedestal inside an industrial reactor core","Flashing red emergency ambient lights pulsing across thick rising white reactor vapor behind","High-voltage snap-zoom through rising white smoke straight onto the exact product","Fast 3/4 dolly slide (±25° frontal) showcasing crisp product contours reflecting red ambient glow amid vapor","Tight macro dolly gliding smoothly over authentic textures and original markings","Authoritative speed-ramp pull-back locking cleanly into centered hero stance amid lingering vapor"],
-      [12,"Acao",false,"#38bdf8","#12 Cofre Tático Criogênico (Unboxing)","Maleta titânio aberta, espuma carbono e jatos de vapor gelado","military sci-fi tactical unboxing commercial","Exact product rigidly seated inside an open laser-cut black carbon foam tray of a matte-black titanium tactical vault case (already open)","Monolithic dark security bunker venting brisk horizontal clouds of white cryogenic steam beneath warm overhead spotlight","Explosive snap-zoom slicing through clearing white cryogenic steam straight onto the exact product in foam","Fast 3/4 tactical dolly (±25° frontal) capturing sculpted edges anchored rigidly inside the open vault","Crisp macro push diving straight into real original details illuminated by focused bunker spotlight","Authoritative pull-back locking into centered hero stance inside the open titanium vault"],
-      [13,"Acao",false,"#f97316","#13 Penhasco Basalto Pôr do Sol","Monolito escuro no alto de cânion ao entardecer com vento e névoa","epic basalt-cliff canyon commercial","Exact product anchored rigidly atop a dark basalt cliff spire overlooking a twilight mountain canyon","Swirling golden canyon mist, warm amber sunset horizon and crisp sunlit wind dust","Fast snap-zoom straight onto the exact product as golden mist whips past behind","Controlled 3/4 scenic dolly (±25° frontal) showcasing sharp contours silhouetted against warm sunset","Macro glide skimming real surface textures bathed in soft golden rim light","Smooth pullback locking monumental hero scale atop the canyon rock"],
-      [14,"Acao",false,"#38bdf8","#14 Estação Orbital Zero-G","Deck espacial escuro com a curvatura azul da Terra girando atrás","sci-fi zero-gravity orbital commercial","Exact product anchored rigidly on a sleek dark brushed-titanium pedestal before a giant spacecraft viewport","Glowing blue Earth curvature visible outside, crisp cool-blue orbital rim light and subtle floating dust","Crisp precision snap-zoom directly onto the exact razor-sharp product","Smooth 3/4 lateral dolly (±25° frontal) catching cool Earth-blue rim reflections along contours","Surgical 100mm macro pass tracking authentic original lines and spotless materials","Majestic pullback locking symmetrical hero alignment before the glowing blue planet"],
-      [15,"Acao",false,"#22d3ee","#15 Beco Cyberpunk sob Chuva Neon","Asfalto molhado de Neo-Tóquio com reflexos ciano/magenta e chuva","dark cyberpunk Neo-Tokyo street commercial","Exact product anchored solidly on rain-slicked wet black urban asphalt slate in a dark neon alley","Electric cyan and hot-magenta neon bokeh shimmering on wet ground, slanted fine rain mist","Sudden snap-zoom skimming glistening wet slate directly onto the exact product","Fast low 3/4 cyberpunk dolly (±25° frontal) while cyan-and-magenta reflections glaze its contours","Continuous rain-bokeh macro glide inspecting real original craftsmanship","Explosive pullback locking commanding hero pose mirrored on wet neon slate"],
-      [16,"Acao",false,"#facc15","#16 Pit-Lane Noturno Fórmula 1","Asfalto de corrida noturno sob strobes brancos e fumaça de pneu","night motorsport F1 pit-lane commercial","Exact product firmly planted on textured dark motorsport tarmac with blurred night pit-lane lights far behind","Pit-lane overhead floodlights slicing brisk white tire smoke drifting behind the product","High-speed snap-zoom cutting through backlit pit smoke straight onto the exact product","Rapid 3/4 lateral motorsport dolly (±25° frontal) flashing crisp white halogen highlights across edges","Low tarmac-level macro push diving into tough build details under bright directional track light","Fast pullback locking fearless centered hero stance amid glowing pit vapor"],
-      [17,"Acao",false,"#ef4444","#17 Assalto ao Cofre com Lasers","Cofre blindado escuro com linhas de laser vermelho ao fundo na névoa","high-stakes laser-heist vault commercial","Exact product secured rigidly atop a matte-steel security monolith inside a pitch-black heist vault","Thin crimson security laser lines glowing subtly in distant vault haze behind the pedestal","Sharp precision snap-zoom locking straight onto the illuminated exact product","Controlled 3/4 stealth dolly (±25° frontal) reflecting subtle crimson ambient sheen across crisp edges","Pinpoint overhead spotlight macro glide inspecting razor-sharp original micro-details","Explosive pullback locking authoritative centered hero pose inside the dark vault"],
-      [18,"Acao",false,"#60a5fa","#18 Trem-Bala 350km/h Noturno","Plataforma metálica ao lado de janela panorâmica com luzes em velocidade","high-speed bullet-train kinetic commercial","Exact product anchored firmly on a sleek brushed-steel ledge beside a dark panoramic high-speed train window","Smooth horizontal night city light streaks racing rapidly outside the panoramic glass behind","Sharp snap-zoom straight onto the rock-steady exact product while velocity light trails race outside","Crisp 3/4 lateral tracking glide (±22° frontal) as passing lights cast subtle moving sheen","Continuous macro push locking onto authentic surface textures contrasting with streaking bokeh","Speed-ramp pullback stabilizing into commanding centered hero framing"],
-      [19,"Acao",false,"#fb923c","#19 Hangar de Caça Supersônico","Turbina a jato gigante atrás com brilho laranja de pós-combustão e vapor","supersonic fighter-jet hangar commercial","Exact product mounted rigidly on a dark titanium deck block directly ahead of massive matte jet turbine blades","Warm orange afterburner glow pulsing softly behind turbine blades with backlit air vapor drifting past","Blazing snap-zoom straight onto the razor-sharp exact product","Controlled 3/4 low dolly (±25° frontal) sweeping warm amber rim highlights across contours","Continuous extreme macro glide revealing ultra-crisp craftsmanship framed by warm backlight","Explosive pullback locking monumental centered hero stance before the glowing turbine"],
-      [20,"Acao",false,"#93c5fd","#20 Terraço na Tempestade Elétrica","Chuva noturna pesada com clarões de relâmpago rasgando o céu atrás","midnight lightning-storm rooftop commercial","Exact product anchored boldly on a wet dark basalt rooftop ledge overlooking a stormy midnight skyline","Slanted driving rain backlit by dramatic white lightning flashes illuminating dark storm clouds behind","Sudden storm flash snap-zoom straight onto the untouched exact product","Controlled 3/4 storm dolly (±25° frontal) catching crisp white sky highlights along the silhouette","Dynamic macro push proving spotless original detail with sparkling rain bokeh behind","Epic pullback locking heroic centered stance against the stormy midnight sky"],
+    // =========================================================================
+    // 8 PLANOS CINEMATOGRÁFICOS HOLLYWOOD DISTINTOS (ZERO REPETIÇÃO!)
+    // =========================================================================
+    const EIGHT_UNIQUE_SHOTS = [
+      {
+        title: "Cena 1 • Gancho Hero Impacto",
+        allowPerson: true,
+        editMove: "crashZoom",
+        frame: (m) => m.hasPerson
+          ? `SHOT 1 (HERO ESTABLISHING + CHARACTER BEHIND): Dramatic low-eye-level 9:16 full-bleed commercial frame. Exact real-sized product rests solidly in sharp focus in foreground on ${m.surface}. ${m.castBg} (hands relaxed, never grabbing product toward lens).`
+          : `SHOT 1 (LOW-ANGLE HERO HOOK): Dramatic low-angle frontal 9:16 full-bleed establishing shot of the exact product anchored solidly on ${m.surface}, commanding the center frame.`,
+        motion: "Explosive dynamic cinematic snap-zoom push-in rushing forward toward the exact product resting solidly on the surface while background lights and atmosphere shift dramatically."
+      },
+      {
+        title: "Cena 2 • Perfil 3/4 Esquerdo",
+        allowPerson: false,
+        editMove: "whipLeft",
+        frame: (m) => `SHOT 2 (LOW LEFT 3/4 PROFILE — PRODUCT ONLY): Sleek surface-level left three-quarter angle showcasing the sculpted side profile and length of the exact product resting firmly on ${m.surface}. Zero hands, zero people, full-bleed 9:16.`,
+        motion: "Fast energetic lateral tracking slider sweeping sharply left-to-right across the resting product's sculpted left profile with crisp specular highlights racing over its contours."
+      },
+      {
+        title: "Cena 3 • Macro 100mm (Detalhes Principais)",
+        allowPerson: false,
+        editMove: "macroPush",
+        frame: (m, macro) => `SHOT 3 (EXTREME 100MM MACRO A — PRODUCT ONLY): Ultra-tight dramatic macro shot looking at 35 degrees onto the exact product resting on ${m.surface}, focusing sharply on ${macro}. Full-bleed edge-to-edge background (ZERO black bars). Zero hands, zero people.`,
+        motion: "High-precision kinetic macro push-in gliding tightly across the primary controls, dial/scroll and rich surface details while bright studio light sweeps cleanly across the finish."
+      },
+      {
+        title: "Cena 4 • Contraplano 3/4 Direito (Ângulo Dinâmico)",
+        allowPerson: false,
+        editMove: "whipRight",
+        frame: (m) => `SHOT 4 (DYNAMIC RIGHT 3/4 ANGLE — PRODUCT ONLY): Bold opposite right-side three-quarter angle with slight dynamic 7-degree cinematic Dutch tilt of the exact product resting solidly on ${m.surface}. Zero hands, zero people, full-bleed 9:16.`,
+        motion: "High-velocity opposite tracking sweep arcing smoothly right-to-left along the product's right flank with dynamic depth-of-field shift and blazing rim reflections."
+      },
+      {
+        title: "Cena 5 • Clímax Hero Épico (ou Macro Acabamento)",
+        allowPerson: true,
+        editMove: "climaxPull",
+        frame: (m) => m.hasPerson
+          ? `SHOT 5 (AUTHORITATIVE WIDE HERO FINALE): Monumental 9:16 full-bleed commercial closing frame with the exact product resting razor-sharp on ${m.surface} in foreground and ${m.castBg} framed in grand cinematic depth.`
+          : `SHOT 5 (MONUMENTAL SYMMETRICAL HERO CLIMAX): Iconic dead-center symmetrical low-angle 9:16 full-bleed flagship hero shot of the exact product resting solidly on ${m.surface} framed by epic background lighting and depth.`,
+        motion: "Dramatic high-impact speed-ramp pullback rising slightly upward to unveil the monumental flagship hero product dominating the full Hollywood set."
+      },
+      {
+        title: "Cena 6 • Mergulho Superior 45° (Top-Down)",
+        allowPerson: false,
+        editMove: "zoomAttack",
+        frame: (m) => `SHOT 6 (ELEVATED 45° TOP-DOWN HERO — PRODUCT ONLY): Crisp architectural 45-degree top-down commercial shot revealing the complete top silhouette, proportions and exact markings of the product resting on ${m.surface}. Zero hands, zero people.`,
+        motion: "Brisk descending overhead crane dive zooming smoothly down toward the resting product's full top design with sharp light sweep."
+      },
+      {
+        title: "Cena 7 • Macro 100mm (Textura & Bordas)",
+        allowPerson: false,
+        editMove: "macroPush",
+        frame: (m) => `SHOT 7 (EXTREME 100MM MACRO B — MATERIAL & EDGES): Intimate grazing-light macro close-up skimming along the tactile edges, finish quality and material grain of the exact product resting on ${m.surface}. Zero hands, zero people, full-bleed 9:16.`,
+        motion: "Silky fast-to-slow macro glide tracing the sharp edges and authentic material finish with dramatic rim-light shimmer."
+      },
+      {
+        title: "Cena 8 • Recorte Chiaroscuro Final",
+        allowPerson: false,
+        editMove: "climaxPull",
+        frame: (m) => `SHOT 8 (DRAMATIC RIM-LIT FINALE — PRODUCT ONLY): High-contrast Hollywood rim-lit hero frame of the exact product resting solidly on ${m.surface}, sculpted sharply by bright edge highlights against deep cinematic bokeh.`,
+        motion: "Explosive speed-ramp zoom-out locking onto the iconic, razor-sharp hero silhouette dominating the closing frame."
+      }
+    ];
 
-      [21,"VFX",false,"#e0f2fe","#21 Estilhaço de Cristal 1000fps","Vidro explodindo em 3D ao redor do produto totalmente intacto","1000fps Phantom Flex crystal-shatter commercial","Exact product anchored dead-center on a pure black mirror pedestal inside a pitch-black high-speed studio","Sparkling clear crystal glass shards bursting outward around the untouched razor-sharp product","Crystal shards burst outward behind as camera executes a crisp snap-zoom onto the spotless product","Controlled 3/4 bullet-time dolly (±25° frontal) weaving past suspended glittering glass fragments","Continuous macro glide showcasing authentic original textures as tiny crystal glints drift in bokeh","Speed-ramp pullback clearing shards away into an immaculate black-mirror hero lock"],
-      [22,"VFX",false,"#38bdf8","#22 Explosão de Gelo Ártico","Estilhaços congelantes e nuvem subzero explodindo atrás do produto","subzero arctic ice-burst commercial","Exact product seated solidly on wet black slate inside a freezing subzero studio chamber","Translucent arctic ice chunks erupting outward amid crisp swirling white cryogenic mist and ice-blue rim light","Sharp ice-crack burst launches a crisp snap-zoom through clearing frost mist onto the exact product","Controlled 3/4 cold-blue dolly (±25° frontal) tracking icy specular highlights across pristine curves","Moving 100mm macro push revealing rich original contrast with sparkling cold haze drifting behind","Speed-ramp pullback locking authoritative centered hero pose on glistening wet dark slate"],
-      [23,"VFX",false,"#f97316","#23 Cascata de Faíscas de Forja","Bigorna escura sob chuva incandescente de faíscas batendo ao fundo","molten metal-forge sparks commercial","Exact product anchored boldly on a dark scorched steel anvil block inside a pitch-black industrial forge","Golden-orange welding sparks showering and bouncing cleanly behind the product in shallow depth","Blazing curtain of background sparks flashes bright as camera snap-zooms onto the exact product","Controlled 3/4 low-angle dolly (±25° frontal) catching warm orange specular glints across edges","Continuous macro push highlighting rugged original build bathed in warm ember rim light","Monumental pullback locking rock-solid hero stance beneath raining golden sparks"],
-      [24,"VFX",false,"#7dd3fc","#24 Onda de Choque em Água Negra","Coroa de água negra espelhada explodindo em gotas prateadas ao redor","high-speed black-water shockwave commercial","Exact product elevated cleanly on a sleek matte-black pedestal rising out of shallow glossy black mirror water","Radial liquid shockwave lifting sculpted silver-lit water crowns and crisp droplets around the base","Radial water crown rises sharply around base as camera snap-zooms onto the crystal-sharp product","Controlled 3/4 bullet-time dolly (±25° frontal) passing glistening suspended droplets","Moving macro glide inspecting pristine dry original finishes with shimmering silver splash bokeh","Speed-ramp pullback locking spotless centered hero reflection as dark ripples calm"],
-      [25,"VFX",false,"#fbbf24","#25 Explosão de Pó de Ouro Líquido","Nuvens explosivas de pó metálico dourado em estúdio blackout","explosive luxury gold-powder VFX commercial","Exact product centered rigidly on a pitch-black obsidian monolith in a pure black luxury void","Symmetrical billows of fine shimmering metallic gold dust erupting smoothly behind under warm golden rim light","Gold powder billows outward behind as camera executes a crisp snap-zoom onto the gleaming product","Controlled 3/4 luxury dolly (±25° frontal) wrapping rich golden rim highlights across textures","Dynamic macro push catching fine metallic shimmer drifting softly in background depth","Regal pullback locking iconic centered hero stance framed by luminous golden dust"],
-      [26,"VFX",false,"#22d3ee","#26 Campo Magnético & Rochas","Fragmentos escuros de basalto levitando suavemente ao fundo","antigravity magnetic-debris VFX commercial","Exact product standing solidly atop a dark monolith while small matte basalt shards levitate behind it","Floating matte obsidian fragments slowly drifting behind lit by crisp cyan and warm gold rim lighting","Basalt shards lift smoothly behind as camera snap-zooms onto the exact product","Controlled 3/4 kinetic dolly (±25° frontal) keeping product razor-sharp while fragments float in depth","Continuous macro glide displaying spotless material integrity with floating bokeh behind","Explosive pullback locking commanding centered hero pose"],
-      [27,"VFX",false,"#fb923c","#27 Anel de Fogo em Ignição","Halo circular de fogo âmbar acendendo atrás do pedestal no blackout","ignition fire-ring VFX commercial","Exact product anchored securely on dark carbon-stone plinth inside a pitch-black concrete chamber","Dramatic ring of bright amber fire burning cleanly far behind the pedestal casting fierce warm rim light","Fire halo ignites sharply behind as camera snap-zooms onto the exact product","Controlled 3/4 dolly (±25° frontal) catching warm firelight reflections along sculpted contours","Continuous low-angle macro push proving tough original precision against warm fire bokeh","Explosive pullback locking heroic centered stance framed inside the circular fire halo"],
-      [28,"VFX",false,"#a855f7","#28 Prisma Cromático & Estúdio","Reflexos prismáticos suaves e limpos no fundo escuro","optical prism studio commercial","Exact product centered rigidly on a clean matte-black optical bench inside a pitch-black crystal studio","Soft subtle rainbow prismatic refractions glowing softly across the dark backdrop behind the product","Crisp surgical snap-zoom straight onto the exact product as soft prismatic light shifts behind","Controlled 3/4 precision dolly (±22° frontal) sweeping clean specular highlights across edges","Surgical 100mm macro pass revealing crystal-clear original finish with subtle edge sheen","Speed-ramp pullback locking sleek iconic flagship hero pose"],
-      [29,"VFX",false,"#e2e8f0","#29 Câmara de Espelhos Geométricos","Painéis espelhados escuros multiplicando luzes em simetria","architectural mirror-chamber commercial","Exact product centered rigidly inside an architectural dark obsidian mirror chamber with angled reflective panels","Clean overhead studio softboxes casting sleek reflections across dark mirrored geometry","Crisp snap-zoom straight onto the real centered exact product","Controlled 3/4 geometric dolly (±22° frontal) showcasing crisp real contours echoed softly in dark mirrors","Moving macro glide highlighting authentic surface textures with deep mirrored reflections behind","Speed-ramp pullback locking bold symmetrical hero presentation inside the mirror stage"],
-      [30,"VFX",false,"#fde047","#30 Vórtice de Fumaça Iluminada","Redemoinho controlado de fumaça branca e dourada girando ao fundo","illuminated smoke-vortex commercial","Exact product rooted dead-center on glossy obsidian slate inside a pitch-black wind studio","Sculpted luminous white-and-gold smoke ribbons swirling briskly behind the product in crisp rim light","Glowing smoke parts cleanly around center as camera snap-zooms onto the exact product","Controlled 3/4 dolly (±25° frontal) contrasting smooth swirling background smoke while product stays sharp","Razor-sharp macro push skimming fine original product details framed by thin backlit haze","Explosive pullback locking serene commanding frontal hero stance"],
-
-      [31,"Luxo",false,"#eab308","#31 Cofre Suíço 007 (Ouro Líquido)","Mármore Nero Marquina, iluminação dourada recortada e névoa noir","Swiss luxury neo-noir commercial","Exact product seated rigidly on polished Nero Marquina black marble inside a velvety pitch-black luxury vault","Sculptural warm liquid-gold studio rim lighting grazing softly through silky dark haze","Sleek crisp snap-zoom onto the exact product as soft warm golden sheen glides across contours","Silky controlled 3/4 dolly (±22° frontal) bathing every curve in warm liquid-gold rim reflections","Moving 100mm macro glide unveiling immaculate original finishes with velvety dark bokeh","Regal pullback locking timeless symmetrical hero pose with fine golden dust motes"],
-      [32,"Luxo",false,"#f8fafc","#32 Blackout Keynote (Estilo Apple)","Palco black piano infinito com reflexos suaves de luz pura","flagship keynote blackout launch commercial","Exact product centered rigidly on glossy black piano-glass stage against an infinite pitch-black horizon","Surgical pure-white overhead softbox bars casting clean liquid reflections across black glass","Surgical push-in straight onto the exact product emerging cleanly in pitch-black studio lighting","Ultra-precise 3/4 robotic dolly (±22° frontal) sweeping soft pure-white reflections across contours","Continuous industrial-design macro glide highlighting zero-flaw original surfaces","Iconic symmetrical pullback locking unforgettable flagship launch hero reflection"],
-      [33,"Luxo",false,"#94a3b8","#33 Unboxing Maleta Carbono VIP","Maleta rígida de carbono e Alcântara já aberta sob luz de galeria","bespoke carbon-collector unboxing commercial","Exact product seated rigidly inside an open matte carbon-fiber collector case lined with charcoal Alcantara foam","Dark VIP collector lounge with crisp overhead gallery spotlight and delicate backlit haze","Punchy snap-zoom straight onto the exact product nested in dark foam inside the open VIP case","Controlled 3/4 dolly (±25° frontal) revealing rich real colors and sculpted contours inside the box","Moving tight macro glide sweeping across precision original details and material contrast","Commanding pullback locking luxury collector hero framing inside the open carbon box"],
-      [34,"Luxo",false,"#10b981","#34 Veludo Esmeralda & Latão Nobre","Alta joalheria verde esmeralda escuro com brilho quente dourado","haute-boutique emerald-brass commercial","Exact product anchored rigidly on deep emerald-green velvet plinth framed with brushed antique brass bars","Moody Parisian high-jewelry vault lit by warm golden overhead spotlights","Crisp snap-zoom onto the exact product as warm golden highlights glint softly on brass trim","Fluid 3/4 editorial dolly (±22° frontal) showcasing sculptural depth against dark emerald shadows","Moving macro pass catching soft specular sheen across authentic original finishes","Refined pullback locking regal centered showcase on emerald and brass"],
-      [35,"Luxo",false,"#f59e0b","#35 Travertino Italiano & Luz Solar","Arquitetura mediterrânea de luxo com sombras solares vivas","Mediterranean architectural luxury commercial","Exact product resting cleanly on honed beige Italian travertine stone monolith","Warm golden architectural window light casting crisp high-fashion diagonal shadows across stone","Brisk architectural push-in straight onto the exact product bathed in crisp natural sunlight","Stylish 3/4 dolly (±22° frontal) contrasting warm sunlit surfaces and clean sculptural shadows","Continuous crisp macro glide emphasizing authentic tactile grain and natural true colors","Smooth pullback locking serene European luxury hero composition"],
-      [36,"Luxo",false,"#fb923c","#36 Dunas Douradas ao Pôr do Sol","Deserto cinematográfico estilo Duna com areia voando no vento","epic golden-desert Dune commercial","Exact product standing solidly on a wind-carved golden Sahara sand dune crest","Low warm amber sunset, fine golden sand wisps blowing cinematically across the dune ridge behind","Crisp dynamic snap-zoom straight onto the exact product as golden sand wisps blow past","Sweeping 3/4 desert dolly (±25° frontal) catching warm sunset rim light along crisp edges","Moving razor-sharp macro glide revealing pristine original build against golden sand bokeh","Monumental pullback framing vast cinematic desert dunes behind centered hero product"],
-      [37,"Luxo",false,"#f59e0b","#37 Vidro com Chuva & Cobertura","Bancada escura diante da cidade noturna dourada sob chuva fina","billionaire rainy-penthouse commercial","Exact product resting firmly on dark honed stone beside floor-to-ceiling rain-streaked penthouse glass","Golden midnight metropolis bokeh sparkling through glistening raindrops outside, warm interior spotlight","Crisp snap-zoom onto the foreground exact product as golden raindrop bokeh shimmers softly behind","Smooth 3/4 lateral dolly (±22° frontal) wrapping warm city gold reflections across contours","Moving 100mm macro glide bathed in warm key light with sparkling midnight city lights blurred","Poised pullback framing unmistakable billionaire lifestyle hero composition"],
-      [38,"Luxo",false,"#fbbf24","#38 Cristal Fumê & Luz Dourada","Monolito de vidro fumê pesado sob iluminação dourada suave","smoked-crystal luxury commercial","Exact product centered rigidly atop a heavy thick smoked-crystal glass block in a dark studio","Warm golden studio backlighting glowing softly through the smoked crystal glass base","Crisp snap-zoom straight onto the exact product perched over glowing smoked crystal","Controlled 3/4 sculptural dolly (±25° frontal) tracking soft warm golden highlights across surfaces","Continuous extreme macro glide proving spotless original quality under warm grazing key light","Majestic pullback locking centered luxury pose above smoked crystal"],
-      [39,"Luxo",false,"#bae6fd","#39 Pico Nevado Alpino Solar","Neve pura sob sol cristalino e vento ártico de cinema","alpine luxury snow-peak commercial","Exact product anchored boldly on a sculpted pristine alpine snow ridge at crisp golden sunrise","Sparkling sunlit snow powder drifting briskly off the ridge behind, icy peaks blurred in depth","Crisp snap-zoom straight onto the exact product as sparkling snow dust drifts past","Rapid 3/4 mountain dolly (±25° frontal) catching pure crisp sunlight across product edges","Continuous ultra-sharp macro glide displaying rich color pop against sparkling snow bokeh","Sweeping pullback framing breathtaking alpine summit behind centered hero product"],
-      [40,"Luxo",false,"#fde047","#40 Gala Champanhe & Bokeh Ouro","Clima de premiação VIP com pontos luminosos dourados ao fundo","opulent champagne-gala commercial","Exact product resting rigidly on glossy black obsidian pedestal inside a dark gala showcase theater","Rich floating champagne-gold bokeh spheres glowing softly in the velvety dark background","Crisp snap-zoom onto the gleaming exact product surrounded by drifting golden bokeh","Fast 3/4 glamorous dolly (±25° frontal) wrapping warm champagne highlights around contours","Continuous razor-sharp macro glide showcasing authentic metallic and matte material contrasts","Show-stopping pullback locking VIP hero stance bathed in warm golden bokeh"],
-
-      [41,"Viral",true,"#22d3ee","#41 POV Queda de Impacto na Mesa","1 mão colocando o produto na mesa dark + corte 3/4 + macro","viral POV desk-drop hard-sell commercial","Single clean first-person hand placing the exact real-sized product firmly onto a sleek dark carbon creator desk, then exiting frame","Punchy high-contrast studio overhead beam with crisp cyan and white rim separation","Decisive single-hand placement onto dark carbon desk triggering an instant snap-zoom onto the exact product","Clean 3/4 lateral dolly over the unobstructed exact product resting solidly on dark carbon desk","Continuous hyper-crisp macro glide proving real-world build quality and authentic surface finish","Snappy pullback locking spotless centered hero display"],
-      [42,"Viral",false,"#00ff9d","#42 Troca de Luz Viral na Batida","O mesmo produto intacto enquanto a luz ambiente muda na batida","viral lighting-flip beat-sync commercial","Exact product locked rigidly dead-center on glossy dark slate stage while smooth ambient rim color shifts cleanly","Rhythmic background rim lighting shifts: warm gold rim -> electric cyan ambient -> crisp pure-white key","Instant crisp snap-zoom straight onto the exact product as warm gold rim shifts to studio white","Controlled 3/4 kinetic dolly (±25° frontal) while ambient rim glow shifts to crisp electric cyan","Continuous ultra-sharp macro proof pass under bright balanced key light showing true original colors","Punchy pullback locking bright crystal-clear flagship hero display"],
-      [43,"Viral",false,"#22ff88","#43 Explosão de Pó de Magnésio Gym","Arena fitness dark, rim neon verde e nuvem branca de treino","athletic gym-chalk viral commercial","Exact product centered rigidly on a dark textured rubber gym bench inside a high-contrast training arena","Brisk burst of white athletic chalk dust rising behind under vivid neon-green rim lights and crisp overhead key","White chalk dust bursts sharply behind as camera snap-zooms onto the razor-sharp exact product","Fast 3/4 dolly (±25° frontal) flashing subtle neon-green rim light across rugged original edges","Continuous macro push locking tightly onto durable texture and standout physical details","Explosive pullback locking bold hero stance amid neon-lit drifting chalk mist"],
-      [44,"Viral",false,"#38bdf8","#44 Vitrine Estúdio LED Vertical","Pedestal escuro brilhante com barras suaves de luz de estúdio","controlled showcase-pedestal commercial","Exact product centered rigidly on a sleek glossy dark showcase pedestal","Clean crisp vertical cinema softbox tubes positioned symmetrically in the dark background","Brisk snap-zoom straight onto the exact product framed by clean vertical studio lights","Smooth 3/4 lateral dolly (±25° frontal) showcasing crisp geometry with subtle vertical reflections","Dynamic macro push tracking authentic original details under balanced studio highlights","Crisp pullback locking spotless symmetrical hero stance"],
-      [45,"Viral",false,"#22d3ee","#45 Vidro Molhado & Gotículas HD","Macro hipnótico sobre vidro escuro molhado com brilho ciano","hyper-tactile wet-glass visual commercial","Exact product seated solidly center-stage on dark tempered glass covered in hyper-realistic crystal water droplets","Sharp electric-cyan and pure-white directional rim highlights making background water droplets sparkle","Crisp snap-zoom skimming glistening droplets straight onto the sharp exact product","Controlled 3/4 dolly (±25° frontal) sparkling subtle cyan-and-white catchlights across clean contours","Hypnotic 100mm macro pass proving spotless original finish framed by crystal droplet bokeh","Clean pullback locking high-converting wet-mirror centered hero presentation"],
-      [46,"Viral",false,"#ef4444","#46 Metralhadora Phonk Vermelho/Preto","Halo vermelho agressivo nos 2s + zooms frontais na batida pesada","scroll-stopper crimson Phonk commercial","Exact product anchored rigidly on matte-black monolith inside a pitch-black high-contrast studio","Deep crimson backlight halo glowing behind against crisp pure-white front key illumination","Aggressive snap-zoom straight onto the exact product silhouetted by crimson studio halo","High-energy 3/4 dolly (±25° frontal) showing crisp edges gleaming with crimson and white rim light","Moving extreme macro push inspecting razor-crisp original edges under bright front key light","Massive pullback locking unforgettable crimson-rimmed hero stance"],
-      [47,"Viral",false,"#fbbf24","#47 Unboxing Caixa Magnética Preta","Caixa rígida preta luxuosa aberta revelando o produto na espuma","viral luxury-box unboxing commercial","Exact product nestled rigidly inside an open matte-black rigid magnetic luxury collector box lined with dark foam on slate","Focused warm-white overhead studio spotlight carving crisp commercial contrast","Crisp instant snap-zoom diving straight into the open matte-black luxury box onto the exact product","Controlled 3/4 dolly (±25° frontal) over the pristine product nestled inside the custom dark foam tray","Moving macro glide proving authentic original colors, fine finish and zero defects","Confident pullback locking high-trust centered unboxing hero display"],
-      [48,"Viral",false,"#ffffff","#48 Estúdio Claro Clean Ultra-Rápido","Fundo off-white de marca milionária com luz solar e sombras duras","high-converting clean DTC brand commercial","Exact product centered rigidly on crisp architectural off-white pedestal inside a bright sunlit flagship studio","Bold crisp diagonal architectural sunlight shadows gliding smoothly across spotless off-white backdrop","Snappy crisp snap-zoom straight onto the exact true-color product","Energetic 3/4 dolly (±25° frontal) highlighting bold clean geometry with zero visual clutter","Continuous ultra-clean daylight macro glide displaying genuine textures and premium build quality","Crisp pullback locking unmistakable high-trust flagship e-commerce hero shot"],
-      [49,"Viral",false,"#f43f5e","#49 Rua Grafite & Flash Urbano","Concreto urbano com grafite desfocado ao fundo e flash editorial","street-art urban flash commercial","Exact product placed rigidly on a dark raw urban concrete block inside a colorful graffiti alleyway at dusk","Vibrant neon-colored graffiti bokeh blurred softly behind, punchy direct commercial lighting","Punchy crisp snap-zoom onto the exact product against colorful blurred urban art","Fast 3/4 street-style dolly (±25° frontal) catching subtle colorful ambient rim highlights along edges","Moving raw macro glide emphasizing solid original build and standout personality","Energetic pullback locking rebellious high-converting street hero pose"],
-      [50,"Viral",false,"#22c55e","#50 Superprodução IMAX Definitiva","Fórmula máxima Hollywood: atmosfera teal & ouro, vapor e brasas","ultimate IMAX blockbuster commercial","Exact product commanding center-stage atop a monumental black obsidian mirror pedestal","Epic dark IMAX soundstage illuminated by atmospheric teal-and-gold haze, brisk rising vapor and fine embers","Explosive snap-zoom slicing through rising vapor straight onto the exact product","High-speed 3/4 dolly (±25° frontal) showcasing authentic contours lit by teal-and-gold studio lighting","Continuous extreme macro glide diving deep into immaculate original craftsmanship with ember bokeh","Monumental pullback locking unstoppable centered hero stance amid glowing vapor"]
-    ].map(([id,cat,hasPerson,accent,name,desc,genre,castPlace,setVfx,b1,b2,b3,b4])=>({id,cat,hasPerson,accent,name,desc,genre,castPlace,setVfx,b1,b2,b3,b4}));
-
-    const TRACK_PROFILES = {
-      phonk:   { bpm: 136, label: "Phonk Dark 136 BPM", notes: [55,55,65.4,55,73.4,65.4,61.7,55], cowbell: [523.25,0,622.25,523.25,0,783.99,622.25,523.25] },
-      trap007: { bpm: 128, label: "Trap Luxo 007 128 BPM", notes: [49,49,58.27,49,65.4,58.27,55,49], cowbell: [392,0,466.16,0,587.33,523.25,466.16,392] },
-      cyber:   { bpm: 132, label: "Cyberpunk Bass 132 BPM", notes: [41.2,41.2,49,41.2,55,49,46.25,41.2], cowbell: [329.63,392,493.88,392,587.33,493.88,392,329.63] },
-      trailer: { bpm: 122, label: "Blockbuster 122 BPM", notes: [43.65,43.65,43.65,51.91,58.27,51.91,49,43.65], cowbell: [261.63,0,311.13,0,392,0,349.23,311.13] },
-      house:   { bpm: 126, label: "Tech House Viral 126 BPM", notes: [65.4,65.4,77.78,65.4,87.3,77.78,73.4,65.4], cowbell: [523.25,0,622.25,0,698.46,622.25,587.33,523.25] },
-      mute:    { bpm: 130, label: "Somente SFX", notes: [], cowbell: [] }
+    // Mapeamento de planos por duração: ZERO REPETIÇÃO GARANTIDA!
+    // 10s = 3 cenas únicas [0, 2, 4] (Gancho -> Macro -> Clímax)
+    // 15s = 5 cenas únicas [0, 1, 2, 3, 4] (Gancho -> Perfil Esq -> Macro -> Perfil Dir -> Clímax)
+    // 20s = 6 cenas únicas [0, 1, 2, 3, 5, 4]
+    // 30s = 8 cenas únicas [0, 1, 2, 3, 5, 6, 7, 4]
+    const DURATION_SHOT_PLANS = {
+      10: [0, 2, 4],
+      15: [0, 1, 2, 3, 4],
+      20: [0, 1, 2, 3, 5, 4],
+      30: [0, 1, 2, 3, 5, 6, 7, 4]
     };
 
-    const SCALE_RULES = {
-      palm: "STRICT TRUE-TO-LIFE ANATOMICAL SCALE: Compact palm-sized item (~10–12cm). When held by a person, it MUST fit naturally inside ONE single human hand with realistic everyday size — NEVER giant, NEVER oversized, NEVER cradled with two hands.",
-      medium: "STRICT TRUE-TO-LIFE ANATOMICAL SCALE: Medium everyday handheld size (~18–24cm). Natural realistic proportion relative to human body and furniture — NEVER exaggerated or giant.",
-      large: "STRICT TRUE-TO-LIFE ANATOMICAL SCALE: Real-world full size resting solidly on surface or carried naturally with accurate human-scale proportions."
+    const MUSIC_PROMPTS = {
+      phonk_bra: { label: "Phonk BR Estúdio IA", prompt: "Ultra-energetic modern Brazilian Phonk commercial beat, massive distorted 808 sub-bass drops, crisp dark trap hi-hats, punchy aggressive snare, iconic dark cowbell riff, 134 BPM, mastered Hollywood commercial mix, high loudness, strictly instrumental no vocals" },
+      trap_007:  { label: "Dark Trap 007 Estúdio IA", prompt: "High-status luxury dark trap Hollywood commercial soundtrack, massive cinematic brass hits, deep clean 808 sub-bass drops, crisp modern trap drums, sleek James Bond 007 thriller energy, 128 BPM, studio mastered, strictly instrumental no vocals" },
+      cyber_bass:{ label: "Cyberpunk Bass Estúdio IA", prompt: "Aggressive futuristic cyberpunk midtempo electronic commercial track, roaring analog synth bass drops, crisp industrial percussion, high-voltage sci-fi risers and impacts, 130 BPM, studio mastered, strictly instrumental no vocals" },
+      trailer_imax:{ label: "Blockbuster IMAX Estúdio IA", prompt: "Epic Hollywood IMAX action movie trailer soundtrack, thunderous taiko war drums, massive Hans Zimmer brass braaams, pulsing hybrid electronic bassline, intense dramatic build and impact drops, 124 BPM, studio mastered, strictly instrumental no vocals" },
+      house_vip: { label: "Tech House VIP Estúdio IA", prompt: "High-energy luxury fashion Tech House viral commercial beat, driving punchy bassline, crisp four-on-the-floor kick, sleek modern synth stabs, upbeat Milan/Paris runway energy, 126 BPM, studio mastered, strictly instrumental no vocals" }
+    };
+
+    const ORIENTATION_RULES = {
+      flat: "NATURAL RESTING POSITION: Product rests solidly FLAT on its natural bottom base on the surface. NEVER stand it vertically on its tail/edge, NEVER float in mid-air.",
+      upright: "NATURAL RESTING POSITION: Product stands solidly UPRIGHT on its own flat base/stand resting firmly on the surface. NEVER float in mid-air, NEVER tip over.",
+      flat_lay: "NATURAL RESTING POSITION: Product lies neatly FLAT inside the display surface/tray viewed cleanly from an elevated angle. NEVER float vertically."
     };
 
     const modeBtns = document.querySelectorAll(".mode-btn");
@@ -371,15 +441,14 @@
     const previewTitle = document.getElementById("previewTitle");
     const productImg = document.getElementById("productImg");
     const thumbPreview = document.getElementById("thumbPreview");
-    const productScale = document.getElementById("productScale");
+    const productOrientation = document.getElementById("productOrientation");
     const minDuration = document.getElementById("minDuration");
     const macroTarget = document.getElementById("macroTarget");
     const productDetailHint = document.getElementById("productDetailHint");
-    const trackStyle = document.getElementById("trackStyle");
+    const musicPreset = document.getElementById("musicPreset");
     const customAudioFile = document.getElementById("customAudioFile");
-    const btnPreviewTrack = document.getElementById("btnPreviewTrack");
-    const enableSfx = document.getElementById("enableSfx");
-    const enableVfx = document.getElementById("enableVfx");
+    const enableDynamicCam = document.getElementById("enableDynamicCam");
+    const enableSfxWhoosh = document.getElementById("enableSfxWhoosh");
     const burnSubs = document.getElementById("burnSubs");
     const scriptText = document.getElementById("scriptText");
     const btnOnlyImg = document.getElementById("btnOnlyImg");
@@ -405,7 +474,8 @@
     let selectedVidModel = VIDEO_MODELS[0];
     let uploadedBase64 = "";
     let uploadedMime = "image/jpeg";
-    let customAudioArrayBuffer = null;
+    let customAudioBuf = null;
+    let customAudioName = "";
     let activeVideoBlobUrl = "";
     let activeRunController = null;
 
@@ -424,16 +494,20 @@
 
     customAudioFile.addEventListener("change", async (e) => {
       const f = e.target.files?.[0];
-      customAudioArrayBuffer = f ? await f.arrayBuffer() : null;
+      if (f) { customAudioBuf = await f.arrayBuffer(); customAudioName = f.name; musicPreset.value = "custom"; }
+      else { customAudioBuf = null; customAudioName = ""; }
+      refreshBtn();
     });
 
-    function refreshBtnLabel() {
+    function refreshBtn() {
       const sec = Number(minDuration.value) || 15;
-      const cutsEst = sec === 10 ? 8 : (sec === 15 ? 12 : (sec === 20 ? 16 : 22));
-      btnBuild.textContent = `Gerar Vídeo Hollywood Beat-Sync (${sec}s • ~${cutsEst} Cortes + 1 Trilha Contínua)`;
+      const count = (DURATION_SHOT_PLANS[sec] || DURATION_SHOT_PLANS[15]).length;
+      const mTag = musicPreset.value === "mute" ? "Mudo" : (musicPreset.value === "custom" ? "Sua Trilha" : "Trilha de Estúdio IA");
+      btnBuild.textContent = `Gerar Comercial Hollywood (${sec}s • ${count} Cenas Únicas + ${mTag})`;
     }
-    minDuration.addEventListener("change", refreshBtnLabel);
-    refreshBtnLabel();
+    minDuration.addEventListener("change", refreshBtn);
+    musicPreset.addEventListener("change", refreshBtn);
+    refreshBtn();
 
     // === CATÁLOGOS 50 + 50 ===
     function renderImagePresets() {
@@ -488,7 +562,6 @@
       selectedVidLabel.textContent = `Selecionado: ${selectedVidModel.name}`;
       renderVideoPresets();
     });
-
     imgSearch.addEventListener("input", renderImagePresets);
     imgCatFilter.addEventListener("change", renderImagePresets);
     vidSearch.addEventListener("input", renderVideoPresets);
@@ -497,334 +570,62 @@
     renderVideoPresets();
 
     // =========================================================================
-    // MOTOR DE ÁUDIO CONTÍNUO HOLLYWOOD (1 TRILHA ÚNICA 0s→FIM + SFX NOS CORTES)
+    // PROMPTS HOLLYWOOD BLINDADOS (ESCALA REAL + MOVIMENTO INTENSO + ZERO MORPHING)
     // =========================================================================
-    function createNoiseBuffer(audioCtx, sec = 2.0) {
-      const len = Math.floor(audioCtx.sampleRate * sec);
-      const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
-      const data = buf.getChannelData(0);
-      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
-      return buf;
-    }
-
-    function makeDistortionCurve(amount = 28) {
-      const n = 256, curve = new Float32Array(n);
-      for (let i = 0; i < n; i++) {
-        const x = (i * 2) / n - 1;
-        curve[i] = ((3 + amount) * x * 20 * (Math.PI / 180)) / (Math.PI + amount * Math.abs(x));
-      }
-      return curve;
-    }
-
-    function scheduleKick(audioCtx, dest, t, gainAmt = 0.85) {
-      const osc = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(155, t);
-      osc.frequency.exponentialRampToValueAtTime(42, t + 0.085);
-      osc.frequency.exponentialRampToValueAtTime(30, t + 0.24);
-      g.gain.setValueAtTime(gainAmt, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
-      osc.connect(g); g.connect(dest);
-      osc.start(t); osc.stop(t + 0.29);
-    }
-
-    function scheduleSnare(audioCtx, dest, noiseBuf, t, gainAmt = 0.42) {
-      const src = audioCtx.createBufferSource();
-      src.buffer = noiseBuf;
-      const bp = audioCtx.createBiquadFilter();
-      bp.type = "bandpass"; bp.frequency.value = 1800; bp.Q.value = 0.9;
-      const g = audioCtx.createGain();
-      g.gain.setValueAtTime(gainAmt, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
-      src.connect(bp); bp.connect(g); g.connect(dest);
-      src.start(t); src.stop(t + 0.18);
-
-      const body = audioCtx.createOscillator();
-      const bg = audioCtx.createGain();
-      body.type = "triangle"; body.frequency.setValueAtTime(210, t);
-      body.frequency.exponentialRampToValueAtTime(110, t + 0.08);
-      bg.gain.setValueAtTime(gainAmt * 0.6, t);
-      bg.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
-      body.connect(bg); bg.connect(dest);
-      body.start(t); body.stop(t + 0.1);
-    }
-
-    function scheduleHat(audioCtx, dest, noiseBuf, t, gainAmt = 0.14, dur = 0.045) {
-      const src = audioCtx.createBufferSource();
-      src.buffer = noiseBuf;
-      const hp = audioCtx.createBiquadFilter();
-      hp.type = "highpass"; hp.frequency.value = 7800;
-      const g = audioCtx.createGain();
-      g.gain.setValueAtTime(gainAmt, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-      src.connect(hp); hp.connect(g); g.connect(dest);
-      src.start(t); src.stop(t + dur + 0.01);
-    }
-
-    function scheduleSubBass808(audioCtx, dest, shaperCurve, freq, t, dur, gainAmt = 0.52) {
-      const osc = audioCtx.createOscillator();
-      const shaper = audioCtx.createWaveShaper();
-      shaper.curve = shaperCurve;
-      const lp = audioCtx.createBiquadFilter();
-      lp.type = "lowpass"; lp.frequency.value = 260;
-      const g = audioCtx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(freq, t);
-      g.gain.setValueAtTime(0.001, t);
-      g.gain.linearRampToValueAtTime(gainAmt, t + 0.025);
-      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-      osc.connect(shaper); shaper.connect(lp); lp.connect(g); g.connect(dest);
-      osc.start(t); osc.stop(t + dur + 0.02);
-    }
-
-    function scheduleLeadTone(audioCtx, dest, freq, t, dur, styleKey) {
-      if (!freq) return;
-      const osc = audioCtx.createOscillator();
-      const lp = audioCtx.createBiquadFilter();
-      const g = audioCtx.createGain();
-      osc.type = styleKey === "phonk" ? "square" : (styleKey === "cyber" ? "sawtooth" : "triangle");
-      osc.frequency.setValueAtTime(freq, t);
-      lp.type = "lowpass";
-      lp.frequency.setValueAtTime(styleKey === "phonk" ? 2100 : 1400, t);
-      lp.frequency.exponentialRampToValueAtTime(420, t + dur);
-      const amp = styleKey === "phonk" ? 0.13 : 0.11;
-      g.gain.setValueAtTime(0.001, t);
-      g.gain.linearRampToValueAtTime(amp, t + 0.01);
-      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-      osc.connect(lp); lp.connect(g); g.connect(dest);
-      osc.start(t); osc.stop(t + dur + 0.02);
-    }
-
-    // SFX CIRÚRGICOS SINCRONIZADOS NOS CORTES
-    function scheduleWhooshSfx(audioCtx, dest, noiseBuf, t, dur = 0.24, gainAmt = 0.45) {
-      const src = audioCtx.createBufferSource();
-      src.buffer = noiseBuf;
-      const bp = audioCtx.createBiquadFilter();
-      bp.type = "bandpass"; bp.Q.value = 2.4;
-      bp.frequency.setValueAtTime(260, t);
-      bp.frequency.exponentialRampToValueAtTime(3600, t + dur * 0.55);
-      bp.frequency.exponentialRampToValueAtTime(320, t + dur);
-      const g = audioCtx.createGain();
-      g.gain.setValueAtTime(0.001, t);
-      g.gain.linearRampToValueAtTime(gainAmt, t + dur * 0.5);
-      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-      src.connect(bp); bp.connect(g); g.connect(dest);
-      src.start(t); src.stop(t + dur + 0.02);
-    }
-
-    function scheduleSubDropSfx(audioCtx, dest, t, gainAmt = 0.72) {
-      const osc = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(115, t);
-      osc.frequency.exponentialRampToValueAtTime(28, t + 0.52);
-      g.gain.setValueAtTime(gainAmt, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.58);
-      osc.connect(g); g.connect(dest);
-      osc.start(t); osc.stop(t + 0.60);
-    }
-
-    function scheduleRiserSfx(audioCtx, dest, noiseBuf, t, dur = 0.65) {
-      const src = audioCtx.createBufferSource();
-      src.buffer = noiseBuf;
-      const hp = audioCtx.createBiquadFilter();
-      hp.type = "bandpass"; hp.Q.value = 3.2;
-      hp.frequency.setValueAtTime(350, t);
-      hp.frequency.exponentialRampToValueAtTime(5200, t + dur);
-      const g = audioCtx.createGain();
-      g.gain.setValueAtTime(0.001, t);
-      g.gain.exponentialRampToValueAtTime(0.36, t + dur * 0.92);
-      g.gain.linearRampToValueAtTime(0.001, t + dur);
-      src.connect(hp); hp.connect(g); g.connect(dest);
-      src.start(t); src.stop(t + dur + 0.02);
-    }
-
-    async function scheduleContinuousSoundtrack(audioCtx, destNode, styleKey, totalSec, cuts, withSfx, customBuf) {
-      const comp = audioCtx.createDynamicsCompressor();
-      comp.threshold.value = -10; comp.knee.value = 12; comp.ratio.value = 6;
-      const masterGain = audioCtx.createGain();
-      masterGain.gain.value = 0.92;
-      comp.connect(masterGain);
-      masterGain.connect(destNode);
-
-      const startAt = audioCtx.currentTime + 0.05;
-      const noiseBuf = createNoiseBuffer(audioCtx, 2.0);
-      const shaperCurve = makeDistortionCurve(styleKey === "phonk" ? 45 : 22);
-
-      // 1) Se usuário subiu MP3/WAV próprio, toca 1 única faixa contínua do 0s ao fim
-      if (customBuf) {
-        try {
-          const decoded = await audioCtx.decodeAudioData(customBuf.slice(0));
-          const src = audioCtx.createBufferSource();
-          src.buffer = decoded;
-          src.loop = true;
-          const mg = audioCtx.createGain();
-          mg.gain.setValueAtTime(0.85, startAt);
-          mg.gain.setValueAtTime(0.85, startAt + Math.max(0.5, totalSec - 0.6));
-          mg.gain.linearRampToValueAtTime(0.01, startAt + totalSec);
-          src.connect(mg); mg.connect(comp);
-          src.start(startAt);
-          src.stop(startAt + totalSec + 0.15);
-        } catch {}
-      } else if (styleKey !== "mute") {
-        // 2) Trilha Contínua Sintetizada (MESMA música ininterrupta do segundo 0.0 até totalSec!)
-        const prof = TRACK_PROFILES[styleKey] || TRACK_PROFILES.phonk;
-        const stepDur = (60 / prof.bpm) / 4; // semicolcheia (16th note)
-        const totalSteps = Math.ceil(totalSec / stepDur);
-
-        for (let step = 0; step < totalSteps; step++) {
-          const t = startAt + step * stepDur;
-          const inBar = step % 16;
-          const barIdx = Math.floor(step / 16);
-
-          // Kick pattern (firme e comercial)
-          const isHouse = styleKey === "house";
-          const kickHit = isHouse
-            ? (inBar % 4 === 0)
-            : (inBar === 0 || inBar === 6 || inBar === 10 || (barIdx % 2 === 1 && inBar === 14));
-          if (kickHit) scheduleKick(audioCtx, comp, t, 0.85);
-
-          // Snare / Clap no tempo 2 e 4
-          if (inBar === 4 || inBar === 12) scheduleSnare(audioCtx, comp, noiseBuf, t, 0.42);
-
-          // Hi-hats contínuos + rolls virais
-          if (inBar % 2 === 0 || inBar === 15 || (barIdx % 2 === 1 && inBar === 11)) {
-            scheduleHat(audioCtx, comp, noiseBuf, t, inBar % 4 === 2 ? 0.18 : 0.10, 0.04);
-          }
-
-          // 808 Sub-Bass contínuo seguindo a progressão
-          if (inBar === 0 || inBar === 6 || inBar === 10) {
-            const noteIdx = (barIdx * 2 + (inBar >= 6 ? 1 : 0)) % prof.notes.length;
-            scheduleSubBass808(audioCtx, comp, shaperCurve, prof.notes[noteIdx], t, stepDur * 4.5, 0.52);
-          }
-
-          // Melodia / Cowbell Dark contínua
-          if (inBar % 2 === 0 && prof.cowbell.length) {
-            const mIdx = (inBar / 2 + barIdx) % prof.cowbell.length;
-            scheduleLeadTone(audioCtx, comp, prof.cowbell[mIdx], t, stepDur * 1.6, styleKey);
-          }
-        }
-        // Fade-out limpo nos últimos 0.5s
-        masterGain.gain.setValueAtTime(0.92, startAt + Math.max(0.5, totalSec - 0.55));
-        masterGain.gain.linearRampToValueAtTime(0.02, startAt + totalSec);
-      }
-
-      // 3) SFX sincronizados exatamente nos cortes do vídeo!
-      if (withSfx && Array.isArray(cuts)) {
-        scheduleSubDropSfx(audioCtx, comp, startAt, 0.78); // Impacto no segundo 0.0
-        cuts.forEach((c, idx) => {
-          if (idx === 0) return;
-          const cutT = startAt + c.start;
-          if (c.move === "whipPan") {
-            scheduleWhooshSfx(audioCtx, comp, noiseBuf, Math.max(startAt, cutT - 0.14), 0.25, 0.48);
-          } else if (c.move === "crashZoom" || c.move === "climax") {
-            if (c.move === "climax") scheduleRiserSfx(audioCtx, comp, noiseBuf, Math.max(startAt, cutT - 0.62), 0.60);
-            scheduleSubDropSfx(audioCtx, comp, cutT, 0.68);
-          } else {
-            scheduleWhooshSfx(audioCtx, comp, noiseBuf, Math.max(startAt, cutT - 0.09), 0.17, 0.30);
-          }
-        });
-      }
-    }
-
-    // Botão "Ouvir 4s" da trilha sonora
-    btnPreviewTrack.addEventListener("click", async () => {
-      try {
-        const AC = window.AudioContext || window.webkitAudioContext;
-        const ac = new AC();
-        if (ac.state === "suspended") await ac.resume();
-        btnPreviewTrack.disabled = true;
-        btnPreviewTrack.textContent = "Tocando...";
-        await scheduleContinuousSoundtrack(ac, ac.destination, trackStyle.value, 4.0, [{ start: 0, move: "crashZoom" }, { start: 1.4, move: "whipPan" }, { start: 2.8, move: "crashZoom" }], enableSfx.checked, customAudioArrayBuffer);
-        setTimeout(() => { ac.close().catch(() => {}); btnPreviewTrack.disabled = false; btnPreviewTrack.textContent = "▶ Ouvir 4s"; }, 4200);
-      } catch {
-        btnPreviewTrack.disabled = false; btnPreviewTrack.textContent = "▶ Ouvir 4s";
-      }
-    });
-
-    // =========================================================================
-    // PROMPTS BLINDADOS (ESCALA REAL 1:1 + ZERO BARRA PRETA + ZERO LED EXTRA)
-    // =========================================================================
-    function buildDynamicNegative(hasPerson) {
+    function buildNegative(hasPerson) {
       const base = [
-        "oversized product", "giant product", "huge disproportionate object", "holding with two hands like a ball",
-        "black bars", "letterbox", "pillarbox", "grey borders", "white borders", "split screen", "frame border",
-        "invented glowing blue LEDs", "added side lights", "extra glowing dots", "extra invented buttons", "added white icons",
-        "product falling over", "product tilting sideways", "deformed logo", "altered branding", "morphing", "distorted product",
-        "laser beam", "glowing ray shooting out of product", "rotating behind product", "rear view of product",
-        "excessive motion blur", "chaotic swirling vortex", "melting face", "text", "typography", "watermark", "shopping cart arrows", "blur", "lowres", "cartoon"
+        "floating in mid-air", "standing on tail edge", "spinning 360 degrees", "rear underside view",
+        "giant hand reaching lens", "oversized disproportionate product", "holding product with two hands",
+        "black bars", "letterbox", "grey borders", "split screen",
+        "invented blue LEDs", "added glowing side strip", "extra glowing white lines", "extra invented buttons",
+        "altered logo font", "gibberish button icons", "morphing", "distorted product",
+        "laser beam", "excessive motion blur", "swirling vortex", "text", "watermark", "shopping cart arrows", "blur", "lowres", "cartoon"
       ];
-      if (hasPerson) {
-        base.push("two hands cradling giant product", "character turning away", "smeared face", "deformed hands", "extra fingers", "bad anatomy");
-      } else {
-        base.push("hands", "fingers", "skin", "gloves", "people", "ordinary cardboard box");
-      }
+      if (hasPerson) base.push("hand grabbing camera", "distorted face", "deformed fingers", "bad anatomy", "person covering product");
+      else base.push("hands", "fingers", "skin", "gloves", "people");
       return base.join(", ");
     }
 
     function getProductSpec() {
       const hint = productDetailHint.value.trim();
-      const scaleClause = SCALE_RULES[productScale.value] || SCALE_RULES.palm;
-      const baseSpec = hint
-        ? `${hint} — 100% strict visual fidelity to the uploaded reference photo (exact shape, colors, logo, buttons; DO NOT add extra blue/red LEDs or side lights not in reference)`
-        : `exact product from uploaded reference photo with 100% visual fidelity (exact shape, colors, logo, original buttons only; DO NOT invent extra side LEDs or glowing dots)`;
-      return `${baseSpec}. ${scaleClause}`;
+      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
+      const spec = hint
+        ? `${hint} — 100% strict visual fidelity to the uploaded reference photo (exact shape, colors, exact logo, original buttons ONLY; ZERO invented side LEDs)`
+        : `exact product from uploaded reference photo with 100% strict visual fidelity (exact shape, finish, original logo, original buttons ONLY; ZERO invented side LEDs)`;
+      return `${spec}. ${orient}`;
     }
 
-    function buildAngleKeyframePrompt(m, angleIdx) {
+    function buildShotKeyframe(m, shotIdx) {
+      const shot = EIGHT_UNIQUE_SHOTS[shotIdx] || EIGHT_UNIQUE_SHOTS[0];
       const macroFocus = macroTarget.value.trim() || "exact visible surface texture, logo and precision details";
-      const isPersonAngle = m.hasPerson && (angleIdx === 0 || angleIdx === 3);
-      let framing = "";
-      let staging = m.castPlace;
-
-      if (angleIdx === 0) {
-        framing = isPersonAngle
-          ? "SHOT 1 (TRUE-SCALE FRONTAL HOOK): Medium-close 9:16 portrait where the person holds the exact REAL-SIZED product naturally in ONE single hand (compact authentic scale relative to hand, NEVER giant or oversized). Edge-to-edge full-bleed frame filling 100% top to bottom."
-          : "SHOT 1 (FRONTAL HOOK): Dramatic full-bleed 9:16 hero composition, exact product anchored upright dead-center, filling 100% height edge-to-edge.";
-      } else if (angleIdx === 1) {
-        framing = "SHOT 2 (3/4 SURFACE ANGLE — NO PEOPLE): Dramatic low 3/4 commercial angle of the exact product resting solidly in natural scale on a matching dark luxury surface/pedestal inside the SAME environment. Zero hands, zero people, 100% full-bleed edge-to-edge 9:16 (NO black bars).";
-        staging = `Exact product resting rigidly at a sleek 3/4 angle on a dark surface inside the ${m.name} world (zero hands, zero people).`;
-      } else if (angleIdx === 2) {
-        framing = `SHOT 3 (FULL-BLEED MACRO — NO PEOPLE): Tight 100mm cinema macro angle of the exact product resting upright in the SAME ${m.name} environment, highlighting ${macroFocus}. Background fills 100% from top edge to bottom edge — ABSOLUTELY NO black top/bottom letterbox bars. Zero hands, zero people.`;
-        staging = `Full-bleed 9:16 macro showcase of the exact product anchored upright inside the ${m.name} lighting (zero hands, zero people).`;
-      } else {
-        framing = "SHOT 4 (WIDE HERO CLIMAX): Authoritative wide-medium symmetrical 9:16 full-bleed hero framing showcasing the full grandeur of the scene with the exact real-sized product sharp in foreground.";
-      }
+      const hasPersonHere = m.hasPerson && shot.allowPerson;
 
       return [
-        `EDGE-TO-EDGE FULL-BLEED 9:16 VERTICAL 4K COMMERCIAL FRAME (${m.genre}). Background MUST reach all four edges (NO black bars, NO letterbox).`,
-        `MANDATORY PRODUCT FIDELITY & SCALE: ${getProductSpec()}.`,
-        framing,
-        `STAGING (${m.name}): ${staging}`,
-        `ENVIRONMENT & LIGHTING: ${m.setVfx}. Photorealistic 8K ARRI Alexa 65 lens, natural physical lighting.`,
-        `Negative constraints: ${buildDynamicNegative(isPersonAngle)}.`
+        `EDGE-TO-EDGE FULL-BLEED 9:16 VERTICAL 4K HOLLYWOOD COMMERCIAL STILL (${m.genre}). Background reaches all 4 edges with ZERO black/grey bars.`,
+        `MANDATORY PRODUCT FIDELITY: ${getProductSpec()}.`,
+        shot.frame(m, macroFocus),
+        `ENVIRONMENT & LIGHTING (${m.name}): ${m.lighting}. Photorealistic 8K ARRI Alexa 65 commercial lens, physically real contact shadows.`,
+        `Negative constraints: ${buildNegative(hasPersonHere)}.`
       ].join("\n\n");
     }
 
-    function buildAngleMotionPrompt(m, angleIdx) {
-      const macroFocus = macroTarget.value.trim();
-      const isPersonAngle = m.hasPerson && (angleIdx === 0 || angleIdx === 3);
-      const lock = isPersonAngle
-        ? "LOCK: Start smoothly from frame 0. Keep the exact real-sized product rigid in ONE hand (never expanding/morphing), keep the person's face natural facing forward, and execute energetic cinematic camera push-in."
-        : "LOCK: Start smoothly from frame 0. Keep the exact product 100% rigid, stationary in its exact upright/resting orientation (NEVER tipping over or morphing), zero added blue/red LEDs, strictly frontal arc (±24° max).";
-
-      const action = angleIdx === 0 ? m.b1 : (angleIdx === 1 ? m.b2 : (angleIdx === 2 ? `${m.b3}${macroFocus ? ` on ${macroFocus}` : ""}` : m.b4));
+    function buildShotMotion(m, shotIdx) {
+      const shot = EIGHT_UNIQUE_SHOTS[shotIdx] || EIGHT_UNIQUE_SHOTS[0];
+      const hasPersonHere = m.hasPerson && shot.allowPerson;
       return [
-        `Vertical 9:16 full-bleed ${m.genre}, 4K, 60fps, energetic kinetic commercial camera motion, completely silent video.`,
-        `PRODUCT LOCK: ${getProductSpec()}.`,
-        lock,
-        `ACTION (${m.name} — Angle ${angleIdx + 1}): ${action}. Atmosphere: ${m.setVfx}.`,
-        `Negative prompt: ${buildDynamicNegative(isPersonAngle)}.`
+        `Vertical 9:16 full-bleed ${m.genre}, 4K, 60fps, high-octane Hollywood commercial cinematography, completely mute silent video.`,
+        `PRODUCT RIGIDITY LOCK: ${getProductSpec()}. Product stays firmly seated on ${m.surface} in its exact starting orientation — NEVER flip, spin 360°, morph, or invent side LEDs.`,
+        `DYNAMIC CAMERA ACTION (${shot.title}): ${shot.motion} Atmosphere: ${m.lighting}.`,
+        `Negative prompt: ${buildNegative(hasPersonHere)}.`
       ].join("\n\n");
     }
 
     function buildStandaloneImagePrompt(m) {
       return [
         `Ultra-realistic flagship 9:16 vertical edge-to-edge full-bleed photograph (NO black bars, NO borders), concept: ${m.name}.`,
-        `Product Fidelity & Real Scale: ${getProductSpec()}.`,
+        `Product Fidelity: ${getProductSpec()}.`,
         `Scene & Direction: ${m.prompt}. Shot on Phase One IQ4 150MP / ARRI Alexa 65 commercial lens, 8K hyper-real lighting.`,
-        `Negative constraints: ${buildDynamicNegative(m.hasPerson)}.`
+        `Negative constraints: ${buildNegative(m.hasPerson)}.`
       ].join("\n\n");
     }
 
@@ -867,7 +668,7 @@
       uploadedMime = opt.mime;
     });
 
-    // === API FAL.AI COM TIMEOUT + RETRY ===
+    // === API FAL.AI COM TIMEOUT + AUTO-RETRY ===
     async function callApi(payload, timeoutMs = 24000, outerSignal = null) {
       const ctrl = new AbortController();
       const onAbort = () => ctrl.abort();
@@ -897,7 +698,7 @@
 
     async function pollFalJob(queued, onStateUpdate, outerSignal) {
       let errs = 0;
-      for (let i = 0; i < 140; i++) {
+      for (let i = 0; i < 150; i++) {
         if (outerSignal && outerSignal.aborted) throw new Error("CANCELLED_BY_USER");
         try {
           const res = await callApi({ task: "poll", statusUrl: queued.statusUrl, responseUrl: queued.responseUrl }, 18000, outerSignal);
@@ -926,7 +727,7 @@
         try { const c = new AbortController(); const t = setTimeout(() => c.abort(), 25000); const p = await fetch(`/api/generate?proxyUrl=${encodeURIComponent(url)}`, { signal: c.signal }); clearTimeout(t); if (p.ok) return await p.blob(); } catch {}
         await sleep(800);
       }
-      throw new Error("Falha ao baixar clipe da fal.ai.");
+      throw new Error("Falha ao baixar mídia da fal.ai.");
     }
 
     // === AUTO-CROP ANTI-BARRAS PRETAS/CINZAS ===
@@ -938,7 +739,6 @@
       const tctx = tmp.getContext("2d", { willReadFrequently: true });
       tctx.drawImage(vid, 0, 0, tw, th);
       const data = tctx.getImageData(0, 0, tw, th).data;
-
       const isBarRow = (y) => {
         let sum = 0, sumSq = 0;
         for (let x = 8; x < tw - 8; x += 2) {
@@ -946,123 +746,69 @@
           const lum = (data[i] + data[i + 1] + data[i + 2]) / 3;
           sum += lum; sumSq += lum * lum;
         }
-        const n = (tw - 16) / 2;
-        const mean = sum / n;
-        const variance = sumSq / n - mean * mean;
-        // Barra sólida preta ou cinza uniforme (baixa variância)
+        const n = (tw - 16) / 2, mean = sum / n, variance = sumSq / n - mean * mean;
         return variance < 9 && (mean < 16 || (mean > 140 && mean < 215));
       };
-
       const maxScan = Math.floor(th * 0.24);
       let top = 0, bottom = th - 1;
       while (top < maxScan && isBarRow(top)) top++;
       while (bottom > th - maxScan && isBarRow(bottom)) bottom--;
-
       if (top > 4) top += 3;
       if (bottom < th - 5) bottom -= 3;
-      const sy = Math.round((top / th) * vh);
-      const sh = Math.max(Math.round(vh * 0.55), Math.round(((bottom - top) / th) * vh));
-      return { sx: 0, sy, sw: vw, sh };
+      return { sx: 0, sy: Math.round((top / th) * vh), sw: vw, sh: Math.max(Math.round(vh * 0.55), Math.round(((bottom - top) / th) * vh)) };
     }
 
     function loadVideoElement(blob) {
       return new Promise((resolve, reject) => {
         const url = URL.createObjectURL(blob);
         const vid = document.createElement("video");
-        vid.src = url; vid.muted = true; vid.loop = true; vid.playsInline = true; vid.preload = "auto";
+        vid.src = url; vid.muted = true; vid.playsInline = true; vid.preload = "auto";
         const t = setTimeout(() => reject(new Error("Timeout ao decodificar MP4.")), 15000);
-        vid.onloadeddata = () => {
-          clearTimeout(t);
-          const crop = detectLetterboxCrop(vid);
-          resolve({ vid, blobUrl: url, crop });
-        };
+        vid.onloadeddata = () => { clearTimeout(t); resolve({ vid, blobUrl: url, crop: detectLetterboxCrop(vid) }); };
         vid.onerror = () => { clearTimeout(t); URL.revokeObjectURL(url); reject(new Error("Erro ao decodificar MP4.")); };
       });
     }
 
-    // === TIMELINE DE CORTES RÁPIDOS SINCRONIZADOS NO BPM (10–22 CORTES!) ===
-    function buildBeatSyncedCuts(totalSec, clipCount, bpm) {
-      const beatSec = 60 / (bpm || 132);
-      const cuts = [];
-      const moveCycle = ["crashZoom", "whipPan", "snapPunch", "speedRamp", "whipPan", "crashZoom", "zoomAttack"];
-      let t = 0, idx = 0;
-      const climaxDur = Math.min(2.6, Math.max(2.0, beatSec * 4));
-      const mainEnd = Math.max(3, totalSec - climaxDur);
-
-      while (t < mainEnd - 0.35) {
-        // Gancho nos primeiros 2.5s corta a cada 2 batidas (~0.9s); corpo alterna 2 e 3 batidas (~0.9s–1.35s)
-        const beatsForCut = t < 2.5 ? 2 : (idx % 3 === 1 ? 3 : 2);
-        let dur = beatsForCut * beatSec;
-        if (t + dur > mainEnd) dur = mainEnd - t;
-        if (dur < 0.55 && cuts.length > 0) { cuts[cuts.length - 1].end = mainEnd; t = mainEnd; break; }
-
-        let clipIdx = idx % clipCount;
-        if (cuts.length > 0 && cuts[cuts.length - 1].clipIdx === clipIdx && clipCount > 1) {
-          clipIdx = (clipIdx + 1) % clipCount;
-        }
-        cuts.push({
-          start: t,
-          end: t + dur,
-          clipIdx,
-          move: idx === 0 ? "crashZoom" : moveCycle[idx % moveCycle.length]
-        });
-        t += dur;
-        idx++;
-      }
-
-      cuts.push({
-        start: t,
-        end: totalSec,
-        clipIdx: clipCount >= 3 ? 2 : (clipCount - 1),
-        move: "climax"
-      });
-      return cuts;
-    }
-
-    function drawCroppedCover(c2d, vid, crop, scale, panX, panY, angleRad = 0, alpha = 1) {
+    function drawCroppedCover(c2d, vid, crop, scale = 1.0, panX = 0, panY = 0, alpha = 1) {
       const cw = canvas.width, ch = canvas.height;
-      const cRatio = cw / ch;
-      const sRatio = crop.sw / crop.sh;
+      const cRatio = cw / ch, sRatio = crop.sw / crop.sh;
       let baseW = cw, baseH = ch;
       if (sRatio > cRatio) { baseH = ch; baseW = baseH * sRatio; }
       else { baseW = cw; baseH = baseW / sRatio; }
-
-      const safeMin = 1.03 + (Math.abs(panX) * 2.15) / cw + (Math.abs(panY) * 2.15) / ch + Math.abs(angleRad) * 2.5;
-      const sc = Math.max(scale, safeMin);
+      const minSafe = 1.02 + (Math.abs(panX) * 2.1) / cw + (Math.abs(panY) * 2.1) / ch;
+      const sc = Math.max(scale, minSafe);
       const dw = baseW * sc, dh = baseH * sc;
-
       c2d.save();
       c2d.globalAlpha = alpha;
-      c2d.translate(cw / 2 + panX, ch / 2 + panY);
-      if (angleRad !== 0) c2d.rotate(angleRad);
-      c2d.drawImage(vid, crop.sx, crop.sy, crop.sw, crop.sh, -dw / 2, -dh / 2, dw, dh);
+      c2d.drawImage(vid, crop.sx, crop.sy, crop.sw, crop.sh, (cw - dw) / 2 + panX, (ch - dh) / 2 + panY, dw, dh);
       c2d.restore();
     }
 
-    const easeOutExpo = (t) => { const x = Math.min(1, Math.max(0, t)); return x === 1 ? 1 : 1 - Math.pow(2, -10 * x); };
-    const easeOutCubic = (t) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
-
-    function makeVignette() {
-      const vc = document.createElement("canvas");
-      vc.width = canvas.width; vc.height = canvas.height;
-      const vctx = vc.getContext("2d");
-      const g = vctx.createRadialGradient(vc.width / 2, vc.height / 2, vc.width * 0.36, vc.width / 2, vc.height / 2, vc.height * 0.68);
-      g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,0,0.42)");
-      vctx.fillStyle = g; vctx.fillRect(0, 0, vc.width, vc.height);
-      return vc;
+    // === SFX DE CINEMA LIMPOS NOS CORTES (WHOOSH DE AR + SUB-BASS DROP) ===
+    function scheduleCleanWhoosh(audioCtx, dest, noiseBuf, t) {
+      const src = audioCtx.createBufferSource(); src.buffer = noiseBuf;
+      const bp = audioCtx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.8;
+      bp.frequency.setValueAtTime(220, t);
+      bp.frequency.exponentialRampToValueAtTime(2600, t + 0.12);
+      bp.frequency.exponentialRampToValueAtTime(260, t + 0.24);
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.001, t);
+      g.gain.linearRampToValueAtTime(0.32, t + 0.11);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+      src.connect(bp); bp.connect(g); g.connect(dest);
+      src.start(t); src.stop(t + 0.27);
     }
-    const vignetteCache = makeVignette();
 
-    function makeParticles(count) {
-      return Array.from({ length: count }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: 1.4 + Math.random() * 3.2,
-        vx: (Math.random() - 0.5) * 45,
-        vy: -(32 + Math.random() * 75),
-        a: 0.25 + Math.random() * 0.6,
-        ph: Math.random() * 6.28
-      }));
+    function scheduleCleanSubDrop(audioCtx, dest, t) {
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(98, t);
+      osc.frequency.exponentialRampToValueAtTime(30, t + 0.38);
+      g.gain.setValueAtTime(0.50, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.42);
+      osc.connect(g); g.connect(dest);
+      osc.start(t); osc.stop(t + 0.44);
     }
 
     function buildSubtitles(text, totalDur) {
@@ -1085,9 +831,9 @@
 
     function pickRecorderProfile() {
       const list = [
-        { mimeType: "video/mp4;codecs=avc1.42E01E,mp4a.40.2", ext: "mp4", baseType: "video/mp4", label: "MP4 H.264 + AAC" },
-        { mimeType: "video/mp4", ext: "mp4", baseType: "video/mp4", label: "MP4 Nativo" },
-        { mimeType: "video/webm;codecs=vp8,opus", ext: "webm", baseType: "video/webm", label: "WebM + Opus" },
+        { mimeType: "video/mp4;codecs=avc1.42E01E,mp4a.40.2", ext: "mp4", baseType: "video/mp4", label: "MP4 H.264 14Mbps" },
+        { mimeType: "video/mp4", ext: "mp4", baseType: "video/mp4", label: "MP4 14Mbps" },
+        { mimeType: "video/webm;codecs=vp8,opus", ext: "webm", baseType: "video/webm", label: "WebM 14Mbps" },
         { mimeType: "video/webm", ext: "webm", baseType: "video/webm", label: "WebM" }
       ];
       for (const c of list) if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(c.mimeType)) return c;
@@ -1105,42 +851,99 @@
       }
     }
 
-    // === EDITOR MASTER BEAT-SYNC (CORTES RÁPIDOS + VFX + 1 TRILHA CONTÍNUA + SFX) ===
-    async function renderBeatSyncMaster(clipBlobs, targetSec, vidModel, styleKey, withSfx, withVfx, withSubs, textForSubs, audioCtx, customBuf) {
+    const easeOutExpo = (x) => { const v = Math.min(1, Math.max(0, x)); return v === 1 ? 1 : 1 - Math.pow(2, -10 * v); };
+    const easeOutCubic = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+
+    // =========================================================================
+    // MASTER EDITOR ZERO REPETIÇÃO (CADA CLIPE ÚNICO ENTRA EXATAMENTE 1 VEZ!)
+    // =========================================================================
+    async function renderZeroRepeatHollywoodMaster(clipBlobs, shotIndices, totalSec, withDynamicCam, withSfx, withSubs, textForSubs, audioCtx, soundtrackArrayBuf) {
       if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume().catch(() => {});
 
       const loaded = [];
       for (const b of clipBlobs) loaded.push(await loadVideoElement(b));
 
-      const profTrack = TRACK_PROFILES[styleKey] || TRACK_PROFILES.phonk;
-      const cuts = buildBeatSyncedCuts(targetSec, loaded.length, profTrack.bpm);
-      const subs = buildSubtitles(textForSubs, targetSec);
-      const particles = makeParticles(24);
-      const accent = vidModel.accent || "#22c55e";
+      // ZERO REPETIÇÃO: exatamente 1 segmento por clipe gerado!
+      const n = loaded.length;
+      const segDur = totalSec / n;
+      const segments = loaded.map((_, idx) => {
+        const shot = EIGHT_UNIQUE_SHOTS[shotIndices[idx]] || EIGHT_UNIQUE_SHOTS[0];
+        return {
+          clipIdx: idx,
+          start: idx * segDur,
+          end: idx === n - 1 ? totalSec : (idx + 1) * segDur,
+          dur: idx === n - 1 ? totalSec - idx * segDur : segDur,
+          editMove: shot.editMove
+        };
+      });
 
-      // Frame 0 seguro
+      const subs = buildSubtitles(textForSubs, totalSec);
+
       ctx.fillStyle = "#000"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-      drawCroppedCover(ctx, loaded[0].vid, loaded[0].crop, 1.06, 0, 0, 0, 1);
+      drawCroppedCover(ctx, loaded[0].vid, loaded[0].crop, 1.0, 0, 0, 1);
 
       const canvasStream = canvas.captureStream(30);
       const tracks = [...canvasStream.getVideoTracks()];
-      let destNode = null;
+      let clockOsc = null;
+
       if (audioCtx && audioCtx.state === "running") {
-        destNode = audioCtx.createMediaStreamDestination();
-        await scheduleContinuousSoundtrack(audioCtx, destNode, styleKey, targetSec, cuts, withSfx, customBuf);
-        tracks.push(...destNode.stream.getAudioTracks());
+        const dest = audioCtx.createMediaStreamDestination();
+        const comp = audioCtx.createDynamicsCompressor();
+        comp.threshold.value = -10; comp.knee.value = 10; comp.ratio.value = 5;
+        comp.connect(dest);
+
+        const startAt = audioCtx.currentTime + 0.05;
+
+        // Relógio silencioso trava duração exata no MP4
+        clockOsc = audioCtx.createOscillator();
+        const cg = audioCtx.createGain(); cg.gain.value = 0.00001;
+        clockOsc.connect(cg); cg.connect(dest); clockOsc.start(startAt);
+
+        // 1) TRILHA DE ESTÚDIO REAL CONTÍNUA (Lyria 2 / CassetteAI / Stable Audio ou MP3 do usuário)
+        if (soundtrackArrayBuf) {
+          try {
+            const decoded = await audioCtx.decodeAudioData(soundtrackArrayBuf.slice(0));
+            const src = audioCtx.createBufferSource();
+            src.buffer = decoded;
+            src.loop = true;
+            const mg = audioCtx.createGain();
+            mg.gain.setValueAtTime(0.02, startAt);
+            mg.gain.linearRampToValueAtTime(0.92, startAt + 0.15);
+            mg.gain.setValueAtTime(0.92, startAt + Math.max(0.6, totalSec - 0.65));
+            mg.gain.linearRampToValueAtTime(0.01, startAt + totalSec);
+            src.connect(mg); mg.connect(comp);
+            src.start(startAt);
+            src.stop(startAt + totalSec + 0.15);
+          } catch {}
+        }
+
+        // 2) SFX DE CINEMA EM CADA CORTE (WHOOSH + SUB-BASS DROP)
+        if (withSfx) {
+          const len = Math.floor(audioCtx.sampleRate * 1.0);
+          const nBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+          const d = nBuf.getChannelData(0);
+          for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+          scheduleCleanSubDrop(audioCtx, comp, startAt);
+          segments.forEach((seg, idx) => {
+            if (idx === 0) return;
+            const ct = startAt + seg.start;
+            scheduleCleanWhoosh(audioCtx, comp, nBuf, Math.max(startAt, ct - 0.12));
+            scheduleCleanSubDrop(audioCtx, comp, ct);
+          });
+        }
+        tracks.push(...dest.stream.getAudioTracks());
       }
 
       const recProf = pickRecorderProfile();
       const stream = new MediaStream(tracks);
       let rec;
-      try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 8500000 }) : new MediaRecorder(stream); }
+      try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 14000000 }) : new MediaRecorder(stream); }
       catch { rec = new MediaRecorder(canvasStream); }
 
       const chunks = [];
       rec.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
       const doneP = new Promise((resolve) => {
-        rec.onstop = () => resolve(new Blob(chunks, { type: recProf.baseType || rec.mimeType || "video/mp4" }));
+        rec.onstop = () => { if (clockOsc) { try { clockOsc.stop(); } catch {} } resolve(new Blob(chunks, { type: recProf.baseType || rec.mimeType || "video/mp4" })); };
       });
 
       rec.start(200);
@@ -1148,147 +951,98 @@
       const fillEl = document.getElementById("renderProgressFill");
       const secEl = document.getElementById("renderProgressSec");
 
-      let activeClipIdx = -1;
-      const activateClip = (idx, rate) => {
-        if (activeClipIdx === idx) {
-          loaded[idx].vid.playbackRate = rate;
-          return;
-        }
-        if (activeClipIdx >= 0) loaded[activeClipIdx].vid.pause();
-        activeClipIdx = idx;
-        loaded[idx].vid.playbackRate = rate;
-        loaded[idx].vid.play().catch(() => {});
+      let currentSegIdx = -1;
+      const activateSegment = (sIdx) => {
+        if (currentSegIdx === sIdx) return;
+        if (currentSegIdx >= 0) loaded[segments[currentSegIdx].clipIdx].vid.pause();
+        currentSegIdx = sIdx;
+        const vid = loaded[segments[sIdx].clipIdx].vid;
+        try { vid.currentTime = 0.0; } catch {}
+        vid.play().catch(() => {});
       };
-
-      const beatSec = 60 / profTrack.bpm;
 
       await new Promise((resolve) => {
         let finished = false;
         const stop = makeTicker(30, () => {
           if (finished) return;
           const elapsed = (performance.now() - startTime) / 1000;
-          if (fillEl) fillEl.style.width = `${Math.min(100, Math.round((elapsed / targetSec) * 100))}%`;
-          if (secEl) secEl.textContent = `${Math.min(targetSec, elapsed).toFixed(1)}s / ${targetSec}.0s`;
+          if (fillEl) fillEl.style.width = `${Math.min(100, Math.round((elapsed / totalSec) * 100))}%`;
+          if (secEl) secEl.textContent = `${Math.min(totalSec, elapsed).toFixed(1)}s / ${totalSec}.0s`;
 
-          if (elapsed >= targetSec + 0.08) {
-            finished = true;
-            stop();
+          if (elapsed >= totalSec + 0.08) {
+            finished = true; stop();
             loaded.forEach((x) => x.vid.pause());
             if (rec.state !== "inactive") rec.stop();
-            resolve();
-            return;
+            resolve(); return;
           }
 
-          const t = Math.min(targetSec - 0.001, elapsed);
-          let cIdx = cuts.length - 1;
-          for (let i = 0; i < cuts.length; i++) {
-            if (t >= cuts[i].start && t < cuts[i].end) { cIdx = i; break; }
+          const t = Math.min(totalSec - 0.001, elapsed);
+          let sIdx = segments.length - 1;
+          for (let i = 0; i < segments.length; i++) {
+            if (t >= segments[i].start && t < segments[i].end) { sIdx = i; break; }
           }
 
-          const cut = cuts[cIdx];
-          const cutDur = Math.max(0.25, cut.end - cut.start);
-          const cEl = Math.max(0, t - cut.start);
-          const p = Math.min(1, cEl / cutDur);
-          const dir = cIdx % 2 === 0 ? 1 : -1;
-
-          // Speed-ramping real no vídeo 3D do Kling (acelera na entrada/saída, firme no meio)
-          const pbRate = cut.move === "speedRamp" ? (p < 0.3 ? 1.45 : (p < 0.75 ? 0.9 : 1.35)) : (cut.move === "climax" ? 0.95 : 1.18);
-          activateClip(cut.clipIdx, pbRate);
-
-          const item = loaded[cut.clipIdx];
+          activateSegment(sIdx);
+          const seg = segments[sIdx];
+          const cEl = Math.max(0, t - seg.start);
+          const p = Math.min(1, cEl / seg.dur);
+          const item = loaded[seg.clipIdx];
           const vid = item.vid;
-          const crop = item.crop;
 
-          // Coreografia de câmera de alta conversão sobre o vídeo 3D real
-          let scale = 1.05, panX = 0, panY = 0, angle = 0, whipX = 0;
-          if (withVfx) {
-            if (cut.move === "crashZoom") {
-              const hit = cEl < 0.18 ? (1 - easeOutExpo(cEl / 0.18)) : 0;
-              scale = 1.08 + hit * 0.26 + (1 - p) * 0.06;
-              panX = hit > 0 ? Math.sin(t * 95) * 10 * hit : dir * (p - 0.5) * 18;
-              panY = hit > 0 ? Math.cos(t * 88) * 8 * hit : 0;
-              angle = dir * hit * 0.028;
-            } else if (cut.move === "whipPan") {
-              const wT = cEl < 0.15 ? (1 - easeOutExpo(cEl / 0.15)) : 0;
-              whipX = wT * 110 * dir;
-              scale = 1.08 + p * 0.12;
-              panX = whipX + dir * (p - 0.5) * 32;
-              angle = dir * wT * 0.04;
-            } else if (cut.move === "snapPunch") {
-              const snap = cEl < 0.14 ? (1 - easeOutExpo(cEl / 0.14)) : 0;
-              scale = 1.12 + snap * 0.16 + p * 0.08;
-              panX = dir * (0.5 - p) * 24;
-            } else if (cut.move === "zoomAttack") {
-              scale = 1.05 + Math.pow(p, 1.8) * 0.24;
-              panY = -p * 16;
-            } else if (cut.move === "climax") {
+          // Speed-Ramping cinematográfico real no vídeo 3D (entrada rápida -> detalhe firme -> acelera pro corte)
+          if (withDynamicCam) {
+            const rate = p < 0.22 ? 1.55 : (p < 0.78 ? 0.92 : 1.48);
+            try { vid.playbackRate = rate; } catch {}
+          } else {
+            try { vid.playbackRate = 1.05; } catch {}
+          }
+
+          // Movimentos de câmera dinâmicos e limpos (sem filtros falsos que estragam a imagem!)
+          let scale = 1.02, panX = 0, panY = 0, whipOffset = 0;
+          if (withDynamicCam) {
+            if (seg.editMove === "crashZoom") {
               const hit = cEl < 0.22 ? (1 - easeOutExpo(cEl / 0.22)) : 0;
-              scale = 1.24 + hit * 0.12 - easeOutCubic(p) * 0.18;
-              panY = (1 - p) * 14;
+              scale = 1.04 + hit * 0.20 + p * 0.08;
+            } else if (seg.editMove === "whipLeft" || seg.editMove === "whipRight") {
+              const dir = seg.editMove === "whipLeft" ? 1 : -1;
+              const wt = cEl < 0.14 ? (1 - easeOutExpo(cEl / 0.14)) : 0;
+              whipOffset = wt * 72 * dir;
+              scale = 1.05 + p * 0.10;
+              panX = whipOffset + dir * (p - 0.5) * 24;
+            } else if (seg.editMove === "macroPush") {
+              scale = 1.04 + easeOutCubic(p) * 0.18;
+              panY = (0.5 - p) * 14;
+            } else if (seg.editMove === "zoomAttack") {
+              scale = 1.03 + Math.pow(p, 1.7) * 0.20;
             } else {
-              scale = 1.06 + Math.sin(p * Math.PI) * 0.12;
-              panX = dir * (p - 0.5) * 26;
+              // climaxPull
+              const hit = cEl < 0.20 ? (1 - easeOutExpo(cEl / 0.20)) : 0;
+              scale = 1.18 + hit * 0.10 - easeOutCubic(p) * 0.16;
             }
           }
 
-          ctx.fillStyle = "#04060a";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "#000"; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
           if (vid.readyState >= 2) {
-            // Whip-Pan Motion Blur direcional
-            if (withVfx && Math.abs(whipX) > 14) {
-              drawCroppedCover(ctx, vid, crop, scale, panX - whipX * 0.55, panY, angle, 1);
-              drawCroppedCover(ctx, vid, crop, scale, panX - whipX * 0.25, panY, angle, 0.55);
-              drawCroppedCover(ctx, vid, crop, scale, panX, panY, angle, 0.65);
+            if (withDynamicCam && Math.abs(whipOffset) > 12) {
+              // Motion blur limpo de 120ms apenas na virada do whip-pan
+              drawCroppedCover(ctx, vid, item.crop, scale, panX - whipOffset * 0.45, panY, 1);
+              drawCroppedCover(ctx, vid, item.crop, scale, panX, panY, 0.58);
             } else {
-              drawCroppedCover(ctx, vid, crop, scale, panX, panY, angle, 1);
+              drawCroppedCover(ctx, vid, item.crop, scale, panX, panY, 1);
             }
 
-            if (withVfx) {
-              // 1. Pulso RGB (Aberração Cromática) nos primeiros 110ms de cada corte
-              if (cEl < 0.11) {
-                const sp = (1 - cEl / 0.11) * 13;
-                ctx.save(); ctx.globalCompositeOperation = "screen";
-                drawCroppedCover(ctx, vid, crop, scale * 1.012, panX + sp, panY, angle, 0.22);
-                drawCroppedCover(ctx, vid, crop, scale * 1.012, panX - sp, panY, angle, 0.18);
-                ctx.restore();
-              }
-              // 2. Flash Óptico seco no corte
-              if (cEl < 0.085 && (cut.move === "crashZoom" || cut.move === "snapPunch" || cut.move === "climax")) {
-                ctx.save(); ctx.globalCompositeOperation = "screen";
-                ctx.fillStyle = "#ffffff";
-                ctx.globalAlpha = (1 - cEl / 0.085) * 0.36;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.restore();
-              }
-              // 3. Rim Light pulsando na batida da trilha (BPM)
-              const beatPhase = (t % beatSec) / beatSec;
-              const beatPulse = Math.pow(1 - beatPhase, 3) * 0.16;
-              ctx.save(); ctx.globalCompositeOperation = "screen";
-              const ex = cIdx % 2 === 0 ? 0 : canvas.width;
-              const rg = ctx.createLinearGradient(ex, 0, canvas.width - ex, canvas.height * 0.35);
-              rg.addColorStop(0, accent); rg.addColorStop(0.45, "rgba(0,0,0,0)");
-              ctx.globalAlpha = 0.06 + beatPulse;
-              ctx.fillStyle = rg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Flash óptico suave e elegante apenas nos primeiros 75ms de cada corte
+            if (withDynamicCam && sIdx > 0 && cEl < 0.075) {
+              ctx.save();
+              ctx.globalCompositeOperation = "screen";
+              ctx.fillStyle = "#ffffff";
+              ctx.globalAlpha = (1 - cEl / 0.075) * 0.22;
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
               ctx.restore();
-
-              // 4. Partículas cinematográficas sutis
-              ctx.save(); ctx.globalCompositeOperation = "screen";
-              for (const pt of particles) {
-                const px = ((pt.x + pt.vx * t) % canvas.width + canvas.width) % canvas.width;
-                const py = ((pt.y + pt.vy * t) % canvas.height + canvas.height) % canvas.height;
-                ctx.globalAlpha = pt.a * (0.45 + 0.55 * Math.sin(t * 6 + pt.ph)) * 0.55;
-                ctx.fillStyle = pt.ph > 4.4 ? "#ffffff" : accent;
-                ctx.beginPath(); ctx.arc(px, py, pt.r, 0, Math.PI * 2); ctx.fill();
-              }
-              ctx.restore();
-
-              // 5. Vinheta cinematográfica
-              ctx.drawImage(vignetteCache, 0, 0);
             }
           }
 
-          // Legenda compacta (zona segura)
           if (withSubs) {
             const activeSub = subs.find((s) => t >= s.start && t <= s.end);
             if (activeSub) {
@@ -1296,7 +1050,7 @@
               const lbl = activeSub.text.toUpperCase(), maxW = canvas.width - 170;
               const tw = Math.min(maxW, ctx.measureText(lbl).width);
               const bw = tw + 22, bx = (canvas.width - bw) / 2, by = canvas.height - 380;
-              ctx.fillStyle = "rgba(4,7,13,0.75)"; ctx.fillRect(bx, by - 21, bw, 32);
+              ctx.fillStyle = "rgba(4,7,13,0.76)"; ctx.fillRect(bx, by - 21, bw, 32);
               ctx.fillStyle = "#fde047"; ctx.fillText(lbl, canvas.width / 2, by + 2, maxW); ctx.restore();
             }
           }
@@ -1307,16 +1061,7 @@
       loaded.forEach((x) => URL.revokeObjectURL(x.blobUrl));
       if (activeVideoBlobUrl) URL.revokeObjectURL(activeVideoBlobUrl);
       activeVideoBlobUrl = URL.createObjectURL(outBlob);
-
-      return {
-        videoUrl: activeVideoBlobUrl,
-        videoBlob: outBlob,
-        ext: recProf.ext,
-        label: recProf.label,
-        srt: makeSrt(subs),
-        cutsCount: cuts.length,
-        sec: targetSec
-      };
+      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: recProf.label, srt: makeSrt(subs), uniqueCount: n, sec: totalSec };
     }
 
     function downloadBlob(blob, filename) {
@@ -1337,14 +1082,13 @@
         stage.innerHTML = `<div class="status-msg">Gerando imagem 9:16 em escala real<br/><strong>${selectedImgModel.name}</strong></div><div class="status-log" id="imgLog">enviando... (0s)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div><div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>`;
         document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
         uiClock = setInterval(() => { const el = document.getElementById("imgLog"); if (el) el.textContent = `${stTxt} (${Math.round((performance.now() - t0) / 1000)}s)`; }, 1000);
-
         const q = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildStandaloneImagePrompt(selectedImgModel) }, 30000, activeRunController.signal);
         const r = await pollFalJob(q, (s) => { stTxt = s; }, activeRunController.signal);
         clearInterval(uiClock);
         stage.innerHTML = `
           <img class="preview-916" src="${r.imageUrl}" alt="Imagem 9:16" />
           <div class="dl-box">
-            <div class="dl-title">${selectedImgModel.name} (${selectedImgModel.cat}) • Escala Real 9:16</div>
+            <div class="dl-title">${selectedImgModel.name} (${selectedImgModel.cat}) • Nano Banana 9:16</div>
             <div class="dl-grid"><a class="dl-btn main" href="${r.imageUrl}" target="_blank" rel="noopener noreferrer" download="nexora-img-${selectedImgModel.id}.jpg">Abrir / Baixar Imagem 9:16</a></div>
           </div>
         `;
@@ -1357,9 +1101,19 @@
       }
     });
 
-    // === MODO VÍDEO HOLLYWOOD BEAT-SYNC (KLING MUDO + 1 TRILHA CONTÍNUA + CORTES RÁPIDOS) ===
+    // === MODO VÍDEO HOLLYWOOD ZERO REPETIÇÃO + TRILHA DE ESTÚDIO IA ===
     btnBuild.addEventListener("click", async () => {
       if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
+
+      const targetSec = Number(minDuration.value) || 15;
+      const shotIndices = DURATION_SHOT_PLANS[targetSec] || DURATION_SHOT_PLANS[15];
+      const totalUnique = shotIndices.length;
+      const mKey = musicPreset.value;
+
+      if (mKey === "custom" && !customAudioBuf) {
+        stage.innerHTML = `<div class="err-msg">Selecione um arquivo .MP3/.WAV ou escolha uma Trilha de Estúdio IA.</div>`;
+        return;
+      }
 
       let audioCtx = null;
       try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { audioCtx = new AC(); if (audioCtx.state === "suspended") await audioCtx.resume(); } } catch {}
@@ -1368,57 +1122,98 @@
       const runSignal = activeRunController.signal;
       btnOnlyImg.disabled = true; btnBuild.disabled = true;
 
-      const targetSec = Number(minDuration.value) || 15;
-      const angleCount = targetSec === 10 ? 2 : (targetSec === 15 ? 3 : 4);
-      const angleNames = ["Ângulo 1 (Frontal Escala Real)", "Ângulo 2 (3/4 Bancada)", "Ângulo 3 (Macro Detalhes)", "Ângulo 4 (Hero Clímax)"];
-      const readyLinks = new Array(angleCount).fill(null);
+      const readyClipUrls = new Array(totalUnique).fill(null);
+      let aiMusicUrl = null;
+      let aiMusicEngine = "";
+      let aiMusicStatus = mKey === "mute" ? "mudo" : (mKey === "custom" ? `MP3: ${customAudioName}` : "iniciando trilha IA...");
+      let aiMusicWarning = "";
       let finishEarly = false, uiClock = null;
 
+      // Dispara a geração da TRILHA DE ESTÚDIO REAL em paralelo desde o segundo 0!
+      let musicPromise = Promise.resolve(null);
+      if (mKey !== "mute" && mKey !== "custom" && MUSIC_PROMPTS[mKey]) {
+        musicPromise = (async () => {
+          try {
+            const qm = await callApi({
+              task: "submit_music",
+              musicPrompt: MUSIC_PROMPTS[mKey].prompt,
+              duration: targetSec + 2
+            }, 30000, runSignal);
+            aiMusicEngine = qm.engine || "Estúdio IA";
+            aiMusicStatus = `gerando (${aiMusicEngine})...`;
+            const rm = await pollFalJob(qm, (st) => { aiMusicStatus = `${aiMusicEngine}: ${st}`; }, runSignal);
+            aiMusicUrl = rm.audioUrl;
+            aiMusicStatus = `pronta ✓ (${aiMusicEngine})`;
+            return rm.audioUrl;
+          } catch (mErr) {
+            if (mErr.message === "CANCELLED_BY_USER") return null;
+            aiMusicStatus = "indisponível (seguindo com SFX)";
+            aiMusicWarning = `Aviso na trilha IA: ${mErr.message}`;
+            return null;
+          }
+        })();
+      }
+
       try {
-        // ETAPA 1: Gerar Keyframes Multi-Ângulo (Escala Real 1:1, Zero Barra Preta)
-        const kfStates = Array.from({ length: angleCount }, (_, i) => ({ label: angleNames[i], status: "aguardando...", startedAt: null, done: false }));
-        const keyframeUrls = new Array(angleCount).fill(null);
+        // ETAPA 1: Gerar todos os Keyframes 100% ÚNICOS no Nano Banana (máx. 2 em paralelo)
+        const kfStates = shotIndices.map((sIdx, i) => ({
+          label: `${i + 1}/${totalUnique} ${EIGHT_UNIQUE_SHOTS[sIdx].title}`,
+          status: "aguardando...",
+          startedAt: null,
+          done: false
+        }));
+        const keyframeUrls = new Array(totalUnique).fill(null);
 
         stage.innerHTML = `
-          <div class="status-msg"><strong>Etapa 1/3 • Criando ${angleCount} ângulos 9:16 (Escala Real 1:1)</strong><br/>${selectedVidModel.name}</div>
+          <div class="status-msg"><strong>Etapa 1/3 • Criando ${totalUnique} cenas 100% únicas (Zero Repetição)</strong><br/>${selectedVidModel.name}</div>
           <div class="status-log" id="kfLog"></div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="kfBar" style="width:10%"></div></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="kfBar" style="width:8%"></div></div>
           <div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>
         `;
         document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
 
         const renderStep1 = () => {
           const logEl = document.getElementById("kfLog"), barEl = document.getElementById("kfBar"), now = performance.now();
-          if (logEl) logEl.innerHTML = kfStates.map((k) => k.done ? `${k.label}: pronto ✓` : (k.startedAt ? `${k.label}: ${k.status} (${Math.round((now - k.startedAt) / 1000)}s)` : `${k.label}: ${k.status}`)).join("<br/>");
-          if (barEl) barEl.style.width = `${10 + Math.round((keyframeUrls.filter(Boolean).length / angleCount) * 22)}%`;
+          if (logEl) {
+            const lines = kfStates.map((k) => k.done ? `${k.label}: pronto ✓` : (k.startedAt ? `${k.label}: ${k.status} (${Math.round((now - k.startedAt) / 1000)}s)` : `${k.label}: ${k.status}`));
+            lines.push(`🎵 Trilha Contínua: ${aiMusicStatus}`);
+            logEl.innerHTML = lines.join("<br/>");
+          }
+          if (barEl) barEl.style.width = `${8 + Math.round((keyframeUrls.filter(Boolean).length / totalUnique) * 24)}%`;
         };
         renderStep1();
         uiClock = setInterval(renderStep1, 1000);
 
         let nextKf = 0;
         async function kfWorker() {
-          while (nextKf < angleCount) {
+          while (nextKf < totalUnique) {
             if (runSignal.aborted) return;
             const i = nextKf++;
             kfStates[i].startedAt = performance.now(); kfStates[i].status = "gerando cena..."; renderStep1();
-            const q = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildAngleKeyframePrompt(selectedVidModel, i) }, 30000, runSignal);
+            const q = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildShotKeyframe(selectedVidModel, shotIndices[i]) }, 30000, runSignal);
             const r = await pollFalJob(q, (st) => { kfStates[i].status = st; }, runSignal);
             keyframeUrls[i] = r.imageUrl; kfStates[i].done = true; renderStep1();
           }
         }
-        await Promise.all(Array.from({ length: Math.min(2, angleCount) }, () => kfWorker()));
+        await Promise.all(Array.from({ length: Math.min(2, totalUnique) }, () => kfWorker()));
         clearInterval(uiClock); uiClock = null;
 
-        // ETAPA 2: Animar os ângulos no Kling v2.6 Pro (MUDO — mais rápido, mais barato, sem música trocada!)
-        const blockStates = Array.from({ length: angleCount }, (_, i) => ({ label: `Clipe 3D ${i + 1} (5s)`, status: "aguardando vaga...", startedAt: null, done: false }));
+        // ETAPA 2: Animar os clipes 3D únicos no Kling v2.6 Pro (máx. 2 simultâneos)
+        const clipStates = shotIndices.map((sIdx, i) => ({
+          label: `Clipe 3D ${i + 1}/${totalUnique} (${EIGHT_UNIQUE_SHOTS[sIdx].title.split("•")[1]?.trim() || "Cena"})`,
+          status: "aguardando vaga...",
+          startedAt: null,
+          done: false
+        }));
+
         stage.innerHTML = `
-          <div class="status-msg"><strong>Etapa 2/3 • Animando ${angleCount} clipes 3D no Kling v2.6 Pro</strong><br/>${selectedVidModel.name} (Modo Rápido p/ Edição Beat-Sync)</div>
+          <div class="status-msg"><strong>Etapa 2/3 • Animando ${totalUnique} cenas 3D únicas no Kling v2.6 Pro</strong><br/>${selectedVidModel.name}</div>
           <div class="status-log" id="liveBlockLog"></div>
           <div class="progress-bar-wrap"><div class="progress-bar-fill" id="step2Bar" style="width:34%"></div></div>
           <div class="clip-list" id="liveReadyLinks"></div>
-          <div class="thumb-strip">${keyframeUrls.map((u, i) => `<img src="${u}" alt="Ângulo ${i + 1}" title="${angleNames[i]}" />`).join("")}</div>
+          <div class="thumb-strip">${keyframeUrls.map((u, i) => `<img src="${u}" alt="Cena ${i + 1}" title="${EIGHT_UNIQUE_SHOTS[shotIndices[i]].title}" />`).join("")}</div>
           <div class="action-inline">
-            <button type="button" class="btn-use-ready hidden" id="btnUseReady">Montar edição agora com prontos</button>
+            <button type="button" class="btn-use-ready hidden" id="btnUseReady">Montar agora com as cenas prontas</button>
             <button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button>
           </div>
         `;
@@ -1427,22 +1222,27 @@
 
         const renderStep2 = () => {
           const logEl = document.getElementById("liveBlockLog"), barEl = document.getElementById("step2Bar"), linksEl = document.getElementById("liveReadyLinks"), useBtn = document.getElementById("btnUseReady"), now = performance.now();
-          if (logEl) logEl.innerHTML = blockStates.map((b) => b.done ? `${b.label}: pronto ✓` : (b.startedAt ? `${b.label}: ${b.status} (${Math.round((now - b.startedAt) / 1000)}s)` : `${b.label}: ${b.status}`)).join("<br/>");
-          const doneC = readyLinks.filter(Boolean).length;
-          if (barEl) barEl.style.width = `${34 + Math.round((doneC / angleCount) * 44)}%`;
-          if (linksEl) linksEl.innerHTML = readyLinks.map((u, i) => u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Clipe ${i + 1} ✓</a>` : "").filter(Boolean).join("");
-          if (useBtn) useBtn.classList.toggle("hidden", doneC === 0 || doneC === angleCount);
+          if (logEl) {
+            const lines = clipStates.map((b) => b.done ? `${b.label}: pronto ✓` : (b.startedAt ? `${b.label}: ${b.status} (${Math.round((now - b.startedAt) / 1000)}s)` : `${b.label}: ${b.status}`));
+            lines.push(`🎵 Trilha Contínua: ${aiMusicStatus}`);
+            logEl.innerHTML = lines.join("<br/>");
+          }
+          const doneC = readyClipUrls.filter(Boolean).length;
+          if (barEl) barEl.style.width = `${34 + Math.round((doneC / totalUnique) * 46)}%`;
+          if (linksEl) linksEl.innerHTML = readyClipUrls.map((u, i) => u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Cena ${i + 1} ✓</a>` : "").filter(Boolean).join("");
+          if (useBtn) useBtn.classList.toggle("hidden", doneC === 0 || doneC === totalUnique);
         };
         renderStep2();
         uiClock = setInterval(renderStep2, 1000);
 
         let nextClip = 0;
         async function clipWorker() {
-          while (nextClip < angleCount) {
+          while (nextClip < totalUnique) {
             if (runSignal.aborted) return;
             const i = nextClip++;
-            const isPersonAngle = selectedVidModel.hasPerson && (i === 0 || i === 3);
-            blockStates[i].startedAt = performance.now(); blockStates[i].status = "enviando à GPU..."; renderStep2();
+            const sIdx = shotIndices[i];
+            const hasPersonHere = selectedVidModel.hasPerson && EIGHT_UNIQUE_SHOTS[sIdx].allowPerson;
+            clipStates[i].startedAt = performance.now(); clipStates[i].status = "enviando à GPU..."; renderStep2();
             let q = null;
             for (let att = 1; att <= 3; att++) {
               try {
@@ -1450,65 +1250,90 @@
                   task: "submit_clip",
                   imageUrl: keyframeUrls[i],
                   duration: "5",
-                  generateAudio: false, // Trilha única contínua + SFX entram no Master Editor!
-                  motionPrompt: buildAngleMotionPrompt(selectedVidModel, i),
-                  negativePrompt: buildDynamicNegative(isPersonAngle)
+                  generateAudio: false,
+                  motionPrompt: buildShotMotion(selectedVidModel, sIdx),
+                  negativePrompt: buildNegative(hasPersonHere)
                 }, 28000, runSignal);
                 break;
               } catch (err) {
                 if (err.message === "CANCELLED_BY_USER") return;
                 if (err.status && err.status >= 400 && err.status < 500 && !err.transient) throw err;
                 if (att === 3) throw err;
-                blockStates[i].status = `reenviando (${att}/3)...`; await sleep(2000);
+                clipStates[i].status = `reenviando (${att}/3)...`; await sleep(2000);
               }
             }
             if (!q || runSignal.aborted) return;
-            blockStates[i].status = "na fila...";
-            const r = await pollFalJob(q, (st) => { blockStates[i].status = st; }, runSignal);
-            readyLinks[i] = r.videoUrl; blockStates[i].done = true; renderStep2();
+            clipStates[i].status = "na fila...";
+            const r = await pollFalJob(q, (st) => { clipStates[i].status = st; }, runSignal);
+            readyClipUrls[i] = r.videoUrl; clipStates[i].done = true; renderStep2();
           }
         }
-        try { await Promise.all(Array.from({ length: Math.min(2, angleCount) }, () => clipWorker())); }
+        try { await Promise.all(Array.from({ length: Math.min(2, totalUnique) }, () => clipWorker())); }
         catch (err) { if (!finishEarly) throw err; }
         clearInterval(uiClock); uiClock = null;
 
-        const finalUrls = readyLinks.filter(Boolean);
-        if (!finalUrls.length) throw new Error(finishEarly ? "Nenhum clipe pronto ainda." : "CANCELLED_BY_USER");
+        // Aguarda a trilha de estúdio terminar (se ainda estiver fechando os últimos segundos)
+        if (!finishEarly) {
+          await musicPromise;
+        }
 
-        // ETAPA 3: Edição Master Beat-Sync (Cortes Rápidos + Zooms + VFX + 1 Trilha Contínua + SFX)
-        const trackLabel = customAudioArrayBuffer ? "Sua Trilha MP3/WAV" : (TRACK_PROFILES[trackStyle.value]?.label || "Trilha Contínua");
+        const validPairs = readyClipUrls
+          .map((u, i) => (u ? { url: u, shotIdx: shotIndices[i] } : null))
+          .filter(Boolean);
+        if (!validPairs.length) throw new Error(finishEarly ? "Nenhuma cena pronta ainda." : "CANCELLED_BY_USER");
+
+        // ETAPA 3: Baixar clipes + trilha real e renderizar Master Hollywood 14 Mbps (Zero Repetição!)
         stage.innerHTML = `
           <div class="status-msg">
-            <strong>Etapa 3/3 • Editando Master Hollywood Beat-Sync (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
-            Aplicando cortes rápidos na batida, Auto-Crop, VFX + ${trackLabel} + SFX...
+            <strong>Etapa 3/3 • Editando Master Hollywood 14 Mbps (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
+            Unindo ${validPairs.length} cenas 100% únicas + Speed-Ramp + Trilha de Estúdio + SFX...
           </div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:6%"></div></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:8%"></div></div>
         `;
 
-        const blobs = await Promise.all(finalUrls.map((u) => fetchMediaBlob(u)));
-        const out = await renderBeatSyncMaster(
-          blobs, targetSec, selectedVidModel, trackStyle.value,
-          enableSfx.checked, enableVfx.checked, burnSubs.checked,
-          scriptText.value.trim(), audioCtx, customAudioArrayBuffer
+        const clipBlobs = await Promise.all(validPairs.map((p) => fetchMediaBlob(p.url)));
+        let soundtrackBuf = null;
+        if (mKey === "custom" && customAudioBuf) {
+          soundtrackBuf = customAudioBuf;
+        } else if (aiMusicUrl) {
+          try {
+            const mb = await fetchMediaBlob(aiMusicUrl);
+            soundtrackBuf = await mb.arrayBuffer();
+          } catch {}
+        }
+
+        const out = await renderZeroRepeatHollywoodMaster(
+          clipBlobs,
+          validPairs.map((p) => p.shotIdx),
+          targetSec,
+          enableDynamicCam.checked,
+          enableSfxWhoosh.checked,
+          burnSubs.checked,
+          scriptText.value.trim(),
+          audioCtx,
+          soundtrackBuf
         );
 
         const srtUrl = URL.createObjectURL(new Blob([out.srt], { type: "text/plain;charset=utf-8" }));
         const fname = `nexora-hollywood-${selectedVidModel.id}-${out.sec}s.${out.ext}`;
+        const musicLabel = mKey === "custom" ? `MP3: ${customAudioName}` : (aiMusicUrl ? `Trilha ${aiMusicEngine}` : (mKey === "mute" ? "Mudo" : "SFX Cinema"));
 
         stage.innerHTML = `
           <video id="outPlayer" class="player-916" src="${out.videoUrl}" controls playsinline></video>
           <div class="dl-box">
-            <div class="dl-title">${selectedVidModel.name} • ${out.sec}s • ${out.cutsCount} Cortes na Batida • ${trackLabel} • ${out.label}</div>
+            <div class="dl-title">${selectedVidModel.name} • ${out.sec}s • ${out.uniqueCount} Cenas 100% Únicas • ${musicLabel} • ${out.label}</div>
             <div class="dl-grid">
               <button type="button" id="btnDlVideo" class="dl-btn main">Baixar Vídeo Master (.${out.ext.toUpperCase()} • ${out.sec}s)</button>
               <a class="dl-btn" href="${srtUrl}" download="legendas.srt">Legenda (.SRT)</a>
               <button type="button" id="btnPlayAgain" class="dl-btn">Reproduzir com Som</button>
             </div>
             <div class="clip-list">
-              ${finalUrls.map((u, idx) => `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer" download="kling-angulo-${idx + 1}.mp4">Clipe Bruto ${idx + 1}</a>`).join("")}
+              ${validPairs.map((p, idx) => `<a class="clip-chip" href="${p.url}" target="_blank" rel="noopener noreferrer" download="cena-unica-${idx + 1}.mp4">Cena ${idx + 1}</a>`).join("")}
+              ${aiMusicUrl ? `<a class="clip-chip" href="${aiMusicUrl}" target="_blank" rel="noopener noreferrer" download="trilha-hollywood.wav">🎵 Baixar Trilha IA</a>` : ""}
             </div>
+            ${aiMusicWarning ? `<div class="warn-note">${aiMusicWarning}</div>` : ""}
           </div>
-          <div class="thumb-strip">${keyframeUrls.map((u, i) => `<img src="${u}" alt="Ângulo ${i + 1}" title="${angleNames[i]}" />`).join("")}</div>
+          <div class="thumb-strip">${keyframeUrls.map((u, i) => `<img src="${u}" alt="Cena ${i + 1}" title="${EIGHT_UNIQUE_SHOTS[shotIndices[i]].title}" />`).join("")}</div>
         `;
 
         const outPlayer = document.getElementById("outPlayer");
@@ -1523,7 +1348,7 @@
         });
       } catch (err) {
         const msg = err.message === "CANCELLED_BY_USER" ? "Geração cancelada." : (err.message || "Erro ao gerar vídeo.");
-        const rescued = readyLinks.map((u, i) => u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Clipe ${i + 1} salvo ✓</a>` : "").filter(Boolean).join("");
+        const rescued = readyClipUrls.map((u, i) => u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Cena ${i + 1} salva ✓</a>` : "").filter(Boolean).join("");
         stage.innerHTML = `<div class="err-msg">${msg}</div>${rescued ? `<div class="clip-list">${rescued}</div>` : ""}`;
       } finally {
         if (uiClock) clearInterval(uiClock);
