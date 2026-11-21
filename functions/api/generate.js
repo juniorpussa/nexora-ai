@@ -1,5 +1,8 @@
 const DEFAULT_NEGATIVE =
-  "oversized product, giant product, floating in mid-air, spinning 360 degrees, rear view, invented blue LEDs, added side lights, extra buttons, deformed logo, morphing, distorted product, black bars, letterbox, grey borders, split screen, laser beam, excessive motion blur, text, watermark, shopping cart arrows, blur, lowres, cartoon";
+  "slow motion, static shot, oversized product, giant product, floating in mid-air, spinning 360 degrees, rear view, glowing blue arcs, electric trails on product, invented red LEDs, invented blue LEDs, added side lights, glowing outline on product, extra buttons, deformed logo, morphing, distorted product, black bars, letterbox, grey borders, split screen, text, watermark, arrows, blur, lowres, cartoon";
+
+const MUSIC_ANTI_SLEEP =
+  "slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, smooth jazz, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, cowbell solo, low quality, muffled";
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -100,86 +103,84 @@ export async function onRequestPost(context) {
       return json({ requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
     }
 
-    // 2) CLIPE 3D HOLLYWOOD (Kling v2.6 Pro Image-to-Video)
+    // 2) CLIPE 3D HOLLYWOOD (Kling v2.6 Pro ou Veo 3.1 Fast c/ fallback seguro para Kling)
     if (task === "submit_clip" || task === "clip") {
       const prompt = body.motionPrompt || body.prompt || "";
       const imageUrl = body.imageUrl || (body.imageBase64 ? `data:${body.mimeType || "image/jpeg"};base64,${body.imageBase64}` : "");
       const duration = String(body.duration === "10" || body.duration === 10 ? "10" : "5");
       const generateAudio = Boolean(body.generateAudio);
       const negativePrompt = body.negativePrompt || DEFAULT_NEGATIVE;
+      const engine = body.engine === "veo" ? "veo" : "kling";
 
       if (!prompt || !imageUrl) return json({ error: "Envie a cena base e o prompt de vídeo." }, 400);
 
-      const res = await fetch("https://queue.fal.run/fal-ai/kling-video/v2.6/pro/image-to-video", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          prompt,
-          image_url: imageUrl,
-          duration,
-          aspect_ratio: "9:16",
-          generate_audio: generateAudio,
-          negative_prompt: negativePrompt
-        })
-      });
-      const raw = await res.text();
-      if (!res.ok) return json({ error: formatFalError(res.status, raw) }, res.status);
-      const q = JSON.parse(raw);
-      return json({ requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
-    }
+      const candidates = engine === "veo"
+        ? [
+            {
+              name: "Veo 3.1 Fast",
+              url: "https://queue.fal.run/fal-ai/veo3.1/fast/image-to-video",
+              payload: { prompt, image_url: imageUrl, aspect_ratio: "9:16", duration: "4s", generate_audio: false }
+            },
+            {
+              name: "Veo 3 Fast",
+              url: "https://queue.fal.run/fal-ai/veo3/fast/image-to-video",
+              payload: { prompt, image_url: imageUrl, aspect_ratio: "9:16", duration: "8s", generate_audio: false }
+            },
+            {
+              name: "Kling v2.6 Pro",
+              url: "https://queue.fal.run/fal-ai/kling-video/v2.6/pro/image-to-video",
+              payload: { prompt, image_url: imageUrl, duration, aspect_ratio: "9:16", generate_audio: generateAudio, negative_prompt: negativePrompt }
+            }
+          ]
+        : [
+            {
+              name: "Kling v2.6 Pro",
+              url: "https://queue.fal.run/fal-ai/kling-video/v2.6/pro/image-to-video",
+              payload: { prompt, image_url: imageUrl, duration, aspect_ratio: "9:16", generate_audio: generateAudio, negative_prompt: negativePrompt }
+            }
+          ];
 
-    // 3) TRILHA SONORA DE ESTÚDIO REAL CONTÍNUA (Lyria 2 → CassetteAI → Stable Audio)
-    if (task === "submit_music") {
-      const prompt = body.musicPrompt || body.prompt || "High-energy Hollywood dark phonk electronic commercial beat, massive 808 sub-bass drops, sharp trap drums, instrumental only";
-      const dur = Math.min(35, Math.max(10, Number(body.duration) || 15));
-
-      const endpoints = [
-        {
-          name: "Lyria 2",
-          url: "https://queue.fal.run/fal-ai/lyria2",
-          payload: {
-            prompt,
-            negative_prompt: "vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, low quality, muffled"
-          }
-        },
-        {
-          name: "CassetteAI",
-          url: "https://queue.fal.run/fal-ai/cassetteai/music-generator",
-          payload: { prompt, duration: dur }
-        },
-        {
-          name: "Stable Audio",
-          url: "https://queue.fal.run/fal-ai/stable-audio",
-          payload: { prompt, seconds_total: dur, steps: 50 }
-        }
-      ];
-
-      let lastErr = "Nenhum gerador de trilha disponível.";
-      for (const ep of endpoints) {
-        const res = await fetch(ep.url, {
-          method: "POST",
-          headers,
-          body: JSON.stringify(ep.payload)
-        });
+      let lastErr = "Falha ao enfileirar vídeo.";
+      for (const c of candidates) {
+        const res = await fetch(c.url, { method: "POST", headers, body: JSON.stringify(c.payload) });
         const raw = await res.text();
         if (res.ok) {
           const q = JSON.parse(raw);
-          return json({
-            engine: ep.name,
-            requestId: q.request_id,
-            statusUrl: q.status_url,
-            responseUrl: q.response_url
-          });
+          return json({ engine: c.name, requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
         }
         lastErr = formatFalError(res.status, raw);
-        if (res.status === 403) {
-          return json({ error: lastErr }, 403);
-        }
+        if (res.status === 403) return json({ error: lastErr }, 403);
       }
       return json({ error: lastErr }, 502);
     }
 
-    // 4) CONSULTA DE STATUS NA FILA (IMAGEM, VÍDEO E TRILHA)
+    // 3) TRILHA SONORA AGRESSIVA DE ESTÚDIO (Lyria 2 → CassetteAI → Stable Audio)
+    if (task === "submit_music") {
+      const prompt = body.musicPrompt || body.prompt || "Explosive aggressive Brazilian Phonk commercial beat, instant heavy distorted 808 bass drop right at second zero, hard-hitting punchy trap drums, 138 BPM, strictly instrumental";
+      const musicNeg = body.musicNegativePrompt || MUSIC_ANTI_SLEEP;
+      const dur = Math.min(35, Math.max(12, Number(body.duration) || 18));
+
+      const endpoints = [
+        { name: "Lyria 2", url: "https://queue.fal.run/fal-ai/lyria2", payload: { prompt, negative_prompt: musicNeg } },
+        { name: "CassetteAI", url: "https://queue.fal.run/fal-ai/cassetteai/music-generator", payload: { prompt, duration: dur } },
+        { name: "Stable Audio", url: "https://queue.fal.run/fal-ai/stable-audio", payload: { prompt, seconds_total: dur, steps: 45 } }
+      ];
+
+      let lastErr = "Nenhum gerador de trilha disponível.";
+      for (const ep of endpoints) {
+        const res = await fetch(ep.url, { method: "POST", headers, body: JSON.stringify(ep.payload) });
+        const raw = await res.text();
+        if (res.ok) {
+          const q = JSON.parse(raw);
+          return json({ engine: ep.name, requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
+        }
+        lastErr = formatFalError(res.status, raw);
+        if (res.status === 403) return json({ error: lastErr }, 403);
+      }
+      return json({ error: lastErr }, 502);
+    }
+
+    // 4) CONSULTA DE STATUS NA FILA
     if (task === "poll") {
       const { statusUrl, responseUrl } = body;
       if (!isQueueUrl(statusUrl) || !isQueueUrl(responseUrl)) return json({ error: "URLs da fila inválidas." }, 400);
@@ -207,9 +208,7 @@ export async function onRequestPost(context) {
       const videoUrl = payload?.video?.url || payload?.videos?.[0]?.url || null;
       const audioUrl = payload?.audio?.url || payload?.audio_file?.url || payload?.music?.url || null;
 
-      if (!imageUrl && !videoUrl && !audioUrl) {
-        return json({ error: "A fal.ai concluiu sem retornar mídia." }, 502);
-      }
+      if (!imageUrl && !videoUrl && !audioUrl) return json({ error: "A fal.ai concluiu sem retornar mídia." }, 502);
       return json({ status: "COMPLETED", imageUrl, videoUrl, audioUrl });
     }
 
