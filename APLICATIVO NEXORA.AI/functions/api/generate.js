@@ -1,8 +1,17 @@
 const DEFAULT_NEGATIVE =
-  "slow motion, static shot, frozen background, spinning 180 degrees, spinning 360 degrees, rear underside view, tipping over, falling product, floating in mid-air, standing vertically on tail edge, invented back logo, tribal logo, white glowing letter, random text on product, glowing white side strip, vertical white neon poles, glowing blue arcs, invented red LEDs, extra buttons, altered logo font, morphing, distorted product, black bars, letterbox, grey borders, split screen, text, watermark, arrows, blur, lowres, cartoon";
+  "static frozen frame, spinning 180 degrees, turntable spin, rear view, tipping over, floating product, invented logo, altered logo, misspelled text, random text on product, glowing LED strip on product, illuminated buttons, fake neon outline, speed lines, comic streaks, morphing, distorted product, extra fingers, deformed hands, plastic CGI look, 3d render look, black bars, grey borders, watermark, arrows, blur, lowres, cartoon";
 
 const MUSIC_CLEAN_NEGATIVE =
-  "harsh distortion, clipping, static noise, muddy, messy, off-beat, slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, smooth jazz, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, cowbell solo";
+  "harsh noise, clipping, static, muddy, messy, off-beat, slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, smooth jazz, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune";
+
+const TTS_VOICE_MAP = {
+  male_impact: { el: "Adam", mm: "Deep_Voice_Man", kk: "pm_alex" },
+  male_tiktok: { el: "Brian", mm: "Casual_Guy", kk: "pm_alex" },
+  male_exec: { el: "Daniel", mm: "Patient_Man", kk: "pm_santa" },
+  female_viral: { el: "Sarah", mm: "Lively_Girl", kk: "pf_dora" },
+  female_tiktok: { el: "Jessica", mm: "Wise_Woman", kk: "pf_dora" },
+  female_lux: { el: "Rachel", mm: "Calm_Woman", kk: "pf_dora" }
+};
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -103,13 +112,13 @@ export async function onRequestPost(context) {
       return json({ requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
     }
 
-    // 2) CLIPE 3D HOLLYWOOD (Kling v2.6 Pro ou Veo 3.1 Fast c/ fallback para Kling)
+    // 2) CLIPE 3D CINEMA / USO REAL / UGC / POV (Kling v2.6 Pro ou Veo 3.1 Fast c/ fallback)
     if (task === "submit_clip" || task === "clip") {
       const prompt = body.motionPrompt || body.prompt || "";
       const imageUrl = body.imageUrl || (body.imageBase64 ? `data:${body.mimeType || "image/jpeg"};base64,${body.imageBase64}` : "");
       const duration = String(body.duration === "10" || body.duration === 10 ? "10" : "5");
       const generateAudio = Boolean(body.generateAudio);
-      const negativePrompt = body.negativePrompt || DEFAULT_NEGATIVE;
+      const negativePrompt = String(body.negativePrompt || DEFAULT_NEGATIVE).slice(0, 380);
       const engine = body.engine === "veo" ? "veo" : "kling";
 
       if (!prompt || !imageUrl) return json({ error: "Envie a cena base e o prompt de vídeo." }, 400);
@@ -149,7 +158,7 @@ export async function onRequestPost(context) {
       return json({ error: lastErr }, 502);
     }
 
-    // 3) TRILHA DE ESTÚDIO REAL COM FALLBACK POR ÍNDICE (0: Lyria 2 → 1: CassetteAI → 2: Stable Audio)
+    // 3) TRILHA DE ESTÚDIO REAL COM FALLBACK TRIPLO (0: Lyria 2 -> 1: CassetteAI -> 2: Stable Audio)
     if (task === "submit_music") {
       const prompt = body.musicPrompt || body.prompt || "High-energy modern electronic slap house commercial beat, punchy bouncy bassline, crisp driving four-on-the-floor kick, bright energetic synth hook, 128 BPM, clean studio master, strictly instrumental";
       const musicNeg = body.musicNegativePrompt || MUSIC_CLEAN_NEGATIVE;
@@ -177,7 +186,100 @@ export async function onRequestPost(context) {
       return json({ error: lastErr }, 502);
     }
 
-    // 4) CONSULTA DE STATUS NA FILA
+    // 4) NARRAÇÃO PT-BR COM FALLBACK TRIPLO (0: ElevenLabs -> 1: MiniMax Speech-02 HD -> 2: Kokoro PT-BR)
+    if (task === "submit_tts") {
+      const text = String(body.text || "").trim();
+      if (!text) return json({ error: "Digite o roteiro da narração em português." }, 400);
+
+      const voicePreset = TTS_VOICE_MAP[body.voiceId] || (body.gender === "female" ? TTS_VOICE_MAP.female_viral : TTS_VOICE_MAP.male_impact);
+      const speed = Math.min(1.25, Math.max(0.85, Number(body.speed) || 1.05));
+      const startIndex = Math.max(0, Math.min(2, Number(body.engineIndex) || 0));
+
+      const endpoints = [
+        {
+          name: "ElevenLabs PT-BR",
+          url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
+          payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.78, speed }
+        },
+        {
+          name: "MiniMax Speech-02 HD",
+          url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
+          payload: {
+            text,
+            voice_setting: { voice_id: voicePreset.mm, speed, vol: 1.0, pitch: 0 },
+            language_boost: "Portuguese",
+            output_format: "url"
+          }
+        },
+        {
+          name: "Kokoro PT-BR",
+          url: "https://queue.fal.run/fal-ai/kokoro/brazilian-portuguese",
+          payload: { prompt: text, voice: voicePreset.kk, speed }
+        }
+      ];
+
+      let lastErr = "Nenhum motor de narração PT-BR disponível.";
+      for (let i = startIndex; i < endpoints.length; i++) {
+        const ep = endpoints[i];
+        const res = await fetch(ep.url, { method: "POST", headers, body: JSON.stringify(ep.payload) });
+        const raw = await res.text();
+        if (res.ok) {
+          const q = JSON.parse(raw);
+          return json({ engine: ep.name, engineIndex: i, requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
+        }
+        lastErr = formatFalError(res.status, raw);
+        if (res.status === 403) return json({ error: lastErr }, 403);
+      }
+      return json({ error: lastErr }, 502);
+    }
+
+    // 5) REMOVEDOR DE FUNDO PNG TRANSPARENTE (0: BiRefNet v2 -> 1: Bria Remove BG -> 2: Rembg)
+    if (task === "remove_bg") {
+      const mime = body.mimeType || "image/jpeg";
+      const imageInput = body.imageUrl || (body.imageBase64 ? `data:${mime};base64,${body.imageBase64}` : "");
+      if (!imageInput) return json({ error: "Envie a imagem do produto para remover o fundo." }, 400);
+
+      const startIndex = Math.max(0, Math.min(2, Number(body.engineIndex) || 0));
+      const endpoints = [
+        {
+          name: "BiRefNet v2 HD",
+          url: "https://queue.fal.run/fal-ai/birefnet/v2",
+          payload: {
+            image_url: imageInput,
+            model: "General Use (Heavy)",
+            operating_resolution: "1024x1024",
+            output_format: "png",
+            refine_foreground: true
+          }
+        },
+        {
+          name: "Bria Remove BG",
+          url: "https://queue.fal.run/fal-ai/bria/background/remove",
+          payload: { image_url: imageInput }
+        },
+        {
+          name: "Rembg Fast",
+          url: "https://queue.fal.run/fal-ai/imageutils/rembg",
+          payload: { image_url: imageInput }
+        }
+      ];
+
+      let lastErr = "Falha ao remover fundo da imagem.";
+      for (let i = startIndex; i < endpoints.length; i++) {
+        const ep = endpoints[i];
+        const res = await fetch(ep.url, { method: "POST", headers, body: JSON.stringify(ep.payload) });
+        const raw = await res.text();
+        if (res.ok) {
+          const q = JSON.parse(raw);
+          return json({ engine: ep.name, engineIndex: i, requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
+        }
+        lastErr = formatFalError(res.status, raw);
+        if (res.status === 403) return json({ error: lastErr }, 403);
+      }
+      return json({ error: lastErr }, 502);
+    }
+
+    // 6) CONSULTA DE STATUS NA FILA
     if (task === "poll") {
       const { statusUrl, responseUrl } = body;
       if (!isQueueUrl(statusUrl) || !isQueueUrl(responseUrl)) return json({ error: "URLs da fila inválidas." }, 400);
@@ -201,9 +303,14 @@ export async function onRequestPost(context) {
       const result = JSON.parse(finRaw);
       const payload = result?.response || result;
 
-      const imageUrl = payload?.images?.[0]?.url || payload?.image?.url || null;
+      const imageUrl = payload?.image?.url || payload?.images?.[0]?.url || payload?.output?.url || null;
       const videoUrl = payload?.video?.url || payload?.videos?.[0]?.url || null;
-      const audioUrl = payload?.audio?.url || payload?.audio_file?.url || payload?.music?.url || null;
+      const audioUrl =
+        payload?.audio?.url ||
+        payload?.audio_url ||
+        payload?.audio_file?.url ||
+        payload?.music?.url ||
+        (typeof payload?.audio === "string" ? payload.audio : null);
 
       if (!imageUrl && !videoUrl && !audioUrl) return json({ error: "A fal.ai concluiu sem retornar mídia." }, 502);
       return json({ status: "COMPLETED", imageUrl, videoUrl, audioUrl });
