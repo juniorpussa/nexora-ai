@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — Superprodução Hollywood 9:16 (Zero Deformação + Trilha Real Garantida)</title>
+  <title>NEXORA.AI — Superprodução Hollywood 9:16 (Estável + Trilha Garantida)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, sans-serif; }
     body { background: #06080d; color: #f4f6fb; min-height: 100vh; padding: 16px; }
@@ -75,18 +75,18 @@
     .status-log { font-size: 11.5px; color: #7dd3fc; margin-top: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.55; }
     .progress-bar-wrap { width: 100%; max-width: 340px; height: 8px; background: #151e30; border-radius: 999px; overflow: hidden; margin-top: 8px; }
     .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #38bdf8); width: 0%; transition: width 0.25s ease; }
-    .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; width: 100%; }
+    .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; width: 100%; word-break: break-word; }
     .warn-note { font-size: 11.5px; color: #fde047; margin-top: 6px; }
     .clip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; justify-content: center; }
     .clip-chip { background: #131d30; border: 1px solid #283a5c; color: #cbd5e1; border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 700; text-decoration: none; }
-    .thumb-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(38px, 1fr)); gap: 4px; width: 100%; margin-top: 4px; }
+    .thumb-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(42px, 1fr)); gap: 4px; width: 100%; margin-top: 4px; }
     .thumb-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 5px; border: 1px solid #26334d; }
   </style>
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>BLINDAGEM TOTAL • 50 MODELOS</span></div>
-    <div class="pill-info">⚡ Trilha Real c/ Fallback Garantido • Zero Giro 180° / Zero Logo Inventado • Câmera + Luz + Cenário Vivos • &lt; 5 min</div>
+    <div class="brand">NEXORA.AI <span>TURBO ESTÁVEL • 50 MODELOS</span></div>
+    <div class="pill-info">⚡ Pool Inteligente 4x GPU (&lt; 4 min) • Prompt Enxuto Anti-422 • Trilha Triplo Fallback • DNA Único</div>
   </div>
 
   <div class="layout">
@@ -125,10 +125,10 @@
             <div id="durFieldWrap">
               <label for="minDuration">Duração &amp; Cortes Únicos (0% Repetição)</label>
               <select id="minDuration">
-                <option value="10" selected>10s — 6 Cortes Únicos (1.3s–1.5s + Hero)</option>
-                <option value="15">15s — 8 Cortes Únicos (1.4s–1.6s + Hero)</option>
-                <option value="20">20s — 10 Cortes Únicos (1.6s–1.8s + Hero)</option>
-                <option value="30">30s — 12 Cortes Únicos (2.0s–2.3s + Hero)</option>
+                <option value="10" selected>10s — 4 Cortes Únicos • 8 Impactos (~1m30s)</option>
+                <option value="15">15s — 6 Cortes Únicos • 12 Impactos (~2m20s • Ideal)</option>
+                <option value="20">20s — 7 Cortes Únicos • 14 Impactos (~2m45s)</option>
+                <option value="30">30s — 8 Cortes Únicos • 16 Impactos (~3m15s)</option>
               </select>
             </div>
           </div>
@@ -147,7 +147,7 @@
 
       <!-- TRAVA DE TEMPO < 5 MIN + MOTOR -->
       <div class="sla-bar" id="slaBarWrap">
-        <span>⏱️ <strong>Trava &lt; 5 min (100% Paralelo GPU):</strong></span>
+        <span>⏱️ <strong>Trava &lt; 5 min (Pool 4x GPU Anti-429):</strong></span>
         <div class="sla-controls">
           <select id="videoEngine" title="Motor de Vídeo 3D">
             <option value="kling" selected>Motor: Kling v2.6 Pro (Econômico + Fiel)</option>
@@ -228,20 +228,20 @@
           </div>
 
           <div class="options-row">
-            <label class="toggle-row"><input type="checkbox" id="enableHyperCuts" checked /><span><strong>Dinamismo Máximo</strong> (Snap-Zoom + Whip-Pan Blur + Micro-Roll + Speed-Ramp 2.0x)</span></label>
+            <label class="toggle-row"><input type="checkbox" id="enableHyperCuts" checked /><span><strong>Dinamismo Máximo</strong> (Snap-Zoom + Mid-Punch + Whip-Pan Blur + Speed-Ramp 2.0x)</span></label>
             <label class="toggle-row"><input type="checkbox" id="enableSfxHits" checked /><span><strong>SFX Limpos nos Cortes</strong> (Whoosh de ar + Sub-Bass sutil)</span></label>
           </div>
         </div>
       </div>
 
-      <button type="button" class="btn-generate" id="btnBuild">⚡ Gerar Superprodução (10s • 6 Cortes Únicos • &lt; 4m30s)</button>
+      <button type="button" class="btn-generate" id="btnBuild">⚡ Gerar Superprodução (10s • 4 Cortes Únicos • &lt; 4m30s)</button>
       <button type="button" class="btn-generate hidden" id="btnOnlyImg">Gerar Imagem Exclusiva 9:16 (Nano Banana)</button>
     </div>
 
     <div class="panel">
       <div class="step-label" id="previewTitle">Preview 9:16 &amp; Download MP4</div>
       <div class="preview-stage" id="stage">
-        <div class="status-msg"><strong>Correções aplicadas:</strong><br/>• <strong>Trilha real garantida</strong> (zero bloqueio de copyright + fallback automático Lyria 2 → CassetteAI → Stable Audio)<br/>• <strong>Zero produto em pé tombando / zero logo inventado</strong><br/>• <strong>Câmera + Luz + Cenário em movimento nonstop</strong> nos 50 modelos</div>
+        <div class="status-msg"><strong>Correções de estabilidade aplicadas:</strong><br/>• <strong>Pool 4x GPU</strong> (elimina bloqueio 429 da fal.ai)<br/>• <strong>Negative prompt enxuto (&lt; 380 chars)</strong> (elimina erro 422 do Kling)<br/>• <strong>Diagnóstico real de erro</strong> + Trilha com fallback triplo</div>
       </div>
     </div>
   </div>
@@ -318,7 +318,7 @@
     // 50 UNIVERSOS HOLLYWOOD — CADA UM COM CENÁRIO EM MOVIMENTO NONSTOP (`envMotion`)
     // =========================================================================
     const VIDEO_MODELS = [
-      [1,"Acao",false,"#01 Eclipse Solar & Faíscas em Fúria","Coroa solar pulsando e girando o vídeo todo + chuva rápida de faíscas","blockbuster solar-eclipse commercial","smooth monolithic matte-black obsidian pedestal (no white neon poles)","Blazing fiery golden solar eclipse corona halo glowing behind with hot fire embers","The giant fiery solar eclipse corona flares violently, rotates and pulses with roaring golden plasma waves while glowing embers drift rapidly across the deep dark sky behind"],
+      [1,"Acao",false,"#01 Eclipse Solar & Faíscas em Fúria","Coroa solar pulsando e girando o vídeo todo + chuva rápida de faíscas","blockbuster solar-eclipse commercial","smooth monolithic matte-black obsidian pedestal","Blazing fiery golden solar eclipse corona halo glowing behind with hot fire embers","The giant fiery solar eclipse corona flares violently, rotates and pulses with roaring golden plasma waves while glowing embers drift rapidly across the dark sky behind"],
       [2,"Acao",false,"#02 Reator Industrial (Strobe Vermelho)","Strobes vermelhos piscando forte + nuvens rápidas de vapor branco","high-voltage industrial reactor commercial","heavy matte-black obsidian pedestal inside an industrial reactor core","Flashing crimson emergency industrial lights cutting thick white reactor vapor behind","Crimson emergency reactor strobes flash rhythmically while thick pressurized clouds of white steam rush violently upward and across the entire chamber"],
       [3,"Acao",false,"#03 Cofre Tático Criogênico (Unboxing)","Maleta titânio aberta + jatos horizontais velozes de vapor gelado","military sci-fi tactical unboxing commercial","open matte-black titanium tactical vault case lined with laser-cut black carbon foam (already fully open)","Dark security bunker with crisp overhead spotlight slicing cold pneumatic steam","Violent horizontal blasts of white cryogenic steam shoot rapidly across the dark bunker while overhead spotlights flicker dynamically through swirling cold mist"],
       [4,"Acao",false,"#04 Joalheria Noir & Partículas Vivas","Fundo preto absoluto com feixes de luz varrendo e partículas douradas","haute-precision dark commercial","glossy pure-black mirror pedestal in a velvet pitch-black studio","Pinpoint warm-white commercial spotlights and bright floating golden dust motes","Razor-sharp commercial light shafts sweep rapidly across the dark velvet void as hundreds of shimmering golden dust motes swirl swiftly through the beams"],
@@ -379,99 +379,92 @@
       prompt: `exact real-sized product resting on ${m.surface}, high-speed frozen action photography of: ${m.envMotion}`
     }));
 
-    // =========================================================================
-    // REGRAS DE PERSPECTIVA 3D REAL (IMPEDE PRODUTO EM PÉ TOMBANDO!)
-    // =========================================================================
     const ORIENTATION_RULES = {
       flat: {
-        short: "lying HORIZONTALLY FLAT on its bottom base in realistic 3D table-level perspective (NEVER propped vertically upright on its rear end)",
-        full: "CRITICAL 3D ORIENTATION LOCK: Even if the uploaded reference photo is a top-down view, you MUST render the product lying HORIZONTALLY FLAT on its natural bottom base on the surface (its length parallel to the table, like a real mouse, sneaker, sunglasses, or box sitting flat). ABSOLUTELY NEVER stand it vertically upright on its rear end, NEVER balance it like a tombstone, NEVER tip it over."
+        short: "lying HORIZONTALLY FLAT on its natural bottom base in 3D table-level perspective (NEVER propped vertically upright)",
+        full: "3D ORIENTATION LOCK: Render the product lying HORIZONTALLY FLAT on its bottom base on the surface (even if reference photo is top-down). NEVER prop it vertically on its rear end or tip it over."
       },
       upright: {
-        short: "standing solidly UPRIGHT on its own natural flat base/stand",
-        full: "CRITICAL 3D ORIENTATION LOCK: Product stands solidly UPRIGHT on its own flat base or display stand resting firmly on the surface (like a perfume bottle, watch on stand, or jar). NEVER tip sideways or float."
+        short: "standing solidly UPRIGHT on its natural flat base/stand",
+        full: "3D ORIENTATION LOCK: Product stands solidly UPRIGHT on its flat base or display stand resting firmly on the surface. NEVER tip sideways or float."
       },
       flat_lay: {
         short: "lying neatly FLAT inside the display tray/surface",
-        full: "CRITICAL 3D ORIENTATION LOCK: Product lies neatly FLAT inside the display tray or surface viewed cleanly from an elevated angle. NEVER prop it vertically."
+        full: "3D ORIENTATION LOCK: Product lies neatly FLAT inside the display tray or surface viewed cleanly from above. NEVER prop it vertically."
       }
     };
 
-    // =========================================================================
-    // 12 PLANOS CINÉTICOS — MOVIMENTO NA CÂMERA + LUZ CORRENDO NO PRODUTO + CENÁRIO VIVO
-    // (NUNCA gira o produto 180° para não inventar logo/traseira nem tombar!)
-    // =========================================================================
     const TWELVE_UNIQUE_SHOTS = [
       {
         title: "Gancho 3/4 Explosivo",
         allowPerson: true,
         editMove: "crashZoom",
         frame: (m, macro, dna, orient) => m.hasPerson
-          ? `SHOT A (LOW 3/4 FOREGROUND HOOK): Dramatic low three-quarter 9:16 commercial reveal. Exact real-sized product ${orient.short} in sharp foreground focus on ${m.surface}, ${dna.surfaceNuance}, with ${dna.cast.text}.`
-          : `SHOT A (DYNAMIC LOW 3/4 HERO HOOK): Bold low-angle three-quarter 9:16 reveal of the exact product ${orient.short} on ${m.surface} silhouetted against the live moving background, ${dna.surfaceNuance}.`,
-        camMotion: "Explosive high-speed snap-zoom slamming rapidly forward into the front-3/4 angle while bright moving cinema key lights sweep fast across the product's sculpted surface"
+          ? `SHOT A (LOW 3/4 FOREGROUND HOOK): Dramatic low three-quarter 9:16 commercial reveal. Exact product ${orient.short} in sharp foreground focus on ${m.surface}, ${dna.surfaceNuance}, with ${dna.cast.text}.`
+          : `SHOT A (DYNAMIC LOW 3/4 HOOK): Bold low-angle three-quarter 9:16 reveal of the exact product ${orient.short} on ${m.surface} silhouetted against the live moving background, ${dna.surfaceNuance}.`,
+        camMotion: "Explosive high-speed snap-zoom slamming rapidly forward into the front-3/4 angle while bright moving cinema key lights sweep fast across the product surface"
       },
       {
         title: "Macro Extremo 100mm (Core)",
         allowPerson: false,
         editMove: "macroSlam",
-        frame: (m, macro, dna, orient) => `SHOT B (EXTREME 100MM MACRO CORE — PRODUCT ONLY): Ultra-close 100mm cinema macro filling 82% of the frame with ${macro} of the exact product ${orient.short} on ${m.surface}, razor-sharp authentic texture, full-bleed background (ZERO black bars, ZERO hands).`,
-        camMotion: "Fast razor-sharp macro snap-push gliding tightly across the primary controls, dial/scroll and real matte-metal finish while directional specular highlights race across the surface"
+        frame: (m, macro, dna, orient) => `SHOT B (EXTREME 100MM MACRO CORE): Ultra-close 100mm cinema macro filling 82% of frame with ${macro} of the exact product ${orient.short} on ${m.surface}, razor-sharp authentic texture, full-bleed background, zero hands.`,
+        camMotion: "Fast razor-sharp macro snap-push gliding tightly across the primary controls and real matte-metal finish while directional specular highlights race across the surface"
       },
       {
         title: "Textura Diagonal & Material",
         allowPerson: false,
         editMove: "whipLeft",
-        frame: (m, macro, dna, orient) => `SHOT C (DIAGONAL TEXTURE CLOSE-UP — PRODUCT ONLY): Dynamic angled close-up sweeping diagonally across the tactile body grip, curvature and finish of the exact product ${orient.short} on ${m.surface}. Zero hands, full-bleed 9:16.`,
+        frame: (m, macro, dna, orient) => `SHOT C (DIAGONAL TEXTURE CLOSE-UP): Dynamic angled close-up sweeping diagonally across the tactile body grip, curvature and finish of the exact product ${orient.short} on ${m.surface}. Zero hands, full-bleed 9:16.`,
         camMotion: "Rapid diagonal whip-pan slider racing swiftly left-to-right across the sculpted material texture as bright grazing light sweeps across the contours"
       },
       {
         title: "Perfil Baixo 3/4 Esquerdo",
         allowPerson: false,
         editMove: "whipRight",
-        frame: (m, macro, dna, orient) => `SHOT D (LOW SURFACE 3/4 LEFT — PRODUCT ONLY): Dramatic table-level left three-quarter angle showcasing the sleek length and front silhouette of the exact product ${orient.short} on ${m.surface}, ${dna.surfaceNuance}. Zero hands.`,
-        camMotion: "Fast kinetic low-angle frontal arc (±18° max, staying strictly in front) sweeping past the product's sleek silhouette while light streaks glide over its surface"
+        frame: (m, macro, dna, orient) => `SHOT D (LOW SURFACE 3/4 LEFT): Dramatic table-level left three-quarter angle showcasing the sleek length and front silhouette of the exact product ${orient.short} on ${m.surface}, ${dna.surfaceNuance}. Zero hands.`,
+        camMotion: "Fast kinetic low-angle frontal arc (±18° max, staying strictly in front) sweeping past the product silhouette while light streaks glide over its surface"
       },
       {
         title: "Macro Detalhe Lateral / Hardware",
         allowPerson: false,
         editMove: "macroSlam",
-        frame: (m, macro, dna, orient) => `SHOT E (EXTREME SIDE HARDWARE MACRO — PRODUCT ONLY): Tight dramatic grazing-light close-up focusing on the precision side edge, buttons/crown and chamfered contours of the exact product ${orient.short} on ${m.surface}. Full-bleed dark depth, zero hands.`,
+        frame: (m, macro, dna, orient) => `SHOT E (EXTREME SIDE HARDWARE MACRO): Tight dramatic grazing-light close-up focusing on the precision side edge, buttons/crown and chamfered contours of the exact product ${orient.short} on ${m.surface}. Zero hands.`,
         camMotion: "Sharp energetic macro push-in revealing precision edges and build craftsmanship as moving rim highlights shimmer dynamically across every contour"
       },
       {
         title: "Contraplano 3/4 Direito",
         allowPerson: false,
         editMove: "whipLeft",
-        frame: (m, macro, dna, orient) => `SHOT F (DYNAMIC 3/4 RIGHT TILT — PRODUCT ONLY): Bold opposite right-side three-quarter angle with slight dynamic 6-degree cinematic tilt of the exact product ${orient.short} on ${m.surface}, ${dna.surfaceNuance}. Zero hands.`,
+        frame: (m, macro, dna, orient) => `SHOT F (DYNAMIC 3/4 RIGHT TILT): Bold opposite right-side three-quarter angle with slight dynamic 6-degree cinematic tilt of the exact product ${orient.short} on ${m.surface}, ${dna.surfaceNuance}. Zero hands.`,
         camMotion: "High-speed frontal tracking sweep racing right-to-left along the opposite front flank with strong foreground/background parallax"
       },
       {
         title: "Mergulho Superior 45°",
         allowPerson: false,
         editMove: "zoomAttack",
-        frame: (m, macro, dna, orient) => `SHOT G (ELEVATED 45° TOP-DOWN — PRODUCT ONLY): Crisp architectural 45-degree overhead view revealing the exact top geometry, proportions and original logo of the product ${orient.short} on ${m.surface}, ${dna.surfaceNuance}. Zero hands.`,
-        camMotion: "Brisk descending overhead crane dive rushing smoothly down toward the full top face of the product as sweeping studio light glides across the entire top surface"
+        frame: (m, macro, dna, orient) => `SHOT G (ELEVATED 45° TOP-DOWN): Crisp architectural 45-degree overhead view revealing the exact top geometry, proportions and original logo of the product ${orient.short} on ${m.surface}, ${dna.surfaceNuance}. Zero hands.`,
+        camMotion: "Brisk descending overhead crane dive rushing smoothly down toward the full top face of the product as sweeping studio light glides across the top surface"
       },
       {
-        title: "Macro Superfície & Logo Original",
+        title: "Macro Logo & Acabamento",
         allowPerson: false,
         editMove: "macroSlam",
-        frame: (m, macro, dna, orient) => `SHOT H (TIGHT FINISH & LOGO MACRO — PRODUCT ONLY): Precision close-up focused cleanly on the original authentic logo area and surface grain of the exact product ${orient.short} on ${m.surface}. Zero invented marks, zero hands.`,
+        frame: (m, macro, dna, orient) => `SHOT H (TIGHT FINISH & LOGO MACRO): Precision close-up focused cleanly on the original authentic logo area and surface grain of the exact product ${orient.short} on ${m.surface}. Zero hands.`,
         camMotion: "Crisp fast-to-slow macro glide sweeping tightly across the authentic finish and exact original logo with moving studio reflection"
       },
       {
         title: "Frontal Baixo Imponente",
         allowPerson: false,
         editMove: "crashZoom",
-        frame: (m, macro, dna, orient) => `SHOT I (DRAMATIC LOW FRONTAL ANGLE — PRODUCT ONLY): Ultra-low ground-skimming frontal angle showing the exact product ${orient.short} on ${m.surface} towering heroically in foreground, ${dna.surfaceNuance}. Zero hands.`,
+        frame: (m, macro, dna, orient) => `SHOT I (DRAMATIC LOW FRONTAL ANGLE): Ultra-low ground-skimming frontal angle showing the exact product ${orient.short} on ${m.surface} towering heroically in foreground, ${dna.surfaceNuance}. Zero hands.`,
         camMotion: "Aggressive low punch-in camera rush skimming the surface straight toward the front face while grazing key light sweeps swiftly over its contours"
       },
       {
         title: "Silhueta Lateral Cinema",
         allowPerson: false,
         editMove: "whipRight",
-        frame: (m, macro, dna, orient) => `SHOT J (SLEEK SIDE SILHOUETTE — PRODUCT ONLY): Ultra-clean horizontal side profile silhouette shot of the exact product ${orient.short} on ${m.surface} with intense live background motion blurred behind, ${dna.surfaceNuance}. Zero hands.`,
+        frame: (m, macro, dna, orient) => `SHOT J (SLEEK SIDE SILHOUETTE): Ultra-clean horizontal side profile silhouette shot of the exact product ${orient.short} on ${m.surface} with intense live background motion blurred behind, ${dna.surfaceNuance}. Zero hands.`,
         camMotion: "Rapid motorized lateral whip gliding smoothly across the clean side profile with intense moving background parallax"
       },
       {
@@ -479,8 +472,8 @@
         allowPerson: true,
         editMove: "zoomAttack",
         frame: (m, macro, dna, orient) => m.hasPerson
-          ? `SHOT K (ATMOSPHERIC MEDIUM — HERO + CAST): Wide-medium editorial frame of the exact product ${orient.short} in sharp foreground on ${m.surface} with ${dna.cast.text} in moody cinematic depth.`
-          : `SHOT K (ATMOSPHERIC SET SHOWCASE): Dramatic medium-wide commercial angle revealing the full live moving Hollywood environment surrounding the exact product ${orient.short} on ${m.surface}.`,
+          ? `SHOT K (ATMOSPHERIC MEDIUM): Wide-medium editorial frame of the exact product ${orient.short} in sharp foreground on ${m.surface} with ${dna.cast.text} in moody depth.`
+          : `SHOT K (ATMOSPHERIC SET SHOWCASE): Dramatic medium-wide commercial angle revealing the live moving Hollywood environment around the exact product ${orient.short} on ${m.surface}.`,
         camMotion: "Fast kinetic dolly push-in sweeping through live atmospheric motion straight onto the sharp foreground product"
       },
       {
@@ -488,14 +481,16 @@
         allowPerson: true,
         editMove: "climaxPull",
         frame: (m, macro, dna, orient) => m.hasPerson
-          ? `SHOT L (MONUMENTAL HERO FINALE): Commanding centered 9:16 closing flagship frame with the exact product ${orient.short} razor-sharp in foreground on ${m.surface} and ${dna.cast.text} in grand cinematic bokeh.`
+          ? `SHOT L (MONUMENTAL HERO FINALE): Commanding centered 9:16 closing flagship frame with the exact product ${orient.short} razor-sharp in foreground on ${m.surface} and ${dna.cast.text} in cinematic bokeh.`
           : `SHOT L (MONUMENTAL SYMMETRICAL HERO CLIMAX): Iconic dead-center symmetrical flagship hero shot of the exact product ${orient.short} on ${m.surface}, framed majestically by the blazing live background environment.`,
         camMotion: "Explosive speed-ramp crane pullback rising smoothly upward while bright rim lights sweep across the anchored product dominating the live set"
       }
     ];
 
+    // Quantidade ideal p/ 0% repetição + < 3m30s + zero rate-limit 429:
+    // 10s=4 cortes únicos (8 impactos c/ mid-punch), 15s=6 cortes únicos (12 impactos), 20s=7 cortes, 30s=8 cortes
     function buildRadicalShotSequence(targetSec) {
-      const targetCount = targetSec === 10 ? 6 : (targetSec === 15 ? 8 : (targetSec === 20 ? 10 : 12));
+      const targetCount = targetSec === 10 ? 4 : (targetSec === 15 ? 6 : (targetSec === 20 ? 7 : 8));
       const mustHave = [1, 2, 4, 6];
       const extras = shuffleArray([3, 5, 7, 8, 9, 10]);
       const midSelected = shuffleArray([...mustHave, ...extras].slice(0, targetCount - 2));
@@ -504,7 +499,7 @@
 
     function buildHollywoodCutDurations(totalSec, count) {
       if (count <= 1) return [totalSec];
-      const finaleRatio = totalSec <= 10 ? 0.25 : (totalSec <= 15 ? 0.20 : 0.15);
+      const finaleRatio = totalSec <= 10 ? 0.28 : (totalSec <= 15 ? 0.21 : 0.16);
       const finaleDur = Number((totalSec * finaleRatio).toFixed(2));
       const fastPoolSec = totalSec - finaleDur;
       const fastCount = count - 1;
@@ -515,11 +510,8 @@
       return durs;
     }
 
-    // =========================================================================
-    // 5 TRILHAS VIRAIS EM ALTA — 100% SEM NOMES DE ARTISTAS/MARCAS (ZERO BLOQUEIO LYRIA 2!)
-    // =========================================================================
     const MUSIC_CLEAN_NEGATIVE =
-      "harsh distortion, clipping, static noise, muddy, messy, off-beat, slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, vocals, singing, speech, talking, rap lyrics, 8-bit, chiptune, cowbell solo";
+      "harsh distortion, clipping, static noise, muddy, slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, vocals, singing, speech, talking, rap lyrics, 8-bit, chiptune";
 
     const MUSIC_PROMPTS = {
       slap_viral: {
@@ -625,7 +617,7 @@
 
     function refreshBtn() {
       const sec = Number(minDuration.value) || 10;
-      const cuts = sec === 10 ? 6 : (sec === 15 ? 8 : (sec === 20 ? 10 : 12));
+      const cuts = sec === 10 ? 4 : (sec === 15 ? 6 : (sec === 20 ? 7 : 8));
       const limitSec = Number(maxWaitLimit.value) || 240;
       const limitLabel = limitSec === 180 ? "< 3m30s" : (limitSec === 240 ? "< 4m30s" : "< 5m00s");
       btnBuild.textContent = `⚡ Gerar Superprodução (${sec}s • ${cuts} Cortes Únicos • ${limitLabel})`;
@@ -694,45 +686,43 @@
     renderVideoPresets();
 
     // =========================================================================
-    // PROMPTS BLINDADOS (ZERO GIRO 180°, ZERO LOGO INVENTADO, ZERO TOMBAMENTO!)
+    // NEGATIVE PROMPT COMPACTO (< 380 CARACTERES — ZERO ERRO HTTP 422 NO KLING!)
     // =========================================================================
     function buildNegative(hasPerson) {
-      const base = [
-        "static frozen shot", "motionless background", "static eclipse", "still image", "slow motion",
-        "spinning 180 degrees", "spinning 360 degrees", "product rotating to back", "rear underside view", "tipping over", "falling product", "floating in mid-air",
-        "invented back logo", "white glowing letter on product", "tribal logo", "white square icon on rear", "random text on product", "extra markings", "extra buttons", "altered logo font",
-        "glowing white side strip", "vertical white neon poles", "straight white sticks in sky", "neon glow on product", "blue electricity on product", "red LED strip under product",
-        "exploding person", "disappearing person", "morphing", "distorted product",
-        "oversized giant product", "black bars", "letterbox", "grey borders", "split screen",
-        "text", "watermark", "arrows", "red arrow", "shopping cart icon", "blur", "lowres", "cartoon"
+      const parts = [
+        "slow motion", "static shot", "frozen background",
+        "spinning 180 degrees", "rear view", "tipping over", "floating",
+        "invented logo", "random text on product", "glowing LED strip", "neon outline",
+        "extra buttons", "morphing", "distorted product",
+        "black bars", "grey borders", "watermark", "arrows", "blur", "lowres", "cartoon"
       ];
-      if (productOrientation.value === "flat") base.push("standing upright vertically on tail edge", "balanced vertically like a tombstone", "propped up vertically");
-      if (hasPerson) base.push("hand grabbing camera", "distorted face", "deformed fingers", "bad anatomy", "person covering product");
-      else base.push("hands", "fingers", "skin", "gloves", "people");
-      return base.join(", ");
+      if (productOrientation.value === "flat") parts.push("standing vertically on tail");
+      if (hasPerson) parts.push("distorted face", "deformed hands", "exploding person");
+      else parts.push("hands", "fingers", "people");
+      return parts.join(", ");
     }
 
     function getProductSpec() {
       const hint = productDetailHint.value.trim();
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
       const spec = hint
-        ? `${hint} — 100% strict visual fidelity to the uploaded reference photo, completely unlit solid physical body (ZERO invented glowing LEDs, ZERO invented side/back logos or letters, exact original shape and markings only)`
-        : `exact product from uploaded reference photo with 100% strict visual fidelity, completely unlit solid physical body (ZERO invented glowing LEDs, ZERO invented side/back logos or letters, exact original shape and markings only)`;
+        ? `${hint} — 100% faithful to reference photo, unlit physical body (zero glowing LEDs, zero invented logos)`
+        : `exact product from reference photo, 100% faithful, unlit physical body (zero glowing LEDs, zero invented logos)`;
       return `${spec}. ${orient.full}`;
     }
 
     function buildShotKeyframe(m, shotIdx, dna) {
       const shot = TWELVE_UNIQUE_SHOTS[shotIdx] || TWELVE_UNIQUE_SHOTS[0];
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
-      const macroFocus = macroTarget.value.trim() || "exact visible surface texture, controls, logo and precision details";
+      const macroFocus = macroTarget.value.trim() || "exact visible texture, controls, logo and precision details";
       const hasPersonHere = m.hasPerson && shot.allowPerson;
 
       return [
-        `EDGE-TO-EDGE FULL-BLEED 9:16 VERTICAL 4K HOLLYWOOD ACTION COMMERCIAL STILL (${m.genre}). Background fills 100% all 4 edges with ZERO black/grey bars.`,
-        `MANDATORY PRODUCT FIDELITY: ${getProductSpec()}.`,
+        `EDGE-TO-EDGE FULL-BLEED 9:16 VERTICAL 4K COMMERCIAL STILL (${m.genre}). ZERO black or grey bars.`,
+        `PRODUCT FIDELITY: ${getProductSpec()}.`,
         shot.frame(m, macroFocus, dna, orient),
-        `LIVE ACTION ENVIRONMENT (${m.name} • ${dna.id}): ${m.lighting}; ${m.envMotion}; ${dna.light.text}. Photorealistic 8K ARRI Alexa 65 commercial lens.`,
-        `Negative constraints: ${buildNegative(hasPersonHere)}.`
+        `LIVE ENVIRONMENT (${m.name}): ${m.lighting}; ${m.envMotion}; ${dna.light.text}. 8K ARRI Alexa 65 commercial lens.`,
+        `Negative: ${buildNegative(hasPersonHere)}.`
       ].join("\n\n");
     }
 
@@ -741,11 +731,10 @@
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
       const hasPersonHere = m.hasPerson && shot.allowPerson;
       return [
-        `Vertical 9:16 full-bleed ${m.genre}, 4K, 60fps, NONSTOP HIGH-ENERGY HOLLYWOOD COMMERCIAL MOTION from 0.0s to end, completely mute silent video.`,
-        `PRODUCT ANCHOR & FIDELITY LOCK: ${getProductSpec()}. Keep the exact product solidly anchored ${orient.short} with an unlit physical body — NEVER spin it 180°, NEVER flip/tip it over, NEVER invent logos, letters or LED strips. Deliver dynamism through fast moving specular light sweeping over the product's real surface plus aggressive camera motion.`,
-        `NONSTOP LIVE BACKGROUND MOTION (${m.name}): ${m.envMotion}. Every background element MUST move dynamically and visibly throughout the entire clip (NEVER static).`,
-        `AGGRESSIVE FRONTAL CAMERA ACTION (${shot.title} • ${dna.id}): ${shot.camMotion}. Stay strictly within a frontal ±20° camera arc (never rotating behind the product). Lighting: ${dna.light.text}.`,
-        `Negative prompt: ${buildNegative(hasPersonHere)}.`
+        `Vertical 9:16 ${m.genre}, 4K, 60fps, high-energy Hollywood commercial motion, mute video.`,
+        `PRODUCT LOCK: ${getProductSpec()}. Anchored ${orient.short}, unlit body — never spin 180°, never tip over, never invent logos or LEDs.`,
+        `LIVE BACKGROUND MOTION (${m.name}): ${m.envMotion}. Background MUST move actively throughout the clip.`,
+        `CAMERA ACTION (${shot.title}): ${shot.camMotion}. Stay strictly within frontal ±20° arc. ${dna.light.text}.`
       ].join("\n\n");
     }
 
@@ -753,10 +742,10 @@
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
       const castClause = m.hasPerson ? ` Background talent: ${dna.cast.text}.` : "";
       return [
-        `Ultra-realistic flagship 9:16 vertical edge-to-edge full-bleed high-speed action photograph (NO black bars, NO borders), concept: ${m.name} (${dna.id}).`,
+        `Ultra-realistic flagship 9:16 vertical edge-to-edge full-bleed action photograph (NO black bars), concept: ${m.name} (${dna.id}).`,
         `Product Fidelity: ${getProductSpec()}. Product ${orient.short}.`,
-        `Dynamic Scene & Action: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Lighting: ${dna.light.text}. Shot on Phase One IQ4 150MP / ARRI Alexa 65 commercial lens.`,
-        `Negative constraints: ${buildNegative(m.hasPerson)}.`
+        `Scene: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Lighting: ${dna.light.text}.`,
+        `Negative: ${buildNegative(m.hasPerson)}.`
       ].join("\n\n");
     }
 
@@ -843,14 +832,25 @@
           if (String(err.message || "").toLowerCase().includes("falha na geração")) throw err;
           errs++;
           if (onStateUpdate) onStateUpdate(`retry ${errs}/8`);
-          if (errs >= 8) throw new Error("Instabilidade ao consultar a fila da fal.ai.");
+          if (errs >= 8) throw new Error(`Instabilidade na fila fal.ai: ${err.message}`);
         }
-        await sleep(2400);
+        await sleep(2500);
       }
       throw new Error("Tempo limite excedido na fila da fal.ai.");
     }
 
-    // === GERADOR DE TRILHA COM FALLBACK REAL ENTRE MOTORES (0: Lyria 2 → 1: CassetteAI → 2: Stable Audio) ===
+    // POOL CONTROLADO (MÁX. 4 CONCORRENTES — EVITA BLOQUEIO HTTP 429 DA FAL.AI!)
+    async function runWithPool(count, maxConcurrent, taskFn) {
+      let next = 0;
+      const workers = Array.from({ length: Math.min(maxConcurrent, count) }, async () => {
+        while (next < count) {
+          const i = next++;
+          await taskFn(i);
+        }
+      });
+      await Promise.all(workers);
+    }
+
     async function generateMusicWithTripleFallback(mKey, dna, durationSec, onStatus, signal) {
       const prompt = buildUniqueMusicPrompt(mKey, dna);
       let lastErr = "Falha na trilha.";
@@ -874,12 +874,11 @@
           }
         } catch (err) {
           if (err.message === "ABORTED_RUN") return null;
-          if (err.status === 403) throw err;
+          if (err.status === 403) return { audioUrl: null, engine: "", error: err.message, fatal403: true };
           lastErr = err.message || "erro";
-          // Continua automaticamente para o próximo motor de áudio!
         }
       }
-      if (onStatus) onStatus(`indisponível (${lastErr.slice(0, 40)})`);
+      if (onStatus) onStatus(`indisponível (${lastErr.slice(0, 42)})`);
       return { audioUrl: null, engine: "", error: lastErr };
     }
 
@@ -1172,29 +1171,31 @@
 
           const beatPhase = (t % beatPulsePeriod) / beatPulsePeriod;
           const beatKick = withHyper ? Math.pow(1 - beatPhase, 4) * 0.032 : 0;
+          const midBeat = cEl - seg.dur * 0.52;
+          const midPunch = (withHyper && seg.dur >= 2.0 && midBeat >= 0) ? (easeOutExpo(Math.min(1, midBeat / 0.16)) * 0.14) : 0;
 
           let scale = 1.04 + dna.zoomJitter + beatKick, panX = 0, panY = 0, angle = 0, whipOffset = 0, flashAlpha = 0;
           if (withHyper) {
             const dir = (sIdx % 2 === 0 ? 1 : -1) * dna.flipDir;
             if (seg.editMove === "crashZoom") {
               const hit = cEl < 0.16 ? (1 - easeOutExpo(cEl / 0.16)) : 0;
-              scale = 1.05 + dna.zoomJitter + beatKick + hit * 0.25 + p * 0.10;
+              scale = 1.05 + dna.zoomJitter + beatKick + midPunch + hit * 0.25 + p * 0.08;
               angle = dir * (hit * 0.035 + (p - 0.5) * 0.018);
               if (hit > 0.18) { panX = Math.sin(t * 96) * 8 * hit; panY = Math.cos(t * 88) * 6 * hit; }
             } else if (seg.editMove === "whipLeft" || seg.editMove === "whipRight") {
               const wDir = (seg.editMove === "whipLeft" ? 1 : -1) * dna.flipDir;
               const wt = cEl < 0.13 ? (1 - easeOutExpo(cEl / 0.13)) : 0;
               whipOffset = wt * 95 * wDir;
-              scale = 1.06 + dna.zoomJitter + beatKick + p * 0.12;
+              scale = 1.06 + dna.zoomJitter + beatKick + midPunch + p * 0.10;
               panX = whipOffset + wDir * (p - 0.5) * 30;
               angle = wDir * (wt * 0.042 + (p - 0.5) * 0.02);
             } else if (seg.editMove === "macroSlam") {
               const hit = cEl < 0.15 ? (1 - easeOutExpo(cEl / 0.15)) : 0;
-              scale = 1.05 + dna.zoomJitter + beatKick + hit * 0.20 + easeOutCubic(p) * 0.15;
+              scale = 1.05 + dna.zoomJitter + beatKick + midPunch + hit * 0.20 + easeOutCubic(p) * 0.14;
               panY = (0.5 - p) * 16 * dir;
               angle = dir * (0.5 - p) * 0.022;
             } else if (seg.editMove === "zoomAttack") {
-              scale = 1.04 + dna.zoomJitter + beatKick + Math.pow(p, 1.4) * 0.24;
+              scale = 1.04 + dna.zoomJitter + beatKick + midPunch * 0.5 + Math.pow(p, 1.4) * 0.24;
               angle = dir * p * 0.02;
             } else {
               const hit = cEl < 0.18 ? (1 - easeOutExpo(cEl / 0.18)) : 0;
@@ -1202,6 +1203,7 @@
               angle = dir * (1 - p) * 0.015;
             }
             if (sIdx > 0 && cEl < 0.055) flashAlpha = (1 - cEl / 0.055) * 0.22;
+            else if (seg.dur >= 2.0 && midBeat >= 0 && midBeat < 0.05) flashAlpha = (1 - midBeat / 0.05) * 0.14;
           }
 
           if (withHyper && Math.abs(whipOffset) > 14) {
@@ -1364,7 +1366,7 @@
     });
 
     // =========================================================================
-    // MODO VÍDEO HOLLYWOOD (100% PARALELO GPU • TRAVA < 5 MIN • TRILHA GARANTIDA!)
+    // MODO VÍDEO HOLLYWOOD (POOL 4x GPU + DIAGNÓSTICO REAL + TRAVA < 5 MIN!)
     // =========================================================================
     btnBuild.addEventListener("click", async () => {
       if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
@@ -1392,6 +1394,8 @@
       const globalStart = performance.now();
       let userCancelled = false, finishEarly = false, deadlineReached = false, uiClock = null;
       let engineUsed = chosenEngine === "veo" ? "Veo 3.1 Fast" : "Kling v2.6 Pro";
+      let fatalErrorMsg = "";
+      let lastClipErrorMsg = "";
 
       const deadlineTimer = setTimeout(() => {
         deadlineReached = true;
@@ -1404,11 +1408,16 @@
       let aiMusicUrl = null, aiMusicEngine = "", noteMsg = "";
       let aiMusicStatus = mKey === "mute" ? "mudo" : (mKey === "custom" ? `MP3: ${customAudioName}` : "iniciando...");
 
-      // 1) TRILHA DE ESTÚDIO COM FALLBACK TRIPLO EM PARALELO DESDE 0.0s!
+      // 1) TRILHA DE ESTÚDIO COM FALLBACK TRIPLO EM PARALELO DESDE 0.0s
       let musicPromise = Promise.resolve(null);
       if (mKey !== "mute" && mKey !== "custom" && MUSIC_PROMPTS[mKey]) {
         musicPromise = (async () => {
           const res = await generateMusicWithTripleFallback(mKey, dna, targetSec + 6, (st) => { aiMusicStatus = st; }, runSignal);
+          if (res && res.fatal403) {
+            fatalErrorMsg = res.error;
+            activeRunController?.abort();
+            return null;
+          }
           if (res && res.audioUrl) {
             aiMusicUrl = res.audioUrl;
             aiMusicEngine = res.engine;
@@ -1420,11 +1429,13 @@
       }
 
       try {
-        // 2) TODOS OS KEYFRAMES EM PARALELO
-        const kfStates = shotIndices.map((sIdx, i) => ({ label: `Plano ${i + 1} (${TWELVE_UNIQUE_SHOTS[sIdx].title})`, status: "enviando...", done: false }));
+        // 2) KEYFRAMES COM POOL DE 4 SIMULTÂNEOS (SEM RATE-LIMIT 429!)
+        const kfStates = shotIndices.map((sIdx, i) => ({ label: `Plano ${i + 1} (${TWELVE_UNIQUE_SHOTS[sIdx].title})`, status: "aguardando...", done: false }));
+        let lastKfError = "";
+
         stage.innerHTML = `
           <div class="timer-badge" id="slaTimerBadge">⏱️ Tempo: 00:00 / Limite ${fmtClock(limitSec)}</div>
-          <div class="status-msg"><strong>Etapa 1/3 • Criando ${totalUnique} planos 3D em paralelo (${dna.id})</strong><br/>${selectedVidModel.name}</div>
+          <div class="status-msg"><strong>Etapa 1/3 • Criando ${totalUnique} planos 3D (${dna.id})</strong><br/>${selectedVidModel.name}</div>
           <div class="status-log" id="kfLog"></div>
           <div class="progress-bar-wrap"><div class="progress-bar-fill" id="kfBar" style="width:10%"></div></div>
           <div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>
@@ -1444,33 +1455,45 @@
         renderStep1();
         uiClock = setInterval(renderStep1, 1000);
 
-        await Promise.allSettled(
-          shotIndices.map(async (sIdx, i) => {
-            if (runSignal.aborted) return;
+        await runWithPool(totalUnique, 4, async (i) => {
+          if (runSignal.aborted) return;
+          const sIdx = shotIndices[i];
+          kfStates[i].status = "enviando...";
+          renderStep1();
+          try {
             const q = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildShotKeyframe(selectedVidModel, sIdx, dna) }, 28000, runSignal);
             kfStates[i].status = "GPU...";
             const r = await pollFalJob(q, (st) => { kfStates[i].status = st; }, runSignal);
             keyframeUrls[i] = r.imageUrl;
             kfStates[i].done = true;
-            renderStep1();
-          })
-        );
+          } catch (err) {
+            if (err.message === "ABORTED_RUN") return;
+            lastKfError = err.message || "erro";
+            kfStates[i].status = `erro: ${lastKfError.slice(0, 38)}`;
+            if (err.status === 403) {
+              fatalErrorMsg = err.message;
+              activeRunController?.abort();
+            }
+          }
+          renderStep1();
+        });
         clearInterval(uiClock); uiClock = null;
 
+        if (fatalErrorMsg) throw new Error(fatalErrorMsg);
         if (userCancelled) throw new Error("CANCELLED_BY_USER");
         const validKfCount = keyframeUrls.filter(Boolean).length;
-        if (validKfCount === 0) throw new Error("Nenhuma cena base retornou da fal.ai.");
+        if (validKfCount === 0) throw new Error(lastKfError ? `Falha nos planos base: ${lastKfError}` : "Nenhuma cena base retornou da fal.ai.");
 
-        // 3) TODOS OS CLIPES 3D EM PARALELO
+        // 3) CLIPES 3D COM POOL DE 4 SIMULTÂNEOS + BACKOFF EM 429 + ERRO EXATO EXPOSTO!
         const clipStates = shotIndices.map((sIdx, i) => ({
           label: `Corte ${i + 1}/${totalUnique} (${TWELVE_UNIQUE_SHOTS[sIdx].title})`,
-          status: keyframeUrls[i] ? "disparando GPU..." : "pulada",
+          status: keyframeUrls[i] ? "na fila local..." : "pulada",
           done: false
         }));
 
         stage.innerHTML = `
           <div class="timer-badge" id="slaTimerBadge">⏱️ Tempo: ${fmtClock((performance.now() - globalStart) / 1000)} / Limite ${fmtClock(limitSec)}</div>
-          <div class="status-msg"><strong>Etapa 2/3 • Animando Câmera + Luz + Cenário em ${validKfCount} cortes simultâneos</strong><br/>${selectedVidModel.name}</div>
+          <div class="status-msg"><strong>Etapa 2/3 • Animando ${validKfCount} cortes na GPU (4x simultâneos)</strong><br/>${selectedVidModel.name}</div>
           <div class="status-log" id="liveBlockLog"></div>
           <div class="progress-bar-wrap"><div class="progress-bar-fill" id="step2Bar" style="width:36%"></div></div>
           <div class="clip-list" id="liveReadyLinks"></div>
@@ -1499,49 +1522,78 @@
         renderStep2();
         uiClock = setInterval(renderStep2, 1000);
 
-        await Promise.allSettled(
-          shotIndices.map(async (sIdx, i) => {
-            if (!keyframeUrls[i] || runSignal.aborted) return;
-            const hasPersonHere = selectedVidModel.hasPerson && TWELVE_UNIQUE_SHOTS[sIdx].allowPerson;
-            let q = null;
-            for (let att = 1; att <= 2; att++) {
-              try {
-                q = await callApi({
-                  task: "submit_clip",
-                  engine: chosenEngine,
-                  imageUrl: keyframeUrls[i],
-                  duration: "5",
-                  generateAudio: false,
-                  motionPrompt: buildShotMotion(selectedVidModel, sIdx, dna),
-                  negativePrompt: buildNegative(hasPersonHere)
-                }, 26000, runSignal);
-                if (q.engine) engineUsed = q.engine;
-                break;
-              } catch (err) {
-                if (err.message === "ABORTED_RUN") return;
-                if (err.status === 403) throw err;
-                if (att === 2) { clipStates[i].status = "falhou"; return; }
-                await sleep(1500);
+        await runWithPool(totalUnique, 4, async (i) => {
+          if (!keyframeUrls[i] || runSignal.aborted) return;
+          const sIdx = shotIndices[i];
+          const hasPersonHere = selectedVidModel.hasPerson && TWELVE_UNIQUE_SHOTS[sIdx].allowPerson;
+          clipStates[i].status = "enviando GPU...";
+          renderStep2();
+
+          let q = null;
+          for (let att = 1; att <= 3; att++) {
+            try {
+              q = await callApi({
+                task: "submit_clip",
+                engine: chosenEngine,
+                imageUrl: keyframeUrls[i],
+                duration: "5",
+                generateAudio: false,
+                motionPrompt: buildShotMotion(selectedVidModel, sIdx, dna),
+                negativePrompt: buildNegative(hasPersonHere)
+              }, 26000, runSignal);
+              if (q.engine) engineUsed = q.engine;
+              break;
+            } catch (err) {
+              if (err.message === "ABORTED_RUN") return;
+              lastClipErrorMsg = err.message || "Erro desconhecido no Kling";
+              if (err.status === 403) {
+                fatalErrorMsg = err.message;
+                clipStates[i].status = "saldo esgotado (403)";
+                activeRunController?.abort();
+                return;
               }
+              if (err.status === 400 || err.status === 422) {
+                clipStates[i].status = `erro ${err.status}: ${lastClipErrorMsg.slice(0, 42)}`;
+                renderStep2();
+                return;
+              }
+              if (att === 3) {
+                clipStates[i].status = `falhou: ${lastClipErrorMsg.slice(0, 42)}`;
+                renderStep2();
+                return;
+              }
+              clipStates[i].status = `aguardando vaga (${att}/3)...`;
+              renderStep2();
+              await sleep(2500 * att);
             }
-            if (!q || runSignal.aborted) return;
-            clipStates[i].status = "GPU";
+          }
+
+          if (!q || runSignal.aborted) return;
+          clipStates[i].status = "GPU";
+          try {
             const r = await pollFalJob(q, (st) => { clipStates[i].status = st; }, runSignal);
             readyClipUrls[i] = r.videoUrl;
             clipStates[i].done = true;
-            renderStep2();
-          })
-        );
+          } catch (pollErr) {
+            if (pollErr.message === "ABORTED_RUN") return;
+            lastClipErrorMsg = pollErr.message || "Falha na GPU";
+            clipStates[i].status = `erro: ${lastClipErrorMsg.slice(0, 42)}`;
+          }
+          renderStep2();
+        });
         clearInterval(uiClock); uiClock = null;
 
+        if (fatalErrorMsg) throw new Error(fatalErrorMsg);
         if (userCancelled) throw new Error("CANCELLED_BY_USER");
         if (!finishEarly && !deadlineReached) await musicPromise;
         if (deadlineReached) noteMsg = `⚡ Trava de velocidade (${fmtClock(limitSec)}) acionada para garantir entrega < 5 min.`;
 
         const validPairs = readyClipUrls.map((u, i) => (u ? { url: u, shotIdx: shotIndices[i] } : null)).filter(Boolean);
-        if (!validPairs.length) throw new Error("Nenhum corte 3D finalizou dentro do limite. Tente novamente.");
+        if (!validPairs.length) {
+          throw new Error(lastClipErrorMsg ? `Falha ao gerar cortes 3D: ${lastClipErrorMsg}` : "Nenhum corte 3D finalizou dentro do limite de tempo. Tente novamente.");
+        }
 
-        // 4) MASTER FINAL (ZERO PISCÃO PRETO + AUTO-DROP!)
+        // 4) MASTER FINAL (ZERO PISCÃO PRETO + AUTO-DROP + MID-PUNCH!)
         stage.innerHTML = `
           <div class="status-msg">
             <strong>Etapa 3/3 • Editando Superprodução (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
