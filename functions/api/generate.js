@@ -1,8 +1,8 @@
 const DEFAULT_NEGATIVE =
-  "slow motion, static shot, oversized product, giant product, floating in mid-air, spinning 360 degrees, rear view, glowing blue arcs, electric trails on product, invented red LEDs, invented blue LEDs, added side lights, glowing outline on product, extra buttons, invented white logo, gibberish text on product, deformed logo, morphing, distorted product, tipping over, falling over, black bars, letterbox, grey borders, split screen, text, watermark, arrows, blur, lowres, cartoon";
+  "slow motion, static shot, frozen background, spinning 180 degrees, spinning 360 degrees, rear underside view, tipping over, falling product, floating in mid-air, standing vertically on tail edge, invented back logo, tribal logo, white glowing letter, random text on product, glowing white side strip, vertical white neon poles, glowing blue arcs, invented red LEDs, extra buttons, altered logo font, morphing, distorted product, black bars, letterbox, grey borders, split screen, text, watermark, arrows, blur, lowres, cartoon";
 
-const MUSIC_ANTI_SLEEP =
-  "harsh distortion, clipping, static noise, slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, smooth jazz, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, cowbell solo";
+const MUSIC_CLEAN_NEGATIVE =
+  "harsh distortion, clipping, static noise, muddy, messy, off-beat, slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, smooth jazz, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, cowbell solo";
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -122,11 +122,6 @@ export async function onRequestPost(context) {
               payload: { prompt, image_url: imageUrl, aspect_ratio: "9:16", duration: "4s", generate_audio: false }
             },
             {
-              name: "Veo 3 Fast",
-              url: "https://queue.fal.run/fal-ai/veo3/fast/image-to-video",
-              payload: { prompt, image_url: imageUrl, aspect_ratio: "9:16", duration: "8s", generate_audio: false }
-            },
-            {
               name: "Kling v2.6 Pro",
               url: "https://queue.fal.run/fal-ai/kling-video/v2.6/pro/image-to-video",
               payload: { prompt, image_url: imageUrl, duration, aspect_ratio: "9:16", generate_audio: generateAudio, negative_prompt: negativePrompt }
@@ -154,30 +149,27 @@ export async function onRequestPost(context) {
       return json({ error: lastErr }, 502);
     }
 
-    // 3) TRILHA DE ESTÚDIO COM SUPORTE A FALLBACK REAL DE ENGINE (Lyria 2 → CassetteAI → Stable Audio)
+    // 3) TRILHA DE ESTÚDIO REAL COM FALLBACK POR ÍNDICE (0: Lyria 2 → 1: CassetteAI → 2: Stable Audio)
     if (task === "submit_music") {
-      const prompt = body.musicPrompt || body.prompt || "High-energy modern slap house electronic commercial instrumental, clean punchy kick, bouncy deep bassline, energetic synth hook, 128 BPM, studio mastered, no vocals";
-      const musicNeg = body.musicNegativePrompt || MUSIC_ANTI_SLEEP;
+      const prompt = body.musicPrompt || body.prompt || "High-energy modern electronic slap house commercial beat, punchy bouncy bassline, crisp driving four-on-the-floor kick, bright energetic synth hook, 128 BPM, clean studio master, strictly instrumental";
+      const musicNeg = body.musicNegativePrompt || MUSIC_CLEAN_NEGATIVE;
       const dur = Math.min(35, Math.max(15, Number(body.duration) || 20));
-      const requestedEngine = String(body.musicEngine || "").toLowerCase();
+      const startIndex = Math.max(0, Math.min(2, Number(body.engineIndex) || 0));
 
-      const allEngines = [
-        { key: "lyria2", name: "Lyria 2", url: "https://queue.fal.run/fal-ai/lyria2", payload: { prompt, negative_prompt: musicNeg } },
-        { key: "cassetteai", name: "CassetteAI", url: "https://queue.fal.run/fal-ai/cassetteai/music-generator", payload: { prompt, duration: dur } },
-        { key: "stable-audio", name: "Stable Audio", url: "https://queue.fal.run/fal-ai/stable-audio", payload: { prompt, seconds_total: dur, steps: 45 } }
+      const endpoints = [
+        { name: "Lyria 2", url: "https://queue.fal.run/fal-ai/lyria2", payload: { prompt, negative_prompt: musicNeg } },
+        { name: "CassetteAI", url: "https://queue.fal.run/fal-ai/cassetteai/music-generator", payload: { prompt, duration: dur } },
+        { name: "Stable Audio", url: "https://queue.fal.run/fal-ai/stable-audio", payload: { prompt, seconds_total: dur, steps: 45 } }
       ];
 
-      const list = requestedEngine
-        ? allEngines.filter((e) => e.key === requestedEngine)
-        : allEngines;
-
       let lastErr = "Nenhum gerador de trilha disponível.";
-      for (const ep of list.length ? list : allEngines) {
+      for (let i = startIndex; i < endpoints.length; i++) {
+        const ep = endpoints[i];
         const res = await fetch(ep.url, { method: "POST", headers, body: JSON.stringify(ep.payload) });
         const raw = await res.text();
         if (res.ok) {
           const q = JSON.parse(raw);
-          return json({ engine: ep.name, engineKey: ep.key, requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
+          return json({ engine: ep.name, engineIndex: i, requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
         }
         lastErr = formatFalError(res.status, raw);
         if (res.status === 403) return json({ error: lastErr }, 403);
