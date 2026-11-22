@@ -87,8 +87,8 @@
     .dl-btn.remix { background: #1e293b; color: #7dd3fc; border: 1px solid #38bdf8; grid-column: span 2; }
     .timer-badge { background: #132544; border: 1px solid #2563eb; color: #93c5fd; padding: 5px 12px; border-radius: 999px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 800; }
     .status-msg { font-size: 13px; color: #9fb0cc; line-height: 1.5; max-width: 420px; }
-    .status-log { font-size: 11.2px; color: #7dd3fc; margin-top: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.5; text-align: left; width: 100%; max-width: 410px; background: #0a101b; border: 1px solid #1b2840; border-radius: 10px; padding: 9px 11px; }
-    .progress-bar-wrap { width: 100%; max-width: 340px; height: 8px; background: #151e30; border-radius: 999px; overflow: hidden; margin-top: 8px; }
+    .status-log { font-size: 11.2px; color: #7dd3fc; margin-top: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.5; text-align: left; width: 100%; max-width: 410px; background: #0a101b; border: 1px solid #1b2840; border-radius: 9px; padding: 8px 10px; }
+    .progress-bar-wrap { width: 100%; max-width: 340px; height: 8px; background: #151e30; border-radius: 999px; overflow: hidden; margin-top: 6px; }
     .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #38bdf8); width: 0%; transition: width 0.25s ease; }
     .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; width: 100%; word-break: break-word; }
     .warn-note { font-size: 11.5px; color: #fde047; margin-top: 6px; }
@@ -100,8 +100,8 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>MOTOR NOTA 10 • 100 VÍDEOS • 100 IMAGENS • VOZ PT-BR • PNG</span></div>
-    <div class="pill-info">⚡ Pipeline Direto 4x GPU (&lt; 3m30s) • Visibilidade 100% + Anti-Tampa • Macros 100mm Ancorados</div>
+    <div class="brand">NEXORA.AI <span>TURBO PRO • 100 VÍDEOS • 100 IMAGENS</span></div>
+    <div class="pill-info">⚡ Pipeline Direto (6–8 Cortes &lt; 4m) • Trava Visibilidade 100% + Anti-Tampa • Macros 100mm Apoiados • Voz PT-BR • PNG</div>
   </div>
 
   <div class="layout">
@@ -176,7 +176,7 @@
 
       <!-- TRAVA DE TEMPO < 5 MIN + MOTOR -->
       <div class="sla-bar" id="slaBarWrap">
-        <span>⚡ <strong>Pipeline Direto (Imagem → Vídeo na hora • 4x GPU):</strong></span>
+        <span>⏱️ <strong>Pipeline Direto &lt; 5 min (4x GPU Anti-429):</strong></span>
         <div class="sla-controls">
           <select id="videoEngine" title="Motor de Vídeo 3D">
             <option value="kling" selected>Motor: Kling v2.6 Pro (Econômico + Fiel)</option>
@@ -184,7 +184,7 @@
           </select>
           <select id="maxWaitLimit" title="Limite máximo de espera">
             <option value="255" selected>⚡ Limite 4m15s (&lt; 4m45s total)</option>
-            <option value="270">⚡ Limite 4m30s (&lt; 5m00s total)</option>
+            <option value="275">⚡ Limite 4m35s (&lt; 5m00s total)</option>
             <option value="195">🚀 Ultra-Rápido 3m15s</option>
           </select>
         </div>
@@ -343,7 +343,7 @@
             <label for="studioVoiceScript">Roteiro em Português (PT-BR)</label>
             <textarea id="studioVoiceScript" rows="4" placeholder="Digite o texto da sua narração aqui ou clique em Montar Roteiro..."></textarea>
             <div class="char-meta">
-              <span id="studioCharInfo">0 caracteres • Ideal para 10s: 130 a 170 caracteres</span>
+              <span id="studioCharInfo">0 caracteres • Ideal para 10s: 120 a 170 caracteres</span>
               <span style="color:#7dd3fc;">Fallback triplo: ElevenLabs → MiniMax → Kokoro PT-BR</span>
             </div>
           </div>
@@ -372,7 +372,7 @@
     <div class="panel">
       <div class="step-label" id="previewTitle">Preview 9:16 &amp; Download MP4</div>
       <div class="preview-stage" id="stage">
-        <div class="status-msg"><strong>Motor Global Nota 10 Ativo (nos 100 modelos):</strong><br/>• <strong>Pipeline Direto 4x GPU:</strong> cada imagem vai na hora para o vídeo (entrega 6 a 8 cortes rápidos bem abaixo de 5 min)<br/>• <strong>Visibilidade 100% + Anti-Tampa:</strong> produto nunca some nem fecha caixa/maleta<br/>• <strong>Macros 100mm Ancorados:</strong> zero produto flutuando + brilho correndo no material</div>
+        <div class="status-msg"><strong>NEXORA.AI — Padrão Nota 10 nos 100 Modelos:</strong><br/>• <strong>Pipeline Direto Turbo:</strong> cada cena já anima na GPU sem esperar as outras (6–8 cortes rápidos &lt; 5 min)<br/>• <strong>Visibilidade 100% + Anti-Tampa Fechada:</strong> produto nunca some nem fica escondido por bordas/tampas<br/>• <strong>Macros 100mm Apoiados:</strong> textura real com luz correndo e zero flutuação</div>
       </div>
     </div>
   </div>
@@ -446,13 +446,15 @@
     }
 
     // =========================================================================
-    // 100 UNIVERSOS DE VÍDEO (50 HOLLYWOOD + 50 UGC, POV, ESTÚDIO PRO, LIFESTYLE)
+    // 100 UNIVERSOS DE VÍDEO (50 ORIGINAIS HOLLYWOOD + 50 NOVOS: UGC, POV, ESTÚDIO PRO, LIFESTYLE)
     // =========================================================================
+    const CONTAINER_MODEL_IDS = new Set([3, 23, 37, 52, 67, 71, 77]);
+
     const VIDEO_MODELS = [
       // === 01-10: AÇÃO, ECLIPSE & REATOR ===
       [1,"Acao",false,false,"#01 Eclipse Solar & Faíscas em Fúria","Coroa solar pulsando + macros extremos com faíscas douradas","blockbuster solar-eclipse commercial","smooth monolithic matte-black obsidian pedestal","Blazing fiery golden solar eclipse corona halo glowing behind with hot fire embers","The giant fiery solar eclipse corona flares, rotates and pulses with golden plasma waves while glowing embers drift rapidly across the dark sky behind","pitch-black shallow-depth bokeh with warm golden rim reflections and tiny glowing fire embers drifting past"],
       [2,"Acao",false,false,"#02 Reator Industrial (Strobe Vermelho)","Strobes vermelhos piscando + nuvens rápidas de vapor branco","high-voltage industrial reactor commercial","heavy matte-black obsidian pedestal inside an industrial reactor core","Flashing crimson emergency industrial lights cutting thick white reactor vapor behind","Crimson emergency reactor strobes flash rhythmically while thick pressurized clouds of white steam rush upward across the chamber","dark steel bokeh with pulsing crimson edge reflection and fast white vapor wisps"],
-      [3,"Acao",false,false,"#03 Cofre Tático Criogênico (Unboxing)","Maleta titânio travada 100% aberta + jatos velozes de vapor gelado","military sci-fi tactical unboxing commercial","flat open matte-black titanium tactical vault case lined with laser-cut black carbon foam (lid locked 100% open flat back)","Dark security bunker with crisp overhead spotlight slicing cold pneumatic steam","Horizontal blasts of white cryogenic steam shoot rapidly across the dark bunker behind while overhead spotlights sweep dynamically through swirling mist","dark brushed-titanium and carbon-foam studio macro with crisp white rim sheen and fine frosty bokeh"],
+      [3,"Acao",false,false,"#03 Cofre Tático Criogênico (Unboxing)","Maleta titânio travada 100% aberta + jatos velozes de vapor gelado","military sci-fi tactical unboxing commercial","low-profile matte-black titanium tactical tray lined with laser-cut black carbon foam (lid locked permanently 100% wide open behind)","Dark security bunker with crisp overhead spotlight slicing cold pneumatic steam","Horizontal blasts of white cryogenic steam shoot rapidly across the dark bunker behind while overhead spotlights flicker through swirling mist (case lid stays 100% motionless and wide open)","dark carbon-foam macro with crisp cold steel-blue studio rim sheen and subtle vapor bokeh"],
       [4,"Acao",false,false,"#04 Joalheria Noir & Partículas Vivas","Fundo preto absoluto com feixes de luz varrendo e partículas douradas","haute-precision dark commercial","glossy pure-black mirror pedestal in a velvet pitch-black studio","Pinpoint warm-white commercial spotlights and bright floating golden dust motes","Razor-sharp commercial light shafts sweep rapidly across the dark velvet void as shimmering golden dust motes swirl swiftly","velvet pitch-black macro studio with sweeping liquid-white specular bar and golden micro-bokeh"],
       [5,"Acao",false,false,"#05 Pit-Lane Noturno Fórmula 1","Asfalto de pista sob holofotes piscando e fumaça veloz de pneu","night motorsport F1 pit-lane commercial","textured dark motorsport tarmac pit-lane surface","Bright pit-lane floodlights slicing thick white tire smoke in dark night depth","Intense pit-lane floodlights strobe and sweep rapidly as turbulent tire-burnout smoke billows fast across the night racetrack","dark asphalt bokeh with blazing white stadium spotlight streak across the product finish"],
       [6,"Acao",false,false,"#06 Beco Cyberpunk sob Chuva Neon","Chuva intensa diagonal, vapor urbano e luzes neon ciano/magenta","dark cyberpunk Neo-Tokyo street commercial","rain-slicked wet black urban asphalt slate","Electric cyan and hot-magenta neon reflections shimmering on wet pavement with rain mist","Slanted driving rain streaks rapidly through flickering electric cyan and magenta neon signs while street steam swirls across wet asphalt","wet dark macro bokeh with subtle electric-cyan and magenta edge reflections"],
@@ -476,7 +478,7 @@
       // === 21-30: LUXO NOIR & JOALHERIA ===
       [21,"Luxo",false,false,"#21 Cofre Suíço 007 (Ouro Líquido)","Feixes de luz dourada correndo no mármore negro e neblina","Swiss luxury neo-noir commercial","polished Nero Marquina black marble slab inside a velvety dark vault","Sculptural warm liquid-gold overhead rim lighting grazing silky dark mist","Sleek liquid-gold studio light beams glide swiftly across the polished black marble while curling noir mist drifts dynamically","velvety noir macro with warm liquid-gold light sweeping across materials"],
       [22,"Luxo",false,false,"#22 Blackout Keynote (Lançamento Pro)","Barras cirúrgicas de luz branca deslizando no vidro black piano","flagship keynote blackout launch commercial","glossy black piano-glass stage against an infinite pitch-black horizon","Surgical pure-white overhead softbox bars reflected cleanly on black glass","Precision pure-white overhead keynote light bars glide briskly across the dark horizon painting liquid-white reflections over black glass","surgical keynote pitch-black macro with pure-white softbox highlight gliding cleanly"],
-      [23,"Luxo",false,false,"#23 Unboxing Maleta Carbono VIP","Maleta de carbono travada aberta com holofotes varrendo e névoa fina","bespoke carbon-collector unboxing commercial","flat open matte carbon-fiber luxury collector tray lined with charcoal Alcantara foam (lid locked 100% open)","Dark VIP gallery lighting with focused overhead spotlight and drifting haze","Focused overhead gallery spotlights sweep dynamically over the open carbon collector case as silky mist drifts continuously","matte carbon-fiber macro texture with focused VIP white spotlight sheen"],
+      [23,"Luxo",false,false,"#23 Unboxing Maleta Carbono VIP","Maleta carbono travada aberta com holofotes varrendo e névoa fina","bespoke carbon-collector unboxing commercial","low-rim open matte carbon-fiber luxury collector tray lined with dark charcoal Alcantara foam (lid fixed wide open)","Dark VIP gallery lighting with focused overhead spotlight and drifting haze","Focused overhead gallery spotlights sweep dynamically over the open carbon collector case as silky mist drifts continuously behind","matte carbon-fiber macro texture with focused VIP white spotlight sheen"],
       [24,"Luxo",false,false,"#24 Veludo Esmeralda & Latão Nobre","Brilhos dourados correndo sobre veludo esmeralda e partículas","haute-boutique emerald-brass commercial","deep emerald-green velvet podium trimmed with brushed antique brass bars","Moody Parisian high-jewelry vault lit by golden overhead spotlights","Warm golden pinpoint spotlights glide dynamically across the antique brass trim and emerald velvet as glowing dust motes dance","deep emerald and antique-gold boutique macro bokeh with warm specular sweep"],
       [25,"Luxo",false,false,"#25 Dunas Douradas ao Pôr do Sol","Vento forte soprando areia dourada sobre a duna sob sol quente","epic golden-desert commercial","wind-carved golden Sahara sand dune crest","Low blazing amber sunset with golden sand wisps over desert dunes","Strong desert winds blow shimmering streams of golden sand across sunlit dune crests while warm sunset flares pulse","warm golden-hour desert macro light with fine sunlit sand sparkle"],
       [26,"Luxo",false,false,"#26 Vidro com Chuva & Cobertura","Gotas escorrendo no vidro + luzes noturnas da cidade cintilando","billionaire rainy-penthouse commercial","dark honed stone ledge beside floor-to-ceiling rain-streaked penthouse glass","Golden midnight metropolis bokeh sparkling through rain-streaked glass","Raindrops streak briskly down the towering penthouse glass while golden metropolitan skyscraper lights shimmer alive outside","creamy golden night-city bokeh behind rain-kissed dark luxury reflections"],
@@ -492,7 +494,7 @@
       [34,"Viral",false,false,"#34 Vidro Molhado & Gotículas HD","Gotículas faiscando sob flashes ciano e água fina em movimento","hyper-tactile wet-glass commercial","dark tempered glass slab covered in crisp hyper-realistic water droplets","Electric-cyan and pure-white directional lights making surrounding droplets sparkle","Fast sweeping electric-cyan and white rim lights make crisp water droplets on dark glass sparkle continuously as fine mist drifts","hyper-tactile dark wet-surface macro with sparkling micro-droplet bokeh"],
       [35,"Viral",false,false,"#35 Palco Dual Rim Ouro & Ciano","Luzes opostas ouro e ciano girando e cruzando no estúdio dark","viral dual-rim showcase commercial","glossy dark slate flagship stage","Bold dual warm-gold and electric-cyan studio background rim lighting","Opposing warm-gold and electric-cyan cinema spotlights sweep and cross rapidly behind the dark slate stage","dark studio macro with crisp opposing warm-gold and cool-cyan edge reflections"],
       [36,"Viral",false,false,"#36 Vitrine Estúdio LED Vertical","Tubos verticais de LED piscando em sequência rítmica no escuro","flagship LED-studio showcase commercial","sleek glossy dark studio showcase pedestal","Symmetrical vertical cinema LED tubes in dark background","Symmetrical rows of bright vertical cinema LED tubes pulse and chase in high-speed rhythmic light waves across the dark backdrop","sleek dark studio macro with rhythmic pure-white vertical light reflection gliding across"],
-      [37,"Viral",false,false,"#37 Unboxing Caixa Magnética Preta","Caixa preta travada aberta com holofote dinâmico varrendo e névoa","viral luxury-box unboxing commercial","flat open matte-black rigid magnetic collector tray lined with dark custom foam on slate (lid locked 100% open)","Focused warm-white overhead studio spotlight carving high-trust contrast","Crisp overhead studio spotlights glide smoothly over the open matte-black collector box while subtle illuminated mist drifts","high-trust dark unboxing macro with crisp neutral-white key light"],
+      [37,"Viral",false,false,"#37 Unboxing Caixa Magnética Preta","Caixa preta travada aberta com holofote dinâmico varrendo","viral luxury-box unboxing commercial","low-rim open matte-black rigid magnetic collector box lined with dark custom foam on slate (lid locked permanently open)","Focused warm-white overhead studio spotlight carving high-trust contrast","Crisp overhead studio spotlights glide smoothly over the open matte-black collector box while subtle illuminated mist drifts behind","high-trust dark unboxing macro with crisp neutral-white key light"],
       [38,"Viral",false,false,"#38 Estúdio Off-White Clean Pro","Sombras solares geométricas correndo no estúdio claro milionário","high-converting clean DTC brand commercial","crisp architectural off-white matte studio pedestal","Bold diagonal architectural sunlight shadows across spotless off-white backdrop","Crisp graphic architectural sunlight shadows sweep briskly across the bright off-white studio wall creating lively modern motion","bright clean off-white studio macro with crisp moving sunlight shadows"],
       [39,"Viral",false,false,"#39 Concreto Urbano & Grafite","Flashes urbanos estroboscópicos com luzes coloridas passando","street-art urban flash commercial","raw dark urban concrete block in a colorful dusk graffiti alley","Vibrant neon graffiti bokeh behind with punchy crisp commercial front light","Energetic urban night light streaks and rhythmic camera flashes pulse dynamically across the colorful blurred street-art alley","punchy urban concrete macro with colorful dusk bokeh behind"],
       [40,"Viral",false,false,"#40 Superprodução IMAX Definitiva","God-rays teal & ouro girando + vapor veloz + chuva de brasas","ultimate IMAX blockbuster commercial","monumental black obsidian mirror pedestal","Epic dark IMAX soundstage with teal-and-gold god-rays, vapor and embers","Monumental teal-and-gold volumetric god-rays sweep across the dark IMAX soundstage as white vapor billows and orange embers rise","epic IMAX dark macro with sweeping teal-and-gold studio light beams"],
@@ -506,12 +508,12 @@
       [46,"Personagem",true,false,"#46 Milionário no Iate Pôr do Sol","Ondas douradas brilhando em movimento e brisa solar no deck","aspirational mega-yacht sunset commercial","polished luxury yacht teak wood table","Warm golden hour ocean sunlight and shimmering turquoise sea bokeh","Sparkling golden sunset ocean waves roll dynamically behind the yacht deck while warm cinema sun flares glide across teak wood","golden sunset yacht macro with shimmering ocean bokeh"],
       [47,"Personagem",true,false,"#47 Pro Gamer em Arena Esports","Holofotes ciano e vermelhos varrendo fumaça na arena","high-voltage esports arena commercial","matte dark carbon-fiber esports tournament desk","Electric-blue and crimson tournament stage lights cutting arena haze","Sweeping electric-blue and crimson esports stage beams scan rapidly through swirling arena smoke behind the dark carbon desk","dark esports carbon macro with sweeping electric-blue and crimson rim reflections"],
       [48,"Personagem",true,false,"#48 Mulher Sofisticada Café Paris","Brisa matinal movimentando sombras douradas na mesa de mármore","aspirational European lifestyle commercial","bright white veined Parisian marble cafe table","Warm golden morning sunlight and creamy European street bokeh","Warm golden morning sunlight and dappled tree-leaf shadows dance briskly across the marble cafe table as Parisian street life glides","bright golden-morning marble macro with warm European sunlit bokeh"],
-      [49,"Personagem",true,false,"#49 Agente Tático no Heliponto","Holofote azul de helicóptero varrendo chuva e névoa noturna","action-thriller helipad commercial","wet matte-black armored tactical case on dark rooftop helipad (lid locked 100% open)","Dramatic blue helipad searchlight cutting fine night rain mist","A bright blue helicopter searchlight sweeps dynamically across driving night rain and turbulent wind-blown mist over the rooftop","wet armored-case macro with sweeping cool-blue searchlight sheen"],
+      [49,"Personagem",true,false,"#49 Agente Tático no Heliponto","Holofote azul de helicóptero varrendo chuva e névoa noturna","action-thriller helipad commercial","wet matte-black armored tactical tabletop on dark rooftop helipad","Dramatic blue helipad searchlight cutting fine night rain mist","A bright blue helicopter searchlight sweeps dynamically across driving night rain and turbulent wind-blown mist over the rooftop","wet dark tactical macro with sweeping cool-blue searchlight sheen"],
       [50,"Personagem",true,false,"#50 DJ em Palco Neon Subterrâneo","Lasers verdes e violetas varrendo rápido fumaça de festival","underground festival laser-show commercial","glossy pitch-black festival DJ booth console","Emerald and violet volumetric club lasers glowing brightly in dark haze","Syncopated emerald and violet volumetric laser fans sweep rapidly through pulsing festival smoke in deep background bokeh","pitch-black club macro with sweeping emerald and violet specular reflections"],
 
       // === 51-65: UGC CRIADOR REAL (15 MODELOS) ===
-      [51,"UGC",true,true,"#51 UGC Review Autêntico na Janela","Criador real mostrando o produto na luz natural da janela (estilo TikTok viral)","authentic vertical smartphone UGC review commercial","clean light oak desk right beside a bright sunlit apartment window","Crisp natural daylight pouring through sheer curtains creating warm authentic home lighting","Natural sunlit dust motes float gently as the creator presents the exact product confidently toward the vertical phone lens","bright natural window-light macro revealing real surface texture and authentic craft"],
-      [52,"UGC",true,true,"#52 UGC Unboxing Direto da Caixa","Criador abrindo encomenda real na mesa com reação genuína de surpresa","authentic viral TikTok Shop UGC unboxing","warm wooden living-room table with fully open brown parcel box flat beside (flaps folded wide open)","Bright natural indoor daylight with clean authentic smartphone dynamic range","The creator showcases the exact product clearly in sharp foreground beside the open parcel with natural authentic presence","crisp indoor daylight close-up highlighting authentic packaging and product finish"],
+      [51,"UGC",true,true,"#51 UGC Review Autêntico na Janela","Criador real mostrando o produto na luz natural da janela (estilo TikTok viral)","authentic vertical smartphone UGC review commercial","clean light oak desk right beside a bright sunlit apartment window","Crisp natural daylight pouring through sheer curtains creating warm authentic home lighting","Natural sunlit dust motes float gently as the creator presents the exact product clearly toward the vertical phone lens","bright natural window-light macro revealing real surface texture and authentic craft"],
+      [52,"UGC",true,true,"#52 UGC Unboxing Direto da Caixa","Criador exibindo encomenda já aberta na mesa com reação genuína","authentic viral TikTok Shop UGC unboxing","warm wooden living-room table with wide-open low brown parcel box neatly displaying the product","Bright natural indoor daylight with clean authentic smartphone dynamic range","Natural smooth smartphone glide showcasing the exact product clearly out in the open beside the opened parcel","crisp indoor daylight close-up highlighting authentic product finish on warm wood"],
       [53,"UGC",true,true,"#53 UGC Espelho & Get Ready With Me","Estilo GRWM no espelho do quarto com luz aconchegante e estética viral","authentic GRWM mirror UGC lifestyle ad","sleek bedroom vanity shelf in front of a softly lit mirror","Warm golden bedroom lamp light blended with crisp natural window fill","Subtle natural handheld camera sway while the creator showcases the product cleanly in foreground before stepping out","warm cozy indoor aesthetic macro with soft natural specular highlights"],
       [54,"UGC",true,true,"#54 UGC Carro Estacionado (Achadinho)","Review espontâneo dentro do carro (altíssima conversão no TikTok Brasil)","authentic inside-car TikTok Shop UGC review","clean modern dark car dashboard and steering cabin interior","Bright natural daylight streaming through windshield with crisp shadows","Subtle realistic handheld smartphone motion inside the bright car interior as the creator shows the exact product clearly","crisp daylight car-interior macro showing real textures and materials"],
       [55,"UGC",true,true,"#55 UGC Setup Home-Office Creator","Criador tech mostrando o achadinho na bancada moderna com LED suave","modern Brazilian creator desk UGC commercial","minimalist matte walnut and dark desk mat with blurred monitor glow behind","Clean softbox key light paired with subtle warm ambient desk lamp bokeh","Dynamic handheld smartphone push-in across the modern creator desk while warm background bokeh breathes subtly","clean softbox studio-desk macro with crisp authentic reflection"],
@@ -527,27 +529,27 @@
       [65,"UGC",true,true,"#65 UGC Café & Produtividade","Mesa de cafeteria moderna com laptop desfocado e luz aconchegante","modern cafe productivity UGC commercial","warm rustic wood coffee shop table with cozy warm cafe bokeh behind","Soft window daylight mixed with warm amber pendant cafe bulbs","Cozy blurred coffee shop movement and warm window light flow softly behind the razor-sharp foreground product","warm cafe window-light macro with creamy amber bokeh"],
 
       // === 66-80: POV PRIMEIRA PESSOA (15 MODELOS) ===
-      [66,"POV",true,true,"#66 POV Mãos Apresentando à Câmera","Primeira pessoa real: mãos segurando e inclinando o produto perto da lente","immersive first-person POV hands-on showcase","natural first-person POV over a clean matte desk with soft blurred background","Crisp directional natural window light highlighting real hand-held scale","First-person POV hands gently tilt the exact product slightly (±15° only, keeping front clearly visible) so light gleams across its real texture","ultra-close first-person POV macro with crisp natural light sliding across the front surface"],
-      [67,"POV",true,true,"#67 POV Abrindo Encomenda (Chegou!)","POV olhando de cima com caixa aberta exibindo o produto limpo","first-person POV parcel arrival unboxing","clean wooden desk surface with wide-open flat delivery box and crisp tissue paper (flaps locked wide open)","Bright natural overhead room light with authentic smartphone sharpness","First-person POV camera pushes smoothly downward revealing the exact product unobstructed and centered inside the wide-open box","crisp overhead POV unboxing macro highlighting mint-condition finish"],
+      [66,"POV",true,true,"#66 POV Mãos Apresentando à Câmera","Primeira pessoa real: mãos exibindo o produto perto da lente","immersive first-person POV hands-on showcase","natural first-person POV over a clean matte desk with soft blurred background","Crisp directional natural window light highlighting real hand-held scale","First-person POV hands gently tilt the exact product slightly (±15° only, keeping front 100% visible) so light gleams across its real texture","ultra-close first-person POV macro grounded on matte desk with crisp natural light sliding across the front surface"],
+      [67,"POV",true,true,"#67 POV Abrindo Encomenda (Chegou!)","POV olhando de cima da caixa já aberta revelando o produto intacto","first-person POV parcel arrival unboxing","clean wooden desk surface with low wide-open delivery box and neat tissue paper (flaps folded flat open)","Bright natural overhead room light with authentic smartphone sharpness","First-person POV camera pushes smoothly downward from 45° showing the exact product clearly unobstructed inside the wide-open parcel","crisp overhead POV unboxing macro highlighting mint-condition finish"],
       [68,"POV",true,true,"#68 POV Testando no Setup Gamer/Tech","POV sentado na mesa tech aproximando o produto da lente sob luz LED","first-person POV tech desk inspection","sleek dark gaming/creator desk mat with soft blurred RGB monitor behind","Clean neutral front desk lamp illuminating true product colors against dark tech bokeh","First-person POV camera glides forward over the dark desk pad as subtle monitor light shifts in background bokeh","crisp dark-desk POV macro with smooth specular edge highlight"],
       [69,"POV",true,true,"#69 POV Pegando na Mesa Para Sair","POV mão alcançando e exibindo o item essencial na luz da manhã","first-person POV morning grab-and-go","minimalist slate tabletop beside keys and sunglasses in soft morning light","Bright golden morning sunbeams slicing diagonally across the room","Smooth first-person POV glide approaching the exact product on the morning tabletop as sunlit motes drift","warm morning-light POV macro with crisp metallic and matte contrast"],
       [70,"POV",true,true,"#70 POV Dentro do Carro (Dia de Sol)","POV no banco do motorista mostrando o produto sob sol real","first-person POV driver-seat showcase","clean dark luxury car interior console with sunlit city road blurred outside","Bright natural daylight through windshield giving hyper-real clarity","First-person POV slight organic handheld motion as bright outdoor light plays smoothly across the product inside the cabin","crisp sunlit car-cabin POV macro showing real materials"],
-      [71,"POV",true,true,"#71 POV Mochila / Kit EDC Tático","POV com mochila tática aberta plana revelando o produto organizado","first-person POV everyday-carry backpack reveal","flat wide-open dark technical everyday-carry organizer tray on textured matte table (zipper open flat)","Clean punchy directional light carving crisp texture across fabric and hardware","First-person POV smooth push-in into the neatly arranged everyday-carry kit with the exact product dead-center and fully unobstructed","tactile EDC dark-bag POV macro with sharp directional light"],
-      [72,"POV",true,true,"#72 POV Ao Ar Livre Sob Sol Real","POV segurando o produto ao sol para provar brilho e acabamento real","first-person POV direct-sunlight authenticity test","outdoor sunlit terrace backdrop with crisp blue sky and city bokeh","Direct authentic Brazilian sunlight creating dazzling real specular reflections","First-person POV gentle micro-tilt in bright direct sunlight making the real material texture and authentic reflections sparkle vividly","dazzling direct-sunlight POV macro revealing true surface finish and shine"],
-      [73,"POV",true,true,"#73 POV Caminhada Noturna na Cidade","POV na rua à noite com luzes de vitrines e postes brilhando atrás","first-person POV midnight city-walk showcase","nighttime metropolitan avenue backdrop with glowing golden streetlights and neon bokeh","Crisp neutral front light on the product backed by rich moving city night bokeh","First-person POV smooth forward camera glide through vibrant blurred city lights reflecting softly across the product edges","cinematic night-street POV macro with glowing golden-cyan city bokeh"],
+      [71,"POV",true,true,"#71 POV Mochila / Kit EDC Tático","POV com bolsa EDC totalmente aberta revelando o produto centralizado","first-person POV everyday-carry backpack reveal","flat wide-open dark technical everyday-carry organizer mat on textured matte table","Clean punchy directional light carving crisp texture across fabric and hardware","First-person POV smooth 45° push-in into the flat wide-open everyday-carry kit with the exact product dead-center and unobstructed","tactile EDC dark-bag POV macro with sharp directional light"],
+      [72,"POV",true,true,"#72 POV Ao Ar Livre Sob Sol Real","POV segurando o produto ao sol para provar brilho e acabamento real","first-person POV direct-sunlight authenticity test","outdoor sunlit terrace ledge with crisp blue sky and city bokeh","Direct authentic Brazilian sunlight creating dazzling real specular reflections","First-person POV gentle micro-tilt in bright direct sunlight making the real material texture and authentic reflections sparkle vividly","dazzling direct-sunlight POV macro revealing true surface finish and shine"],
+      [73,"POV",true,true,"#73 POV Caminhada Noturna na Cidade","POV na rua à noite com luzes de vitrines e postes brilhando atrás","first-person POV midnight city-walk showcase","nighttime metropolitan stone rail with glowing golden streetlights and neon bokeh","Crisp neutral front light on the product backed by rich moving city night bokeh","First-person POV smooth forward camera glide through vibrant blurred city lights reflecting softly across the product edges","cinematic night-street POV macro with glowing golden-cyan city bokeh"],
       [74,"POV",true,true,"#74 POV No Espelho do Banheiro/Quarto","POV rotina de cuidados mostrando o produto sobre a pia de mármore","first-person POV morning self-care routine","bright white marble bathroom counter with soft illuminated mirror light","Clean crisp spa-like morning lighting with soft bright reflections","Smooth first-person POV push-in toward the exact product on the bright marble counter with subtle steam wisps behind","clean spa-light marble POV macro with crisp white highlights"],
-      [75,"POV",true,true,"#75 POV Zoom Extremo no Detalhe","POV trazendo o produto bem perto da lente para inspecionar qualidade","first-person POV close-up quality inspection","clean dark charcoal studio surface blurred out smoothly behind","Precision neutral-white studio key light showing zero flaws and real grain","First-person POV brisk forward lens push bringing the exact product razor-sharp into extreme detail inspection","extreme 100mm POV inspection macro filling frame with crisp authentic grain"],
-      [76,"POV",true,true,"#76 POV Teste de Respingos / Resistência","POV borrifando leve névoa/gotículas finas perto do produto sobre pedra","first-person POV water-droplet resilience showcase","dark wet slate countertop with fine sparkling mist droplets","High-contrast directional rim light making fine water droplets glisten cleanly","Fine backlit water mist sparkles dynamically across the dark slate around the exact product during a brisk POV push-in","crisp wet-slate POV macro with sparkling micro-droplets and sharp specular sheen"],
-      [77,"POV",true,true,"#77 POV Presente de Luxo (Caixa Laço)","POV exibindo caixa presente aberta de luxo sobre mesa clara","first-person POV luxury gift-box reveal","flat open luxury black-and-gold rigid gift tray resting on clean travertine table (lid completely removed beside)","Warm flattering boutique overhead lighting with crisp highlights","First-person POV smooth crane descent into the wide-open luxury gift tray revealing the exact product centered cleanly","warm luxury gift-box POV macro with soft golden specular glide"],
+      [75,"POV",true,true,"#75 POV Zoom Extremo no Detalhe","POV trazendo a lente bem perto do produto para inspecionar qualidade","first-person POV close-up quality inspection","clean dark charcoal studio table with background blurred out completely","Precision neutral-white studio key light showing zero flaws and real grain","First-person POV brisk forward lens push bringing the exact product razor-sharp into extreme detail inspection","extreme 100mm POV inspection macro grounded on dark surface filling frame with authentic grain"],
+      [76,"POV",true,true,"#76 POV Teste de Respingos / Resistência","POV névoa/gotículas finas perto do produto sobre pedra escura","first-person POV water-droplet resilience showcase","dark wet slate countertop with fine sparkling mist droplets","High-contrast directional rim light making fine water droplets glisten cleanly","Fine backlit water mist sparkles dynamically across the dark slate around the exact product during a brisk POV push-in","crisp wet-slate POV macro with sparkling micro-droplets and sharp specular sheen"],
+      [77,"POV",true,true,"#77 POV Presente de Luxo (Caixa Laço)","POV caixa presente aberta sobre mesa clara exibindo o produto no centro","first-person POV luxury gift-box reveal","low-rim wide-open luxury black-and-gold rigid gift box resting on clean travertine table (lid completely removed beside)","Warm flattering boutique overhead lighting with crisp highlights","First-person POV smooth 45° crane descent into the open luxury gift box revealing the exact product centered and 100% visible","warm luxury gift-box POV macro with soft golden specular glide"],
       [78,"POV",true,true,"#78 POV Mesa de Restaurante / Jantar","POV exibindo o produto na mesa elegante com velas desfocadas","first-person POV upscale evening dinner table","dark oak upscale restaurant table with warm candlelit bokeh behind","Moody golden candlelight ambiance paired with crisp clean fill light on product","Warm candle flames flicker softly in creamy background bokeh as the POV camera glides smoothly toward the product","warm candlelit evening POV macro with rich golden reflections"],
-      [79,"POV",true,true,"#79 POV Academia / Pós-Treino","POV tirando o produto da bolsa esportiva sob luz forte de academia","first-person POV gym-bag essential reveal","dark matte gym bench beside sleek black sports duffel bag","Punchy overhead athletic lighting with bright modern gym bokeh behind","Energetic first-person POV push-in over the dark gym bench with bright athletic arena bokeh moving subtly behind","punchy athletic-light POV macro showing solid build details"],
+      [79,"POV",true,true,"#79 POV Academia / Pós-Treino","POV produto na bancada esportiva sob luz forte de academia","first-person POV gym-bag essential reveal","dark matte gym bench beside sleek black sports duffel bag","Punchy overhead athletic lighting with bright modern gym bokeh behind","Energetic first-person POV push-in over the dark gym bench with bright athletic arena bokeh moving subtly behind","punchy athletic-light POV macro showing solid build details"],
       [80,"POV",true,true,"#80 POV Comparativo de Qualidade Real","POV posicionando o produto em estúdio minimalista para mostrar acabamento","first-person POV tactile craftsmanship showcase","clean brushed architectural concrete table in bright modern studio","Crisp museum-grade softbox lighting revealing every real edge and texture","Confident first-person POV tracking sweep across the exact product highlighting precision craftsmanship and true colors","museum-grade softbox POV macro with crisp traveling light reflection"],
 
-      // === 81-90: ESTÚDIO PRO MACRO (10 MODELOS — ESTILO VÍDEOS DE REFERÊNCIA) ===
-      [81,"EstudioPro",false,false,"#81 Relojoaria & Macro Aço Escovado","Estilo vídeo referência: feixes de luz correndo no metal/textura em fundo grafite","Swiss horology ultra-macro studio commercial","dark brushed slate-graphite studio plinth in moody pitch-black void","Razor-sharp moving silver-white commercial light bars gliding continuously across every curve and bevel","Precision silver-white softbox light ribbons sweep continuously across the dark graphite stage, making every metallic bevel and surface grain gleam dynamically","ultra-tight Swiss horology macro with a crisp silver-white light ribbon sliding across the brushed surface"],
+      // === 81-90: ESTÚDIO PRO MACRO (10 MODELOS) ===
+      [81,"EstudioPro",false,false,"#81 Relojoaria & Macro Aço Escovado","Estilo comercial suíço: feixes de luz correndo no material em fundo grafite","Swiss horology ultra-macro studio commercial","dark brushed slate-graphite studio plinth in moody pitch-black void","Razor-sharp moving silver-white commercial light bars gliding continuously across every curve and bevel","Precision silver-white softbox light ribbons sweep continuously across the dark graphite stage, making every metallic bevel and surface grain gleam dynamically","ultra-tight Swiss horology macro with a crisp silver-white light ribbon sliding across the brushed surface"],
       [82,"EstudioPro",false,false,"#82 Reflexo Duplo Espelhado Infinito","Espelho negro absoluto duplicando a silhueta do produto com luz dourada","mirror-reflection luxury flagship commercial","flawless black infinity mirror surface creating a razor-sharp vertical reflection below","Sculptural warm-white and subtle amber overhead cinema key lights gliding smoothly","Smooth overhead commercial light shafts glide across the infinity mirror, making the product and its crisp mirror reflection glow dynamically","glossy black mirror macro with crisp liquid-white specular line racing across the finish"],
       [83,"EstudioPro",false,false,"#83 Pedra Vulcânica & Feixe Cirúrgico","Rocha basáltica escura com feixe de luz branca cortando a cena","volcanic-basalt architectural studio commercial","sculpted raw dark volcanic basalt slab in pitch-black studio","Single razor-sharp pure-white overhead beam slicing dark atmospheric haze","A surgical pure-white cinema light beam sweeps slowly and purposefully across the dark volcanic basalt and product contours through fine haze","dark volcanic-stone macro with razor-sharp pure-white light beam grazing texture"],
-      [84,"EstudioPro",false,false,"#84 Mesa Tática Top-Down EDC Dark","Visualização limpa sobre tecido/maleta tática escura com sombras precisas","tactical dark-fabric flat-lay showcase commercial","flat wide-open dark matte ballistic-nylon tactical organizer pad on dark slate","Crisp directional studio side-lighting sculpting every stitch, edge and contour","Focused directional studio lighting sweeps briskly across the tactical dark surface creating sharp kinetic shadows","crisp tactical dark-surface macro with precision side-light highlighting edges"],
+      [84,"EstudioPro",false,false,"#84 Mesa Tática Top-Down EDC Dark","Visualização limpa sobre tecido/maleta tática escura com sombras precisas","tactical dark-fabric flat-lay showcase commercial","flat heavy dark matte ballistic-nylon tactical organizer pad on dark slate","Crisp directional studio side-lighting sculpting every stitch, edge and contour","Focused directional studio lighting sweeps briskly across the tactical dark surface creating sharp kinetic shadows","crisp tactical dark-surface macro with precision side-light highlighting edges"],
       [85,"EstudioPro",false,false,"#85 Luz Solar Real na Janela (Orgânico)","Feixes reais de sol quente atravessando persiana com poeira dourada","organic golden-sunbeam studio commercial","warm honed dark limestone block inside a sunlit architectural studio","Warm real golden afternoon sunbeams slicing through architectural blinds with floating sunlit dust","Warm golden sunbeams and crisp architectural blind shadows glide steadily across the limestone stage as tiny sunlit dust sparkles","warm real-sunlight macro with golden specular glint sliding over surface grain"],
       [86,"EstudioPro",false,false,"#86 Grafite Infinito & Feixe Azul Sutil","Fundo grafite fosco elegante com linha de luz azul-prata em movimento","precision tech flagship commercial","matte dark gunmetal-graphite architectural pedestal","Pure neutral-white product key light backed by a sleek sweeping ice-blue studio horizon line","A sleek ice-blue and silver architectural light line sweeps smoothly across the dark gunmetal horizon while crisp white key light glides over the product","dark gunmetal macro with crisp silver-white key light and subtle ice-blue rim sheen"],
       [87,"EstudioPro",false,false,"#87 Arco de Luzes 360° (Virtual Spin)","Câmera firme + anel de holofotes girando rápido ao redor do produto","dynamic orbiting-light studio commercial","glossy obsidian showcase disc inside a pitch-black commercial cyclorama","Multiple precision studio spotlights orbiting smoothly around the anchored product","Bright commercial studio spotlights orbit continuously around the anchored product, painting fast rhythmic specular highlights across every front contour","pitch-black cyclorama macro with continuous orbiting studio reflections gliding over the surface"],
@@ -555,7 +557,7 @@
       [89,"EstudioPro",false,false,"#89 Galeria Brutalista Concreto Polido","Arquitetura minimalista de concreto escuro com luz de museu","brutalist museum-gallery commercial","massive monolithic dark polished concrete plinth inside a minimalist gallery","Dramatic museum skylight beam sweeping cleanly across raw concrete architecture","A commanding overhead skylight beam glides smoothly across the dark brutalist concrete gallery creating deep sculptural depth","museum-grade brutalist concrete macro with sculptural directional light"],
       [90,"EstudioPro",false,false,"#90 Pedestal Sobre Água Cristalina","Superfície de água limpa com ondas finas refletindo luz de estúdio","crystal-water serene luxury commercial","sleek floating dark slate plinth resting over calm crystal-clear studio water","Bright pure-white overhead studio softboxes casting shimmering water caustics","Gentle concentric ripples spread continuously across the crystal-clear water surface casting shimmering white caustics across the studio","crisp dark-slate macro with shimmering liquid-light caustics dancing subtly"],
 
-      // === 91-100: LIFESTYLE & AMBIENTES ASPIRACIONAIS (10 MODELOS) ===
+      // === 91-100: LIFESTYLE & AMBIENTES ASPIRACIONAIS ===
       [91,"Lifestyle",true,false,"#91 Montanha ao Amanhecer & Aventura","Cenário épico de montanha com névoa solar dourada correndo no vale","epic mountain-sunrise outdoor commercial","rugged natural dark alpine granite rock overlooking misty sunlit mountain peaks","Warm golden sunrise breaking through swirling mountain valley clouds","Golden sunrise rays sweep across rolling mountain mist and sunlit clouds moving briskly behind the rugged granite foreground","crisp outdoor alpine-sunrise macro with warm golden edge light"],
       [92,"Lifestyle",false,false,"#92 Praia Tropical & Brilho do Sol","Areia clara, mar turquesa cintilando ao fundo e brisa solar viva","tropical beach-sunlight lifestyle commercial","clean bleached driftwood podium overlooking sparkling turquoise ocean waves","Bright dazzling tropical sunlight creating crisp natural highlights","Turquoise ocean waves shimmer and roll smoothly under dazzling tropical sunlight in creamy background bokeh","bright tropical-sunlight macro with warm coastal specular sparkle"],
       [93,"Lifestyle",false,false,"#93 Setup Podcast & Creator Pro","Estúdio de podcast premium com luz quente e microfone desfocado atrás","pro creator-podcast studio commercial","rich dark walnut studio desk inside a modern acoustic-paneled creator studio","Warm amber practical studio lamps paired with crisp neutral white key light","Warm studio bokeh lights glow softly across dark acoustic panels while clean key light sweeps across the foreground product","modern walnut-studio macro with crisp white key light and warm amber bokeh"],
@@ -575,11 +577,6 @@
         : `exact real-sized product resting on ${m.surface}, high-speed frozen commercial action photography of: ${m.envMotion}`
     }));
 
-    function hasCaseOrBox(m) {
-      const txt = `${m.name} ${m.surface} ${m.desc}`.toLowerCase();
-      return /(maleta|caixa|cofre|mochila|parcel|vault case|collector|gift box|gift tray|organizer|unboxing)/.test(txt);
-    }
-
     const ORIENTATION_RULES = {
       flat: {
         short: "lying HORIZONTALLY FLAT on its natural bottom base in 3D table-level perspective (NEVER propped vertically upright)",
@@ -595,11 +592,14 @@
       }
     };
 
+    function isContainerModel(m) {
+      return CONTAINER_MODEL_IDS.has(m.id) || productOrientation.value === "flat_lay";
+    }
+
     // =========================================================================
-    // 12 PLANOS CINEMATOGRÁFICOS RADICAIS (UNIVERSAIS P/ OS 100 MODELOS)
-    // - Macros 100mm SEMPRE ancorados na superfície real (zero produto flutuando)
-    // - Câmera respeita elevação segura quando o cenário usa caixa/maleta
-    // - ZERO palavra "Explosive" em qualquer plano
+    // 12 PLANOS CINEMATOGRÁFICOS RADICAIS (NOTA 10 NOS 100 MODELOS)
+    // - Macros 100mm sempre APOIADOS na superfície real (nunca flutuando)
+    // - Elevação automática em modelos de maleta/caixa (borda nunca tampa o produto)
     // =========================================================================
     const TWELVE_UNIQUE_SHOTS = [
       {
@@ -607,40 +607,35 @@
         shotType: "hero",
         allowPerson: true,
         editMove: "crashZoom",
-        frame: (m, macro, dna, orient, isBox) => {
-          const elev = isBox ? "elevated 35-degree" : "dramatic low";
-          if (m.isUGC) {
-            return `SHOT A (AUTHENTIC VERTICAL HOOK): High-retention 9:16 creator reveal. Exact product in razor-sharp unobstructed foreground focus on ${m.surface} (${m.cat === "POV" ? "held cleanly in first-person POV hands showing front face" : `${orient.short} with ${dna.cast.text}`}).`;
-          }
-          if (m.hasPerson) {
-            return `SHOT A (3/4 FOREGROUND HOOK): ${elev} three-quarter 9:16 commercial reveal. Exact product ${orient.short} in sharp unobstructed foreground focus on ${m.surface}, ${dna.surfaceNuance}, with ${dna.cast.text}.`;
-          }
-          return `SHOT A (DYNAMIC 3/4 HERO HOOK): Bold ${elev} left three-quarter 9:16 reveal of the exact product ${orient.short} on ${m.surface}, 100% unobstructed and framed dramatically against the live moving background, ${dna.surfaceNuance}.`;
-        },
-        camMotion: "High-speed kinetic snap-zoom gliding rapidly forward into the front-3/4 angle while bright moving commercial key lights sweep fast across the product surface"
+        frame: (m, macro, dna, orient, isBox) => m.isUGC
+          ? `SHOT A (AUTHENTIC VERTICAL HOOK): High-retention 9:16 creator reveal. Exact product 100% unobstructed in razor-sharp foreground focus on ${m.surface} (${m.cat === "POV" ? "held cleanly in first-person POV hands showing front face" : `${orient.short} with ${dna.cast.text}`}).`
+          : (m.hasPerson
+              ? `SHOT A (3/4 FOREGROUND HOOK): Dramatic ${isBox ? "elevated 35-degree" : "low"} three-quarter 9:16 commercial reveal. Exact product ${orient.short} 100% unobstructed in sharp foreground focus on ${m.surface}, ${dna.surfaceNuance}, with ${dna.cast.text}.`
+              : `SHOT A (DYNAMIC 3/4 HERO HOOK): Bold ${isBox ? "elevated 38-degree" : "low-angle"} left three-quarter 9:16 reveal of the exact product ${orient.short} 100% clearly visible on ${m.surface} framed dramatically against the live moving background, ${dna.surfaceNuance}.`),
+        camMotion: "High-speed kinetic snap-zoom pushing smoothly forward into the front-3/4 angle while keeping the entire product 100% unobstructed and bright commercial key lights sweep fast across its surface"
       },
       {
-        title: "Macro Extremo 100mm (Core)",
+        title: "Macro Extremo 100mm (Apoiado)",
         shotType: "macro",
         allowPerson: false,
         editMove: "macroSlam",
-        frame: (m, macro, dna, orient) => `SHOT B (EXTREME 100MM ULTRA-MACRO — 92% FRAME FILL): Extreme 100mm cinema macro lens zoomed tightly INTO ${macro} of the exact product resting solidly on ${m.surface} (NEVER floating in mid-air). The authentic product detail fills almost the ENTIRE vertical 9:16 frame with razor-sharp real material grain, grounded contact shadow and soft dark-studio bokeh behind.`,
-        camMotion: "Fast razor-sharp 100mm macro glide sweeping tightly across the primary controls, dial/surface and real finish while a crisp studio specular light ribbon slides rapidly across the material"
+        frame: (m, macro, dna, orient) => `SHOT B (EXTREME 100MM ULTRA-MACRO — 92% FRAME FILL, FIRMLY GROUNDED): Extreme cinema macro lens zoomed tightly INTO ${macro} of the exact product resting solidly on ${m.surface} (NEVER floating in mid-air). The product detail fills nearly the entire vertical 9:16 frame with razor-sharp authentic texture, real contact shadow and untouched original logo.`,
+        camMotion: "Fast razor-sharp 100mm macro glide sweeping tightly across the primary controls, dial/surface and real grounded finish while a crisp studio light ribbon slides rapidly across the material"
       },
       {
         title: "Contraplano 3/4 Direito (Tilt)",
         shotType: "angle",
         allowPerson: false,
         editMove: "whipLeft",
-        frame: (m, macro, dna, orient, isBox) => `SHOT C (OPPOSITE RIGHT 3/4 DYNAMIC TILT): Bold OPPOSITE right-side ${isBox ? "elevated 35-degree" : "three-quarter"} close-medium angle with stylish 8-degree cinematic Dutch tilt showing the exact product ${orient.short} unobstructed on ${m.surface}, breaking silhouette completely from left angles.`,
+        frame: (m, macro, dna, orient, isBox) => `SHOT C (OPPOSITE RIGHT 3/4 DYNAMIC TILT): Bold OPPOSITE right-side three-quarter ${isBox ? "elevated 35-degree " : ""}close-medium angle with stylish 8-degree cinematic Dutch tilt showing the exact product ${orient.short} 100% unobstructed on ${m.surface}.`,
         camMotion: "Rapid right-to-left frontal tracking whip racing along the opposite front flank with strong foreground parallax and sweeping specular reflections"
       },
       {
-        title: "Macro Textura & Bordas 100mm",
+        title: "Macro Bordas & Textura 100mm",
         shotType: "macro",
         allowPerson: false,
         editMove: "macroSlam",
-        frame: (m, macro, dna, orient) => `SHOT D (EXTREME DIAGONAL HARDWARE & EDGE MACRO — 90% FRAME FILL): Ultra-tight diagonal grazing-light close-up filling 90% of the vertical frame with the sculpted side edge, buttons/crown, bevels and tactile finish of the exact product anchored firmly on ${m.surface} (NEVER floating). Pure shallow macro depth-of-field.`,
+        frame: (m, macro, dna, orient) => `SHOT D (EXTREME DIAGONAL HARDWARE & EDGE MACRO — 90% FRAME FILL, GROUNDED): Ultra-tight diagonal grazing-light close-up filling 90% of the vertical frame with the sculpted side edge, buttons/crown, bevels and tactile finish of the exact product anchored firmly on ${m.surface}. Rich dark-light studio contrast, NEVER floating.`,
         camMotion: "Energetic diagonal macro slider racing swiftly across the sculpted contours and chamfered edges as bright grazing light gleams vividly across every detail"
       },
       {
@@ -648,35 +643,37 @@
         shotType: "angle",
         allowPerson: false,
         editMove: "zoomAttack",
-        frame: (m, macro, dna, orient) => `SHOT E (ELEVATED 45° TOP-DOWN ARCHITECTURAL): Crisp elevated 45-degree overhead commercial angle revealing the exact top geometry, clean symmetry and exact original logo of the product ${orient.short} unobstructed on ${m.surface}. Completely different perspective from eye-level shots.`,
-        camMotion: "Brisk descending overhead crane dive rushing smoothly down toward the unobstructed top face of the product as sweeping studio light glides across the entire top surface"
+        frame: (m, macro, dna, orient) => `SHOT E (ELEVATED 45° TOP-DOWN ARCHITECTURAL): Crisp elevated 45-degree overhead commercial angle revealing the exact top geometry, clean symmetry and untouched original logo of the product ${orient.short} resting clearly on ${m.surface}, 100% unobstructed.`,
+        camMotion: "Brisk descending overhead crane dive rushing smoothly down toward the top face of the product (staying high enough to keep product 100% unobstructed) as sweeping studio light glides across the top surface"
       },
       {
         title: "Macro Logo & Brilho Real",
         shotType: "macro",
         allowPerson: false,
         editMove: "whipRight",
-        frame: (m, macro, dna, orient) => `SHOT F (ULTRA-CLOSE FINISH & ORIGINAL LOGO MACRO — 88% FRAME FILL): Precision luxury commercial macro focused tightly on the exact original logo area and authentic surface material of the product resting firmly on ${m.surface}. Preserve exact original logo geometry and font with a crisp sweeping specular light bar.`,
+        frame: (m, macro, dna, orient) => `SHOT F (ULTRA-CLOSE FINISH & ORIGINAL LOGO MACRO — 88% FRAME FILL, GROUNDED): Precision luxury commercial macro focused tightly on the exact original logo area and authentic surface material of the product resting solidly on ${m.surface}. Preserve exact logo shape and font with ZERO distortion.`,
         camMotion: "Crisp fast-to-slow macro glide sweeping tightly across the authentic finish and exact original logo with a traveling studio reflection bar"
       },
       {
-        title: "Perfil Rasante Cinema",
+        title: "Perfil Baixo Rasante",
         shotType: "angle",
         allowPerson: false,
         editMove: "whipRight",
-        frame: (m, macro, dna, orient, isBox) => `SHOT G (${isBox ? "ELEVATED 30° FRONTAL PROFILE" : "ULTRA-LOW SURFACE-SKIMMING PROFILE"}): Crisp ${isBox ? "30-degree elevated" : "ground-skimming low"} frontal-side silhouette of the exact product ${orient.short} 100% unobstructed on ${m.surface}, commanding sharp foreground focus with dramatic moving bokeh behind.`,
-        camMotion: "Fast kinetic frontal arc (±18° max, staying strictly in front and keeping product 100% unobstructed) with intense background parallax"
+        frame: (m, macro, dna, orient, isBox) => isBox
+          ? `SHOT G (ELEVATED 38° FRONT-SIDE SHOWCASE): Clean elevated 38-degree angled side-front showcase looking clearly over the low rim onto the exact product ${orient.short} resting on ${m.surface}, 100% unobstructed with moving bokeh behind.`
+          : `SHOT G (ULTRA-LOW SURFACE-SKIMMING PROFILE): Ground-skimming low frontal-side silhouette of the exact product ${orient.short} on ${m.surface}, towering heroically in sharp foreground with dramatic moving bokeh far behind.`,
+        camMotion: "Fast kinetic frontal arc (±18° max, staying strictly in front and keeping entire product 100% unobstructed) with intense background parallax"
       },
       {
         title: "Contexto Real / Atmosfera",
         shotType: "context",
         allowPerson: true,
         editMove: "zoomAttack",
-        frame: (m, macro, dna, orient) => m.isUGC
-          ? `SHOT H (HANDS-ON REAL-WORLD CONTEXT): Authentic vertical commercial frame showing the exact product in natural real-life scale unobstructed on ${m.surface} (${m.cat === "POV" ? "first-person POV angle naturally presenting the front" : `with ${dna.cast.text} naturally in frame`}).`
+        frame: (m, macro, dna, orient, isBox) => m.isUGC
+          ? `SHOT H (HANDS-ON REAL-WORLD CONTEXT): Authentic vertical commercial frame showing the exact product 100% clearly in natural real-life scale on ${m.surface} (${m.cat === "POV" ? "first-person POV angle naturally presenting the front" : `with ${dna.cast.text} naturally in frame`}).`
           : (m.hasPerson
-              ? `SHOT H (EDITORIAL ATMOSPHERE MEDIUM): Wide-medium editorial frame of the exact product ${orient.short} in sharp unobstructed foreground on ${m.surface} with ${dna.cast.text} in moody cinematic bokeh.`
-              : `SHOT H (WIDE ATMOSPHERIC SET SHOWCASE): Dramatic elevated medium-wide commercial angle revealing the live moving environment around the exact product ${orient.short} unobstructed on ${m.surface}.`),
+              ? `SHOT H (EDITORIAL ATMOSPHERE MEDIUM): Wide-medium editorial frame of the exact product ${orient.short} 100% visible in sharp foreground on ${m.surface} with ${dna.cast.text} in moody cinematic bokeh.`
+              : `SHOT H (WIDE ATMOSPHERIC SET SHOWCASE): Dramatic ${isBox ? "elevated 35-degree " : ""}medium-wide commercial angle revealing the live moving environment around the exact product ${orient.short} clearly displayed on ${m.surface}.`),
         camMotion: "Fast kinetic dolly push-in sweeping smoothly through live atmospheric depth straight onto the sharp unobstructed foreground product"
       },
       {
@@ -684,15 +681,15 @@
         shotType: "angle",
         allowPerson: false,
         editMove: "crashZoom",
-        frame: (m, macro, dna, orient, isBox) => `SHOT I (COMMANDING FRONTAL SYMMETRY): Dead-center ${isBox ? "elevated 35-degree" : "low-angle"} symmetrical frontal close-up of the exact product ${orient.short} unobstructed on ${m.surface}, filling 72% of width with imposing flagship presence.`,
-        camMotion: "Aggressive punch-in camera rush straight toward the symmetrical front face while bright rim light sweeps rapidly from left to right"
+        frame: (m, macro, dna, orient, isBox) => `SHOT I (COMMANDING FRONTAL SYMMETRY): Dead-center ${isBox ? "elevated 36-degree" : "low-angle"} symmetrical frontal close-up of the exact product ${orient.short} 100% unobstructed on ${m.surface}, filling 72% of width with imposing flagship presence.`,
+        camMotion: "Brisk punch-in camera rush straight toward the symmetrical front face while bright rim light sweeps rapidly from left to right"
       },
       {
         title: "Macro Curvas & Reflexo",
         shotType: "macro",
         allowPerson: false,
         editMove: "macroSlam",
-        frame: (m, macro, dna, orient) => `SHOT J (SCULPTURAL CURVE & REFLECTION MACRO — 90% FRAME FILL): Ultra-close 100mm macro focused on the signature front curves and tactile contrast of ${macro} of the exact product firmly grounded on ${m.surface}, dramatic dark-light specular gradient, zero wide background.`,
+        frame: (m, macro, dna, orient) => `SHOT J (SCULPTURAL CURVE & REFLECTION MACRO — 90% FRAME FILL, GROUNDED): Ultra-close 100mm macro focused on the signature front curves and tactile contrast of ${macro} of the exact product resting solidly on ${m.surface}, dramatic dark-light specular gradient, NEVER floating.`,
         camMotion: "Fast sweeping macro push-in across the sculpted front geometry as a crisp studio highlight slides smoothly across the surface"
       },
       {
@@ -700,7 +697,7 @@
         shotType: "angle",
         allowPerson: false,
         editMove: "whipLeft",
-        frame: (m, macro, dna, orient, isBox) => `SHOT K (SLEEK HORIZONTAL SIDE PROFILE): Clean ${isBox ? "elevated 30-degree" : "architectural"} side-angle profile of the exact product ${orient.short} 100% unobstructed on ${m.surface} showcasing slim lines and build precision with intense blurred light streaks behind.`,
+        frame: (m, macro, dna, orient, isBox) => `SHOT K (SLEEK SIDE-FRONT PROFILE): Clean architectural ${isBox ? "elevated 35-degree " : ""}side-front angle of the exact product ${orient.short} 100% visible on ${m.surface} showcasing slim lines and build precision with intense blurred light streaks behind.`,
         camMotion: "Rapid motorized lateral whip gliding smoothly across the clean profile with vivid moving background parallax"
       },
       {
@@ -709,10 +706,10 @@
         allowPerson: true,
         editMove: "climaxPull",
         frame: (m, macro, dna, orient, isBox) => m.isUGC
-          ? `SHOT L (FLAGSHIP UGC CLOSING HERO): Clean iconic centered 9:16 closing showcase of the exact product razor-sharp and 100% unobstructed in foreground on ${m.surface}, high-trust viral commercial finish.`
+          ? `SHOT L (FLAGSHIP UGC CLOSING HERO): Clean iconic centered 9:16 closing showcase of the exact product 100% unobstructed and razor-sharp in foreground on ${m.surface}, high-trust viral commercial finish.`
           : (m.hasPerson
               ? `SHOT L (MONUMENTAL HERO FINALE): Commanding centered ${isBox ? "elevated 35-degree " : ""}9:16 closing flagship frame with the exact product ${orient.short} razor-sharp and unobstructed in foreground on ${m.surface} and ${dna.cast.text} in cinematic bokeh.`
-              : `SHOT L (MONUMENTAL SYMMETRICAL HERO CLIMAX): Iconic dead-center ${isBox ? "elevated 35-degree " : ""}symmetrical flagship hero shot of the exact product ${orient.short} 100% unobstructed on ${m.surface}, framed majestically by the live moving background environment.`),
+              : `SHOT L (MONUMENTAL SYMMETRICAL HERO CLIMAX): Iconic dead-center ${isBox ? "elevated 35-degree " : ""}symmetrical flagship hero shot of the exact product ${orient.short} 100% visible on ${m.surface}, framed majestically by the blazing live background environment.`),
         camMotion: "Dynamic speed-ramp crane pullback rising smoothly upward while bright rim lights sweep across the anchored unobstructed product dominating the live set"
       }
     ];
@@ -737,6 +734,15 @@
         }
       }
       return [0, ...mid, 11];
+    }
+
+    // Prioriza Onda 1 com Gancho + Macro + Contraplano + Clímax Final
+    function buildPriorityOrder(total) {
+      if (total <= 4) return Array.from({ length: total }, (_, i) => i);
+      const firstWave = [0, 1, 2, total - 1];
+      const rest = [];
+      for (let i = 3; i < total - 1; i++) rest.push(i);
+      return [...firstWave, ...rest];
     }
 
     function buildHollywoodCutDurations(totalSec, count) {
@@ -788,9 +794,6 @@
       return `${base.prompt}, ${base.baseBpm + dna.bpmDelta} BPM, in ${dna.musicKey}`;
     }
 
-    // =========================================================================
-    // VOZES PT-BR (MASCULINA / FEMININA) + ROTEIROS AIDA (10s/15s/20s/30s)
-    // =========================================================================
     const VOICE_STYLES = {
       male: [
         { id: "male_impact", label: "👨 Masculina Impacto Comercial (Grave e Firme)" },
@@ -1011,7 +1014,7 @@
       const sec = Number(minDuration.value) || 10;
       const cuts = sec === 10 ? 6 : (sec === 15 ? 8 : (sec === 20 ? 9 : 10));
       const limitSec = Number(maxWaitLimit.value) || 255;
-      const limitLabel = limitSec === 195 ? "< 3m45s" : (limitSec === 255 ? "< 4m45s" : "< 5m00s");
+      const limitLabel = limitSec <= 200 ? "< 3m45s" : (limitSec <= 260 ? "< 4m45s" : "< 5m00s");
       btnBuild.textContent = `⚡ Gerar Superprodução (${sec}s • ${cuts} Cortes Únicos • ${limitLabel})`;
       updateInlineVoiceUI();
     }
@@ -1080,19 +1083,19 @@
     renderVideoPresets();
 
     // =========================================================================
-    // NEGATIVE PROMPT COMPACTO (< 360 CHARS — ZERO ERRO HTTP 422 NO KLING!)
+    // NEGATIVE PROMPT COMPACTO (< 340 CHARS — ZERO ERRO HTTP 422 NO KLING!)
     // =========================================================================
     function buildNegative(hasPerson, allowHands = false, isBox = false) {
       const parts = [
-        "slow motion", "static shot", "frozen background",
-        "spinning 180 degrees", "rear view", "tipping over", "floating",
-        "invented logo", "random text", "glowing LED strip", "neon outline",
-        "extra buttons", "morphing", "distorted product",
-        "black bars", "grey borders", "watermark", "arrows", "blur", "lowres", "cartoon"
+        "slow motion", "static", "frozen background",
+        "spin 180", "rear view", "tipping over", "floating",
+        "hidden product", "invented logo", "altered logo", "random text",
+        "glowing LED", "morphing", "distorted",
+        "black bars", "grey borders", "watermark", "arrows", "blur", "cartoon"
       ];
+      if (isBox) parts.push("closing lid", "closed box", "wall blocking product");
       if (productOrientation.value === "flat" && !allowHands) parts.push("standing vertically");
-      if (isBox) parts.push("closing lid", "hidden product");
-      if (hasPerson || allowHands) parts.push("distorted face", "deformed fingers");
+      if (hasPerson || allowHands) parts.push("distorted face", "deformed hands");
       else parts.push("hands", "fingers", "people");
       return parts.join(", ");
     }
@@ -1101,34 +1104,31 @@
       const hint = productDetailHint.value.trim();
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
       const spec = hint
-        ? `${hint} — 100% faithful to reference photo, preserve exact original logo shape and font, unlit physical body (zero glowing LEDs, zero invented logos)`
-        : `exact product from reference photo, 100% faithful, preserve exact original logo shape and font, unlit physical body (zero glowing LEDs, zero invented logos)`;
+        ? `${hint} — 100% faithful to reference photo, exact original logo untouched, unlit physical body (zero glowing LEDs, zero invented logos)`
+        : `exact product from reference photo, 100% faithful, exact original logo untouched, unlit physical body (zero glowing LEDs, zero invented logos)`;
       return `${spec}. ${orient.full}`;
     }
 
-    // MOTOR GLOBAL DE FOTOGRAFIA (TODOS OS 100 MODELOS):
-    // 1. Macros 100mm: ancorados na superfície real + luz correndo no material (zero flutuação)
-    // 2. Visibilidade 100%: produto nunca oculto por tampas, bordas, mãos ou fumaça
-    // 3. Anti-Tampa automático em qualquer cenário com maleta/caixa/mochila
     function buildShotKeyframe(m, shotIdx, dna) {
       const shot = TWELVE_UNIQUE_SHOTS[shotIdx] || TWELVE_UNIQUE_SHOTS[0];
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
       const macroFocus = macroTarget.value.trim() || "exact visible texture, dial/controls, original logo and precision hardware";
       const hasPersonHere = m.hasPerson && shot.allowPerson;
       const allowHandsHere = m.isUGC && shot.allowPerson;
-      const isBox = hasCaseOrBox(m);
+      const isBox = isContainerModel(m);
 
-      const boxRule = isBox
-        ? "OPEN-CASE LOCK: Lid stays rigidly locked 100% WIDE OPEN flat back. Camera stays elevated (30°–50° angle) so case rims or walls NEVER block the product."
-        : "VISIBILITY LOCK: Keep the product 100% unobstructed and razor-sharp from edge to edge.";
+      const visibilityClause = isBox
+        ? `VISIBILITY & ANTI-LID LOCK: The case/box lid is FIXED 100% WIDE OPEN and motionless. Camera stays elevated (35°–48°) so the front rim NEVER hides or covers any part of the product.`
+        : `VISIBILITY LOCK: The exact product stays 100% unobstructed and razor-sharp in foreground — NEVER hidden behind props, walls or foreground objects.`;
 
       const envBlock = shot.shotType === "macro"
-        ? `GROUNDED 100MM MACRO STUDIO: Product rests solidly on ${m.surface} (NEVER floating in air or over bright glowing floor). ${m.macroAccent}. Ultra-shallow 100mm f/2.8 bokeh with crisp traveling specular highlight bar across real material. DO NOT pull back to wide scenery.`
+        ? `MACRO GROUNDING & LIGHTING: Product sits FIRMLY GROUNDED on ${m.surface} (NEVER floating in mid-air or suspended over bright light). ${m.macroAccent}. Shallow 100mm f/2.8 bokeh. Stay tightly zoomed on real product finish.`
         : `LIVE ENVIRONMENT (${m.name}): ${m.lighting}; ${m.envMotion}; ${dna.light.text}. 8K ARRI Alexa 65 commercial optics.`;
 
       return [
         `EDGE-TO-EDGE FULL-BLEED 9:16 VERTICAL 4K COMMERCIAL STILL (${m.genre}). ZERO black or grey bars.`,
-        `PRODUCT FIDELITY: ${getProductSpec()}. ${boxRule}`,
+        `PRODUCT FIDELITY: ${getProductSpec()}.`,
+        visibilityClause,
         shot.frame(m, macroFocus, dna, orient, isBox),
         envBlock,
         `Negative: ${buildNegative(hasPersonHere, allowHandsHere, isBox)}.`
@@ -1139,19 +1139,19 @@
       const shot = TWELVE_UNIQUE_SHOTS[shotIdx] || TWELVE_UNIQUE_SHOTS[0];
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
       const isMacro = shot.shotType === "macro";
-      const isBox = hasCaseOrBox(m);
+      const isBox = isContainerModel(m);
 
-      const boxMotionRule = isBox
-        ? "OPEN-CASE LOCK: The case/box lid stays rigidly locked 100% OPEN and completely motionless — NEVER close, drop, or move the lid. Keep camera elevated so rims NEVER block the product."
-        : "VISIBILITY LOCK: The product MUST remain 100% unobstructed and sharply visible from 0.0s to the final frame — NEVER hidden by walls, edges, smoke, or objects.";
+      const containerGuard = isBox
+        ? ` ANTI-LID LOCK: Case/box lid stays 100% motionless and WIDE OPEN from 0.0s to end — NEVER close or slam the lid. Keep camera above rim so product is NEVER hidden.`
+        : ` VISIBILITY LOCK: Product stays 100% visible and unobstructed from 0.0s to end.`;
 
       const bgMotionLine = isMacro
-        ? `MACRO LIGHT & SURFACE MOTION: Product remains solidly anchored on ${m.surface} (never floating). Bright clean commercial specular light sweeps continuously across the product finish while subtle background bokeh (${m.macroAccent}) shifts dynamically.`
-        : `LIVE BACKGROUND MOTION (${m.name}): ${m.envMotion}. Background MUST stay actively alive throughout the clip without ever obscuring the product.`;
+        ? `MACRO LIGHT & SURFACE MOTION: Product stays firmly anchored on ${m.surface} (NEVER floating). Bright studio specular light sweeps continuously across the product texture while subtle bokeh (${m.macroAccent}) shifts behind.`
+        : `LIVE BACKGROUND MOTION (${m.name}): ${m.envMotion}. Background MUST stay actively alive throughout the clip.`;
 
       return [
         `Vertical 9:16 ${m.genre}, 4K, 60fps, high-energy commercial motion, mute video.`,
-        `PRODUCT LOCK: ${getProductSpec()}. Keep front facing camera (${m.isUGC && shot.allowPerson ? "natural gentle angle ±15° max" : `anchored ${orient.short}`}), unlit body — never spin 180°, never tip over, never invent logos or LEDs. ${boxMotionRule}`,
+        `PRODUCT LOCK: ${getProductSpec()}. Keep front facing camera (${m.isUGC && shot.allowPerson ? "natural gentle angle ±15° max" : `anchored ${orient.short}`}), unlit body — never spin 180°, never tip over, never alter original logo.${containerGuard}`,
         bgMotionLine,
         `CAMERA ACTION (${shot.title}): ${shot.camMotion}. Stay strictly within frontal ±20° arc. ${dna.light.text}.`
       ].join("\n\n");
@@ -1159,9 +1159,9 @@
 
     function buildStandaloneImagePrompt(m, dna) {
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.flat;
-      const isBox = hasCaseOrBox(m);
+      const isBox = isContainerModel(m);
       const castClause = m.hasPerson ? ` Talent/Creator: ${dna.cast.text}.` : "";
-      const boxClause = isBox ? " Open-case lock: lid locked 100% wide open, elevated 35-degree view, product 100% unobstructed." : "";
+      const boxClause = isBox ? ` Case/box lid locked 100% wide open, camera elevated 38° so product is 100% unobstructed.` : "";
       return [
         `Ultra-realistic flagship 9:16 vertical edge-to-edge full-bleed commercial photograph (NO black bars), concept: ${m.name} (${dna.id}).`,
         `Product Fidelity: ${getProductSpec()}. Product ${orient.short}.${boxClause}`,
@@ -1241,6 +1241,39 @@
 
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+    // Semáforo simples para limitar concorrência de GPU (máx. 4 simultâneos = ZERO HTTP 429)
+    function createSemaphore(maxCount) {
+      let active = 0;
+      const queue = [];
+      return {
+        async acquire(signal) {
+          if (signal && signal.aborted) throw new Error("ABORTED_RUN");
+          if (active < maxCount) { active++; return; }
+          await new Promise((resolve, reject) => {
+            const onAbort = () => {
+              const idx = queue.indexOf(entry);
+              if (idx >= 0) queue.splice(idx, 1);
+              reject(new Error("ABORTED_RUN"));
+            };
+            const entry = {
+              resolve: () => {
+                if (signal) signal.removeEventListener("abort", onAbort);
+                resolve();
+              }
+            };
+            if (signal) signal.addEventListener("abort", onAbort, { once: true });
+            queue.push(entry);
+          });
+          active++;
+        },
+        release() {
+          active = Math.max(0, active - 1);
+          const next = queue.shift();
+          if (next) next.resolve();
+        }
+      };
+    }
+
     async function pollFalJob(queued, onStateUpdate, outerSignal) {
       let errs = 0;
       for (let i = 0; i < 150; i++) {
@@ -1261,28 +1294,9 @@
           if (onStateUpdate) onStateUpdate(`retry ${errs}/8`);
           if (errs >= 8) throw new Error(`Instabilidade na fila fal.ai: ${err.message}`);
         }
-        await sleep(2400);
+        await sleep(2500);
       }
       throw new Error("Tempo limite excedido na fila da fal.ai.");
-    }
-
-    // SEMÁFORO DE CONCORRÊNCIA (GARANTE MÁX. 4 GPUs SIMULTÂNEAS POR ESTÁGIO SEM PERDER 1 SEGUNDO!)
-    function createLimiter(maxConcurrent) {
-      let active = 0;
-      const queue = [];
-      const pump = () => {
-        if (active >= maxConcurrent || !queue.length) return;
-        active++;
-        const item = queue.shift();
-        Promise.resolve().then(item.fn).then(item.resolve, item.reject).finally(() => {
-          active--;
-          pump();
-        });
-      };
-      return (fn) => new Promise((resolve, reject) => {
-        queue.push({ fn, resolve, reject });
-        pump();
-      });
     }
 
     async function generateMusicWithTripleFallback(mKey, dna, durationSec, onStatus, signal) {
@@ -1454,7 +1468,7 @@
         const t = setTimeout(() => { if (!settled) { settled = true; reject(new Error("Timeout ao decodificar MP4.")); } }, 15000);
         vid.onloadeddata = () => {
           vid.onseeked = finish;
-          const jumpTo = Math.min(0.45, Math.max(0.14, (vid.duration || 5) * 0.09));
+          const jumpTo = Math.min(0.42, Math.max(0.12, (vid.duration || 5) * 0.085));
           try { vid.currentTime = jumpTo; } catch { finish(); }
           setTimeout(finish, 900);
         };
@@ -1739,3 +1753,612 @@
 
           if (flashAlpha > 0.01) {
             ctx.save(); ctx.globalCompositeOperation = "screen";
+            ctx.fillStyle = "#ffffff"; ctx.globalAlpha = flashAlpha;
+            ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.restore();
+          }
+        });
+      });
+
+      const outBlob = await doneP;
+      loaded.forEach((x) => URL.revokeObjectURL(x.blobUrl));
+      if (activeVideoBlobUrl) URL.revokeObjectURL(activeVideoBlobUrl);
+      activeVideoBlobUrl = URL.createObjectURL(outBlob);
+      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: `${recProf.label} ${(dna.bitrate / 1e6).toFixed(1)}Mbps`, uniqueCount: n, sec: totalSec, musicMixedOk, voiceMixedOk };
+    }
+
+    function downloadBlob(blob, filename) {
+      const u = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = u; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(u), 5000);
+    }
+
+    function fmtClock(sec) {
+      const s = Math.max(0, Math.floor(sec));
+      return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+    }
+
+    function setAllButtonsDisabled(disabled) {
+      btnOnlyImg.disabled = disabled;
+      btnBuild.disabled = disabled;
+      btnGenVoice.disabled = disabled;
+      btnRunRemoveBg.disabled = disabled;
+      btnQuickRemoveBg.disabled = disabled || !uploadedBase64;
+    }
+
+    function renderResultStage(out, session, audioSummary, aiMusicUrl, aiVoiceUrl, noteMsg) {
+      const fname = `nexora-${session.dna.id.toLowerCase()}-${out.sec}s.${out.ext}`;
+      const elapsedTxt = session.totalElapsedSec ? ` • Gerado em ${fmtClock(session.totalElapsedSec)}` : "";
+
+      stage.innerHTML = `
+        <video id="outPlayer" class="player-916" src="${out.videoUrl}" controls playsinline></video>
+        <div class="dl-box">
+          <div class="dl-title">${session.vidModel.name} • ${out.sec}s • ${out.uniqueCount} Cortes Únicos • ${audioSummary}${elapsedTxt}</div>
+          <div class="dl-dna">🛡️ ${session.dna.id} • Motor: ${session.engineUsed} • Luz: ${session.dna.light.tag} • ${out.label}</div>
+          <div class="dl-grid">
+            <button type="button" id="btnDlVideo" class="dl-btn main">Baixar Superprodução (.${out.ext.toUpperCase()} • ${out.sec}s)</button>
+            <button type="button" id="btnPlayAgain" class="dl-btn" style="grid-column:span 2;">Reproduzir com Som</button>
+            <button type="button" id="btnRemixAudio" class="dl-btn remix">🎵 Trocar Trilha / Narração (Reaproveita os vídeos • Zero custo GPU)</button>
+          </div>
+          <div class="clip-list">
+            ${session.validPairs.map((p, idx) => `<a class="clip-chip" href="${p.url}" target="_blank" rel="noopener noreferrer" download="corte-${idx + 1}.mp4">Corte ${idx + 1}</a>`).join("")}
+            ${aiMusicUrl ? `<a class="clip-chip" href="${aiMusicUrl}" target="_blank" rel="noopener noreferrer" download="trilha-${session.dna.id.toLowerCase()}.wav">🎵 Trilha</a>` : ""}
+            ${aiVoiceUrl ? `<a class="clip-chip" href="${aiVoiceUrl}" target="_blank" rel="noopener noreferrer" download="narracao-${session.dna.id.toLowerCase()}.mp3">🎙️ Narração</a>` : ""}
+          </div>
+          ${noteMsg ? `<div class="warn-note">${noteMsg}</div>` : ""}
+        </div>
+        <div class="thumb-strip">${session.keyframeUrls.filter(Boolean).map((u, i) => `<img src="${u}" alt="Corte ${i + 1}" />`).join("")}</div>
+      `;
+
+      const outPlayer = document.getElementById("outPlayer");
+      if (outPlayer) {
+        outPlayer.muted = false;
+        outPlayer.play().catch(() => { outPlayer.muted = true; outPlayer.play().catch(() => {}); });
+      }
+      document.getElementById("btnDlVideo")?.addEventListener("click", () => downloadBlob(out.videoBlob, fname));
+      document.getElementById("btnPlayAgain")?.addEventListener("click", () => {
+        if (!outPlayer) return;
+        outPlayer.muted = false; outPlayer.currentTime = 0; outPlayer.play().catch(() => {});
+      });
+      document.getElementById("btnRemixAudio")?.addEventListener("click", () => remixLastSession());
+    }
+
+    async function remixLastSession() {
+      if (!lastMasterSession) return;
+      const mKey = musicPreset.value;
+      if (mKey === "custom" && !customAudioBuf) {
+        stage.innerHTML = `<div class="err-msg">Suba um .MP3/.WAV ou selecione outra trilha antes de Re-mixar.</div>`;
+        return;
+      }
+
+      let audioCtx = null;
+      try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { audioCtx = new AC(); if (audioCtx.state === "suspended") await audioCtx.resume(); } } catch {}
+
+      setAllButtonsDisabled(true);
+      const remixDna = generateUniqueDNA();
+      remixDna.cast = lastMasterSession.dna.cast;
+      remixDna.light = lastMasterSession.dna.light;
+
+      let newMusicUrl = null, newEngine = "", soundtrackBuf = null, newVoiceUrl = null, voiceBuf = null, warn = "";
+      try {
+        if (mKey === "custom" && customAudioBuf) {
+          soundtrackBuf = customAudioBuf;
+        } else if (mKey !== "mute" && MUSIC_PROMPTS[mKey]) {
+          stage.innerHTML = `<div class="status-msg"><strong>Gerando nova trilha (${MUSIC_PROMPTS[mKey].label})...</strong><br/><span id="remixStatus">conectando...</span></div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div>`;
+          const mRes = await generateMusicWithTripleFallback(mKey, remixDna, lastMasterSession.targetSec + 6, (st) => {
+            const el = document.getElementById("remixStatus"); if (el) el.textContent = st;
+          }, null);
+          if (mRes && mRes.audioUrl) {
+            newMusicUrl = mRes.audioUrl;
+            newEngine = mRes.engine;
+            soundtrackBuf = await (await fetchMediaBlob(newMusicUrl)).arrayBuffer();
+          } else {
+            warn = `Aviso trilha: ${mRes?.error || "indisponível"}`;
+          }
+        }
+
+        if (enableVideoVoiceover.checked) {
+          if (savedVoiceBuf) {
+            voiceBuf = savedVoiceBuf;
+          } else if (inlineVoiceScript.value.trim()) {
+            stage.innerHTML = `<div class="status-msg"><strong>Gerando narração PT-BR...</strong><br/><span id="remixVoiceSt">conectando...</span></div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:65%"></div></div>`;
+            const vRes = await generateVoiceWithTripleFallback(
+              inlineVoiceScript.value.trim(),
+              inlineVoiceGender.value,
+              inlineVoiceStyle.value,
+              1.05,
+              (st) => { const el = document.getElementById("remixVoiceSt"); if (el) el.textContent = st; },
+              null
+            );
+            if (vRes && vRes.audioUrl) {
+              newVoiceUrl = vRes.audioUrl;
+              voiceBuf = await (await fetchMediaBlob(newVoiceUrl)).arrayBuffer();
+              savedVoiceBuf = voiceBuf;
+              savedVoiceMeta = `${inlineVoiceGender.value === "male" ? "Masc" : "Fem"} • ${vRes.engine}`;
+              updateInlineVoiceUI();
+            } else {
+              warn += ` | Aviso voz: ${vRes?.error || "indisponível"}`;
+            }
+          }
+        }
+
+        stage.innerHTML = `<div class="status-msg"><strong>Re-mixando MP4 (<span id="renderProgressSec">0.0s / ${lastMasterSession.targetSec}.0s</span>)...</strong></div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:12%"></div></div>`;
+        lastMasterSession.dna = remixDna;
+        const out = await renderHollywoodMaster(
+          lastMasterSession.clipBlobs,
+          lastMasterSession.validPairs.map((p) => p.shotIdx),
+          lastMasterSession.targetSec,
+          remixDna,
+          enableHyperCuts.checked,
+          enableSfxHits.checked,
+          audioCtx,
+          soundtrackBuf,
+          voiceBuf
+        );
+        const mLabel = mKey === "custom" ? `MP3: ${customAudioName}` : (out.musicMixedOk ? `${MUSIC_PROMPTS[mKey]?.label || newEngine}` : "Sem Trilha");
+        const audioSummary = out.voiceMixedOk ? `${mLabel} + 🎙️ Narração PT-BR` : mLabel;
+        renderResultStage(out, lastMasterSession, audioSummary, newMusicUrl, newVoiceUrl, warn);
+      } catch (err) {
+        stage.innerHTML = `<div class="err-msg">Erro no remix: ${err.message}</div>`;
+      } finally {
+        if (audioCtx) { try { await audioCtx.close(); } catch {} }
+        setAllButtonsDisabled(false);
+      }
+    }
+
+    // =========================================================================
+    // REMOVER FUNDO PNG TRANSPARENTE
+    // =========================================================================
+    async function executeRemoveBackground() {
+      if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
+      activeRunController = new AbortController();
+      setAllButtonsDisabled(true);
+      let uiClock = null, stTxt = "iniciando recorte...";
+      const t0 = performance.now();
+      try {
+        stage.innerHTML = `<div class="status-msg"><strong>Removendo fundo da imagem...</strong><br/>Gerando PNG transparente em alta definição</div><div class="status-log" id="bgLog">iniciando... (0s)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%"></div></div><div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>`;
+        document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
+        uiClock = setInterval(() => { const el = document.getElementById("bgLog"); if (el) el.textContent = `${stTxt} (${Math.round((performance.now() - t0) / 1000)}s)`; }, 1000);
+
+        const res = await removeBgWithTripleFallback(uploadedBase64, uploadedMime, (s) => { stTxt = s; }, activeRunController.signal);
+        clearInterval(uiClock); uiClock = null;
+
+        if (!res || !res.imageUrl) throw new Error(res?.error || "Não foi possível remover o fundo.");
+        const pngBlob = await fetchMediaBlob(res.imageUrl);
+        const pngDataUrl = await blobToDataUrl(pngBlob);
+        const pngBase64 = pngDataUrl.split(",")[1] || "";
+
+        stage.innerHTML = `
+          <img class="preview-png checker-bg" src="${pngDataUrl}" alt="PNG Sem Fundo" />
+          <div class="dl-box">
+            <div class="dl-title">✂️ Fundo Removido com Sucesso • PNG Transparente (${res.engine})</div>
+            <div class="dl-grid">
+              <button type="button" id="btnDlPng" class="dl-btn main">⬇️ Baixar PNG Transparente</button>
+              <button type="button" id="btnApplyPng" class="dl-btn remix">✅ Usar esta imagem sem fundo nos Vídeos e Imagens</button>
+            </div>
+          </div>
+        `;
+        document.getElementById("btnDlPng")?.addEventListener("click", () => downloadBlob(pngBlob, `nexora-sem-fundo-${Date.now()}.png`));
+        document.getElementById("btnApplyPng")?.addEventListener("click", () => {
+          setUploadedProduct(pngDataUrl, pngBase64, "image/png", true);
+          if (activeMode === "removebg") setMode("video");
+          const btn = document.getElementById("btnApplyPng");
+          if (btn) btn.textContent = "✓ Aplicado como foto do produto!";
+        });
+      } catch (err) {
+        stage.innerHTML = `<div class="err-msg">${err.message === "ABORTED_RUN" ? "Recorte cancelado." : err.message}</div>`;
+      } finally {
+        if (uiClock) clearInterval(uiClock);
+        activeRunController = null;
+        setAllButtonsDisabled(false);
+      }
+    }
+    btnQuickRemoveBg.addEventListener("click", executeRemoveBackground);
+    btnRunRemoveBg.addEventListener("click", executeRemoveBackground);
+
+    // =========================================================================
+    // ESTÚDIO DE NARRAÇÃO PT-BR AVULSA (10s, 15s, 20s, 30s)
+    // =========================================================================
+    btnGenVoice.addEventListener("click", async () => {
+      const text = studioVoiceScript.value.trim();
+      if (!text) { stage.innerHTML = `<div class="err-msg">Digite um roteiro em português ou clique em "Montar Roteiro".</div>`; return; }
+
+      const sec = Number(studioVoiceDuration.value) || 10;
+      const voiceId = studioVoiceStyle.value;
+      const speed = Number(studioVoiceSpeed.value) || 1.05;
+      const genderLabel = studioGender === "male" ? "Voz Masculina" : "Voz Feminina";
+
+      activeRunController = new AbortController();
+      setAllButtonsDisabled(true);
+      let uiClock = null, stTxt = "enviando roteiro...";
+      const t0 = performance.now();
+      try {
+        stage.innerHTML = `<div class="status-msg"><strong>Gerando Narração PT-BR (${sec}s • ${genderLabel})</strong><br/>Estúdio com fallback triplo</div><div class="status-log" id="ttsLog">enviando... (0s)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:55%"></div></div><div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>`;
+        document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
+        uiClock = setInterval(() => { const el = document.getElementById("ttsLog"); if (el) el.textContent = `${stTxt} (${Math.round((performance.now() - t0) / 1000)}s)`; }, 1000);
+
+        const res = await generateVoiceWithTripleFallback(text, studioGender, voiceId, speed, (s) => { stTxt = s; }, activeRunController.signal);
+        clearInterval(uiClock); uiClock = null;
+        if (!res || !res.audioUrl) throw new Error(res?.error || "Falha ao gerar narração.");
+
+        const audioBlob = await fetchMediaBlob(res.audioUrl);
+        const audioBlobUrl = URL.createObjectURL(audioBlob);
+        const audioArrayBuf = await audioBlob.arrayBuffer();
+
+        stage.innerHTML = `
+          <div style="font-size:38px;">🎙️</div>
+          <audio id="voicePreviewPlayer" class="voice-player" src="${audioBlobUrl}" controls></audio>
+          <div class="dl-box">
+            <div class="dl-title">Narração PT-BR Pronta • ${sec}s • ${genderLabel} (${res.engine})</div>
+            <div class="dl-dna">${text.length} caracteres • Velocidade ${speed}x</div>
+            <div class="dl-grid">
+              <button type="button" id="btnDlVoice" class="dl-btn main">⬇️ Baixar Narração (.MP3)</button>
+              <button type="button" id="btnUseVoiceInVideo" class="dl-btn remix">🎬 Usar esta Narração no meu Vídeo (${sec}s)</button>
+            </div>
+          </div>
+        `;
+        document.getElementById("voicePreviewPlayer")?.play().catch(() => {});
+        document.getElementById("btnDlVoice")?.addEventListener("click", () => downloadBlob(audioBlob, `nexora-narracao-${studioGender}-${sec}s.mp3`));
+        document.getElementById("btnUseVoiceInVideo")?.addEventListener("click", () => {
+          savedVoiceBuf = audioArrayBuf;
+          savedVoiceMeta = `${genderLabel} • ${sec}s • ${res.engine}`;
+          minDuration.value = String(sec);
+          enableVideoVoiceover.checked = true;
+          inlineVoiceBox.classList.remove("hidden");
+          inlineVoiceGender.value = studioGender;
+          populateVoiceSelect(inlineVoiceStyle, studioGender);
+          inlineVoiceStyle.value = voiceId;
+          inlineVoiceScript.value = text;
+          refreshBtn();
+          setMode("video");
+        });
+      } catch (err) {
+        stage.innerHTML = `<div class="err-msg">${err.message === "ABORTED_RUN" ? "Geração cancelada." : err.message}</div>`;
+      } finally {
+        if (uiClock) clearInterval(uiClock);
+        activeRunController = null;
+        setAllButtonsDisabled(false);
+      }
+    });
+
+    // =========================================================================
+    // MODO IMAGEM 9:16 (100 MODELOS)
+    // =========================================================================
+    btnOnlyImg.addEventListener("click", async () => {
+      if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
+      const dna = generateUniqueDNA();
+      activeRunController = new AbortController();
+      setAllButtonsDisabled(true);
+      let uiClock = null, stTxt = "enviando...";
+      const t0 = performance.now();
+      try {
+        stage.innerHTML = `<div class="status-msg">Gerando imagem 9:16 (<strong>${dna.id}</strong>)<br/>${selectedImgModel.name}</div><div class="status-log" id="imgLog">enviando... (0s)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div><div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>`;
+        document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
+        uiClock = setInterval(() => { const el = document.getElementById("imgLog"); if (el) el.textContent = `${stTxt} (${Math.round((performance.now() - t0) / 1000)}s)`; }, 1000);
+        const q = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildStandaloneImagePrompt(selectedImgModel, dna) }, 30000, activeRunController.signal);
+        const r = await pollFalJob(q, (s) => { stTxt = s; }, activeRunController.signal);
+        clearInterval(uiClock);
+        stage.innerHTML = `
+          <img class="preview-916" src="${r.imageUrl}" alt="Imagem 9:16" />
+          <div class="dl-box">
+            <div class="dl-title">${selectedImgModel.name} • Nano Banana 9:16</div>
+            <div class="dl-dna">🛡️ ${dna.id} • Luz: ${dna.light.tag}</div>
+            <div class="dl-grid"><a class="dl-btn main" href="${r.imageUrl}" target="_blank" rel="noopener noreferrer" download="nexora-${dna.id.toLowerCase()}.jpg">Abrir / Baixar Imagem 9:16</a></div>
+          </div>
+        `;
+      } catch (err) {
+        stage.innerHTML = `<div class="err-msg">${err.message === "ABORTED_RUN" ? "Cancelado." : err.message}</div>`;
+      } finally {
+        if (uiClock) clearInterval(uiClock);
+        activeRunController = null;
+        setAllButtonsDisabled(false);
+      }
+    });
+
+    // =========================================================================
+    // MODO VÍDEO SUPERPRODUÇÃO 9:16 — PIPELINE DIRETO TURBO (KEYFRAME -> GPU NA HORA!)
+    // =========================================================================
+    btnBuild.addEventListener("click", async () => {
+      if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
+
+      const targetSec = Number(minDuration.value) || 10;
+      const limitSec = Number(maxWaitLimit.value) || 255;
+      const chosenEngine = videoEngine.value === "veo" ? "veo" : "kling";
+      const mKey = musicPreset.value;
+      const wantsVoice = enableVideoVoiceover.checked;
+      const voiceScriptText = inlineVoiceScript.value.trim();
+
+      if (mKey === "custom" && !customAudioBuf) {
+        stage.innerHTML = `<div class="err-msg">Selecione um .MP3/.WAV ou escolha uma Trilha Viral IA.</div>`;
+        return;
+      }
+      if (wantsVoice && !savedVoiceBuf && !voiceScriptText) {
+        stage.innerHTML = `<div class="err-msg">Digite o roteiro da Narração PT-BR ou clique em "Gerar Roteiro AIDA".</div>`;
+        return;
+      }
+
+      const dna = generateUniqueDNA();
+      const shotIndices = buildRadicalShotSequence(targetSec);
+      const totalUnique = shotIndices.length;
+      const priorityQueue = buildPriorityOrder(totalUnique);
+      const isBox = isContainerModel(selectedVidModel);
+
+      let audioCtx = null;
+      try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { audioCtx = new AC(); if (audioCtx.state === "suspended") await audioCtx.resume(); } } catch {}
+
+      activeRunController = new AbortController();
+      const runSignal = activeRunController.signal;
+      setAllButtonsDisabled(true);
+
+      const globalStart = performance.now();
+      let userCancelled = false, finishEarly = false, deadlineReached = false, uiClock = null;
+      let engineUsed = chosenEngine === "veo" ? "Veo 3.1 Fast" : "Kling v2.6 Pro";
+      let fatalErrorMsg = "";
+      let lastClipErrorMsg = "";
+
+      const deadlineTimer = setTimeout(() => {
+        deadlineReached = true;
+        finishEarly = true;
+        activeRunController?.abort();
+      }, limitSec * 1000);
+
+      const keyframeUrls = new Array(totalUnique).fill(null);
+      const readyClipUrls = new Array(totalUnique).fill(null);
+      let aiMusicUrl = null, aiMusicEngine = "", aiVoiceUrl = null, aiVoiceEngine = "", noteMsg = "";
+      let aiMusicStatus = mKey === "mute" ? "mudo" : (mKey === "custom" ? `MP3: ${customAudioName}` : "iniciando...");
+      let aiVoiceStatus = !wantsVoice ? "desativada" : (savedVoiceBuf ? `pronta ✓ (${savedVoiceMeta})` : "iniciando...");
+
+      // 1) TRILHA + NARRAÇÃO PT-BR EM PARALELO DESDE 0.0s
+      let musicPromise = Promise.resolve(null);
+      if (mKey !== "mute" && mKey !== "custom" && MUSIC_PROMPTS[mKey]) {
+        musicPromise = (async () => {
+          const res = await generateMusicWithTripleFallback(mKey, dna, targetSec + 6, (st) => { aiMusicStatus = st; }, runSignal);
+          if (res && res.fatal403) { fatalErrorMsg = res.error; activeRunController?.abort(); return null; }
+          if (res && res.audioUrl) { aiMusicUrl = res.audioUrl; aiMusicEngine = res.engine; }
+          else if (res && res.error) noteMsg = `Aviso trilha: ${res.error}`;
+          return aiMusicUrl;
+        })();
+      }
+
+      let voicePromise = Promise.resolve(null);
+      if (wantsVoice && !savedVoiceBuf && voiceScriptText) {
+        voicePromise = (async () => {
+          const res = await generateVoiceWithTripleFallback(voiceScriptText, inlineVoiceGender.value, inlineVoiceStyle.value, 1.05, (st) => { aiVoiceStatus = st; }, runSignal);
+          if (res && res.fatal403) { fatalErrorMsg = res.error; activeRunController?.abort(); return null; }
+          if (res && res.audioUrl) { aiVoiceUrl = res.audioUrl; aiVoiceEngine = res.engine; }
+          else if (res && res.error) noteMsg += ` | Aviso voz: ${res.error}`;
+          return aiVoiceUrl;
+        })();
+      }
+
+      try {
+        // 2) PIPELINE DIRETO UNIFICADO: CADA CENA VAI P/ GPU 3D ASSIM QUE SEU KEYFRAME FICA PRONTO!
+        const pipeStates = shotIndices.map((sIdx, i) => ({
+          label: `Corte ${i + 1} (${TWELVE_UNIQUE_SHOTS[sIdx].title})`,
+          status: "aguardando...",
+          kfDone: false,
+          clipDone: false
+        }));
+
+        stage.innerHTML = `
+          <div class="timer-badge" id="slaTimerBadge">⏱️ Tempo: 00:00 / Limite ${fmtClock(limitSec)}</div>
+          <div class="status-msg"><strong>Pipeline Direto Turbo • ${totalUnique} Cortes Únicos (${dna.id})</strong><br/>${selectedVidModel.name}</div>
+          <div class="status-log" id="pipeLog"></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pipeBar" style="width:8%"></div></div>
+          <div class="clip-list" id="liveReadyLinks"></div>
+          <div class="thumb-strip" id="liveThumbStrip"></div>
+          <div class="action-inline">
+            <button type="button" class="btn-use-ready hidden" id="btnUseReady">Montar agora com prontos</button>
+            <button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button>
+          </div>
+        `;
+        document.getElementById("btnCancelNow")?.addEventListener("click", () => { userCancelled = true; activeRunController?.abort(); });
+        document.getElementById("btnUseReady")?.addEventListener("click", () => { finishEarly = true; activeRunController?.abort(); });
+
+        const renderPipelineUI = () => {
+          const elT = document.getElementById("slaTimerBadge");
+          const logEl = document.getElementById("pipeLog");
+          const barEl = document.getElementById("pipeBar");
+          const linksEl = document.getElementById("liveReadyLinks");
+          const thumbEl = document.getElementById("liveThumbStrip");
+          const useBtn = document.getElementById("btnUseReady");
+
+          if (elT) elT.textContent = `⏱️ Tempo: ${fmtClock((performance.now() - globalStart) / 1000)} / Limite ${fmtClock(limitSec)} (Trava < 5 min)`;
+          if (logEl) {
+            const lines = pipeStates.map((p) => `${p.label}: ${p.clipDone ? "VÍDEO PRONTO ✓" : p.status}`);
+            lines.push(`🎵 Trilha: ${aiMusicStatus}`);
+            if (wantsVoice) lines.push(`🎙️ Narração PT-BR: ${aiVoiceStatus}`);
+            logEl.innerHTML = lines.join("<br/>");
+          }
+
+          const kfDoneCount = keyframeUrls.filter(Boolean).length;
+          const clipDoneCount = readyClipUrls.filter(Boolean).length;
+          const pct = 8 + Math.round((kfDoneCount / totalUnique) * 22 + (clipDoneCount / totalUnique) * 58);
+          if (barEl) barEl.style.width = `${Math.min(88, pct)}%`;
+
+          if (linksEl) {
+            linksEl.innerHTML = readyClipUrls
+              .map((u, i) => (u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Corte ${i + 1} ✓</a>` : ""))
+              .filter(Boolean)
+              .join("");
+          }
+          if (thumbEl) {
+            thumbEl.innerHTML = keyframeUrls
+              .map((u, i) => (u ? `<img src="${u}" alt="Corte ${i + 1}" />` : ""))
+              .filter(Boolean)
+              .join("");
+          }
+          if (useBtn) useBtn.classList.toggle("hidden", clipDoneCount === 0 || clipDoneCount === totalUnique);
+        };
+        renderPipelineUI();
+        uiClock = setInterval(renderPipelineUI, 1000);
+
+        const imgSem = createSemaphore(4);
+        const vidSem = createSemaphore(4);
+
+        const runSingleCut = async (i) => {
+          if (runSignal.aborted) return;
+          const sIdx = shotIndices[i];
+          const shot = TWELVE_UNIQUE_SHOTS[sIdx];
+          const hasPersonHere = selectedVidModel.hasPerson && shot.allowPerson;
+          const allowHandsHere = selectedVidModel.isUGC && shot.allowPerson;
+
+          // ETAPA A: KEYFRAME NANO BANANA (MÁX 4 SIMULTÂNEOS)
+          let kfUrl = null;
+          try {
+            await imgSem.acquire(runSignal);
+            try {
+              pipeStates[i].status = "1/2 foto: enviando...";
+              renderPipelineUI();
+              const qImg = await callApi({
+                task: "submit_scene",
+                imageBase64: uploadedBase64,
+                mimeType: uploadedMime,
+                imagePrompt: buildShotKeyframe(selectedVidModel, sIdx, dna)
+              }, 28000, runSignal);
+              pipeStates[i].status = "1/2 foto: GPU...";
+              const rImg = await pollFalJob(qImg, (st) => { pipeStates[i].status = `1/2 foto: ${st}`; }, runSignal);
+              kfUrl = rImg.imageUrl;
+              keyframeUrls[i] = kfUrl;
+              pipeStates[i].kfDone = true;
+              pipeStates[i].status = "2/2 vídeo: fila local...";
+              renderPipelineUI();
+            } finally {
+              imgSem.release();
+            }
+          } catch (err) {
+            if (err.message === "ABORTED_RUN") return;
+            lastClipErrorMsg = err.message || "erro na imagem base";
+            pipeStates[i].status = `erro foto: ${lastClipErrorMsg.slice(0, 34)}`;
+            if (err.status === 403) { fatalErrorMsg = err.message; activeRunController?.abort(); }
+            renderPipelineUI();
+            return;
+          }
+
+          if (!kfUrl || runSignal.aborted) return;
+
+          // ETAPA B: CLIPE 3D IMEDIATAMENTE (MÁX 4 SIMULTÂNEOS NA GPU KLING/VEO)
+          try {
+            await vidSem.acquire(runSignal);
+            try {
+              pipeStates[i].status = "2/2 vídeo: enviando GPU...";
+              renderPipelineUI();
+
+              let qVid = null;
+              for (let att = 1; att <= 3; att++) {
+                try {
+                  qVid = await callApi({
+                    task: "submit_clip",
+                    engine: chosenEngine,
+                    imageUrl: kfUrl,
+                    duration: "5",
+                    generateAudio: false,
+                    motionPrompt: buildShotMotion(selectedVidModel, sIdx, dna),
+                    negativePrompt: buildNegative(hasPersonHere, allowHandsHere, isBox)
+                  }, 26000, runSignal);
+                  if (qVid.engine) engineUsed = qVid.engine;
+                  break;
+                } catch (err) {
+                  if (err.message === "ABORTED_RUN") return;
+                  lastClipErrorMsg = err.message || "Erro no motor 3D";
+                  if (err.status === 403) { fatalErrorMsg = err.message; pipeStates[i].status = "saldo esgotado (403)"; activeRunController?.abort(); return; }
+                  if (err.status === 400 || err.status === 422) { pipeStates[i].status = `erro ${err.status}: ${lastClipErrorMsg.slice(0, 34)}`; renderPipelineUI(); return; }
+                  if (att === 3) { pipeStates[i].status = `falhou: ${lastClipErrorMsg.slice(0, 34)}`; renderPipelineUI(); return; }
+                  pipeStates[i].status = `aguardando vaga (${att}/3)...`;
+                  renderPipelineUI();
+                  await sleep(2200 * att);
+                }
+              }
+
+              if (!qVid || runSignal.aborted) return;
+              pipeStates[i].status = "2/2 vídeo: GPU";
+              const rVid = await pollFalJob(qVid, (st) => { pipeStates[i].status = `2/2 vídeo: ${st}`; }, runSignal);
+              readyClipUrls[i] = rVid.videoUrl;
+              pipeStates[i].clipDone = true;
+              renderPipelineUI();
+            } finally {
+              vidSem.release();
+            }
+          } catch (pollErr) {
+            if (pollErr.message === "ABORTED_RUN") return;
+            lastClipErrorMsg = pollErr.message || "Falha na GPU";
+            pipeStates[i].status = `erro vídeo: ${lastClipErrorMsg.slice(0, 34)}`;
+            renderPipelineUI();
+          }
+        };
+
+        // Dispara todos os cortes seguindo a ordem de prioridade (Onda 1 = Gancho + Macro + Contraplano + Clímax)
+        await Promise.all(priorityQueue.map((cutIdx) => runSingleCut(cutIdx)));
+        clearInterval(uiClock); uiClock = null;
+
+        if (fatalErrorMsg) throw new Error(fatalErrorMsg);
+        if (userCancelled) throw new Error("CANCELLED_BY_USER");
+        if (!finishEarly && !deadlineReached) await Promise.all([musicPromise, voicePromise]);
+        if (deadlineReached) noteMsg = `⚡ Trava de velocidade (${fmtClock(limitSec)}) acionada para garantir entrega < 5 min.`;
+
+        // Mantém a ordem cinematográfica original (Gancho no 0:00 e Clímax no final)
+        const validPairs = readyClipUrls
+          .map((u, i) => (u ? { url: u, shotIdx: shotIndices[i] } : null))
+          .filter(Boolean);
+
+        if (!validPairs.length) {
+          throw new Error(lastClipErrorMsg ? `Falha ao gerar cortes 3D: ${lastClipErrorMsg}` : "Nenhum corte 3D finalizou dentro do limite de tempo. Tente novamente.");
+        }
+
+        // 3) MASTER FINAL (CORTES RÁPIDOS + AUTO-DROP + DUCKING NA NARRAÇÃO)
+        stage.innerHTML = `
+          <div class="status-msg">
+            <strong>Finalizando Superprodução (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
+            Unindo ${validPairs.length} cortes rápidos + Áudio Master...
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:10%"></div></div>
+        `;
+
+        const clipBlobs = await Promise.all(validPairs.map((p) => fetchMediaBlob(p.url)));
+        let soundtrackBuf = null;
+        if (mKey === "custom" && customAudioBuf) soundtrackBuf = customAudioBuf;
+        else if (aiMusicUrl) {
+          try { soundtrackBuf = await (await fetchMediaBlob(aiMusicUrl)).arrayBuffer(); } catch {}
+        }
+
+        let voiceBuf = null;
+        if (wantsVoice) {
+          if (savedVoiceBuf) voiceBuf = savedVoiceBuf;
+          else if (aiVoiceUrl) {
+            try { voiceBuf = await (await fetchMediaBlob(aiVoiceUrl)).arrayBuffer(); } catch {}
+          }
+        }
+
+        const totalElapsedSec = Math.round((performance.now() - globalStart) / 1000) + targetSec;
+        lastMasterSession = { clipBlobs, validPairs, targetSec, keyframeUrls, shotIndices, vidModel: selectedVidModel, dna, totalElapsedSec, engineUsed };
+
+        const out = await renderHollywoodMaster(
+          clipBlobs,
+          validPairs.map((p) => p.shotIdx),
+          targetSec,
+          dna,
+          enableHyperCuts.checked,
+          enableSfxHits.checked,
+          audioCtx,
+          soundtrackBuf,
+          voiceBuf
+        );
+
+        const musicLabel = mKey === "custom" ? `MP3: ${customAudioName}` : (out.musicMixedOk ? `${MUSIC_PROMPTS[mKey]?.label || aiMusicEngine} (${aiMusicEngine})` : (mKey === "mute" ? "Mudo" : "Somente SFX"));
+        const audioSummary = out.voiceMixedOk ? `${musicLabel} + 🎙️ Narração PT-BR` : musicLabel;
+        renderResultStage(out, lastMasterSession, audioSummary, aiMusicUrl, aiVoiceUrl, noteMsg);
+      } catch (err) {
+        const msg = err.message === "CANCELLED_BY_USER" ? "Geração cancelada." : (err.message || "Erro ao gerar vídeo.");
+        const rescued = readyClipUrls.map((u, i) => u ? `<a class="clip-chip" href="${u}" target="_blank" rel="noopener noreferrer">Corte ${i + 1} salvo ✓</a>` : "").filter(Boolean).join("");
+        stage.innerHTML = `<div class="err-msg">${msg}</div>${rescued ? `<div class="clip-list">${rescued}</div>` : ""}`;
+      } finally {
+        clearTimeout(deadlineTimer);
+        if (uiClock) clearInterval(uiClock);
+        activeRunController = null;
+        if (audioCtx) { try { await audioCtx.close(); } catch {} }
+        setAllButtonsDisabled(false);
+      }
+    });
+  </script>
+</body>
+</html>
