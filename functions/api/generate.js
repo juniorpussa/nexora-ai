@@ -1,5 +1,5 @@
 const DEFAULT_NEGATIVE =
-  "slow motion, static shot, frozen background, spinning 180 degrees, rear view, tipping over, floating, invented logo, random text on product, glowing LED strip, neon outline, extra buttons, morphing, distorted product, black bars, grey borders, watermark, arrows, blur, lowres, cartoon";
+  "static frozen frame, spinning 180 degrees, turntable spin, rear view, tipping over, floating product, invented logo, altered logo, misspelled text, random text on product, glowing LED strip on product, illuminated buttons, fake neon outline, speed lines, comic streaks, morphing, distorted product, extra fingers, deformed hands, plastic CGI look, 3d render look, black bars, grey borders, watermark, arrows, blur, lowres, cartoon";
 
 const MUSIC_CLEAN_NEGATIVE =
   "harsh noise, clipping, static, muddy, messy, off-beat, slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, smooth jazz, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune";
@@ -112,13 +112,13 @@ export async function onRequestPost(context) {
       return json({ requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
     }
 
-    // 2) CLIPE 3D HOLLYWOOD / UGC / POV (Kling v2.6 Pro ou Veo 3.1 Fast c/ fallback)
+    // 2) CLIPE 3D CINEMA / USO REAL / UGC / POV (Kling v2.6 Pro ou Veo 3.1 Fast c/ fallback)
     if (task === "submit_clip" || task === "clip") {
       const prompt = body.motionPrompt || body.prompt || "";
       const imageUrl = body.imageUrl || (body.imageBase64 ? `data:${body.mimeType || "image/jpeg"};base64,${body.imageBase64}` : "");
       const duration = String(body.duration === "10" || body.duration === 10 ? "10" : "5");
       const generateAudio = Boolean(body.generateAudio);
-      const negativePrompt = String(body.negativePrompt || DEFAULT_NEGATIVE).slice(0, 365);
+      const negativePrompt = String(body.negativePrompt || DEFAULT_NEGATIVE).slice(0, 380);
       const engine = body.engine === "veo" ? "veo" : "kling";
 
       if (!prompt || !imageUrl) return json({ error: "Envie a cena base e o prompt de vídeo." }, 400);
