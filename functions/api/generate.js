@@ -1,8 +1,8 @@
 const DEFAULT_NEGATIVE =
-  "slow motion, static shot, oversized product, giant product, floating in mid-air, spinning 360 degrees, rear view, glowing blue arcs, electric trails on product, invented red LEDs, invented blue LEDs, added side lights, glowing outline on product, extra buttons, deformed logo, morphing, distorted product, black bars, letterbox, grey borders, split screen, text, watermark, arrows, blur, lowres, cartoon";
+  "slow motion, static shot, oversized product, giant product, floating in mid-air, spinning 360 degrees, rear view, glowing blue arcs, electric trails on product, invented red LEDs, invented blue LEDs, added side lights, glowing outline on product, extra buttons, invented white logo, gibberish text on product, deformed logo, morphing, distorted product, tipping over, falling over, black bars, letterbox, grey borders, split screen, text, watermark, arrows, blur, lowres, cartoon";
 
 const MUSIC_ANTI_SLEEP =
-  "slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, smooth jazz, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, cowbell solo, low quality, muffled";
+  "harsh distortion, clipping, static noise, slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, smooth jazz, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, cowbell solo";
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -103,7 +103,7 @@ export async function onRequestPost(context) {
       return json({ requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
     }
 
-    // 2) CLIPE 3D HOLLYWOOD (Kling v2.6 Pro ou Veo 3.1 Fast c/ fallback seguro para Kling)
+    // 2) CLIPE 3D HOLLYWOOD (Kling v2.6 Pro ou Veo 3.1 Fast c/ fallback para Kling)
     if (task === "submit_clip" || task === "clip") {
       const prompt = body.motionPrompt || body.prompt || "";
       const imageUrl = body.imageUrl || (body.imageBase64 ? `data:${body.mimeType || "image/jpeg"};base64,${body.imageBase64}` : "");
@@ -154,25 +154,30 @@ export async function onRequestPost(context) {
       return json({ error: lastErr }, 502);
     }
 
-    // 3) TRILHA SONORA AGRESSIVA DE ESTÚDIO (Lyria 2 → CassetteAI → Stable Audio)
+    // 3) TRILHA DE ESTÚDIO COM SUPORTE A FALLBACK REAL DE ENGINE (Lyria 2 → CassetteAI → Stable Audio)
     if (task === "submit_music") {
-      const prompt = body.musicPrompt || body.prompt || "Explosive aggressive Brazilian Phonk commercial beat, instant heavy distorted 808 bass drop right at second zero, hard-hitting punchy trap drums, 138 BPM, strictly instrumental";
+      const prompt = body.musicPrompt || body.prompt || "High-energy modern slap house electronic commercial instrumental, clean punchy kick, bouncy deep bassline, energetic synth hook, 128 BPM, studio mastered, no vocals";
       const musicNeg = body.musicNegativePrompt || MUSIC_ANTI_SLEEP;
-      const dur = Math.min(35, Math.max(12, Number(body.duration) || 18));
+      const dur = Math.min(35, Math.max(15, Number(body.duration) || 20));
+      const requestedEngine = String(body.musicEngine || "").toLowerCase();
 
-      const endpoints = [
-        { name: "Lyria 2", url: "https://queue.fal.run/fal-ai/lyria2", payload: { prompt, negative_prompt: musicNeg } },
-        { name: "CassetteAI", url: "https://queue.fal.run/fal-ai/cassetteai/music-generator", payload: { prompt, duration: dur } },
-        { name: "Stable Audio", url: "https://queue.fal.run/fal-ai/stable-audio", payload: { prompt, seconds_total: dur, steps: 45 } }
+      const allEngines = [
+        { key: "lyria2", name: "Lyria 2", url: "https://queue.fal.run/fal-ai/lyria2", payload: { prompt, negative_prompt: musicNeg } },
+        { key: "cassetteai", name: "CassetteAI", url: "https://queue.fal.run/fal-ai/cassetteai/music-generator", payload: { prompt, duration: dur } },
+        { key: "stable-audio", name: "Stable Audio", url: "https://queue.fal.run/fal-ai/stable-audio", payload: { prompt, seconds_total: dur, steps: 45 } }
       ];
 
+      const list = requestedEngine
+        ? allEngines.filter((e) => e.key === requestedEngine)
+        : allEngines;
+
       let lastErr = "Nenhum gerador de trilha disponível.";
-      for (const ep of endpoints) {
+      for (const ep of list.length ? list : allEngines) {
         const res = await fetch(ep.url, { method: "POST", headers, body: JSON.stringify(ep.payload) });
         const raw = await res.text();
         if (res.ok) {
           const q = JSON.parse(raw);
-          return json({ engine: ep.name, requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
+          return json({ engine: ep.name, engineKey: ep.key, requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
         }
         lastErr = formatFalError(res.status, raw);
         if (res.status === 403) return json({ error: lastErr }, 403);
