@@ -2,15 +2,17 @@ const DEFAULT_NEGATIVE =
   "static frozen frame, spinning 180 degrees, turntable spin, rear view, tipping over, floating product, invented logo, altered logo, misspelled text, random text on product, glowing LED strip on product, illuminated buttons, fake neon outline, speed lines, comic streaks, morphing, distorted product, extra fingers, deformed hands, plastic CGI look, 3d render look, black bars, grey borders, watermark, arrows, blur, lowres, cartoon";
 
 const MUSIC_CLEAN_NEGATIVE =
-  "harsh noise, clipping, static, muddy, messy, off-beat, slow, calm, chill, lofi, ambient, lounge, elevator music, soft piano, acoustic, ballad, sleepy, smooth jazz, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune";
+  "tropical house, ukulele, cheesy corporate, stock music, elevator music, acoustic guitar, hand claps, happy whistle, lofi, ambient, chill, lounge, soft piano, acoustic, ballad, sleepy, smooth jazz, sad, gloomy, horror, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, harsh noise, clipping, static, muddy";
 
 const TTS_VOICE_MAP = {
-  male_impact: { el: "Adam", mm: "Deep_Voice_Man", kk: "pm_alex" },
+  male_adam: { el: "Adam", mm: "Deep_Voice_Man", kk: "pm_alex" },
   male_tiktok: { el: "Brian", mm: "Casual_Guy", kk: "pm_alex" },
   male_exec: { el: "Daniel", mm: "Patient_Man", kk: "pm_santa" },
-  female_viral: { el: "Sarah", mm: "Lively_Girl", kk: "pf_dora" },
-  female_tiktok: { el: "Jessica", mm: "Wise_Woman", kk: "pf_dora" },
-  female_lux: { el: "Rachel", mm: "Calm_Woman", kk: "pf_dora" }
+  male_impact: { el: "George", mm: "Deep_Voice_Man", kk: "pm_alex" },
+  female_natasha: { el: "Sarah", mm: "Lively_Girl", kk: "pf_dora" },
+  female_viral: { el: "Jessica", mm: "Lively_Girl", kk: "pf_dora" },
+  female_tiktok: { el: "Rachel", mm: "Wise_Woman", kk: "pf_dora" },
+  female_lux: { el: "Charlotte", mm: "Calm_Woman", kk: "pf_dora" }
 };
 
 function json(body, status = 200) {
@@ -118,7 +120,7 @@ export async function onRequestPost(context) {
       const imageUrl = body.imageUrl || (body.imageBase64 ? `data:${body.mimeType || "image/jpeg"};base64,${body.imageBase64}` : "");
       const duration = String(body.duration === "10" || body.duration === 10 ? "10" : "5");
       const generateAudio = Boolean(body.generateAudio);
-      const negativePrompt = String(body.negativePrompt || DEFAULT_NEGATIVE).slice(0, 380);
+      const negativePrompt = String(body.negativePrompt || DEFAULT_NEGATIVE).slice(0, 540);
       const engine = body.engine === "veo" ? "veo" : "kling";
 
       if (!prompt || !imageUrl) return json({ error: "Envie a cena base e o prompt de vídeo." }, 400);
@@ -160,7 +162,7 @@ export async function onRequestPost(context) {
 
     // 3) TRILHA DE ESTÚDIO REAL COM FALLBACK TRIPLO (0: Lyria 2 -> 1: CassetteAI -> 2: Stable Audio)
     if (task === "submit_music") {
-      const prompt = body.musicPrompt || body.prompt || "High-energy modern electronic slap house commercial beat, punchy bouncy bassline, crisp driving four-on-the-floor kick, bright energetic synth hook, 128 BPM, clean studio master, strictly instrumental";
+      const prompt = body.musicPrompt || body.prompt || "Sleek ultra-modern flagship luxury brand commercial electronic soundtrack, deep punchy analog Moog sub-bass pulse, crisp tight studio percussion, 124 BPM, clean studio master, strictly instrumental";
       const musicNeg = body.musicNegativePrompt || MUSIC_CLEAN_NEGATIVE;
       const dur = Math.min(35, Math.max(15, Number(body.duration) || 20));
       const startIndex = Math.max(0, Math.min(2, Number(body.engineIndex) || 0));
@@ -186,20 +188,54 @@ export async function onRequestPost(context) {
       return json({ error: lastErr }, 502);
     }
 
-    // 4) NARRAÇÃO PT-BR COM FALLBACK TRIPLO (0: ElevenLabs -> 1: MiniMax Speech-02 HD -> 2: Kokoro PT-BR)
+    // 4) CLONAGEM EXATA DE VOZ (Adam / Natasha) VIA MINIMAX VOICE CLONE
+    if (task === "clone_voice") {
+      const mime = body.mimeType || "audio/mp4";
+      const audioInput = body.audioUrl || (body.audioBase64 ? `data:${mime};base64,${body.audioBase64}` : "");
+      if (!audioInput) return json({ error: "Envie um áudio de referência (10s a 30s) para clonar a voz." }, 400);
+
+      const res = await fetch("https://queue.fal.run/fal-ai/minimax/voice-clone", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          audio_url: audioInput,
+          noise_reduction: true,
+          need_volume_normalization: true
+        })
+      });
+      const raw = await res.text();
+      if (!res.ok) return json({ error: formatFalError(res.status, raw) }, res.status);
+      const q = JSON.parse(raw);
+      return json({ engine: "MiniMax Voice Clone", requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
+    }
+
+    // 5) NARRAÇÃO PT-BR (Clone Exato MiniMax opcional -> ElevenLabs Multilingual v2 -> MiniMax Speech-02 HD -> Kokoro PT-BR)
     if (task === "submit_tts") {
       const text = String(body.text || "").trim();
       if (!text) return json({ error: "Digite o roteiro da narração em português." }, 400);
 
-      const voicePreset = TTS_VOICE_MAP[body.voiceId] || (body.gender === "female" ? TTS_VOICE_MAP.female_viral : TTS_VOICE_MAP.male_impact);
+      const voicePreset = TTS_VOICE_MAP[body.voiceId] || (body.gender === "female" ? TTS_VOICE_MAP.female_natasha : TTS_VOICE_MAP.male_adam);
+      const customVoiceId = typeof body.customVoiceId === "string" && body.customVoiceId.trim() ? body.customVoiceId.trim() : "";
       const speed = Math.min(1.25, Math.max(0.85, Number(body.speed) || 1.05));
-      const startIndex = Math.max(0, Math.min(2, Number(body.engineIndex) || 0));
 
-      const endpoints = [
+      const endpoints = [];
+      if (customVoiceId) {
+        endpoints.push({
+          name: "MiniMax Clone Exato",
+          url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
+          payload: {
+            text,
+            voice_setting: { voice_id: customVoiceId, speed, vol: 1.0, pitch: 0 },
+            language_boost: "Portuguese",
+            output_format: "url"
+          }
+        });
+      }
+      endpoints.push(
         {
           name: "ElevenLabs PT-BR",
           url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
-          payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.78, speed }
+          payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed }
         },
         {
           name: "MiniMax Speech-02 HD",
@@ -216,8 +252,9 @@ export async function onRequestPost(context) {
           url: "https://queue.fal.run/fal-ai/kokoro/brazilian-portuguese",
           payload: { prompt: text, voice: voicePreset.kk, speed }
         }
-      ];
+      );
 
+      const startIndex = Math.max(0, Math.min(endpoints.length - 1, Number(body.engineIndex) || 0));
       let lastErr = "Nenhum motor de narração PT-BR disponível.";
       for (let i = startIndex; i < endpoints.length; i++) {
         const ep = endpoints[i];
@@ -233,7 +270,29 @@ export async function onRequestPost(context) {
       return json({ error: lastErr }, 502);
     }
 
-    // 5) REMOVEDOR DE FUNDO PNG TRANSPARENTE (0: BiRefNet v2 -> 1: Bria Remove BG -> 2: Rembg)
+    // 6) SINCRONIZAÇÃO EXATA PALAVRA POR PALAVRA PARA LEGENDAS TIKTOK SHOP (Whisper PT-BR)
+    if (task === "transcribe_words") {
+      const audioUrl = body.audioUrl || "";
+      if (!audioUrl) return json({ error: "URL de áudio obrigatória para sincronizar legendas." }, 400);
+
+      const res = await fetch("https://queue.fal.run/fal-ai/whisper", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          audio_url: audioUrl,
+          task: "transcribe",
+          language: "pt",
+          chunk_level: "word",
+          version: "3"
+        })
+      });
+      const raw = await res.text();
+      if (!res.ok) return json({ error: formatFalError(res.status, raw) }, res.status);
+      const q = JSON.parse(raw);
+      return json({ engine: "Whisper Word-Sync", requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
+    }
+
+    // 7) REMOVEDOR DE FUNDO PNG TRANSPARENTE (0: BiRefNet v2 -> 1: Bria Remove BG -> 2: Rembg)
     if (task === "remove_bg") {
       const mime = body.mimeType || "image/jpeg";
       const imageInput = body.imageUrl || (body.imageBase64 ? `data:${mime};base64,${body.imageBase64}` : "");
@@ -279,7 +338,7 @@ export async function onRequestPost(context) {
       return json({ error: lastErr }, 502);
     }
 
-    // 6) CONSULTA DE STATUS NA FILA
+    // 8) CONSULTA DE STATUS NA FILA
     if (task === "poll") {
       const { statusUrl, responseUrl } = body;
       if (!isQueueUrl(statusUrl) || !isQueueUrl(responseUrl)) return json({ error: "URLs da fila inválidas." }, 400);
@@ -311,9 +370,14 @@ export async function onRequestPost(context) {
         payload?.audio_file?.url ||
         payload?.music?.url ||
         (typeof payload?.audio === "string" ? payload.audio : null);
+      const customVoiceId = payload?.custom_voice_id || payload?.voice_id || null;
+      const chunks = Array.isArray(payload?.chunks) ? payload.chunks : null;
+      const transcriptText = typeof payload?.text === "string" ? payload.text : null;
 
-      if (!imageUrl && !videoUrl && !audioUrl) return json({ error: "A fal.ai concluiu sem retornar mídia." }, 502);
-      return json({ status: "COMPLETED", imageUrl, videoUrl, audioUrl });
+      if (!imageUrl && !videoUrl && !audioUrl && !customVoiceId && !chunks && !transcriptText) {
+        return json({ error: "A fal.ai concluiu sem retornar mídia ou dados." }, 502);
+      }
+      return json({ status: "COMPLETED", imageUrl, videoUrl, audioUrl, customVoiceId, chunks, transcriptText });
     }
 
     return json({ error: `Tarefa desconhecida: ${task}` }, 400);
