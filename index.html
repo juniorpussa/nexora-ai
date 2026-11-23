@@ -1412,26 +1412,54 @@
 
     function drawCroppedCover(c2d, mediaEl, crop, scale = 1.0, panX = 0, panY = 0, angleRad = 0, alpha = 1, filterStr = "none") {
       const cw = canvas.width, ch = canvas.height;
+      if (!mediaEl || mediaEl === canvas) return;
+      c2d.save();
+      c2d.globalCompositeOperation = "source-over";
+      c2d.globalAlpha = 1;
+      c2d.filter = "none";
       c2d.fillStyle = "#000000";
       c2d.fillRect(0, 0, cw, ch);
-      const cRatio = cw / ch, sRatio = crop.sw / crop.sh;
+      c2d.restore();
+
+      const cRatio = cw / ch;
+      const safeSw = Math.max(1, Number(crop && crop.sw) || cw);
+      const safeSh = Math.max(1, Number(crop && crop.sh) || ch);
+      const safeSx = Math.max(0, Number(crop && crop.sx) || 0);
+      const safeSy = Math.max(0, Number(crop && crop.sy) || 0);
+      const sRatio = safeSw / safeSh;
+
       let baseW = cw, baseH = ch;
       if (sRatio > cRatio) { baseH = ch; baseW = baseH * sRatio; }
       else { baseW = cw; baseH = baseW / sRatio; }
-      const minSafe = 1.04 + (Math.abs(panX) * 2.35) / baseW + (Math.abs(panY) * 2.35) / baseH + Math.abs(angleRad) * 2.8;
+
+      const cosA = Math.abs(Math.cos(angleRad));
+      const sinA = Math.abs(Math.sin(angleRad));
+      const reqScaleX = (cw + Math.abs(panX) * 2) / Math.max(1, baseW * cosA + baseH * sinA);
+      const reqScaleY = (ch + Math.abs(panY) * 2) / Math.max(1, baseW * sinA + baseH * cosA);
+      const minSafe = Math.max(1.06, reqScaleX, reqScaleY) * 1.02;
       const sc = Math.max(scale, minSafe);
       const dw = baseW * sc, dh = baseH * sc;
+
       c2d.save();
+      c2d.globalCompositeOperation = "source-over";
       c2d.globalAlpha = alpha;
       try { c2d.filter = filterStr || "none"; } catch {}
       c2d.translate(cw / 2 + panX, ch / 2 + panY);
       if (angleRad !== 0) c2d.rotate(angleRad);
-      c2d.drawImage(mediaEl, crop.sx, crop.sy, crop.sw, crop.sh, -dw / 2, -dh / 2, dw, dh);
+      c2d.drawImage(mediaEl, safeSx, safeSy, safeSw, safeSh, -dw / 2, -dh / 2, dw, dh);
       c2d.restore();
     }
 
     function drawMirrorPunchIn(c2d, mediaEl, crop, progress, filterStr) {
       const cw = canvas.width, ch = canvas.height;
+      if (!mediaEl || mediaEl === canvas) return;
+      c2d.save();
+      c2d.globalCompositeOperation = "source-over";
+      c2d.globalAlpha = 1;
+      c2d.filter = "none";
+      c2d.fillStyle = "#000000";
+      c2d.fillRect(0, 0, cw, ch);
+      c2d.restore();
       const zoomOut = 0.56 + easeOutCubic(progress) * 0.44;
       const tileW = cw * zoomOut, tileH = ch * zoomOut;
       const sRatio = crop.sw / crop.sh, cRatio = cw / ch;
@@ -1787,9 +1815,13 @@
 
             if (seg.trans === "whipPan" && cEl < 0.14) {
               const wp = 1 - easeOutCubic(cEl / 0.14);
-              panX += dir * wp * 62;
-              scale += wp * 0.07;
+              panX += dir * wp * 48;
+              scale += wp * 0.08;
             }
+            const maxPanX = canvas.width * 0.08;
+            const maxPanY = canvas.height * 0.07;
+            panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
+            panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
           }
 
           drawCroppedCover(ctx, mediaEl, item.crop, scale, panX, panY, angle, 1, dna.cssFilter);
