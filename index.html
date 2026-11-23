@@ -107,8 +107,8 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.0 • 105 UNIVERSOS ÚNICOS • TIKTOK SHOP BLINDADO</span></div>
-    <div class="pill-info">🎬 Motor Hollywood Universal (Padrão Comercial Relógios/Marcas) • 105 Cenários Únicos (Zero Fumaça Forçada) • Movimento Real de Câmera &amp; Cenário • Áudio Agência • TikTok Shop Blindado</div>
+    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.1 • MULTI-ÂNGULOS 3D &amp; PANORÂMICA • ÁUDIO CALIBRADO</span></div>
+    <div class="pill-info">🎬 Hollywood Universal v12.1 • Vista Panorâmica + Movimento 3D Esq/Dir + 2 Super Macros Coerentes • Zero Grua/Equipamento • Trilha &amp; SFX Baixos p/ Narração • TikTok Shop Blindado</div>
   </div>
 
   <div class="layout">
@@ -195,7 +195,7 @@
 
       <div class="director-banner" id="directorBannerWrap">
         <div class="director-banner-head">
-          <span>🎬 Coreografia Hollywood v12.0 (Movimento Real de Câmera + Física Única de Cada Modelo • Zero Fumaça Forçada • Cortes Rápidos &amp; Zooms):</span>
+          <span>🎬 Coreografia v12.1 (Crash-Zoom • Macro Esq→Dir • 3D Esquerda • Vista Panorâmica 3D • Macro Dir→Esq • 3D Direita • Hero Final • Áudio Calibrado p/ Narração):</span>
           <small style="color:#86efac;">100% universal nos 105 universos • Zona Segura TikTok Shop</small>
         </div>
         <div class="director-acts-preview" id="directorActsPreview"></div>
@@ -274,7 +274,7 @@
           <div class="preset-grid" id="vidPresetGrid"></div>
         </div>
 
-        <div class="step-label">4. Trilha Sonora Em Alta (Aprovada 10/10) + Whoosh Sutil + Narração PT-BR</div>
+        <div class="step-label">4. Trilha Sonora Calibrada p/ Narração (Volume Baixo) + Whoosh Sutil + Narração PT-BR</div>
         <div class="audio-panel">
           <div class="grid-2">
             <div>
@@ -624,15 +624,26 @@
       return /\b(smoke|steam|mist|haze|fog)\b/.test(txt);
     }
 
+    function isBrightOrDaytimeModel(m) {
+      if (LIGHT_STUDIO_MODEL_IDS.has(m.id)) return true;
+      const txt = `${m.name || ""} ${m.lighting || ""} ${m.surface || ""} ${m.genre || ""}`.toLowerCase();
+      const isExplicitNightOrDark = /\b(night|midnight|pitch-black|dark studio|dark garage|dark vault|blackout|noir|noturn|escuro|escura)\b/.test(txt);
+      if (m.isUGC && !isExplicitNightOrDark) return true;
+      if (/\b(sunlight|daylight|morning|bright|beach|snow|desert|travertine|carrara|sunrise|sunset|golden-hour|afternoon|off-white|white-lab)\b/.test(txt) && !isExplicitNightOrDark) {
+        return true;
+      }
+      return false;
+    }
+
     function getColorPaletteLock(m) {
       if (NEON_CYAN_MODEL_IDS.has(m.id)) {
         return "PALETTE: Strictly honor this scene's authentic crisp blue/cyan lighting accents; no purple or magenta tint.";
       }
       if (LIGHT_STUDIO_MODEL_IDS.has(m.id)) {
-        return "PALETTE: Clean bright architectural off-white and pure-white studio tones; no dark gloomy tint, no purple or cyan color cast.";
+        return "PALETTE: Clean bright architectural off-white and pure-white tones; no dark gloomy walls, no purple or cyan color cast.";
       }
-      if (m.isUGC) {
-        return "PALETTE: Authentic true-to-life natural daylight or real indoor lighting; zero artificial neon or colored haze.";
+      if (isBrightOrDaytimeModel(m)) {
+        return "PALETTE: Authentic bright natural daylight or warm real-world indoor tones consistent across every shot; never switch to a black studio background, zero artificial neon or colored haze.";
       }
       return "PALETTE: Strictly honor this universe's authentic natural/monochrome commercial color grading; zero purple, pink, magenta or neon cyan color cast.";
     }
@@ -640,90 +651,95 @@
     function getUniqueWorldMotion(m) {
       const combined = `${m.lighting || ""} ${m.envMotion || ""} ${m.surface || ""} ${m.genre || ""}`.toLowerCase();
       if (hasModelSmoke(m)) {
-        return `dynamic turbulent volumetric smoke and atmospheric mist billowing and curling rapidly in 3D space behind the pedestal, catching moving directional spotlights (${m.envMotion})`;
+        return `dynamic turbulent volumetric smoke and atmospheric mist billowing and curling rapidly in 3D space behind the surface, catching moving directional highlights (${m.envMotion})`;
       }
       if (/\b(spark|ember|forge|eclipse|volcanic)\b/.test(combined)) {
-        return `vivid glowing golden sparks and fiery micro-embers drifting and streaking rapidly through deep f/1.4 bokeh behind while intense rim-light glints race across the product (${m.envMotion}), crystal-clear air`;
+        return `vivid glowing golden sparks and fiery micro-embers drifting and streaking rapidly through deep f/1.4 bokeh behind while bright rim glints race across the product (${m.envMotion}), crystal-clear air`;
       }
       if (/\b(water|ocean|wave|ripple|droplet|liquid)\b/.test(combined)) {
-        return `shimmering real-time water caustics, concentric ripples and 1000fps specular droplets moving vividly behind while crisp studio reflections glide across the product (${m.envMotion}), crystal-clear air`;
+        return `shimmering real-time water caustics, concentric ripples and 1000fps specular droplets moving vividly behind while crisp reflections glide across the product (${m.envMotion}), crystal-clear air`;
       }
       if (/\b(crystal|ice|snow|frost|shard)\b/.test(combined)) {
         return `1000fps suspended crystal and ice micro-particles shimmering and drifting dynamically through deep shallow bokeh while razor-sharp rim highlights sweep across every edge (${m.envMotion}), crystal-clear air`;
       }
       if (/\b(plasma|reactor|cyberpunk|skyline|city|street|supercar|garage|cockpit|station|rooftop|hangar|orbital)\b/.test(combined)) {
-        return `vivid shifting architectural reflections, passing background bokeh light streaks and dynamic directional showroom/city spotlights sweeping briskly across the product finish (${m.envMotion}), crystal-clear air`;
+        return `vivid shifting architectural reflections, passing background bokeh light streaks and dynamic traveling specular highlights sweeping briskly across the product finish (${m.envMotion}), crystal-clear air`;
       }
       if (LIGHT_STUDIO_MODEL_IDS.has(m.id)) {
-        return `crisp motorized overhead softbox light bars gliding fluidly across the product surface with clean shifting reflections and sculpted studio shadows (${m.envMotion}), crystal-clear air`;
+        return `clean bright traveling specular reflections gliding fluidly across the product surface with crisp soft sculpted shadows shifting gently (${m.envMotion}), crystal-clear air`;
       }
-      if (m.isUGC) {
-        return `natural shifting window daylight, crisp real-world specular reflections gliding across authentic materials and lively shallow-depth background parallax (${m.envMotion}), crystal-clear air`;
+      if (isBrightOrDaytimeModel(m)) {
+        return `natural shifting window daylight, crisp real-world reflections gliding smoothly across authentic materials and lively sunlit background depth parallax (${m.envMotion}), crystal-clear air`;
       }
-      return `crisp motorized overhead commercial spotlights and architectural rim-light beams sweeping rapidly across the product surface, creating vivid traveling specular glints and rich moving depth bokeh (${m.envMotion}), crystal-clear air`;
+      return `crisp bright directional specular highlights and subtle architectural light beams sweeping rapidly across the product surface, creating vivid traveling glints and rich depth bokeh (${m.envMotion}), crystal-clear air`;
     }
 
     function getActTemplates(m, profile) {
       const isLight = LIGHT_STUDIO_MODEL_IDS.has(m.id);
+      const isBright = isBrightOrDaytimeModel(m);
       const allowsSmoke = hasModelSmoke(m);
       const optics = m.isUGC
         ? "ultra-realistic vertical 9:16 creator still photograph, natural f/1.8 shallow bokeh, authentic tactile surface grain"
         : isLight
-          ? "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 bright architectural commercial studio photograph, crisp softbox lighting, clean off-white studio depth and authentic physical micro-texture"
-          : "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 high-budget flagship commercial photograph, f/1.4 razor-shallow bokeh, physically accurate materials, razor-sharp detail and authentic specular roll-off";
+          ? "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 bright minimalist architectural commercial photograph, clean even illumination, soft sculpted shadow, pure clean off-white backdrop and authentic physical micro-texture"
+          : isBright
+            ? "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 sunlit commercial photograph, natural f/1.8 shallow depth, crisp authentic colors and tactile micro-texture"
+            : "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 high-budget flagship commercial photograph, f/1.4 razor-shallow bokeh, physically accurate materials, razor-sharp detail and authentic specular roll-off";
 
       const macroBgRule = isLight
-        ? "clean soft bright studio bokeh behind, crystal-clear air"
-        : allowsSmoke
-          ? "deep dark f/1.4 studio bokeh with subtle natural volumetric mist behind, no white background"
-          : "deep clean out-of-focus f/1.4 bokeh matching this scene behind, crystal-clear air, no white background";
+        ? "clean soft bright off-white studio bokeh matching the same bright backdrop behind, crystal-clear air, no black background"
+        : isBright
+          ? `warm natural bright out-of-focus bokeh matching the EXACT SAME sunlit room/environment (${m.lighting}) behind, crystal-clear air, NEVER a black background`
+          : allowsSmoke
+            ? "deep dark f/1.4 studio bokeh with subtle natural volumetric mist behind, no white background"
+            : "deep clean out-of-focus f/1.4 bokeh matching this scene behind, crystal-clear air, no white background";
 
       const actHook = {
         key: "hook_hero", shortLabel: "Ato 1 • Crash-Zoom 3/4", isHuman: false, isMacro: false, editMove: "crashZoom", trans: "zoomBlur",
-        motion: (world) => `Fast dynamic Hollywood dolly-in crash-zoom gliding briskly closer toward the product from a low 22-degree front-left three-quarter angle as bright directional key lights sweep boldly across the product surface and ${world}.`,
-        desc: (m, orient, isBox) => `Shot 1 (Low-angle 3/4 flagship hero composition, 75% frame): ${optics}. Monumental low-angle 22-degree front-left three-quarter 3D perspective of the exact product ${orient.short} ${isBox ? "at an elevated 36-degree angle " : ""}resting solidly on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear pedestal and shadow). ${m.lighting}.`
+        motion: (world) => `Fast dynamic Hollywood push-in crash-zoom gliding briskly closer toward the product from a low 22-degree front-left three-quarter angle as crisp directional highlights sweep boldly across the product surface and ${world}.`,
+        desc: (m, orient, isBox) => `Shot 1 (Low-angle 3/4 flagship hero composition, 75% frame): ${optics}. Low-angle 22-degree front-left three-quarter 3D perspective of the exact product ${orient.short} ${isBox ? "at an elevated 36-degree angle " : ""}resting solidly on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear surface and shadow). ${m.lighting}.`
       };
 
       const actMacro = {
-        key: "super_macro", shortLabel: "Ato 2 • Super Macro 100mm", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "radialFlash",
-        motion: (world) => `Smooth fast 100mm macro tracking camera gliding laterally right-to-left inches from the product surface while a crisp bright specular highlight beam sweeps rapidly across every authentic micro-texture and edge, with ${world} shifting dynamically in shallow bokeh behind.`,
-        desc: (m, orient, isBox, macro) => `Shot 2 (Extreme 100mm close-up macro photograph, 95% surface fill, no pedestal visible): Ultra-close 100mm Master Prime macro lens positioned very close at a 20-degree oblique angle, focused tightly on the central detail (${macro}) of the exact product ${orient.short}, filling 95% of the vertical 9:16 frame so outer borders and pedestal fall outside the frame. ${m.macroAccent}. Physically accurate micro-grain, sharp original markings, ${macroBgRule}.`
+        key: "super_macro", shortLabel: "Ato 2 • Macro 100mm Esq→Dir", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "radialFlash",
+        motion: (world) => `Smooth fast 100mm macro tracking perspective gliding laterally from left to right inches from the product surface while a crisp bright highlight sweeps rapidly across every authentic micro-texture and edge, with ${world} shifting dynamically in shallow bokeh behind.`,
+        desc: (m, orient, isBox, macro) => `Shot 2 (Extreme 100mm close-up macro photograph, 95% surface fill, no base visible): Ultra-close 100mm Master Prime macro lens positioned very close at a 20-degree oblique angle, focused tightly on the central detail (${macro}) of the exact product ${orient.short}, filling 95% of the vertical 9:16 frame so outer borders fall outside the frame. ${m.macroAccent}. Physically accurate micro-grain, sharp original markings, ${macroBgRule}.`
       };
 
-      const actProfileLeft = {
-        key: "profile_left_pivot", shortLabel: "Ato 3 • Slider Lateral Esq 55°", isHuman: false, isMacro: false, editMove: "lightSweep34", trans: "whipPan",
-        motion: (world) => `Fluid motorized curved slider camera arcing dynamically around the front-left side of the product from a 55-degree side profile toward a 18-degree front-left angle, creating strong 3D foreground-to-background parallax and revealing real side depth as crisp rim lights travel across the contours and ${world}.`,
-        desc: (m, orient) => `Shot 3 (Deep 55-degree left-side lateral perspective, 78% frame): ${optics}. Distinct 55-degree left lateral side angle clearly revealing the side thickness, sculpted lateral contours and 3D depth of the exact product ${orient.short} resting firmly on ${m.surface}, centered in the middle-upper safe zone. ${m.lighting}.`
+      const actSweepLeft = {
+        key: "sweep_left_3d", shortLabel: "Ato 3 • Movimento 3D Esquerda", isHuman: false, isMacro: false, editMove: "sweepLeft3D", trans: "whipPan",
+        motion: (world) => `Fluid curved 3D lateral tracking movement sweeping smoothly around the LEFT side of the product from a deep 60-degree left profile toward a 18-degree front-left angle, creating strong 3D foreground-to-background parallax and showcasing lateral depth as crisp rim highlights travel across the contours and ${world}.`,
+        desc: (m, orient) => `Shot 3 (Deep 60-degree LEFT-side lateral 3D perspective, 76% frame): ${optics}. Distinct 60-degree left lateral side angle clearly revealing the left side thickness, sculpted lateral contours and 3D depth of the exact product ${orient.short} resting firmly on ${m.surface}, centered in the middle-upper safe zone. ${m.lighting}.`
       };
 
-      const actLowWormEye = {
-        key: "low_worm_eye", shortLabel: "Ato 4 • Crane Contra-Plongée", isHuman: false, isMacro: false, editMove: "craneRise", trans: "zoomBlur",
-        motion: (world) => `Dramatic low-angle motorized crane camera rising swiftly upward from pedestal level while zooming slightly closer, sweeping bright overhead spotlights across the product silhouette as ${world} flows vividly across the background.`,
-        desc: (m, orient) => `Shot 4 (Low table-level upward perspective from pedestal edge, 78% frame): ${optics}. Dramatic low camera positioned near pedestal height looking upward (+18 degrees) at the exact product ${orient.short} resting heavily on ${m.surface}, delivering monumental flagship scale in the middle-upper safe zone with real contact shadow. ${m.lighting}.`
+      const actPanoramic = {
+        key: "panoramic_3d", shortLabel: "Ato 4 • Vista Panorâmica 3D", isHuman: false, isMacro: false, editMove: "panoramicGlide", trans: "zoomBlur",
+        motion: (world) => `Sweeping wide cinematic panoramic horizontal glide moving smoothly from left to right across the full environment while gently pushing closer, showcasing the product commanding the wider architectural/natural horizon with strong 3D depth parallax as ${world} moves vividly across the scene.`,
+        desc: (m, orient) => `Shot 4 (Cinematic 3D panoramic establishing view, 62% product scale with rich wide horizon): ${optics}. Clean wider cinematic panoramic establishing perspective showing the exact product ${orient.short} resting prominently on ${m.surface} framed by the expansive depth and horizon of the scene (NEVER showing table legs, studio ceiling, or filming gear), centered cleanly in the middle-upper safe zone. ${m.lighting}.`
       };
 
       const actMacroEdge = {
-        key: "macro_edge", shortLabel: "Ato 5 • Macro Borda & Textura", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "radialFlash",
-        motion: (world) => `Silky rapid 100mm probe-macro camera pushing in and gliding diagonally along the opposite sculpted edge, bevels and fine craftsmanship details as sharp light glints race across the real surface finish and ${world} shifts in deep bokeh.`,
-        desc: (m, orient, isBox, macro) => `Shot 5 (Extreme 100mm opposite-edge macro photograph, 95% fill, no pedestal visible): Ultra-close 100mm Master Prime macro lens from the opposite right-side diagonal focused closely on the sculpted edge, side contours and ${macro} of the exact product ${orient.short}, outer edges and pedestal cropped out of frame, razor-sharp real material finish and rim highlight, ${macroBgRule}.`
+        key: "macro_edge", shortLabel: "Ato 5 • Macro Borda Dir→Esq", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "radialFlash",
+        motion: (world) => `Silky rapid 100mm macro perspective pushing in and gliding diagonally from right to left along the opposite sculpted edge, bevels and craftsmanship details as sharp light glints race across the real surface finish and ${world} shifts smoothly in bokeh.`,
+        desc: (m, orient, isBox, macro) => `Shot 5 (Extreme 100mm opposite-edge macro photograph, 95% fill, no base visible): Ultra-close 100mm Master Prime macro lens from the opposite right-side diagonal focused closely on the sculpted edge, side contours and ${macro} of the exact product ${orient.short}, outer edges cropped out of frame, razor-sharp real material finish and rim highlight, ${macroBgRule}.`
       };
 
-      const actHighDutchRight = {
-        key: "high_dutch_right", shortLabel: "Ato 6 • Gimbal Alto Dir 40°", isHuman: false, isMacro: false, editMove: "zoomArcOut", trans: "whipPan",
-        motion: (world) => `Dynamic elevated 40-degree front-right gimbal camera descending smoothly while arcing horizontally toward center with strong 3D parallax, revealing upper geometry and right contours as directional highlights sweep across the product and ${world}.`,
-        desc: (m, orient) => `Shot 6 (Elevated 40-degree front-right perspective with subtle 10-degree dynamic tilt, 78% frame): ${optics}. Distinct 40-degree elevated front-right commercial angle with a sleek subtle 10-degree dynamic tilt showcasing upper geometry, right-side depth and authentic materials of the exact product ${orient.short} resting firmly on ${m.surface}, centered in the middle-upper safe zone. ${m.lighting}.`
+      const actSweepRight = {
+        key: "sweep_right_3d", shortLabel: "Ato 6 • Movimento 3D Direita", isHuman: false, isMacro: false, editMove: "sweepRight3D", trans: "whipPan",
+        motion: (world) => `Dynamic elevated 3D lateral tracking movement sweeping smoothly around the RIGHT side of the product from an elevated 55-degree right-side perspective toward front-center with strong 3D parallax, revealing upper geometry and opposite right contours as bright directional highlights sweep across the product and ${world}.`,
+        desc: (m, orient) => `Shot 6 (Elevated 35-degree RIGHT-side 55-degree 3D perspective, 76% frame): ${optics}. Distinct elevated front-right 55-degree three-quarter commercial angle (mirror opposite to Shot 3) showcasing upper geometry, right-side thickness and authentic materials of the exact product ${orient.short} resting firmly on ${m.surface}, centered in the middle-upper safe zone. ${m.lighting}.`
       };
 
       const actHero = {
-        key: "final_hero", shortLabel: "Ato 7 • Hero Zoom-Out Final", isHuman: false, isMacro: false, editMove: "heroPunch", trans: "zoomBlur",
-        motion: (world) => `Authoritative Hollywood dolly-out zoom-out camera pulling smoothly back from tight close-up to iconic flagship framing in the middle-upper safe zone while bright overhead studio rim lights sweep across the complete silhouette and ${world}.`,
-        desc: (m, orient) => `Shot 7 (Flagship 3D hero portrait composition, 76% frame in middle-upper safe zone): ${optics}. Authoritative 24-degree front-three-quarter 3D hero perspective showing full volume, grounded bottom contact and natural shadow of the exact product ${orient.short} resting firmly on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear pedestal and shadow), authentic unlit product finish. ${m.lighting}.`
+        key: "final_hero", shortLabel: "Ato 7 • Hero 3D Final", isHuman: false, isMacro: false, editMove: "heroPunch", trans: "zoomBlur",
+        motion: (world) => `Authoritative smooth subtle pull-back zoom-out widening slightly from tight close-up to iconic large flagship framing (keeping the product commanding and prominent in the middle-upper safe zone, never pulling back to show ceiling or room corners) while bright traveling highlights sweep across the silhouette and ${world}.`,
+        desc: (m, orient) => `Shot 7 (Flagship 3D hero composition, 74% frame in middle-upper safe zone): ${optics}. Authoritative 24-degree front-three-quarter 3D hero perspective showing full volume, grounded bottom contact and natural shadow of the exact product ${orient.short} resting firmly on ${m.surface}, kept large and commanding in the middle-upper safe zone (bottom 25% clear surface and shadow), authentic unlit product finish. ${m.lighting}.`
       };
 
       if (profile === "cinema_universal") {
         return {
-          base: [actHook, actMacro, actProfileLeft, actLowWormEye, actMacroEdge, actHighDutchRight, actHero],
-          extras: [actProfileLeft, actLowWormEye, actMacroEdge, actHighDutchRight]
+          base: [actHook, actMacro, actSweepLeft, actPanoramic, actMacroEdge, actSweepRight, actHero],
+          extras: [actSweepLeft, actPanoramic, actMacroEdge, actSweepRight]
         };
       }
 
@@ -747,14 +763,14 @@
       }[profile];
 
       const actHuman = {
-        key: "human_use", shortLabel: humanAct3.shortLabel, isHuman: true, isMacro: false, editMove: "lightSweep34", trans: "hardCut",
-        motion: (world) => `Smooth intimate handheld gimbal push-in capturing natural real-world product interaction with subtle realistic hand movement catching key light while ${world}.`,
+        key: "human_use", shortLabel: humanAct3.shortLabel, isHuman: true, isMacro: false, editMove: "sweepLeft3D", trans: "hardCut",
+        motion: (world) => `Smooth intimate handheld push-in capturing natural real-world product interaction with subtle realistic hand movement catching key light while ${world}.`,
         desc: humanAct3.desc
       };
 
       return {
-        base: [actHook, actMacro, actHuman, actLowWormEye, actMacroEdge, actHighDutchRight, actHero],
-        extras: [actProfileLeft, actLowWormEye, actMacroEdge, actHighDutchRight]
+        base: [actHook, actMacro, actHuman, actPanoramic, actMacroEdge, actSweepRight, actHero],
+        extras: [actSweepLeft, actPanoramic, actMacroEdge, actSweepRight]
       };
     }
 
@@ -1149,6 +1165,7 @@
     function buildNegative(allowPeople, isBox = false, allowLightBg = false, allowCyan = false, allowSmoke = false) {
       const parts = [
         "static camera", "frozen frame", "slideshow", "orbiting", "banking", "full 360 spin", "180 turn", "rear view",
+        "camera rig", "crane arm", "robotic arm", "studio equipment", "lighting stand", "softbox", "overhead light bar", "lamp fixture", "tripod", "table legs", "studio ceiling",
         "movie theater seats", "auditorium", "plastic CGI", "3D render look",
         "purple smoke", "pink smoke", "magenta fog", "violet mist",
         "purple LED", "pink LED", "red LED strip", "RGB glow", "neon edge", "glowing seams", "underglow", "LED strip",
@@ -1163,7 +1180,7 @@
       if (isBox) parts.push("closing lid", "closed box");
       if (allowPeople) parts.push("deformed hands", "extra fingers");
       else parts.push("people", "hands", "fingers");
-      return parts.join(", ").slice(0, 460);
+      return parts.join(", ").slice(0, 520);
     }
 
     function getProductSpec() {
@@ -1180,32 +1197,39 @@
       const macroFocus = (macroTarget.value.trim() || "material texture, precision edges and original finish").slice(0, 120);
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
+      const isBright = isBrightOrDaytimeModel(m);
       const allowCyan = NEON_CYAN_MODEL_IDS.has(m.id);
       const allowSmoke = hasModelSmoke(m);
       const bgRule = isLightStudio
-        ? "Create a seamless edge-to-edge bright architectural studio photograph extending cleanly to all 4 borders with soft sculpted shadows, no letterbox bars and no wall text."
-        : "Completely replace the uploaded photo's original plain or white background with a seamless edge-to-edge commercial studio environment extending to all 4 borders, with no white background, no white floor, no white margins and no wall text.";
+        ? "Create a seamless edge-to-edge bright minimalist architectural photograph extending cleanly to all 4 borders with soft sculpted shadows, no letterbox bars, no ceiling lights or equipment, and no wall text."
+        : isBright
+          ? "Completely replace the uploaded photo's plain cutout background with a seamless edge-to-edge bright real-world commercial photograph extending to all 4 borders, consistent natural lighting, no studio equipment and no wall text."
+          : "Completely replace the uploaded photo's original plain or white background with a seamless edge-to-edge commercial environment extending to all 4 borders, with no white background, no white floor, no white margins, no filming equipment and no wall text.";
       const framingRule = act.isMacro
-        ? "Extreme macro close-up crop filling 95% of the vertical 9:16 frame strictly with close-up surface texture and core details so all outer edges and pedestal fall outside the frame. Keep the product finish unlit and authentic."
+        ? `Extreme macro close-up crop filling 95% of the vertical 9:16 frame strictly with close-up surface texture and core details so all outer edges fall outside the frame. Keep the product finish unlit and authentic, and keep the out-of-focus background strictly matching the exact brightness and color of this scene (${m.lighting}).`
         : isBox
           ? `Keep the open display tray lid wide open on ${m.surface}.`
-          : `Place the product on ${m.surface} centered in the middle-upper safe zone (leaving the bottom 25% as clean pedestal and shadow), with unlit original product finish and grounded contact shadow.`;
+          : act.key === "panoramic_3d"
+            ? `Place the product prominently on ${m.surface} in a cinematic panoramic perspective showing the wider environment around it (no table legs, no ceiling fixtures), centered in the middle-upper safe zone with grounded contact shadow.`
+            : `Place the product on ${m.surface} centered in the middle-upper safe zone (leaving the bottom 25% as clean surface and shadow), with unlit original product finish and grounded contact shadow.`;
       const stillLight = isLightStudio
-        ? "Clean bright overhead architectural softbox lighting with gentle natural contact shadow and crisp highlights."
-        : `${dna.light.text}. Grounded physical contact shadow.`;
+        ? "Clean bright diffused architectural illumination with gentle natural contact shadow and crisp highlights."
+        : isBright
+          ? `Authentic natural bright illumination (${m.lighting}) with soft real-world contact shadow and crisp true-to-life reflections.`
+          : `${dna.light.text}. Grounded physical contact shadow.`;
       const stillBackdrop = isLightStudio
-        ? "Clean minimalist off-white studio backdrop with crisp clean air and gentle light falloff."
-        : m.isUGC
-          ? `Authentic real-world background depth (${m.lighting}) with crisp crystal-clear air and natural f/1.8 optical bokeh.`
+        ? "Clean minimalist seamless off-white backdrop with crisp clean air and gentle light falloff."
+        : isBright
+          ? `Authentic bright real-world background depth (${m.lighting}) with crisp crystal-clear air and natural f/1.8 optical bokeh (NEVER a black background).`
           : allowSmoke
             ? `Authentic scene lighting (${m.lighting}) with realistic natural charcoal-grey volumetric mist in shallow f/1.4 bokeh.`
             : `Authentic scene lighting (${m.lighting}) with crystal-clear spotless air and razor-clean shallow f/1.4 depth bokeh.`;
       const smokeAvoid = allowSmoke ? "colored purple or magenta tint," : "cloudy haze,";
       const avoidClause = allowCyan
-        ? `Avoid ${smokeAvoid} text overlays, watermarks, arrows, black bars, added glowing strips on the product, or distorted geometry.`
-        : isLightStudio
-          ? `Avoid ${smokeAvoid} text overlays, watermarks, arrows, black bars, dark gloomy walls, purple or cyan tint, added glowing strips on the product, or distorted geometry.`
-          : `Avoid ${smokeAvoid} text overlays, watermarks, arrows, black or white bars, white floor, purple/pink/cyan tint, added glowing strips on the product, or distorted geometry.`;
+        ? `Avoid ${smokeAvoid} visible filming equipment, lamps, stands, text overlays, watermarks, arrows, black bars, added glowing strips on the product, or distorted geometry.`
+        : isBright
+          ? `Avoid ${smokeAvoid} black studio background, visible filming gear, lamps, stands, table legs, text overlays, watermarks, arrows, black bars, purple or cyan tint, added glowing strips on the product, or distorted geometry.`
+          : `Avoid ${smokeAvoid} visible filming equipment, lamps, stands, text overlays, watermarks, arrows, black or white bars, white floor, purple/pink/cyan tint, added glowing strips on the product, or distorted geometry.`;
 
       return clampPrompt([
         `Edit and place the product from the reference image into an ultra-realistic 9:16 vertical still commercial photograph matching this exact universe (${m.genre}). ${bgRule}`,
@@ -1221,41 +1245,47 @@
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const macroFocus = (macroTarget.value.trim() || "surface texture and fine craftsmanship details").slice(0, 90);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
+      const isBright = isBrightOrDaytimeModel(m);
       const allowSmoke = hasModelSmoke(m);
       const angleMap = {
-        hook_hero: "low-angle front-left three-quarter 3D studio angle",
+        hook_hero: "low-angle front-left three-quarter 3D angle",
         super_macro: `extreme 100mm macro close-up focusing tightly on ${macroFocus} filling the frame`,
-        profile_left_pivot: "left-side 55-degree three-quarter studio angle showing side depth",
-        low_worm_eye: "low table-level upward angle showing bold product scale",
+        sweep_left_3d: "deep left-side 60-degree three-quarter angle showing side depth",
+        panoramic_3d: "wider cinematic panoramic establishing angle showing the product and horizon",
         macro_edge: `extreme 100mm diagonal macro close-up focusing on the edge texture and ${macroFocus}`,
-        high_dutch_right: "elevated 40-degree front-right studio angle with subtle dynamic tilt",
+        sweep_right_3d: "elevated 35-degree right-side 55-degree angle showing opposite side depth",
         final_hero: "clean front-three-quarter flagship hero angle centered in the middle-upper safe zone"
       };
-      const anglePhrase = angleMap[act.key] || "three-quarter 3D studio angle";
+      const anglePhrase = angleMap[act.key] || "three-quarter 3D angle";
       const bgPhrase = isLightStudio
-        ? `bright clean architectural studio backdrop with soft studio lighting on ${m.surface}`
-        : `commercial studio setting on ${m.surface} with ${m.lighting}${allowSmoke ? "" : " in crystal-clear air"}, no white background`;
+        ? `bright clean seamless architectural off-white backdrop on ${m.surface}`
+        : isBright
+          ? `bright natural real-world setting on ${m.surface} with ${m.lighting} in crystal-clear air`
+          : `commercial setting on ${m.surface} with ${m.lighting}${allowSmoke ? "" : " in crystal-clear air"}, no white background`;
       return clampPrompt(
-        `Ultra-realistic 9:16 vertical commercial product photograph of the exact item from the reference photo, ${orient.short}, shot from a ${anglePhrase}, placed in a ${bgPhrase}. Sharp focus, realistic materials, grounded contact shadow, edge-to-edge full frame, no text, no watermarks, no borders.`,
-        700
+        `Ultra-realistic 9:16 vertical commercial product photograph of the exact item from the reference photo, ${orient.short}, shot from a ${anglePhrase}, placed in a ${bgPhrase}. Sharp focus, realistic materials, grounded contact shadow, edge-to-edge full frame, no filming equipment, no text, no watermarks, no borders.`,
+        720
       );
     }
 
     function buildActMotionPrompt(m, act, dna) {
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
+      const isBright = isBrightOrDaytimeModel(m);
       const allowSmoke = hasModelSmoke(m);
       const worldMotion = getUniqueWorldMotion(m);
       const leadMotion = typeof act.motion === "function"
         ? act.motion(worldMotion)
-        : `Dynamic smooth Hollywood commercial camera movement with strong 3D parallax and crisp traveling rim-light highlights while ${worldMotion}.`;
+        : `Dynamic smooth Hollywood commercial perspective movement with strong 3D parallax and crisp traveling rim highlights while ${worldMotion}.`;
       const productAnchor = isBox
         ? "Keep the exact product and wide-open display box solidly grounded with authentic materials and crisp details."
-        : "Keep the exact product solidly grounded on its base with 100% original silhouette, authentic markings and unlit finish — ONLY the camera, lights and background environment move dynamically (never lifting the product off its base or warping logos).";
-      const smokeGuard = allowSmoke ? "" : " Crystal-clear transparent studio air with crisp optical clarity.";
+        : "Keep the exact product solidly grounded on its base with 100% original silhouette, authentic markings and unlit finish — ONLY the perspective angle, reflections and background environment move dynamically (never lifting the product off its base, never showing filming equipment or light stands).";
+      const smokeGuard = allowSmoke ? "" : " Crystal-clear transparent air with crisp optical clarity.";
       const lightClause = isLightStudio
-        ? "Bright clean architectural softbox lighting."
-        : `${dna.light.text}.`;
+        ? "Clean bright diffused architectural illumination."
+        : isBright
+          ? `Consistent bright natural lighting (${m.lighting}), never dark black backdrop.`
+          : `${dna.light.text}.`;
       const prompt = [
         leadMotion,
         `High-budget 9:16 ARRI Alexa 65 ${m.genre} commercial film, ultra-realistic physical optics, mute video.${smokeGuard}`,
@@ -1269,17 +1299,23 @@
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
+      const isBright = isBrightOrDaytimeModel(m);
       const allowCyan = NEON_CYAN_MODEL_IDS.has(m.id);
       const allowSmoke = hasModelSmoke(m);
       const castClause = m.hasPerson ? ` Creator: ${dna.cast.text}.` : "";
       const boxClause = isBox ? " Box lid fixed 100% wide open." : "";
-      const bgPurge = isLightStudio ? "" : " Replace 100% of uploaded white/plain background with full-bleed commercial studio scene (ZERO white background/floor).";
-      const smokeRule = allowSmoke ? "" : " Crystal-clear transparent studio air.";
-      const negLine = `Negative: ${buildNegative(m.hasPerson, isBox, isLightStudio, allowCyan, allowSmoke)}.`;
+      const bgPurge = isLightStudio ? "" : " Replace 100% of uploaded white/plain background with full-bleed commercial scene (no white background or floor).";
+      const smokeRule = allowSmoke ? "" : " Crystal-clear transparent air.";
+      const lightStr = isLightStudio
+        ? "clean bright diffused architectural illumination"
+        : isBright
+          ? `authentic bright natural lighting (${m.lighting})`
+          : dna.light.text;
+      const negLine = `Negative: ${buildNegative(m.hasPerson, isBox, isBright, allowCyan, allowSmoke)}.`;
       const body = clampPrompt([
-        `Ultra-realistic 9:16 full-bleed commercial studio photo (no bars/text/arrows), ${m.genre} (${dna.id}).${bgPurge}${smokeRule} ${getColorPaletteLock(m)}`,
+        `Ultra-realistic 9:16 full-bleed commercial photo (no bars/text/arrows/equipment), ${m.genre} (${dna.id}).${bgPurge}${smokeRule} ${getColorPaletteLock(m)}`,
         `LOCK: ${getProductSpec()} Centered in middle-upper safe zone (bottom 25% clear).${boxClause}`,
-        `Scene: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Light: ${isLightStudio ? 'clean bright architectural studio softbox lighting' : dna.light.text}.`
+        `Scene: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Light: ${lightStr}.`
       ].join(" "), 1850);
       return `${body}\n\n${negLine}`;
     }
@@ -1971,7 +2007,7 @@
               vSrc.playbackRate.value = Math.min(1.22, vDec.duration / Math.max(1, totalSec - 0.18));
             }
             const vg = audioCtx.createGain();
-            vg.gain.setValueAtTime(1.06, startAt);
+            vg.gain.setValueAtTime(1.14, startAt);
             vSrc.connect(vg); vg.connect(comp);
             vSrc.start(startAt + 0.06);
             vSrc.stop(startAt + totalSec + 0.1);
@@ -1987,9 +2023,10 @@
             src.buffer = decoded;
             src.loop = true;
             const mg = audioCtx.createGain();
-            const baseVol = voiceMixedOk ? 0.30 : 0.92;
-            mg.gain.setValueAtTime(0.08, startAt);
-            mg.gain.linearRampToValueAtTime(baseVol, startAt + 0.08);
+            // Studio-calibrated volume: 0.28 without built-in narration (leaves headroom for CapCut voiceover), 0.12 with built-in narration
+            const baseVol = voiceMixedOk ? 0.12 : 0.28;
+            mg.gain.setValueAtTime(0.03, startAt);
+            mg.gain.linearRampToValueAtTime(baseVol, startAt + 0.10);
 
             if (withSfx && !voiceMixedOk) {
               let lastScheduled = startAt + 0.10;
@@ -2024,21 +2061,22 @@
           const nBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
           const d = nBuf.getChannelData(0);
           for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-          const sfxScale = voiceMixedOk ? 0.45 : 0.90;
+          // Subtle, low-level Hollywood SFX calibrated so voiceover (built-in or CapCut) stays 100% clear
+          const sfxScale = voiceMixedOk ? 0.18 : 0.36;
 
-          scheduleSoftSubHit(audioCtx, comp, startAt, 0.90 * sfxScale);
+          scheduleSoftSubHit(audioCtx, comp, startAt, 0.72 * sfxScale);
 
           const lastIdx = segments.length - 1;
           for (let idx = 1; idx < segments.length; idx++) {
             const cutT = startAt + segments[idx].start;
             if (idx === lastIdx && lastIdx >= 2) {
-              scheduleCinemaRiser(audioCtx, comp, nBuf, cutT, 0.52, sfxScale);
-              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, 2, sfxScale * 1.05);
-              scheduleSoftSubHit(audioCtx, comp, cutT, 0.85 * sfxScale);
+              scheduleCinemaRiser(audioCtx, comp, nBuf, cutT, 0.48, 0.85 * sfxScale);
+              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, 2, 0.90 * sfxScale);
+              scheduleSoftSubHit(audioCtx, comp, cutT, 0.70 * sfxScale);
             } else if (idx % 2 === 1) {
               const variant = Math.floor(idx / 2) % 3;
-              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, variant, sfxScale);
-              scheduleSoftSubHit(audioCtx, comp, cutT, 0.58 * sfxScale);
+              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, variant, 0.85 * sfxScale);
+              scheduleSoftSubHit(audioCtx, comp, cutT, 0.50 * sfxScale);
             }
           }
         }
@@ -2131,45 +2169,44 @@
           } else {
             if (seg.editMove === "crashZoom") {
               // Explosive Hollywood crash-zoom slam-in
-              scale = 1.03 + easeOutCubic(p) * (0.21 + dna.zoomJitter) * optBoost;
-              panX = dir * Math.sin(p * Math.PI) * 14 * optBoost;
-              panY = (0.45 - smoothCurve) * 14 * optBoost;
+              scale = 1.04 + easeOutCubic(p) * (0.20 + dna.zoomJitter) * optBoost;
+              panX = -1 * Math.sin(p * Math.PI) * 14 * optBoost;
+              panY = (0.45 - smoothCurve) * 12 * optBoost;
             } else if (seg.editMove === "macroSweep") {
-              // Deep 100mm macro push + lateral track
-              scale = 1.18 + smoothCurve * 0.18 * optBoost;
-              panX = dir * (smoothCurve - 0.5) * 38 * optBoost;
+              // Deep 100mm macro push + alternating left-to-right / right-to-left track
+              const macroDir = seg.key === "super_macro" ? 1 : -1;
+              scale = 1.16 + smoothCurve * 0.18 * optBoost;
+              panX = macroDir * (smoothCurve - 0.5) * 42 * optBoost;
+              panY = (0.5 - smoothCurve) * 8;
+            } else if (seg.editMove === "sweepLeft3D") {
+              // Explicit LEFT-side 3D curved arc sweeping toward center
+              const arcZoom = p < 0.42 ? easeOutCubic(p / 0.42) : 1 - easeInOutQuad((p - 0.42) / 0.58) * 0.45;
+              scale = 1.07 + arcZoom * 0.15 * optBoost;
+              panX = (0.5 - smoothCurve) * 48 * optBoost;
               panY = (0.5 - smoothCurve) * 10;
-            } else if (seg.editMove === "craneRise") {
-              // Dramatic crane rise + zoom swell
-              const inOut = Math.sin(p * Math.PI);
-              scale = 1.05 + inOut * 0.15 * optBoost;
-              panY = (0.5 - smoothCurve) * 28 * optBoost;
-              panX = dir * (smoothCurve - 0.5) * 22 * optBoost;
-            } else if (seg.editMove === "zoomArcOut") {
-              // Dynamic zoom-in arc releasing into clean zoom-out
-              const zoomWave = p < 0.45
-                ? easeOutCubic(p / 0.45)
-                : 1 - easeInOutQuad((p - 0.45) / 0.55);
-              scale = 1.05 + zoomWave * 0.17 * optBoost;
-              panX = dir * (smoothCurve - 0.5) * 34 * optBoost;
-              panY = (0.5 - smoothCurve) * 10;
-              angle = dir * Math.sin(p * Math.PI * 2) * 0.008;
-            } else if (seg.editMove === "heroPunch") {
-              // Commanding silky Hollywood zoom-out pull-back reveal
-              scale = 1.22 - easeOutCubic(p) * 0.18;
-              panX = dir * (1 - smoothCurve) * 14;
+              angle = -0.008 * Math.sin(p * Math.PI);
+            } else if (seg.editMove === "sweepRight3D") {
+              // Explicit RIGHT-side 3D curved arc sweeping toward center (mirror contrast)
+              const arcZoom = p < 0.42 ? easeOutCubic(p / 0.42) : 1 - easeInOutQuad((p - 0.42) / 0.58) * 0.45;
+              scale = 1.07 + arcZoom * 0.15 * optBoost;
+              panX = (smoothCurve - 0.5) * 48 * optBoost;
               panY = (smoothCurve - 0.5) * 10;
+              angle = 0.008 * Math.sin(p * Math.PI);
+            } else if (seg.editMove === "panoramicGlide") {
+              // Wide cinematic panoramic horizontal glide left-to-right with gentle push
+              scale = 1.08 + smoothCurve * 0.11 * optBoost;
+              panX = (smoothCurve - 0.5) * 52 * optBoost;
+              panY = Math.sin(p * Math.PI) * -8;
+            } else if (seg.editMove === "heroPunch") {
+              // Controlled silky zoom-out keeping the product large & commanding (no excessive shrink)
+              scale = 1.15 - easeOutCubic(p) * 0.11;
+              panX = dir * (1 - smoothCurve) * 12;
+              panY = (smoothCurve - 0.5) * 6;
             } else {
-              // lightSweep34: punchy side-slider zoom-in + parallax glide
-              const arcZoom = p < 0.35
-                ? easeOutCubic(p / 0.35)
-                : p < 0.72
-                  ? 1.0
-                  : 1.0 - easeInOutQuad((p - 0.72) / 0.28) * 0.72;
-              scale = 1.05 + arcZoom * 0.16 * optBoost;
-              panX = dir * (smoothCurve - 0.5) * 38 * optBoost;
-              panY = (0.5 - smoothCurve) * 10;
-              angle = dir * Math.sin((p - 0.5) * Math.PI) * 0.009;
+              const inOut = Math.sin(p * Math.PI);
+              scale = 1.06 + inOut * 0.14 * optBoost;
+              panX = dir * (smoothCurve - 0.5) * 34 * optBoost;
+              panY = (0.5 - smoothCurve) * 16 * optBoost;
             }
 
             if (seg.trans === "whipPan" && cEl < 0.13) {
@@ -2191,7 +2228,7 @@
           if (isBlockbuster && seg.trans === "radialFlash" && cEl < 0.15) {
             drawSpecularRadialFlash(ctx, canvas.width, canvas.height, 1 - cEl / 0.15);
           }
-          if (isBlockbuster && (seg.isImg || seg.editMove === "macroSweep" || seg.editMove === "heroPunch" || seg.editMove === "lightSweep34")) {
+          if (isBlockbuster && (seg.isImg || seg.editMove === "macroSweep" || seg.editMove === "heroPunch" || seg.editMove === "sweepLeft3D" || seg.editMove === "sweepRight3D" || seg.editMove === "panoramicGlide")) {
             drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, (seg.editMove === "macroSweep" ? 0.16 : 0.11) * Math.sin(p * Math.PI), dir);
           }
           if (!allowLightBg) {
@@ -2331,7 +2368,7 @@
           audioCtx,
           soundtrackBuf,
           voiceBuf,
-          LIGHT_STUDIO_MODEL_IDS.has(lastMasterSession.vidModel.id)
+          isBrightOrDaytimeModel(lastMasterSession.vidModel)
         );
         const mLabel = mKey === "custom" ? `MP3: ${customAudioName}` : (out.musicMixedOk ? `${MUSIC_PROMPTS[mKey]?.label || newEngine}` : "Whoosh Sutil");
         const audioSummary = out.voiceMixedOk ? `${mLabel} + 🎙️ Narração PT-BR` : mLabel;
@@ -2696,7 +2733,7 @@
                     duration: "5",
                     generateAudio: false,
                     motionPrompt: buildActMotionPrompt(selectedVidModel, act, dna),
-                    negativePrompt: buildNegative(act.isHuman, isBox, LIGHT_STUDIO_MODEL_IDS.has(selectedVidModel.id), NEON_CYAN_MODEL_IDS.has(selectedVidModel.id), hasModelSmoke(selectedVidModel))
+                    negativePrompt: buildNegative(act.isHuman, isBox, isBrightOrDaytimeModel(selectedVidModel), NEON_CYAN_MODEL_IDS.has(selectedVidModel.id), hasModelSmoke(selectedVidModel))
                   }, 26000, runSignal);
                   if (qVid.engine) engineUsed = qVid.engine;
                   break;
@@ -2789,7 +2826,7 @@
           audioCtx,
           soundtrackBuf,
           voiceBuf,
-          LIGHT_STUDIO_MODEL_IDS.has(selectedVidModel.id)
+          isBrightOrDaytimeModel(selectedVidModel)
         );
 
         const musicLabel = mKey === "custom" ? `MP3: ${customAudioName}` : (out.musicMixedOk ? `${MUSIC_PROMPTS[mKey]?.label || aiMusicEngine} (${aiMusicEngine})` : "Whoosh Sutil");
