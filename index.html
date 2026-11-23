@@ -107,7 +107,7 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>BLOCKBUSTER v11.4 PRO • 105 VÍDEOS • 105 IMAGENS</span></div>
+    <div class="brand">NEXORA.AI <span>BLOCKBUSTER v11.5 ULTRA-REAL • 105 VÍDEOS • 105 IMAGENS</span></div>
     <div class="pill-info">🎬 Motor Blockbuster 4 Atos Universal (Qualquer Produto) • Super Macro 100mm • Mirror Punch-In &amp; Speed-Ramp • Voz PT-BR • PNG</div>
   </div>
 
@@ -195,7 +195,7 @@
 
       <div class="director-banner" id="directorBannerWrap">
         <div class="director-banner-head">
-          <span>🎬 Coreografia v11.4 Multi-Ângulos (7 Ângulos Distintos • Pivô Sutil de Vitrine ±35° • Super Macro 100% Real • Mesmo Pedestal • Zoom-Out Final):</span>
+          <span>🎬 Coreografia v11.5 Ultra-Real (Virada Lenta Escultural ±40° • 7 Câmeras/Ângulos Distintos • Fumaça Volumétrica Viva • Paleta Travada • Zoom-Out):</span>
           <small style="color:#86efac;">100% universal nos 105 universos • Zona Segura TikTok Shop</small>
         </div>
         <div class="director-acts-preview" id="directorActsPreview"></div>
@@ -426,7 +426,7 @@
         { tag: "Ouro Quente Especular", text: "sweeping warm golden-amber rim light paired with clean neutral-white key light gliding across every real contour of the product" },
         { tag: "Prata & Aço Cinético", text: "razor-sharp silver-white commercial softbox reflection sweeping briskly across the real surface texture" },
         { tag: "Holofote God-Ray Noir", text: "single dramatic architectural overhead spotlight cutting crisp specular highlights through deep dark studio shadows" },
-        { tag: "IMAX Teal & Brasa", text: "IMAX volumetric cool-teal and warm-amber atmospheric depth behind clean true-color front key light on the product" },
+        { tag: "Estúdio Anamórfico Neutro", text: "clean neutral-white overhead commercial key light paired with crisp directional rim lighting carving authentic micro-texture and deep natural shadows" },
         { tag: "Obsidiana & Contraste Pro", text: "velvet pitch-black studio depth carved by moving directional commercial rim lights with authentic specular reflections" }
       ],
       surfaceNuances: [
@@ -470,6 +470,7 @@
 
     const CONTAINER_MODEL_IDS = new Set([3, 23, 37, 52, 67, 71, 77]);
     const LIGHT_STUDIO_MODEL_IDS = new Set([38, 88]);
+    const NEON_CYAN_MODEL_IDS = new Set([102, 6, 12, 35]);
 
     const RAW_VIDEO_MODELS = [
       [101,"Master10",false,false,true,"#101 Eclipse Vulcânico & Faíscas Ouro (Ref. Vídeo 1)","Rocha vulcânica + eclipse dourado + brilho estrela + super macro 100mm + faíscas","blockbuster volcanic-eclipse commercial","rugged raw matte-black volcanic basalt rock pedestal in a dramatic pitch-black void","Blazing golden solar eclipse corona glowing far behind with warm star-glint edge highlights and clean front key light","Golden eclipse corona radiates behind as floating golden fire sparks drift slowly through deep f/1.4 bokeh while warm specular light sweeps across the product","extreme 100mm macro filling 90% of the frame showing real surface grain, edges and warm golden rim glint"],
@@ -618,57 +619,80 @@
       return chosen;
     }
 
+    function getColorPaletteLock(m) {
+      if (NEON_CYAN_MODEL_IDS.has(m.id)) {
+        return "PALETTE LOCK: Strictly honor this universe's authentic blue/cyan accents; zero purple, pink or magenta haze.";
+      }
+      if (LIGHT_STUDIO_MODEL_IDS.has(m.id)) {
+        return "PALETTE LOCK: Clean neutral off-white/pure-white architectural studio tones; zero purple, pink, magenta or cyan tint.";
+      }
+      if (m.isUGC) {
+        return "PALETTE LOCK: True-to-life natural daylight/indoor colors; zero purple, pink, magenta or cyan smoke/haze.";
+      }
+      return "PALETTE LOCK: Strictly preserve this universe's authentic monochrome/natural color grading — all smoke, mist and haze MUST remain realistic natural charcoal-grey, pale silver-white or subtle universe-matched tone (ZERO purple smoke, ZERO pink/magenta fog, ZERO cyan nebula).";
+    }
+
+    function getLivingAtmosphereMotion(m) {
+      if (m.isUGC) {
+        return `natural drifting airborne micro-dust motes, gentle living ambient light depth and shifting real-world reflections (${m.envMotion})`;
+      }
+      if (LIGHT_STUDIO_MODEL_IDS.has(m.id)) {
+        return `crisp shifting overhead softbox reflections gliding across real material grain and clean studio depth (${m.envMotion})`;
+      }
+      return `ultra-realistic slow-motion volumetric smoke wisps and fine natural haze curling and drifting continuously in 3D space behind and softly around the pedestal, catching directional key light with subtle airborne micro-dust (${m.envMotion})`;
+    }
+
     function getActTemplates(m, profile) {
       const optics = m.isUGC
-        ? "authentic crisp vertical 9:16 creator camera, natural f/1.8 shallow depth"
-        : "ARRI Alexa 65 anamorphic 9:16 commercial studio optics, f/1.4 razor-shallow bokeh, clean dark stage with 1 vivid living background phenomenon";
+        ? "ultra-realistic vertical 9:16 creator film optics, authentic f/1.8 natural bokeh, real tactile surface grain, zero CGI plastic look"
+        : "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 commercial studio film optics, f/1.4 razor-shallow bokeh, authentic physical micro-texture and natural specular roll-off, zero CGI plastic look";
 
       const actHook = {
         key: "hook_hero", shortLabel: "Ato 1 • Baixo 3/4 + Zoom-In", isHuman: false, isMacro: false, editMove: "crashZoom", trans: "mirrorPunch",
-        beat: "0.0s: fast smooth low-angle 3D dolly zoom-in approaching the grounded product from a dramatic 22° front-left low angle -> 1.1s: subtle camera parallax with crisp specular light glint sweeping across the front surface as background atmosphere moves gently -> 2.5s: sharp heroic close lock in middle-upper safe zone",
-        desc: (m, orient, isBox) => `ACT 1 (LOW-ANGLE 3/4 HERO ZOOM-IN — 75% FRAME): ${optics}. Monumental low-angle 20-degree front-left three-quarter 3D perspective looking slightly upward at the exact product ${orient.short} ${isBox ? "at an elevated 36° angle " : ""}resting heavily on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart). ${m.lighting}.`
+        beat: "0.0s: smooth low-angle 3D dolly zoom-in approaching the grounded product from a 24° front-left angle -> 1.0s: product performs a silky slow 22° sculptural turn catching overhead key light while realistic volumetric smoke wisps drift organically behind -> 2.5s: sharp heroic lock in middle-upper safe zone",
+        desc: (m, orient, isBox) => `ACT 1 (LOW-ANGLE 3/4 HERO ZOOM-IN — 75% FRAME): ${optics}. Monumental low-angle 22-degree front-left three-quarter 3D perspective of the exact product ${orient.short} ${isBox ? "at an elevated 36° angle " : ""}resting heavily on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear for TikTok cart). ${m.lighting}.`
       };
 
       const actMacro = {
-        key: "super_macro", shortLabel: "Ato 2 • Super Macro 100mm (100%)", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "zoomBlur",
-        beat: "0.0s: ultra-tight 100mm oblique probe-macro zoom-in 2cm from the product surface filling 100% of frame -> 1.0s: gentle lateral camera glide from left detail across center texture to right detail while specular light sweeps cleanly across real finish -> 2.5s: razor-sharp macro glide",
-        desc: (m, orient, isBox, macro) => `ACT 2 (EXTREME 100MM PROBE-MACRO — 100% FULL-SCREEN SURFACE FILL, ZERO PEDESTAL VISIBLE): Ultra-close 100mm macro lens positioned 2cm away at a low 18-degree oblique angle, cropped tightly onto ONLY the central detail (${macro}) of the exact product ${orient.short}, filling 95–100% of the vertical 9:16 screen so ALL outer product borders and pedestal are cropped completely out of frame. ${m.macroAccent}. Razor-sharp authentic surface grain and markings, zero invented text, zero white background.`
+        key: "super_macro", shortLabel: "Ato 2 • Super Macro + Virada Lenta", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "zoomBlur",
+        beat: "0.0s: ultra-realistic 100mm close-up macro filling 100% of the vertical screen with authentic material micro-grain and central details -> 0.8s: silky, slow, continuous 38° sculptural turn from front-three-quarter into a deep lateral close-up revealing side thickness, sculpted edges, controls and real material finish with zero distortion while subtle realistic smoke wisps drift softly in dark bokeh behind -> 2.5s: razor-sharp optical macro glide",
+        desc: (m, orient, isBox, macro) => `ACT 2 (ULTRA-REALISTIC 100MM PROBE-MACRO + SLOW SCULPTURAL TURN — 100% FRAME FILL, ZERO PEDESTAL): Ultra-close 100mm Master Prime macro lens 2cm from the product at a 20-degree oblique angle, cropped tightly onto ONLY the central detail (${macro}) of the exact product ${orient.short}, filling 95–100% of the vertical 9:16 screen so outer borders and pedestal are completely cropped out. ${m.macroAccent}. Physically accurate micro-grain, crisp original markings, zero invented text, zero white background.`
       };
 
       const actProfileLeft = {
-        key: "profile_left_pivot", shortLabel: "Ato 3 • Perfil Esq 55° + Pivô", isHuman: false, isMacro: false, editMove: "lightSweep34", trans: "whipPan",
-        beat: "0.0s: smooth camera zoom-in from a sharp 55° left-side profile angle showcasing side depth and contours -> 1.0s: elegant subtle showroom micro-pivot (~35°) turning gently from 55° left profile toward 20° front-left while product stays firmly grounded on its base (NEVER turning 180° to unseen rear) and background lights/atmosphere drift subtly -> 2.3s: controlled smooth zoom-out release",
-        desc: (m, orient) => `ACT 3 (55° LEFT SIDE PROFILE + SUBTLE SHOWROOM PIVOT — 78% FRAME): ${optics}. Distinct 55-degree left-side three-quarter 3D perspective clearly showing the side thickness, sculpted lateral contours and depth of the exact product ${orient.short} resting firmly on the EXACT SAME ${m.surface}, centered in the middle-upper safe zone while ${m.envMotion} moves subtly behind.`
+        key: "profile_left_pivot", shortLabel: "Ato 3 • Câmera Lateral Esq 60° + Giro", isHuman: false, isMacro: false, editMove: "lightSweep34", trans: "whipPan",
+        beat: "0.0s: distinct 60° left-side lateral camera angle zooming in smoothly on the product's sculpted side profile -> 0.9s: product rotates slowly and smoothly (~40° luxury watch-commercial turn from 60° left profile toward 20° front-left while staying solidly grounded on its base, NEVER flipping 180° to unseen back) as realistic billowing smoke wisps curl continuously behind and catch crisp rim light -> 2.4s: controlled smooth release",
+        desc: (m, orient) => `ACT 3 (DEEP 60° LEFT-SIDE LATERAL CAMERA + SLOW TURN — 78% FRAME): ${optics}. Distinct 60-degree left lateral side camera angle clearly revealing the side thickness, lateral hardware/contours and real depth of the exact product ${orient.short} resting firmly on the EXACT SAME ${m.surface}, centered in the middle-upper safe zone with realistic drifting volumetric smoke/atmosphere behind.`
       };
 
-      const actTop45Right = {
-        key: "elevated_top45", shortLabel: "Ato 4 • Alto 45° Dir + Crane", isHuman: false, isMacro: false, editMove: "zoomArcOut", trans: "radialFlash",
-        beat: "0.0s: elevated 42° high-angle front-right crane shot gliding downward and zooming in gently -> 1.1s: subtle 30° showroom presentation pivot from right toward center highlighting top geometry and right-side contours while background atmosphere shifts gently -> 2.3s: smooth controlled pull-back",
-        desc: (m, orient) => `ACT 4 (ELEVATED 42° HIGH-ANGLE FRONT-RIGHT PERSPECTIVE — 78% FRAME): ${optics}. Distinct 42-degree high-elevated three-quarter angle from the front-right side showcasing top design, sculpted upper geometry and right contours of the exact product ${orient.short} resting solidly on the EXACT SAME ${m.surface} (NEVER flat 90° top-down cutout pasted upright), centered in the middle-upper safe zone.`
+      const actLowWormEye = {
+        key: "low_worm_eye", shortLabel: "Ato 4 • Contra-Plongée Base + Subida", isHuman: false, isMacro: false, editMove: "craneRise", trans: "radialFlash",
+        beat: "0.0s: dramatic ultra-low table-level worm's-eye camera resting right along the pedestal edge looking upward (+18°) -> 0.9s: smooth upward crane tilt combined with a slow 30° sculptural turn of the grounded product from right-front toward center while dense realistic volumetric smoke curls slowly across the dark background -> 2.4s: imposing monumental lock",
+        desc: (m, orient) => `ACT 4 (ULTRA-LOW WORM'S-EYE CONTRA-PLONGÉE FROM PEDESTAL EDGE — 78% FRAME): ${optics}. Dramatic low table-level camera positioned right at pedestal height looking upward (+18° elevation) at the exact product ${orient.short} resting heavily on the EXACT SAME ${m.surface}, giving monumental flagship scale in the middle-upper safe zone with real grounded contact shadow and natural drifting volumetric smoke/atmosphere behind.`
       };
 
       const actMacroEdge = {
-        key: "macro_edge", shortLabel: "Ato 5 • Macro Quina/Borda (100%)", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "zoomBlur",
-        beat: "0.0s: tight diagonal 100mm probe-macro gliding smoothly along the precision edge, bevel and material contour (zero pedestal in frame) -> 1.2s: crisp moving rim-light glint sweeps across authentic finish while distant bokeh shifts subtly -> 2.5s: sharp focus lock",
-        desc: (m, orient, isBox, macro) => `ACT 5 (EXTREME 100MM EDGE & CONTOUR MACRO — 95–100% FILL, OPPOSITE DIAGONAL, ZERO PEDESTAL): Ultra-close 100mm probe-macro skimming closely along the sculpted upper rim, edge contour and ${macro} of the exact product ${orient.short}, outer edges and pedestal cropped completely out of frame with crisp moving rim-light and deep out-of-focus f/1.4 bokeh behind, zero white background.`
+        key: "macro_edge", shortLabel: "Ato 5 • Macro Lateral Dir + Virada", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "zoomBlur",
+        beat: "0.0s: ultra-realistic 100mm macro shot from the opposite right-side oblique angle skimming closely along the sculpted bevel, side controls and contour (zero pedestal visible) -> 0.9s: silky slow 35° continuous turn revealing the side profile depth and moving specular light sweep across real surface grain while natural smoke wisps drift softly in deep out-of-focus bokeh -> 2.5s: razor-sharp focus settle",
+        desc: (m, orient, isBox, macro) => `ACT 5 (ULTRA-REALISTIC 100MM RIGHT-SIDE EDGE MACRO + SLOW TURN — 95–100% FILL, ZERO PEDESTAL): Ultra-close 100mm Master Prime macro lens from the opposite right-side diagonal skimming closely along the sculpted edge, side contours and ${macro} of the exact product ${orient.short}, outer edges and pedestal cropped completely out of frame, real physical material finish, crisp moving rim-light and subtle natural bokeh behind, zero white background.`
       };
 
-      const actProfileRightLow = {
-        key: "profile_right_low", shortLabel: "Ato 6 • Perfil Dir Baixo 55°", isHuman: false, isMacro: false, editMove: "craneRise", trans: "whipPan",
-        beat: "0.0s: dramatic table-level low 55° right-side profile push-in -> 1.1s: fluid horizontal camera arc gliding smoothly from right profile toward front-right 25° with strong background parallax as ambient lights and atmosphere sweep past -> 2.4s: crisp sculptural lock",
-        desc: (m, orient) => `ACT 6 (LOW TABLE-LEVEL 55° RIGHT PROFILE — 78% FRAME): ${optics}. Dramatic low table-level 55-degree right-side profile 3D perspective (opposite side from Act 3) revealing the right lateral profile, grounded contact shadow and true materials of the exact product ${orient.short} resting solidly on the EXACT SAME ${m.surface}, centered in the middle-upper safe zone.`
+      const actHighDutchRight = {
+        key: "high_dutch_right", shortLabel: "Ato 6 • Alto 40° Dir + Dutch 10°", isHuman: false, isMacro: false, editMove: "zoomArcOut", trans: "whipPan",
+        beat: "0.0s: elevated 40° front-right commercial studio camera with a sleek subtle 10° Dutch tilt zooming in gently -> 0.9s: product executes a smooth slow 35° showroom turn from 55° right side toward 20° front-right revealing top geometry and opposite side contours while realistic volumetric smoke curls and drifts dynamically across the background -> 2.3s: smooth controlled pull-back",
+        desc: (m, orient) => `ACT 6 (ELEVATED 40° FRONT-RIGHT + SUBTLE 10° DUTCH ANGLE — 78% FRAME): ${optics}. Distinct 40-degree elevated front-right commercial angle with a sleek subtle 10-degree dynamic tilt revealing upper geometry, right-side depth and authentic materials of the exact product ${orient.short} resting firmly on the EXACT SAME ${m.surface} (NEVER flat 90° top-down cutout pasted upright), centered in the middle-upper safe zone.`
       };
 
       const actHero = {
-        key: "final_hero", shortLabel: "Ato 7 • Hero Final + Zoom-Out", isHuman: false, isMacro: false, editMove: "heroPunch", trans: "mirrorPunch",
-        beat: "0.0s: close commanding 3D three-quarter framing with a subtle 15° showroom settle locking into the flagship hero pose on the base (zero lifting, zero 180° rear spin, zero added glowing lines) -> 1.0s: silky smooth camera-only zoom-out pull-back widening cleanly to reveal the complete product commanding the middle-upper safe zone while background lights, haze and atmosphere drift vividly -> 2.5s: rock-steady flagship hero lock",
-        desc: (m, orient) => `ACT 7 (FLAGSHIP 3D HERO FINALE WITH ZOOM-OUT — 76% FRAME IN MIDDLE-UPPER SAFE ZONE): ${optics}. Iconic 24-degree front-three-quarter 3D hero perspective (showing full 3D depth, grounded bottom contact and real shadow — NEVER flat top-down pasted upright) of the exact product ${orient.short} resting firmly on the EXACT SAME ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart) with dramatic overhead spotlight and authentic unlit product finish.`
+        key: "final_hero", shortLabel: "Ato 7 • Hero Final + Giro & Zoom-Out", isHuman: false, isMacro: false, editMove: "heroPunch", trans: "mirrorPunch",
+        beat: "0.0s: close commanding 3D three-quarter framing as the grounded product finishes a silky slow 18° sculptural settle into its flagship hero pose on the base (zero lifting, zero 180° rear spin, zero glowing strips) -> 1.0s: smooth camera zoom-out pull-back widening cleanly to frame the entire product in the middle-upper safe zone while ultra-realistic volumetric smoke and ambient light curl organically behind -> 2.5s: rock-steady flagship hero lock",
+        desc: (m, orient) => `ACT 7 (FLAGSHIP 3D HERO FINALE WITH ZOOM-OUT — 76% FRAME IN MIDDLE-UPPER SAFE ZONE): ${optics}. Iconic 24-degree front-three-quarter 3D hero perspective (full 3D volume, grounded bottom contact and real shadow — NEVER flat top-down pasted upright) of the exact product ${orient.short} resting firmly on the EXACT SAME ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart) with dramatic overhead spotlight and authentic unlit product finish.`
       };
 
       if (profile === "cinema_universal") {
         return {
-          base: [actHook, actMacro, actProfileLeft, actTop45Right, actMacroEdge, actProfileRightLow, actHero],
-          extras: [actProfileLeft, actTop45Right, actMacroEdge, actProfileRightLow]
+          base: [actHook, actMacro, actProfileLeft, actLowWormEye, actMacroEdge, actHighDutchRight, actHero],
+          extras: [actProfileLeft, actLowWormEye, actMacroEdge, actHighDutchRight]
         };
       }
 
@@ -698,8 +722,8 @@
       };
 
       return {
-        base: [actHook, actMacro, actHuman, actTop45Right, actMacroEdge, actProfileRightLow, actHero],
-        extras: [actProfileLeft, actTop45Right, actMacroEdge, actProfileRightLow]
+        base: [actHook, actMacro, actHuman, actLowWormEye, actMacroEdge, actHighDutchRight, actHero],
+        extras: [actProfileLeft, actLowWormEye, actMacroEdge, actHighDutchRight]
       };
     }
 
@@ -1063,29 +1087,31 @@
       return (lastSpace > maxLen - 120 ? cut.slice(0, lastSpace) : cut).trim();
     }
 
-    function buildNegative(allowPeople, isBox = false, allowLightBg = false) {
+    function buildNegative(allowPeople, isBox = false, allowLightBg = false, allowCyan = false) {
       const parts = [
         "orbiting", "banking", "full 360 spin", "180 turn", "rear view", "back of product",
-        "movie theater seats", "cinema seats", "auditorium",
+        "movie theater seats", "auditorium", "plastic CGI", "3D render look",
+        "purple smoke", "pink smoke", "magenta fog", "violet mist", "rainbow glow",
         "purple LED", "pink LED", "red LED strip", "RGB glow", "neon edge", "glowing seams", "underglow", "LED strip",
-        "standing upright on rear edge", "balanced on rear", "top-down pasted vertically",
+        "standing upright on rear edge", "top-down pasted vertically",
         "invented logo", "text", "wall text", "subtitles", "watermark",
         "arrows", "black bars", "white bars", "catalog cutout",
         "morphing", "distorted product", "floating product", "cartoon", "blur"
       ];
+      if (!allowCyan) parts.push("cyan smoke", "blue neon fog", "teal nebula");
       if (!allowLightBg) parts.push("white background", "white floor", "white margin");
       if (isBox) parts.push("closing lid", "closed box");
       if (allowPeople) parts.push("deformed hands", "extra fingers");
       else parts.push("people", "hands", "fingers");
-      return parts.join(", ").slice(0, 410);
+      return parts.join(", ").slice(0, 420);
     }
 
     function getProductSpec() {
       const hint = productDetailHint.value.trim().slice(0, 160);
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const core = hint
-        ? `${hint}, 100% identical to reference photo, authentic unlit original surface finish, exact colors/texture/markings, zero invented logos or added lights on the product`
-        : `exact product from reference photo, 100% faithful design, authentic unlit original finish and colors, zero invented logos or added lights on the product`;
+        ? `${hint}, 100% identical to reference photo, ultra-realistic physical materials, authentic unlit original surface finish, exact colors/micro-grain/markings, zero invented logos or added lights on the product`
+        : `exact product from reference photo, 100% faithful design, ultra-realistic physical materials, authentic unlit original finish and colors, zero invented logos or added lights on the product`;
       return `${core}. ${orient.full}`;
     }
 
@@ -1094,20 +1120,22 @@
       const macroFocus = (macroTarget.value.trim() || "material texture, precision edges and original finish").slice(0, 120);
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
+      const allowCyan = NEON_CYAN_MODEL_IDS.has(m.id);
       const bgPurge = isLightStudio
         ? "Full-bleed architectural studio to all 4 borders, no bars, no wall text."
         : "REPLACE 100% of uploaded photo's white/plain background with full-bleed commercial studio environment to all 4 borders — ZERO white background, white floor, white margin or wall text.";
       const framingLock = act.isMacro
-        ? "EXTREME MACRO CROP LOCK: Fill 95–100% of the vertical 9:16 screen strictly with close-up surface texture and core details — crop all outer product edges and pedestal completely OUTSIDE the frame. Zero wide shot, zero pedestal visible, unlit original product finish."
+        ? "EXTREME MACRO CROP LOCK: Fill 95–100% of the vertical 9:16 screen strictly with ultra-sharp close-up surface texture and core details — crop all outer product borders and pedestal completely OUTSIDE the frame. Zero pedestal visible, unlit authentic product finish."
         : isBox
           ? `CASE & CONTINUITY LOCK: Open box lid locked 100% wide open on the EXACT SAME ${m.surface}.`
-          : `SAFE-ZONE & PEDESTAL CONTINUITY LOCK: Use the EXACT SAME pedestal (${m.surface}) consistently — never swap for a generic plain cylinder or cube. Product centered in middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart), unlit product shell and unlit pedestal.`;
-      const negLine = `Negative: ${buildNegative(act.isHuman, isBox, isLightStudio)}.`;
+          : `SAFE-ZONE & PEDESTAL CONTINUITY LOCK: Use the EXACT SAME pedestal (${m.surface}) consistently — never swap for a plain cylinder or cube. Product centered in middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart), unlit product shell and unlit pedestal.`;
+      const negLine = `Negative: ${buildNegative(act.isHuman, isBox, isLightStudio, allowCyan)}.`;
       const body = clampPrompt([
-        `Photorealistic 9:16 vertical full-bleed commercial studio photo (no bars, no text/arrows). ${bgPurge}`,
+        `Ultra-realistic 9:16 vertical full-bleed commercial studio photograph (no bars, no text/arrows, true physical camera optics). ${bgPurge}`,
+        getColorPaletteLock(m),
         `PRODUCT LOCK: ${getProductSpec()} ${framingLock}`,
         act.desc(m, orient, isBox, macroFocus, dna),
-        `Lighting: ${m.envMotion}. ${dna.light.text}. Grounded contact shadow.`
+        `Atmosphere & Light: ${getLivingAtmosphereMotion(m)}. ${dna.light.text}. Grounded physical contact shadow.`
       ].join(" "), 1850);
       return `${body}\n\n${negLine}`;
     }
@@ -1117,24 +1145,23 @@
       const macroFocus = (macroTarget.value.trim() || "material texture, precision edges and original finish").slice(0, 120);
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
-      const hasShowroomPivot = act.key === "profile_left_pivot" || act.key === "elevated_top45";
+      const livingAtmo = getLivingAtmosphereMotion(m);
+      const paletteLock = getColorPaletteLock(m);
       const boxLock = isBox
         ? "Open lid 100% motionless."
         : act.isMacro
-          ? "Ultra-tight macro frame stays locked on real surface textures with zero pedestal visible and unlit original finish."
-          : hasShowroomPivot
-            ? "Product stays heavily grounded on its natural base with only a subtle, smooth luxury showroom pivot (~30–35° within front-side arc — NEVER lifting upright on rear edge, NEVER turning 180°/360° to unseen back, zero glowing strips)."
-            : "Product stays heavily grounded and unlit on its natural base — ONLY smooth camera movement (never lifting upright on rear edge, never 180°/360° back spin, zero glowing strips).";
+          ? "Ultra-tight 100mm macro frame stays locked on authentic physical surface grain with a silky slow 35–40° sculptural turn showing side depth, zero pedestal visible, unlit original finish."
+          : "Product stays heavily grounded on its natural base executing a silky slow, continuous 30–40° luxury commercial turn within the front-side arc (NEVER lifting upright on rear edge, NEVER flipping 180°/360° to unseen back, zero glowing strips).";
       const settingClause = act.isMacro
-        ? `Macro Backdrop: deep out-of-focus f/1.4 ${m.genre} bokeh.`
+        ? `Macro Backdrop: deep out-of-focus f/1.4 ${m.genre} bokeh with subtle realistic drifting wisps.`
         : `Pedestal Continuity: keep the EXACT SAME ${m.surface} throughout.`;
       const cameraStyle = act.key === "final_hero"
-        ? `Silky smooth camera-only zoom-out pull-back widening from close-up to full flagship framing while background atmosphere and lights move subtly (${m.envMotion}).`
+        ? `Silky slow sculptural settle followed by smooth camera zoom-out pull-back while ${livingAtmo}.`
         : act.isMacro
-          ? `Slow ultra-smooth 100mm probe-macro lateral glide across authentic textures with traveling specular highlight and subtle moving f/1.4 bokeh behind.`
-          : `Dynamic multi-angle commercial studio motion: smooth zoom-in, subtle showcase parallax and controlled zoom-out pull-back paired with subtle living background motion (${m.envMotion}, drifting ambient haze and shifting reflections).`;
+          ? `Ultra-realistic 100mm macro film physics: silky slow continuous turn revealing real metallic/matte micro-textures and bevels with traveling specular highlight and ${livingAtmo}.`
+          : `Ultra-realistic commercial studio film physics: distinct side/angle camera motion with slow silky product turn, natural light roll-off and ${livingAtmo}.`;
       const prompt = [
-        `Photorealistic 9:16 ${m.genre}, mute ARRI Alexa 65 commercial studio realism, full-bleed edge-to-edge${isLightStudio ? "" : ", ZERO white background or white floor"}.`,
+        `Ultra-realistic 9:16 ${m.genre}, mute ARRI Alexa 65 commercial studio film, true physical realism, full-bleed edge-to-edge${isLightStudio ? "" : ", ZERO white background or white floor"}. ${paletteLock}`,
         `LOCK: ${getProductSpec()} ${boxLock} ${settingClause} Light: ${dna.light.text}.`,
         `MOTION: ${act.beat}. ${cameraStyle}`,
         `SHOT (${act.shortLabel}): ${act.desc(m, orient, isBox, macroFocus, dna)}`
@@ -1146,12 +1173,13 @@
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
+      const allowCyan = NEON_CYAN_MODEL_IDS.has(m.id);
       const castClause = m.hasPerson ? ` Creator: ${dna.cast.text}.` : "";
       const boxClause = isBox ? " Box lid fixed 100% wide open." : "";
       const bgPurge = isLightStudio ? "" : " Replace 100% of uploaded white/plain background with full-bleed commercial studio scene (ZERO white background/floor).";
-      const negLine = `Negative: ${buildNegative(m.hasPerson, isBox, isLightStudio)}.`;
+      const negLine = `Negative: ${buildNegative(m.hasPerson, isBox, isLightStudio, allowCyan)}.`;
       const body = clampPrompt([
-        `Photorealistic 9:16 full-bleed commercial studio photo (no bars/text/arrows), ${m.genre} (${dna.id}).${bgPurge}`,
+        `Ultra-realistic 9:16 full-bleed commercial studio photo (no bars/text/arrows), ${m.genre} (${dna.id}).${bgPurge} ${getColorPaletteLock(m)}`,
         `LOCK: ${getProductSpec()} Centered in middle-upper safe zone (bottom 25% clear).${boxClause}`,
         `Scene: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Light: ${dna.light.text}.`
       ].join(" "), 1850);
@@ -1510,7 +1538,7 @@
         const t = setTimeout(() => { if (!settled) { settled = true; reject(new Error("Timeout ao decodificar MP4.")); } }, 15000);
         vid.onloadeddata = () => {
           vid.onseeked = finish;
-          const jumpTo = Math.min(0.20, Math.max(0.08, (vid.duration || 5) * 0.04));
+          const jumpTo = (vid.duration && vid.duration >= 4.0) ? 0.55 : Math.min(0.25, Math.max(0.08, (vid.duration || 5) * 0.10));
           try { vid.currentTime = jumpTo; } catch { finish(); }
           setTimeout(finish, 800);
         };
@@ -1980,13 +2008,14 @@
 
           if (item.type === "video") {
             const curT = mediaEl.currentTime || 0;
-            if (curT >= 2.28 && (mediaEl.duration || 5) > 2.6) {
-              try { mediaEl.playbackRate = 0.65; } catch {}
+            const vDur = mediaEl.duration || 5;
+            if (curT >= Math.max(3.6, vDur - 0.45)) {
+              try { mediaEl.playbackRate = 0.85; } catch {}
             } else if (isBlockbuster) {
-              const rate = p < 0.24 ? 1.75 : p < 0.72 ? 1.15 : 1.55;
+              const rate = p < 0.22 ? 1.65 : p < 0.78 ? 1.38 : 1.58;
               try { mediaEl.playbackRate = rate; } catch {}
             } else {
-              try { mediaEl.playbackRate = isCleanMode ? 1.0 : 1.22; } catch {}
+              try { mediaEl.playbackRate = isCleanMode ? 1.18 : 1.35; } catch {}
             }
             if (mediaEl.readyState < 2 || mediaEl.seeking) return;
           }
@@ -2552,7 +2581,7 @@
                     duration: "5",
                     generateAudio: false,
                     motionPrompt: buildActMotionPrompt(selectedVidModel, act, dna),
-                    negativePrompt: buildNegative(act.isHuman, isBox, LIGHT_STUDIO_MODEL_IDS.has(selectedVidModel.id))
+                    negativePrompt: buildNegative(act.isHuman, isBox, LIGHT_STUDIO_MODEL_IDS.has(selectedVidModel.id), NEON_CYAN_MODEL_IDS.has(selectedVidModel.id))
                   }, 26000, runSignal);
                   if (qVid.engine) engineUsed = qVid.engine;
                   break;
