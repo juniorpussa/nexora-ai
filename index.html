@@ -107,7 +107,7 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>BLOCKBUSTER v11.2 • 105 VÍDEOS • 105 IMAGENS</span></div>
+    <div class="brand">NEXORA.AI <span>BLOCKBUSTER v11.3 • 105 VÍDEOS • 105 IMAGENS</span></div>
     <div class="pill-info">🎬 Motor Blockbuster 4 Atos Universal (Qualquer Produto) • Super Macro 100mm • Mirror Punch-In &amp; Speed-Ramp • Voz PT-BR • PNG</div>
   </div>
 
@@ -195,7 +195,7 @@
 
       <div class="director-banner" id="directorBannerWrap">
         <div class="director-banner-head">
-          <span>🎬 Coreografia v11.2 (Zoom-In → Arco Sutil Lado/Frente/Lado ±28° → Zoom-Out + Cenário Vivo + Base Travada):</span>
+          <span>🎬 Coreografia v11.3 (Perspectiva 3D Real em 100% dos Cortes • Zoom-In → Arco Lado/Frente/Lado → Zoom-Out + Cenário Vivo):</span>
           <small style="color:#86efac;">100% universal nos 105 universos • Zona Segura TikTok Shop</small>
         </div>
         <div class="director-acts-preview" id="directorActsPreview"></div>
@@ -591,20 +591,20 @@
 
     const ORIENTATION_RULES = {
       auto: {
-        short: "resting solidly on its real bottom base in natural 3D perspective facing forward",
-        full: "NATURAL 3D GRAVITY LOCK: Rest the product solidly on its true physical base (upright if naturally tall like bottle/watch; horizontally flat on its belly if naturally flat like mouse/sneaker/glasses/controller). NEVER balance a flat product upright on its rear edge, NEVER paste a top-down catalog cutout vertically, NEVER float or turn 180° to the back."
+        short: "resting solidly on its true bottom base in grounded 3D perspective",
+        full: "NATURAL 3D GRAVITY LOCK: Rest the product heavily on its true physical base (tall vertical items like bottles/watches stand upright on their base; low horizontal items like mice/sneakers/glasses/wallets lie horizontally flat with their top surface facing upward toward the ceiling and bottom resting flat on the pedestal). NEVER stand a flat product upright on its rear edge, NEVER paste a top-down catalog image vertically, NEVER float or twist."
       },
       upright: {
-        short: "standing solidly UPRIGHT on its natural base in 3D perspective facing forward",
-        full: "RIGID 3D UPRIGHT LOCK: Product stands solidly upright on its natural base facing forward. NEVER paste a flat top-down view vertically, NEVER float, tip or turn 180° to the back."
+        short: "standing solidly UPRIGHT on its flat bottom base in grounded 3D perspective",
+        full: "RIGID 3D UPRIGHT LOCK: Product stands solidly upright on its natural bottom base with grounded contact shadow. NEVER paste a flat top-down view vertically, NEVER float, tip or turn to the rear."
       },
       flat: {
-        short: "lying HORIZONTALLY FLAT on its bottom belly on the pedestal in 3D perspective",
-        full: "RIGID 3D FLAT LOCK: Product lies horizontally flat on its natural bottom belly resting firmly on the pedestal in 3D perspective. STRICTLY FORBIDDEN to balance upright on its rear end, paste top-down vertically, tilt upright, float or turn 180° to the back."
+        short: "lying HORIZONTALLY FLAT on its full underside belly with its top surface facing upward toward the ceiling in 3D table-level perspective",
+        full: "RIGID 3D HORIZONTAL LOCK: Product lies horizontally flat on its full bottom underside resting firmly on the pedestal, with its top face pointing upward toward the ceiling in realistic 3D table-level perspective. STRICTLY FORBIDDEN to stand upright on its rear edge, paste a top-down catalog view vertically, tilt upward, float or spin."
       },
       flat_lay: {
         short: "resting neatly FLAT inside the wide-open display tray in 3D perspective",
-        full: "RIGID 3D TRAY LOCK: Product lies neatly flat inside the wide-open display tray at an elevated 3D angle. NEVER close lid, stand upright or turn 180° to the back."
+        full: "RIGID 3D TRAY LOCK: Product lies neatly flat inside the wide-open display tray at an elevated 3D angle. NEVER close lid, stand upright or spin."
       }
     };
 
@@ -624,24 +624,24 @@
         : "ARRI Alexa 65 anamorphic 9:16 commercial optics, f/1.4 razor-shallow bokeh, clean dark stage with 1 vivid living background phenomenon";
 
       const actHook = {
-        key: "hook_hero", shortLabel: "Ato 1 • Hook Zoom-In", isHuman: false, isMacro: false, editMove: "crashZoom", trans: "mirrorPunch",
-        beat: "0.0s: smooth frontal dolly zoom-in approaching the grounded product -> 1.1s: subtle side-to-front parallax with crisp specular highlight as background light and atmosphere shift gently -> 2.5s: sharp close hero lock in middle-upper safe zone",
-        desc: (m, orient, isBox) => `ACT 1 (HERO ZOOM-IN HOOK — 75% FRAME): ${optics}. Medium-close 25-degree elevated 3D perspective (NEVER flat top-down pasted vertically) where the pedestal sits at mid-frame and the exact product ${orient.short} ${isBox ? "at an elevated 36° angle " : ""}on ${m.surface} is centered in the middle-upper safe zone (bottom 25% clear for TikTok cart). ${m.lighting}.`
+        key: "hook_hero", shortLabel: "Ato 1 • Hook 3D Zoom-In", isHuman: false, isMacro: false, editMove: "crashZoom", trans: "mirrorPunch",
+        beat: "0.0s: smooth 3D dolly zoom-in approaching the motionless grounded product from a 28° front-left three-quarter angle -> 1.1s: subtle camera parallax gliding slightly toward center with crisp specular highlight as background light and atmosphere shift gently -> 2.5s: sharp close hero lock in middle-upper safe zone",
+        desc: (m, orient, isBox) => `ACT 1 (3/4 3D HERO ZOOM-IN HOOK — 75% FRAME): ${optics}. Medium-close 25-degree low-elevated front-left three-quarter 3D perspective (showing clear 3D side depth and volume, NEVER flat straight-on catalog cutout pasted upright) where the pedestal sits at mid-frame and the exact product ${orient.short} ${isBox ? "at an elevated 36° angle " : ""}on ${m.surface} is centered in the middle-upper safe zone (bottom 25% clear for TikTok cart). ${m.lighting}.`
       };
       const actMacro = {
         key: "super_macro", shortLabel: "Ato 2 • Super Macro 100mm", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "zoomBlur",
-        beat: "0.0s: ultra-tight 100mm oblique probe-macro zoom-in filling 95% of frame -> 1.0s: gentle lateral glide from left bevel across center detail to right bevel while background bokeh drifts subtly -> 2.5s: razor-sharp macro glide",
+        beat: "0.0s: ultra-tight 100mm oblique probe-macro zoom-in filling 95% of frame -> 1.0s: gentle lateral camera glide from left bevel across center detail to right bevel while background bokeh drifts subtly -> 2.5s: razor-sharp macro glide",
         desc: (m, orient, isBox, macro) => `ACT 2 (EXTREME 100MM PROBE-MACRO — 95% FULL-SCREEN FILL, LOW 20° OBLIQUE ANGLE, ZERO TOP-DOWN CATALOG VIEW): Ultra-close 100mm probe-macro lens 3cm from the product cropped tightly onto ONLY the central detail (${macro}) of the exact product ${orient.short}, filling 95% of the 9:16 screen so outer edges and pedestal are cropped out. ${m.macroAccent}. Authentic surface grain and markings, zero invented text, zero white background.`
       };
       const actSculpt = {
         key: "sculpt_34", shortLabel: "Ato 3 • Arco Lado → Frente → Lado", isHuman: false, isMacro: false, editMove: "lightSweep34", trans: "whipPan",
-        beat: "0.0s: smooth camera zoom-in approaching from a subtle front-left 28° side angle -> 1.1s: gentle smooth horizontal arc gliding across the front face to a subtle front-right 28° side angle (showing left profile, center front, and right profile while product stays solidly grounded on its base, NEVER turning to the rear or standing on end) -> 2.3s: smooth controlled zoom-out pull-back while background atmosphere and reflections move subtly",
-        desc: (m, orient) => `ACT 3 (SCULPTURAL 3D SIDE-TO-FRONT-TO-SIDE ARC + LIVING SCENARIO — 78% FRAME): ${optics}. Dynamic 3D front-side 28° perspective close-up of the exact product ${orient.short} resting solidly on ${m.surface}, centered in the middle-upper safe zone with crisp traveling rim-light while ${m.envMotion} moves subtly behind.`
+        beat: "0.0s: smooth camera zoom-in from a front-left 28° side-three-quarter angle (product stays 100% stationary and bolted to its pedestal) -> 1.1s: ONLY the camera glides in a subtle horizontal arc past the front face to a front-right 28° side angle, revealing both side contours smoothly -> 2.3s: smooth controlled zoom-out pull-back while background atmosphere and reflections move subtly",
+        desc: (m, orient) => `ACT 3 (SCULPTURAL 3/4 3D SIDE-TO-FRONT-TO-SIDE ARC + LIVING SCENARIO — 78% FRAME): ${optics}. Dynamic low-elevated front-left 28° three-quarter 3D perspective close-up of the exact product ${orient.short} resting heavily on ${m.surface}, centered in the middle-upper safe zone with crisp traveling rim-light while ${m.envMotion} moves subtly behind.`
       };
       const actHero = {
-        key: "final_hero", shortLabel: "Ato 4 • Hero Zoom-Out Final", isHuman: false, isMacro: false, editMove: "heroPunch", trans: "mirrorPunch",
-        beat: "0.0s: close 3D perspective showing a subtle front-left to front-right horizontal glide across the grounded product (solidly resting on its natural base, NEVER standing upright on rear edge, NEVER turning 180° to rear, zero purple/pink LED) -> 1.1s: smooth cinematic zoom-out pull-back widening cleanly to reveal the product commanding the middle-upper safe zone while background lights and atmosphere drift subtly -> 2.5s: crisp steady flagship hero lock",
-        desc: (m, orient) => `ACT 4 (3D GROUNDED HERO FINALE WITH ZOOM-OUT — 76% FRAME IN MIDDLE-UPPER SAFE ZONE): ${optics}. Authoritative 28-degree elevated 3D frontal perspective (NEVER flat top-down view pasted upright on rear end) of the exact product ${orient.short} resting firmly on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear) with dramatic overhead spotlight, crisp natural specular highlights and zero added RGB/purple LEDs.`
+        key: "final_hero", shortLabel: "Ato 4 • Hero 3D Zoom-Out", isHuman: false, isMacro: false, editMove: "heroPunch", trans: "mirrorPunch",
+        beat: "0.0s: crisp close three-quarter 3D framing of the 100% motionless grounded product bolted firmly on the pedestal (zero object rotation, zero lifting, zero added glowing lines) -> 1.0s: silky smooth camera-only zoom-out pull-back widening cleanly to reveal the product commanding the middle-upper safe zone while background lights, haze and reflections drift subtly -> 2.5s: rock-steady flagship hero lock",
+        desc: (m, orient) => `ACT 4 (GROUNDED 3/4 3D HERO FINALE WITH ZOOM-OUT — 76% FRAME IN MIDDLE-UPPER SAFE ZONE): ${optics}. Authoritative 24-degree low-elevated front-right three-quarter 3D hero perspective (showing full 3D length, grounded bottom contact and real shadow — NEVER flat straight-on or top-down view pasted upright on rear edge) of the exact product ${orient.short} resting firmly on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear) with dramatic overhead spotlight and authentic unlit original product finish.`
       };
 
       if (profile === "cinema_universal") {
@@ -654,14 +654,14 @@
               desc: (m, orient, isBox, macro) => `SUPER MACRO ANGLE 2 (95% FILL — LOW OBLIQUE 3D ANGLE, ZERO TOP-DOWN VIEW): Extreme 100mm probe-macro skimming closely across the sculpted edge and ${macro} of the exact product ${orient.short} resting on ${m.surface}, outer edges cropped off-frame with moving rim-light and f/1.4 bokeh behind, zero white background.`
             },
             {
-              key: "low_monolith", shortLabel: "Contra-Plongée + Zoom-Out", isHuman: false, isMacro: false, editMove: "craneRise", trans: "whipPan",
-              beat: "0.0s: subtle low-angle 3D push-in with gentle left-to-right frontal glide across the grounded product -> 1.3s: controlled pull-back reveal as background atmosphere and lighting shift subtly -> 2.5s: imposing flagship silhouette",
-              desc: (m, orient) => `LOW-ANGLE 3D POWER SHOT (78% FRAME): ${optics}. Dramatic low-angle 3D frontal perspective of the exact product ${orient.short} resting solidly on ${m.surface}, elevating its scale in the middle-upper safe zone under dramatic overhead lighting.`
+              key: "low_monolith", shortLabel: "Contra-Plongée 3/4 + Zoom-Out", isHuman: false, isMacro: false, editMove: "craneRise", trans: "whipPan",
+              beat: "0.0s: low-angle three-quarter 3D push-in with subtle left-to-right camera glide past the stationary grounded product -> 1.3s: smooth pull-back reveal as background atmosphere and lighting shift subtly -> 2.5s: imposing flagship silhouette",
+              desc: (m, orient) => `LOW-ANGLE 3/4 3D POWER SHOT (78% FRAME): ${optics}. Dramatic low-angle front-left 26° three-quarter 3D perspective of the exact product ${orient.short} resting solidly on ${m.surface}, elevating its scale in the middle-upper safe zone under dramatic overhead lighting.`
             },
             {
-              key: "top_symmetry", shortLabel: "Arco 3D + Zoom-Out", isHuman: false, isMacro: false, editMove: "zoomArcOut", trans: "radialFlash",
-              beat: "0.0s: smooth 3D elevated zoom-in from front-right 25° gliding across front center to front-left 25° -> 1.3s: smooth zoom-out pull-back revealing full grounded 3D form and subtle living scenario motion behind -> 2.5s: crisp optical settle",
-              desc: (m, orient) => `ELEVATED 30° 3D PERSPECTIVE SHOT (78% FRAME — NEVER TOP-DOWN PASTED UPRIGHT): ${optics}. Clean 30-degree front-elevated 3D perspective of the exact product ${orient.short} resting firmly on ${m.surface} (never standing on its rear edge), highlighting sculpted contours, grounded contact shadow and true materials.`
+              key: "top_symmetry", shortLabel: "Arco 3/4 Direito + Zoom-Out", isHuman: false, isMacro: false, editMove: "zoomArcOut", trans: "radialFlash",
+              beat: "0.0s: smooth camera zoom-in from a front-right 30° three-quarter angle gliding gently across the front toward front-left 22° (product stays 100% stationary on its base) -> 1.3s: smooth zoom-out pull-back revealing full grounded 3D form and subtle living scenario motion behind -> 2.5s: crisp optical settle",
+              desc: (m, orient) => `SCULPTURAL 3/4 FRONT-RIGHT 3D PERSPECTIVE (78% FRAME — NEVER FLAT TOP-DOWN UPRIGHT): ${optics}. Clean 25-degree elevated front-right 30° three-quarter 3D perspective of the exact product ${orient.short} resting flat and firmly on ${m.surface}, highlighting sculpted 3D profile, heavy grounded contact shadow and true materials.`
             }
           ]
         };
@@ -670,19 +670,19 @@
       const humanAct3 = {
         wearable_wrist: {
           shortLabel: "Ato 3 • Toque & Pulso",
-          desc: (m, orient, isBox, macro, dna) => `ACT 3 (TACTILE REAL-WORLD INTERACTION): Natural close-up of ${dna.cast.text.split(",")[0]}'s hand gently adjusting ${macro} and wearing the exact product on their wrist in the same environment (${m.name}), product razor-sharp and dominant in upper-center safe zone.`
+          desc: (m, orient, isBox, macro, dna) => `ACT 3 (TACTILE REAL-WORLD INTERACTION): Natural close-up of ${dna.cast.text.split(",")[0]}'s hand gently adjusting ${macro} and wearing the exact product on their wrist in the same setting (${m.genre}), product razor-sharp and dominant in upper-center safe zone.`
         },
         wearable_face: {
           shortLabel: "Ato 3 • Uso Real Corpo",
-          desc: (m, orient, isBox, macro, dna) => `ACT 3 (REAL-WORLD WEARING): Clean close-up of ${dna.cast.text.split(",")[0]} naturally wearing/presenting the exact product in real life in the same environment (${m.name}), keeping the product razor-sharp in the upper-center safe zone.`
+          desc: (m, orient, isBox, macro, dna) => `ACT 3 (REAL-WORLD WEARING): Clean close-up of ${dna.cast.text.split(",")[0]} naturally wearing/presenting the exact product in real life in the same setting (${m.genre}), keeping the product razor-sharp in the upper-center safe zone.`
         },
         handheld_tech: {
           shortLabel: "Ato 3 • Toque & Controle",
-          desc: (m, orient, isBox, macro, dna) => `ACT 3 (HANDS-ON TACTILE TEST): Natural close-up of ${dna.cast.text.split(",")[0]}'s hand holding and testing ${macro} on the exact product in the same environment (${m.name}), natural five-finger anatomy, product razor-sharp.`
+          desc: (m, orient, isBox, macro, dna) => `ACT 3 (HANDS-ON TACTILE TEST): Natural close-up of ${dna.cast.text.split(",")[0]}'s hand holding and testing ${macro} on the exact product in the same setting (${m.genre}), natural five-finger anatomy, product razor-sharp.`
         },
         beauty_spray: {
           shortLabel: "Ato 3 • Aplicação Real",
-          desc: (m, orient, isBox, macro, dna) => `ACT 3 (REAL APPLICATION): Natural close-up of ${dna.cast.text.split(",")[0]} holding and applying the exact product naturally in the same environment (${m.name}), keeping the exact bottle/package clearly recognizable and sharp.`
+          desc: (m, orient, isBox, macro, dna) => `ACT 3 (REAL APPLICATION): Natural close-up of ${dna.cast.text.split(",")[0]} holding and applying the exact product naturally in the same setting (${m.genre}), keeping the exact bottle/package clearly recognizable and sharp.`
         }
       }[profile];
 
@@ -1071,7 +1071,8 @@
     function buildNegative(allowPeople, isBox = false, allowLightBg = false) {
       const parts = [
         "orbiting", "banking", "360 spin", "180 turn", "turntable", "rear view",
-        "purple LED", "pink LED", "neon edge", "underglow", "LED strip",
+        "purple LED", "pink LED", "red LED strip", "RGB glow", "neon edge", "glowing seams", "underglow", "LED strip",
+        "standing upright on rear edge", "balanced on rear", "top-down pasted vertically",
         "invented logo", "text", "wall text", "subtitles", "watermark",
         "arrows", "black bars", "white bars", "catalog cutout",
         "morphing", "distorted product", "floating product", "cartoon", "blur"
@@ -1080,15 +1081,15 @@
       if (isBox) parts.push("closing lid", "closed box");
       if (allowPeople) parts.push("deformed hands", "extra fingers");
       else parts.push("people", "hands", "fingers");
-      return parts.join(", ").slice(0, 340);
+      return parts.join(", ").slice(0, 390);
     }
 
     function getProductSpec() {
       const hint = productDetailHint.value.trim().slice(0, 160);
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const core = hint
-        ? `${hint}, 100% identical to reference photo, authentic colors/texture/markings, zero invented logos or purple/pink/RGB LEDs`
-        : `exact product from reference photo, 100% faithful design/colors/finish, zero invented logos or purple/pink/RGB LEDs`;
+        ? `${hint}, 100% identical to reference photo, authentic unlit original surface finish, exact colors/texture/markings, zero invented logos or added lights on the product`
+        : `exact product from reference photo, 100% faithful design, authentic unlit original finish and colors, zero invented logos or added lights on the product`;
       return `${core}. ${orient.full}`;
     }
 
@@ -1102,7 +1103,7 @@
         : "REPLACE 100% of uploaded photo's white/plain background with full-bleed cinema environment to all 4 borders — ZERO white background, white floor, white margin or wall text.";
       const boxLock = isBox
         ? "Open box lid locked 100% wide open."
-        : "Product centered in middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart), unlit base.";
+        : "Product centered in middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart), completely unlit product shell and unlit pedestal base.";
       const negLine = `Negative: ${buildNegative(act.isHuman, isBox, isLightStudio)}.`;
       const body = clampPrompt([
         `Photorealistic 9:16 vertical full-bleed commercial photo (no bars, no text/arrows). ${bgPurge}`,
@@ -1120,11 +1121,14 @@
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
       const boxLock = isBox
         ? "Open lid 100% motionless."
-        : "Product rests solidly on its natural base (never upright on rear end, never 180°/360° rear spin, zero purple/pink/RGB LEDs).";
+        : "The product itself remains 100% stationary, unlit and heavily grounded on its natural base — ONLY the camera moves smoothly (never lifting the product upright on its rear end, never spinning the product, never adding glowing strips on the product).";
+      const cameraStyle = act.key === "final_hero"
+        ? `Pure smooth camera-only zoom-out pull-back while the product stays rock-steady and motionless, paired with subtle living background motion (${m.envMotion}, drifting ambient haze and shifting specular reflections).`
+        : `Smooth camera-only zoom-in, subtle frontal left-to-center-to-right ±28° showcase parallax and controlled zoom-out pull-back, paired with subtle living background motion (${m.envMotion}, drifting ambient haze and shifting specular reflections).`;
       const prompt = [
         `Photorealistic 9:16 ${m.genre}, mute ARRI Alexa 65 cinema realism, full-bleed edge-to-edge${isLightStudio ? "" : ", ZERO white background or white floor"}.`,
-        `LOCK: ${getProductSpec()} ${boxLock} Universe: ${m.name}. Light: ${dna.light.text}.`,
-        `MOTION: ${act.beat}. Subtle smooth camera zoom-in, gentle frontal left-to-center-to-right ±28° showcase parallax and controlled zoom-out pull-back, paired with subtle living background motion (${m.envMotion}, drifting ambient haze and shifting specular reflections).`,
+        `LOCK: ${getProductSpec()} ${boxLock} Setting: ${m.surface}. Light: ${dna.light.text}.`,
+        `MOTION: ${act.beat}. ${cameraStyle}`,
         `SHOT (${act.shortLabel}): ${act.desc(m, orient, isBox, macroFocus, dna)}`
       ].join(" ");
       return clampPrompt(prompt, 2150);
@@ -1139,7 +1143,7 @@
       const bgPurge = isLightStudio ? "" : " Replace 100% of uploaded white/plain background with full-bleed cinema scene (ZERO white background/floor).";
       const negLine = `Negative: ${buildNegative(m.hasPerson, isBox, isLightStudio)}.`;
       const body = clampPrompt([
-        `Photorealistic 9:16 full-bleed commercial photo (no bars/text/arrows), ${m.name} (${dna.id}).${bgPurge}`,
+        `Photorealistic 9:16 full-bleed commercial photo (no bars/text/arrows), ${m.genre} (${dna.id}).${bgPurge}`,
         `LOCK: ${getProductSpec()} Centered in middle-upper safe zone (bottom 25% clear).${boxClause}`,
         `Scene: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Light: ${dna.light.text}.`
       ].join(" "), 1850);
