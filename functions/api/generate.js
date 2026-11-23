@@ -4,13 +4,12 @@ const DEFAULT_NEGATIVE =
 const MUSIC_CLEAN_NEGATIVE =
   "tropical house, ukulele, cheesy corporate, stock music, elevator music, acoustic guitar, hand claps, happy whistle, lofi, ambient, chill, lounge, soft piano, acoustic, ballad, sleepy, smooth jazz, sad, gloomy, horror, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, harsh noise, clipping, static, muddy";
 
-// Official ElevenLabs Voice ID for legacy Adam is "pNInz6obpgDQGcFmaJgB"
 const TTS_VOICE_MAP = {
-  male_adam: { elId: "pNInz6obpgDQGcFmaJgB", el: "Bill", mm: "Deep_Voice_Man", kk: "pm_alex" },
+  male_adam: { el: "Brian", mm: "Deep_Voice_Man", kk: "pm_alex", preferPtNative: true },
   male_tiktok: { el: "Brian", mm: "Casual_Guy", kk: "pm_alex" },
   male_exec: { el: "Daniel", mm: "Patient_Man", kk: "pm_santa" },
   male_impact: { el: "George", mm: "Deep_Voice_Man", kk: "pm_alex" },
-  female_natasha: { el: "Sarah", mm: "Lively_Girl", kk: "pf_dora" },
+  female_natasha: { el: "Sarah", mm: "Lively_Girl", kk: "pf_dora", preferPtNative: true },
   female_viral: { el: "Jessica", mm: "Lively_Girl", kk: "pf_dora" },
   female_tiktok: { el: "Rachel", mm: "Wise_Woman", kk: "pf_dora" },
   female_lux: { el: "Charlotte", mm: "Calm_Woman", kk: "pf_dora" }
@@ -210,7 +209,7 @@ export async function onRequestPost(context) {
       return json({ engine: "MiniMax Voice Clone", requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
     }
 
-    // 5) NARRAÇÃO PT-BR (Clone Exato MiniMax -> ElevenLabs Adam ID / Premade -> MiniMax Speech-02 HD -> Kokoro PT-BR)
+    // 5) NARRAÇÃO PT-BR (Clone Exato MiniMax -> PT-BR Nativo MiniMax/Kokoro -> ElevenLabs Fallback)
     if (task === "submit_tts") {
       const text = String(body.text || "").trim();
       if (!text) return json({ error: "Digite o roteiro da narração em português." }, 400);
@@ -231,8 +230,9 @@ export async function onRequestPost(context) {
       const endpoints = [];
 
       if (customVoiceId) {
+        const cloneTag = voiceKey === "male_adam" ? "MiniMax Clone Exato (Adam)" : voiceKey === "female_natasha" ? "MiniMax Clone Exato (Natasha)" : "MiniMax Clone Exato";
         endpoints.push({
-          name: "MiniMax Clone Exato",
+          name: cloneTag,
           url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
           payload: {
             text,
@@ -243,37 +243,54 @@ export async function onRequestPost(context) {
         });
       }
 
-      // If voice has an official ElevenLabs legacy Voice ID (like Adam = pNInz6obpgDQGcFmaJgB), try it before premade fallback
-      if (voicePreset.elId) {
-        endpoints.push({
-          name: "ElevenLabs Adam Original",
-          url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
-          payload: { text, voice: voicePreset.elId, stability: 0.45, similarity_boost: 0.82, speed }
-        });
-      }
-
-      endpoints.push(
-        {
-          name: `ElevenLabs (${voicePreset.el})`,
-          url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
-          payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed }
-        },
-        {
-          name: "MiniMax Speech-02 HD",
-          url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
-          payload: {
-            text,
-            voice_setting: { voice_id: voicePreset.mm, speed, vol: 1.0, pitch: 0 },
-            language_boost: "Portuguese",
-            output_format: "url"
+      // If no clone yet for Adam/Natasha, prefer native PT-BR pronunciation (MiniMax PT-BR / Kokoro PT-BR) instead of English-accented ElevenLabs Bill
+      if (voicePreset.preferPtNative) {
+        endpoints.push(
+          {
+            name: "MiniMax PT-BR HD (Sem Clone)",
+            url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
+            payload: {
+              text,
+              voice_setting: { voice_id: voicePreset.mm, speed, vol: 1.0, pitch: 0 },
+              language_boost: "Portuguese",
+              output_format: "url"
+            }
+          },
+          {
+            name: "Kokoro PT-BR Nativo",
+            url: "https://queue.fal.run/fal-ai/kokoro/brazilian-portuguese",
+            payload: { prompt: text, voice: voicePreset.kk, speed }
+          },
+          {
+            name: `ElevenLabs (${voicePreset.el})`,
+            url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
+            payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed }
           }
-        },
-        {
-          name: "Kokoro PT-BR",
-          url: "https://queue.fal.run/fal-ai/kokoro/brazilian-portuguese",
-          payload: { prompt: text, voice: voicePreset.kk, speed }
-        }
-      );
+        );
+      } else {
+        endpoints.push(
+          {
+            name: `ElevenLabs (${voicePreset.el})`,
+            url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
+            payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed }
+          },
+          {
+            name: "MiniMax Speech-02 HD",
+            url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
+            payload: {
+              text,
+              voice_setting: { voice_id: voicePreset.mm, speed, vol: 1.0, pitch: 0 },
+              language_boost: "Portuguese",
+              output_format: "url"
+            }
+          },
+          {
+            name: "Kokoro PT-BR",
+            url: "https://queue.fal.run/fal-ai/kokoro/brazilian-portuguese",
+            payload: { prompt: text, voice: voicePreset.kk, speed }
+          }
+        );
+      }
 
       const startIndex = Math.max(0, Math.min(endpoints.length - 1, Number(body.engineIndex) || 0));
       let lastErr = "Nenhum motor de narração PT-BR disponível.";
@@ -391,7 +408,7 @@ export async function onRequestPost(context) {
         payload?.audio_file?.url ||
         payload?.music?.url ||
         (typeof payload?.audio === "string" ? payload.audio : null);
-      const customVoiceId = payload?.custom_voice_id || payload?.voice_id || null;
+      const customVoiceId = payload?.custom_voice_id || payload?.voice_id || result?.custom_voice_id || null;
       const chunks = Array.isArray(payload?.chunks) ? payload.chunks : null;
       const transcriptText = typeof payload?.text === "string" ? payload.text : null;
 
