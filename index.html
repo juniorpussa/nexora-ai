@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — Hollywood v12.2 • 105 Vídeos • Vozes Adam &amp; Natasha • Legendas TikTok Shop</title>
+  <title>NEXORA.AI — Hollywood v12.4 • 105 Vídeos • Vozes Adam &amp; Natasha (Clone WAV) • Legendas Padrão TikTok Shop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
@@ -122,8 +122,8 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.3 • VOZES ADAM &amp; NATASHA • LEGENDAS &amp; ROTEIROS ÚNICOS</span></div>
-    <div class="pill-info">🎬 Hollywood Universal v12.3 • 105 Modelos 3D • Vozes Adam &amp; Natasha • Gerador Persuasivo Anti-Repetição (10s/15s/20s/30s) • Legendas TikTok Shop • Importar Vídeo</div>
+    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.4 • ADAM &amp; NATASHA EXATOS • LEGENDAS PADRÃO TIKTOK SHOP</span></div>
+    <div class="pill-info">🎬 Hollywood Universal v12.4 • 105 Modelos 3D • Adam &amp; Natasha (Clone WAV + ElevenLabs) • Legendas Compactas Padrão TikTok Shop • Roteiros Únicos</div>
   </div>
 
   <div class="layout">
@@ -335,22 +335,30 @@
                 <select id="inlineVoiceStyle"></select>
               </div>
             </div>
-            <div class="grid-2">
+            <div class="grid-3">
               <div>
-                <label for="inlineSubtitleStyle">Legenda Dinâmica TikTok Shop</label>
+                <label for="inlineSubtitleStyle">Legenda TikTok Shop</label>
                 <select id="inlineSubtitleStyle">
-                  <option value="viral_yellow" selected>🔥 Viral TikTok Shop (Branco + Amarelo Ouro + Contorno)</option>
-                  <option value="tiktok_native">📱 Nativo TikTok (Caixinha Branca Orgânica • UGC)</option>
-                  <option value="capcut_pill">⚡ Karaokê Pílula (CapCut Pro • Destaque Fundo)</option>
-                  <option value="none">🚫 Sem Legenda (Exportar Limpo)</option>
+                  <option value="viral_yellow" selected>🔥 Viral (Branco + Amarelo)</option>
+                  <option value="tiktok_native">📱 Nativo TikTok (Caixa Branca)</option>
+                  <option value="capcut_pill">⚡ Karaokê Pílula (CapCut)</option>
+                  <option value="none">🚫 Sem Legenda (Limpo)</option>
                 </select>
               </div>
               <div>
-                <label for="inlineSubtitlePos">Posição Segura da Legenda</label>
+                <label for="inlineSubtitleSize">Tamanho da Letra</label>
+                <select id="inlineSubtitleSize">
+                  <option value="small">🔹 Compacta (Discreta)</option>
+                  <option value="normal" selected>✅ Padrão TikTok Shop</option>
+                  <option value="medium">🔸 Média (Destaque)</option>
+                </select>
+              </div>
+              <div>
+                <label for="inlineSubtitlePos">Posição Segura</label>
                 <select id="inlineSubtitlePos">
-                  <option value="safe_tiktok" selected>🛡️ Zona Segura TikTok Shop (68% • Acima do Carrinho)</option>
-                  <option value="center">🎯 Centro da Tela (52%)</option>
-                  <option value="top">⬆️ Topo Seguro (22%)</option>
+                  <option value="safe_tiktok" selected>🛡️ Zona Segura (71%)</option>
+                  <option value="center">🎯 Centro (52%)</option>
+                  <option value="top">⬆️ Topo (22%)</option>
                 </select>
               </div>
             </div>
@@ -402,7 +410,7 @@
             </div>
           </div>
 
-          <div class="grid-3">
+          <div class="grid-2">
             <div>
               <label for="labSubtitleStyle">4. Estilo de Legenda TikTok</label>
               <select id="labSubtitleStyle">
@@ -413,15 +421,26 @@
               </select>
             </div>
             <div>
-              <label for="labSubtitlePos">5. Posição Segura</label>
+              <label for="labSubtitleSize">5. Tamanho da Letra</label>
+              <select id="labSubtitleSize">
+                <option value="small">🔹 Compacta (Menor e Discreta)</option>
+                <option value="normal" selected>✅ Padrão TikTok Shop (Calibrado)</option>
+                <option value="medium">🔸 Média (Mais Destaque)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label for="labSubtitlePos">6. Posição Segura da Legenda</label>
               <select id="labSubtitlePos">
-                <option value="safe_tiktok" selected>🛡️ Zona Segura TikTok (68%)</option>
-                <option value="center">🎯 Centro (52%)</option>
-                <option value="top">⬆️ Topo (22%)</option>
+                <option value="safe_tiktok" selected>🛡️ Zona Segura TikTok (71% • Abaixo do Produto)</option>
+                <option value="center">🎯 Centro da Tela (52%)</option>
+                <option value="top">⬆️ Topo Seguro (22%)</option>
               </select>
             </div>
             <div>
-              <label for="labOrigVol">6. Volume do Vídeo Original</label>
+              <label for="labOrigVol">7. Volume do Vídeo Original</label>
               <select id="labOrigVol">
                 <option value="0.85" selected>🔊 Manter Trilha Baixa (85% • Ideal v12.1)</option>
                 <option value="0.50">🔉 Reduzir Mais (50%)</option>
@@ -433,7 +452,7 @@
 
           <div class="grid-2">
             <div>
-              <label for="labScriptDuration">7. Duração da Narração (10s, 15s, 20s ou 30s)</label>
+              <label for="labScriptDuration">8. Duração da Narração (10s, 15s, 20s ou 30s)</label>
               <select id="labScriptDuration">
                 <option value="auto" selected>🤖 Automático (Duração do Vídeo Importado)</option>
                 <option value="10">⚡ 10 segundos (Super Gancho + CTA Rápido)</option>
@@ -443,7 +462,7 @@
               </select>
             </div>
             <div>
-              <label for="labProductName">8. Nome do Produto (p/ Gerar Narração Persuasiva)</label>
+              <label for="labProductName">9. Nome do Produto (p/ Gerar Narração Persuasiva)</label>
               <input type="text" id="labProductName" placeholder="Ex: Tênis Esportivo HOKA / Óculos Ray-Ban / Perfume" />
             </div>
           </div>
@@ -462,7 +481,7 @@
 
           <div class="clone-card">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
-              <strong style="font-size:11.5px;color:#7dd3fc;">🧬 Clone Exato de Voz (Opcional • Salvo p/ sempre neste navegador)</strong>
+              <strong style="font-size:11.5px;color:#86efac;">🧬 Voz Exata Adam &amp; Natasha (Envie AUDIO ADAM.mp4 e AUDIO NATASHA.mp4 1 vez • Conversão WAV automática)</strong>
               <small style="font-size:10.5px;color:#94a3b8;">Envie AUDIO ADAM.mp4 / AUDIO NATASHA.mp4 1 vez para clonar o timbre exato</small>
             </div>
             <div class="clone-row">
@@ -1282,7 +1301,20 @@
       if (brIdx >= 0) hist.lastBridge = brIdx;
       hist.lastCta = cIdx;
       saveScriptHistory(hist);
-      return bestText;
+      return fixPtBrContractions(bestText);
+    }
+
+    function fixPtBrContractions(text) {
+      return String(text || "")
+        .replace(/\bem\s+este\b/gi, (m) => (m[0] === "E" ? "Neste" : "neste"))
+        .replace(/\bem\s+esta\b/gi, (m) => (m[0] === "E" ? "Nesta" : "nesta"))
+        .replace(/\bem\s+esse\b/gi, (m) => (m[0] === "E" ? "Nesse" : "nesse"))
+        .replace(/\bem\s+essa\b/gi, (m) => (m[0] === "E" ? "Nessa" : "nessa"))
+        .replace(/\bde\s+este\b/gi, (m) => (m[0] === "D" ? "Deste" : "deste"))
+        .replace(/\bde\s+esta\b/gi, (m) => (m[0] === "D" ? "Desta" : "desta"))
+        .replace(/\bde\s+esse\b/gi, (m) => (m[0] === "D" ? "Desse" : "desse"))
+        .replace(/\bde\s+essa\b/gi, (m) => (m[0] === "D" ? "Dessa" : "dessa"))
+        .replace(/\bde\s+um\b/gi, (m) => (m[0] === "D" ? "De um" : "de um"));
     }
 
     const modeBtns = document.querySelectorAll(".mode-btn");
@@ -1319,6 +1351,7 @@
     const inlineVoiceGender = document.getElementById("inlineVoiceGender");
     const inlineVoiceStyle = document.getElementById("inlineVoiceStyle");
     const inlineSubtitleStyle = document.getElementById("inlineSubtitleStyle");
+    const inlineSubtitleSize = document.getElementById("inlineSubtitleSize");
     const inlineSubtitlePos = document.getElementById("inlineSubtitlePos");
     const inlineVoiceScript = document.getElementById("inlineVoiceScript");
     const inlineCharCount = document.getElementById("inlineCharCount");
@@ -1346,6 +1379,7 @@
     const labVoiceStyle = document.getElementById("labVoiceStyle");
     const labVoiceSpeed = document.getElementById("labVoiceSpeed");
     const labSubtitleStyle = document.getElementById("labSubtitleStyle");
+    const labSubtitleSize = document.getElementById("labSubtitleSize");
     const labSubtitlePos = document.getElementById("labSubtitlePos");
     const labOrigVol = document.getElementById("labOrigVol");
     const labScriptDuration = document.getElementById("labScriptDuration");
@@ -1417,14 +1451,14 @@
       for (const id of ["adamCloneBadgeLab", "adamCloneBadgeStudio"]) {
         const el = document.getElementById(id);
         if (el) {
-          el.textContent = adamId ? "✅ Clone Exato Ativo (MiniMax salvo)" : "Padrão: ElevenLabs Adam (ou envie áudio p/ clonar exato)";
+          el.textContent = adamId ? "✅ Clone Exato Adam Ativo (MiniMax salvo)" : "Sem clone: usa ElevenLabs Adam ID (envie AUDIO ADAM.mp4 p/ voz exata)";
           el.classList.toggle("active", Boolean(adamId));
         }
       }
       for (const id of ["natashaCloneBadgeLab", "natashaCloneBadgeStudio"]) {
         const el = document.getElementById(id);
         if (el) {
-          el.textContent = natId ? "✅ Clone Exato Ativo (MiniMax salvo)" : "Padrão: ElevenLabs Sarah (envie AUDIO NATASHA.mp4 p/ clonar exato)";
+          el.textContent = natId ? "✅ Clone Exato Natasha Ativo (MiniMax salvo)" : "Sem clone: usa ElevenLabs Sarah (envie AUDIO NATASHA.mp4 p/ voz exata)";
           el.classList.toggle("active", Boolean(natId));
         }
       }
@@ -1966,7 +2000,7 @@
     async function generateVoiceWithTripleFallback(text, gender, voiceId, speed, onStatus, signal) {
       let lastErr = "Falha na narração PT-BR.";
       const customVoiceId = getSavedCloneVoiceId(voiceId);
-      const maxAttempts = customVoiceId ? 4 : 3;
+      const maxAttempts = customVoiceId ? 5 : 4;
       for (let engIdx = 0; engIdx < maxAttempts; engIdx++) {
         if (signal && signal.aborted) return null;
         try {
@@ -2004,44 +2038,97 @@
       return null;
     }
 
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const r = new FileReader();
-        r.onerror = () => reject(new Error("Erro ao ler arquivo de áudio."));
-        r.onload = () => {
-          const dataUrl = String(r.result || "");
-          resolve({ base64: dataUrl.split(",")[1] || "", mime: file.type || "audio/mp4" });
-        };
-        r.readAsDataURL(file);
-      });
+    function encodeMonoWavBuffer(audioBuffer, maxSec = 20, targetSr = 22050) {
+      const srcSr = audioBuffer.sampleRate;
+      const srcLen = Math.min(audioBuffer.length, Math.floor(srcSr * maxSec));
+      const ch0 = audioBuffer.getChannelData(0);
+      const ch1 = audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1) : null;
+      const outSr = Math.min(srcSr, targetSr);
+      const ratio = srcSr / outSr;
+      const outLen = Math.max(1, Math.floor(srcLen / ratio));
+      const wavBuf = new ArrayBuffer(44 + outLen * 2);
+      const view = new DataView(wavBuf);
+      const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+      writeStr(0, "RIFF");
+      view.setUint32(4, 36 + outLen * 2, true);
+      writeStr(8, "WAVE");
+      writeStr(12, "fmt ");
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, 1, true);
+      view.setUint32(24, outSr, true);
+      view.setUint32(28, outSr * 2, true);
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true);
+      writeStr(36, "data");
+      view.setUint32(40, outLen * 2, true);
+      let offset = 44;
+      for (let i = 0; i < outLen; i++) {
+        const sIdx = Math.min(srcLen - 1, Math.floor(i * ratio));
+        const sample = ch1 ? (ch0[sIdx] + ch1[sIdx]) * 0.5 : ch0[sIdx];
+        const clamped = Math.max(-1, Math.min(1, sample));
+        view.setInt16(offset, clamped < 0 ? clamped * 0x8000 : clamped * 0x7fff, true);
+        offset += 2;
+      }
+      return new Blob([wavBuf], { type: "audio/wav" });
+    }
+
+    async function extractCleanWavBase64(file) {
+      const ab = await file.arrayBuffer();
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) {
+        let ac = null;
+        try {
+          ac = new AC();
+          const decoded = await ac.decodeAudioData(ab.slice(0));
+          const wavBlob = encodeMonoWavBuffer(decoded, 20, 22050);
+          const dataUrl = await blobToDataUrl(wavBlob);
+          return { base64: dataUrl.split(",")[1] || "", mime: "audio/wav", sec: Math.min(20, decoded.duration).toFixed(1) };
+        } catch {}
+        finally { if (ac) { try { await ac.close(); } catch {} } }
+      }
+      const dataUrl = await blobToDataUrl(file);
+      return { base64: dataUrl.split(",")[1] || "", mime: file.type || "audio/mp3", sec: "?" };
     }
 
     async function handleCloneVoiceUpload(voiceKey, labelName, file) {
       if (!file) return;
-      if (file.size > 12 * 1024 * 1024) {
-        stage.innerHTML = `<div class="err-msg">O arquivo de voz deve ter menos de 12 MB (ideal: 15s a 30s em MP3 ou MP4).</div>`;
+      if (file.size > 20 * 1024 * 1024) {
+        stage.innerHTML = `<div class="err-msg">O arquivo de voz deve ter menos de 20 MB (ideal: 15s a 30s em MP3, WAV ou MP4).</div>`;
         return;
       }
       activeRunController = new AbortController();
       setAllButtonsDisabled(true);
       try {
-        stage.innerHTML = `<div class="status-msg"><strong>🧬 Clonando voz exata: ${labelName}</strong><br/>Enviando amostra para MiniMax Voice Clone...</div><div class="status-log" id="cloneLog">lendo arquivo...</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:52%"></div></div>`;
-        const { base64, mime } = await fileToBase64(file);
+        stage.innerHTML = `<div class="status-msg"><strong>🧬 Clonando voz exata: ${labelName}</strong><br/>Extraindo áudio WAV limpo e enviando para MiniMax Voice Clone...</div><div class="status-log" id="cloneLog">convertendo áudio para WAV puro...</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div>`;
+        const { base64, mime, sec } = await extractCleanWavBase64(file);
         const logEl = document.getElementById("cloneLog");
-        if (logEl) logEl.textContent = "enviando para fal.ai (MiniMax Voice Clone)...";
-        const qc = await callApi({ task: "clone_voice", audioBase64: base64, mimeType: mime }, 32000, activeRunController.signal);
+        if (logEl) logEl.textContent = `áudio WAV extraído (${sec}s) • enviando para fal.ai (MiniMax Voice Clone)...`;
+        const qc = await callApi({ task: "clone_voice", audioBase64: base64, mimeType: mime }, 34000, activeRunController.signal);
         const rc = await pollFalJob(qc, (st) => { if (logEl) logEl.textContent = `MiniMax Voice Clone: ${st}`; }, activeRunController.signal);
         if (!rc || !rc.customVoiceId) throw new Error("A fal.ai não retornou o ID da voz clonada.");
         setSavedCloneVoiceId(voiceKey, rc.customVoiceId);
         refreshCloneBadgesUI();
+        const envVarName = voiceKey === "male_adam" ? "ADAM_VOICE_ID" : "NATASHA_VOICE_ID";
         stage.innerHTML = `
           <div style="font-size:40px;">🧬</div>
           <div class="dl-box">
-            <div class="dl-title">✅ Voz Exata "${labelName}" Clonada e Salva com Sucesso!</div>
-            <div class="dl-dna">ID salvo no navegador: ${rc.customVoiceId}</div>
-            <div style="font-size:12px;color:#cbd5e1;line-height:1.45;">A partir de agora, sempre que você selecionar <strong>⭐ ${labelName}</strong> (na Superprodução, no Importar Vídeo ou no Estúdio de Narração), o NEXORA usará automaticamente este timbre exato.</div>
+            <div class="dl-title">✅ Voz Exata "${labelName}" Clonada e Ativa!</div>
+            <div class="dl-dna" id="clonedIdText">${rc.customVoiceId}</div>
+            <div class="dl-grid" style="margin-bottom:8px;">
+              <button type="button" id="btnCopyCloneId" class="dl-btn main">📋 Copiar ID (${envVarName})</button>
+            </div>
+            <div style="font-size:11.5px;color:#cbd5e1;line-height:1.45;">
+              ✓ Já está <strong>ativa agora neste navegador</strong> ao escolher <strong>⭐ ${labelName}</strong>.<br/>
+              💡 <strong>Dica SaaS:</strong> se quiser que TODOS os seus clientes já usem essa voz exata automaticamente, adicione a variável <code>${envVarName}</code> com esse ID no Cloudflare Pages.
+            </div>
           </div>
         `;
+        document.getElementById("btnCopyCloneId")?.addEventListener("click", () => {
+          navigator.clipboard?.writeText(rc.customVoiceId).catch(() => {});
+          const b = document.getElementById("btnCopyCloneId");
+          if (b) b.textContent = "✓ ID Copiado!";
+        });
       } catch (err) {
         stage.innerHTML = `<div class="err-msg">Erro ao clonar voz ${labelName}: ${err.message}</div>`;
       } finally {
@@ -2626,27 +2713,33 @@
       c2d.closePath();
     }
 
-    function drawTikTokCaption(c2d, cw, ch, blocks, curTime, style = "viral_yellow", posKey = "safe_tiktok") {
+    function drawTikTokCaption(c2d, cw, ch, blocks, curTime, style = "viral_yellow", posKey = "safe_tiktok", sizeKey = "normal") {
       if (!blocks || !blocks.length || !style || style === "none") return;
       const activeBlock = blocks.find((b) => curTime >= b.start - 0.04 && curTime <= b.end + 0.08);
       if (!activeBlock) return;
 
-      const yRatio = posKey === "top" ? 0.22 : posKey === "center" ? 0.52 : 0.675;
+      const yRatio = posKey === "top" ? 0.22 : posKey === "center" ? 0.52 : 0.715;
       const centerY = Math.round(ch * yRatio);
-      const maxWidth = cw * 0.84;
+      const maxWidth = cw * 0.78;
 
       const elapsedInBlock = Math.max(0, curTime - activeBlock.start);
-      const popScale = elapsedInBlock < 0.085
-        ? 0.86 + easeOutCubic(elapsedInBlock / 0.085) * 0.17
-        : elapsedInBlock < 0.14
-          ? 1.03 - ((elapsedInBlock - 0.085) / 0.055) * 0.03
+      const popScale = elapsedInBlock < 0.08
+        ? 0.90 + easeOutCubic(elapsedInBlock / 0.08) * 0.12
+        : elapsedInBlock < 0.13
+          ? 1.02 - ((elapsedInBlock - 0.08) / 0.05) * 0.02
           : 1.0;
 
       const isUpper = style !== "tiktok_native";
-      const displayWords = activeBlock.words.map((w) => ({
-        ...w,
-        label: isUpper ? w.text.toUpperCase() : w.text
-      }));
+      const displayWords = activeBlock.words
+        .map((w) => {
+          const cleaned = String(w.text || "").replace(/[.,;:]+$/g, "").trim() || w.text;
+          return {
+            ...w,
+            label: isUpper ? cleaned.toUpperCase() : cleaned
+          };
+        })
+        .filter((w) => w.label);
+      if (!displayWords.length) return;
 
       let activeWordIdx = displayWords.findIndex((w) => curTime >= w.start && curTime <= w.end);
       if (activeWordIdx === -1) {
@@ -2657,7 +2750,10 @@
       c2d.textBaseline = "middle";
       c2d.textAlign = "left";
 
-      const baseFontSize = style === "viral_yellow" ? 50 : style === "capcut_pill" ? 46 : 38;
+      // True TikTok Shop mobile proportions on 720x1280 canvas
+      const sizeScale = sizeKey === "small" ? 0.85 : sizeKey === "medium" ? 1.18 : 1.0;
+      const rawBase = style === "viral_yellow" ? 34 : style === "capcut_pill" ? 31 : 27;
+      const baseFontSize = Math.round(rawBase * sizeScale);
       const fontFamily = style === "tiktok_native"
         ? '800 {SZ}px "Poppins", "Montserrat", Inter, sans-serif'
         : '900 {SZ}px "Montserrat", "Arial Black", Impact, sans-serif';
@@ -2667,9 +2763,10 @@
       let widths = [];
       let totalW = 0;
 
-      while (fontSize >= 26) {
+      while (fontSize >= 20) {
         c2d.font = fontFamily.replace("{SZ}", String(fontSize));
-        spaceW = Math.round(fontSize * 0.30);
+        // Generous word gap (0.46x fontSize) so black strokes never merge into adjacent words
+        spaceW = Math.max(11, Math.round(fontSize * (style === "tiktok_native" ? 0.34 : 0.46)));
         widths = displayWords.map((w) => c2d.measureText(w.label).width);
         totalW = widths.reduce((a, b) => a + b, 0) + spaceW * Math.max(0, displayWords.length - 1);
         if (totalW <= maxWidth) break;
@@ -2682,16 +2779,15 @@
       const startX = -totalW / 2;
 
       if (style === "tiktok_native") {
-        // Native TikTok App rounded white pill container
-        const padX = 24, padY = 14;
+        const padX = 18, padY = 10;
         const boxW = totalW + padX * 2;
         const boxH = fontSize + padY * 2;
         c2d.save();
-        c2d.shadowColor = "rgba(0,0,0,0.45)";
-        c2d.shadowBlur = 16;
-        c2d.shadowOffsetY = 5;
+        c2d.shadowColor = "rgba(0,0,0,0.40)";
+        c2d.shadowBlur = 12;
+        c2d.shadowOffsetY = 4;
         c2d.fillStyle = "rgba(255,255,255,0.96)";
-        drawRoundedRectPath(c2d, -boxW / 2, -boxH / 2, boxW, boxH, 16);
+        drawRoundedRectPath(c2d, -boxW / 2, -boxH / 2, boxW, boxH, 13);
         c2d.fill();
         c2d.restore();
 
@@ -2704,13 +2800,12 @@
           x += widths[i] + spaceW;
         }
       } else if (style === "capcut_pill") {
-        // CapCut Pro Karaoke Pill: subtle dark glass backdrop + bright rounded pill behind active word
-        const bgPadX = 22, bgPadY = 14;
+        const bgPadX = 18, bgPadY = 10;
         const bgW = totalW + bgPadX * 2;
         const bgH = fontSize + bgPadY * 2;
         c2d.save();
         c2d.fillStyle = "rgba(7,11,18,0.58)";
-        drawRoundedRectPath(c2d, -bgW / 2, -bgH / 2, bgW, bgH, 16);
+        drawRoundedRectPath(c2d, -bgW / 2, -bgH / 2, bgW, bgH, 13);
         c2d.fill();
         c2d.restore();
 
@@ -2719,28 +2814,28 @@
           const w = displayWords[i];
           const isAct = i === activeWordIdx;
           if (isAct) {
-            const pPadX = 11, pPadY = 7;
+            const pPadX = 8, pPadY = 5;
             c2d.save();
             c2d.fillStyle = w.isCta ? "#22FF66" : "#FFE600";
-            c2d.shadowColor = "rgba(0,0,0,0.45)";
-            c2d.shadowBlur = 10;
-            drawRoundedRectPath(c2d, x - pPadX, -(fontSize / 2) - pPadY, widths[i] + pPadX * 2, fontSize + pPadY * 2, 12);
+            c2d.shadowColor = "rgba(0,0,0,0.40)";
+            c2d.shadowBlur = 8;
+            drawRoundedRectPath(c2d, x - pPadX, -(fontSize / 2) - pPadY, widths[i] + pPadX * 2, fontSize + pPadY * 2, 10);
             c2d.fill();
             c2d.restore();
             c2d.fillStyle = "#06090F";
-            c2d.fillText(w.label, x, 2);
+            c2d.fillText(w.label, x, 1);
           } else {
             c2d.lineJoin = "round";
-            c2d.lineWidth = 7;
+            c2d.lineWidth = Math.max(5, Math.round(fontSize * 0.18));
             c2d.strokeStyle = "#000000";
-            c2d.strokeText(w.label, x, 2);
+            c2d.strokeText(w.label, x, 1);
             c2d.fillStyle = "#FFFFFF";
-            c2d.fillText(w.label, x, 2);
+            c2d.fillText(w.label, x, 1);
           }
           x += widths[i] + spaceW;
         }
       } else {
-        // Default: Viral TikTok Shop (White + Golden Yellow Active Word + Lime Green CTA + Thick Black Outline)
+        // Default: Viral TikTok Shop (Crisp Compact White + Golden Yellow Active + Lime CTA + Clean Black Outline)
         let x = startX;
         for (let i = 0; i < displayWords.length; i++) {
           const w = displayWords[i];
@@ -2748,14 +2843,14 @@
           const wordCenterX = x + widths[i] / 2;
           c2d.save();
           c2d.translate(wordCenterX, 0);
-          if (isAct) c2d.scale(1.09, 1.09);
+          if (isAct) c2d.scale(1.05, 1.05);
           c2d.lineJoin = "round";
           c2d.miterLimit = 2;
-          c2d.lineWidth = Math.max(9, Math.round(fontSize * 0.23));
+          c2d.lineWidth = Math.max(6, Math.round(fontSize * 0.21));
           c2d.strokeStyle = "#000000";
-          c2d.shadowColor = "rgba(0,0,0,0.88)";
-          c2d.shadowBlur = 12;
-          c2d.shadowOffsetY = 5;
+          c2d.shadowColor = "rgba(0,0,0,0.82)";
+          c2d.shadowBlur = 9;
+          c2d.shadowOffsetY = 4;
           c2d.strokeText(w.label, -widths[i] / 2, 0);
           c2d.shadowBlur = 0;
           c2d.shadowOffsetY = 0;
@@ -2777,7 +2872,7 @@
       } catch {}
     }
 
-    async function renderImportedVideoWithVoiceAndCaptions(videoFile, videoArrayBuf, voiceArrayBuf, scriptText, whisperChunks, subStyle, subPos, origVolScale, audioCtx) {
+    async function renderImportedVideoWithVoiceAndCaptions(videoFile, videoArrayBuf, voiceArrayBuf, scriptText, whisperChunks, subStyle, subPos, subSize, origVolScale, audioCtx) {
       await ensureCaptionFontsLoaded();
       if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume().catch(() => {});
 
@@ -2897,7 +2992,7 @@
           if (vid.readyState >= 2) {
             drawCroppedCover(ctx, vid, crop, 1.0, 0, 0, 0, 1, "none");
             if (captionBlocks.length > 0) {
-              drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, elapsed, subStyle, subPos);
+              drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, elapsed, subStyle, subPos, subSize);
             }
           }
         });
@@ -3197,7 +3292,7 @@
             drawCinematicVignette(ctx, canvas.width, canvas.height, 0.24);
           }
           if (captionBlocks.length > 0 && captionCfg) {
-            drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, elapsed, captionCfg.style, captionCfg.pos || "safe_tiktok");
+            drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, elapsed, captionCfg.style, captionCfg.pos || "safe_tiktok", captionCfg.size || "normal");
           }
         });
       });
@@ -3331,7 +3426,7 @@
           savedWhisperChunks = remixWhisper;
         }
         const remixCaptionCfg = (enableVideoVoiceover.checked && inlineSubtitleStyle.value !== "none")
-          ? { style: inlineSubtitleStyle.value, pos: inlineSubtitlePos.value, text: inlineVoiceScript.value.trim(), whisperChunks: remixWhisper }
+          ? { style: inlineSubtitleStyle.value, pos: inlineSubtitlePos.value, size: inlineSubtitleSize.value, text: inlineVoiceScript.value.trim(), whisperChunks: remixWhisper }
           : null;
         const out = await renderHollywoodMaster(
           lastMasterSession.mediaItems,
@@ -3802,7 +3897,7 @@
           savedWhisperChunks = buildWhisper;
         }
         const buildCaptionCfg = wantsCaptions
-          ? { style: inlineSubtitleStyle.value, pos: inlineSubtitlePos.value, text: voiceScriptText, whisperChunks: buildWhisper }
+          ? { style: inlineSubtitleStyle.value, pos: inlineSubtitlePos.value, size: inlineSubtitleSize.value, text: voiceScriptText, whisperChunks: buildWhisper }
           : null;
 
         const out = await renderHollywoodMaster(
@@ -3917,7 +4012,7 @@
           <div class="dl-grid">
             <button type="button" id="btnDlLabVideo" class="dl-btn main">⬇️ Baixar Vídeo Final com Voz &amp; Legenda (.${out.ext.toUpperCase()})</button>
             <button type="button" id="btnPlayLabAgain" class="dl-btn" style="grid-column:span 2;">Reproduzir com Som</button>
-            <button type="button" id="btnLabRemixStyle" class="dl-btn remix">🎨 Testar Outro Estilo/Posição de Legenda (Zero Custo API)</button>
+            <button type="button" id="btnLabRemixStyle" class="dl-btn remix">🎨 Trocar Estilo / Tamanho / Posição da Legenda (Zero Custo API)</button>
           </div>
           <div class="clip-list">
             ${session.voiceUrl ? `<a class="clip-chip" href="${session.voiceUrl}" target="_blank" rel="noopener noreferrer" download="narracao-ptbr.mp3">🎙️ Baixar Só Narração</a>` : ""}
@@ -3942,6 +4037,7 @@
         try {
           const newStyle = labSubtitleStyle.value;
           const newPos = labSubtitlePos.value;
+          const newSize = labSubtitleSize.value;
           const newOrigVol = Number(labOrigVol.value);
           stage.innerHTML = `<div class="status-msg"><strong>Re-aplicando legenda sem custo API (<span id="renderProgressSec">0.0s / ${lastLabSession.dur.toFixed(1)}s</span>)...</strong></div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:15%"></div></div>`;
           const out2 = await renderImportedVideoWithVoiceAndCaptions(
@@ -3952,6 +4048,7 @@
             lastLabSession.whisperChunks,
             newStyle,
             newPos,
+            newSize,
             newOrigVol,
             audioCtx
           );
@@ -3983,6 +4080,7 @@
       const speed = Number(labVoiceSpeed.value) || 1.05;
       const subStyle = labSubtitleStyle.value;
       const subPos = labSubtitlePos.value;
+      const subSize = labSubtitleSize.value;
       const origVol = Number(labOrigVol.value);
 
       let audioCtx = null;
@@ -4042,6 +4140,7 @@
           whisperChunks,
           subStyle,
           subPos,
+          subSize,
           origVol,
           audioCtx
         );
