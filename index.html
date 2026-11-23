@@ -402,7 +402,7 @@
           <strong>NEXORA.AI — Nível 10 Absoluto pronto:</strong><br/>
           • <strong>105 Universos Cinema + 105 Imagens 9:16</strong> universais p/ qualquer produto<br/>
           • <strong>Fórmula dos 4 Vídeos Campeões:</strong> Palco Limpo + 1 Fenômeno Vivo Atrás + Super Macro 100mm (85–95%) + Light Sweep<br/>
-          • <strong>Canvas Pro Blockbuster:</strong> Mirror Punch-In, Speed-Ramp real e Flash Radial limpo (ZERO seta • Zona Segura TikTok Shop)
+          • <strong>Canvas Pro Blockbuster + Fallback de Áudio Blindado:</strong> Mirror Punch-In, Speed-Ramp real e Flash Radial limpo (ZERO seta • Zona Segura TikTok Shop)
         </div>
       </div>
     </div>
@@ -1254,11 +1254,10 @@
           }
         } catch (err) {
           if (err.message === "ABORTED_RUN") return null;
-          if (err.status === 403) return { audioUrl: null, engine: "", error: err.message, fatal403: true };
           lastErr = err.message || "erro";
         }
       }
-      if (onStatus) onStatus(`indisponível (${lastErr.slice(0, 42)})`);
+      if (onStatus) onStatus(`seguindo com Whoosh Sutil`);
       return { audioUrl: null, engine: "", error: lastErr };
     }
 
@@ -1278,7 +1277,6 @@
           }
         } catch (err) {
           if (err.message === "ABORTED_RUN") return null;
-          if (err.status === 403) return { audioUrl: null, engine: "", error: err.message, fatal403: true };
           lastErr = err.message || "erro";
         }
       }
@@ -2137,9 +2135,7 @@
       if (mKey !== "mute" && mKey !== "custom" && MUSIC_PROMPTS[mKey]) {
         musicPromise = (async () => {
           const res = await generateMusicWithTripleFallback(mKey, dna, targetSec + 6, (st) => { aiMusicStatus = st; }, runSignal);
-          if (res && res.fatal403) { fatalErrorMsg = res.error; activeRunController?.abort(); return null; }
           if (res && res.audioUrl) { aiMusicUrl = res.audioUrl; aiMusicEngine = res.engine; }
-          else if (res && res.error) noteMsg = `Aviso trilha: ${res.error}`;
           return aiMusicUrl;
         })();
       }
@@ -2148,7 +2144,6 @@
       if (wantsVoice && !savedVoiceBuf && voiceScriptText) {
         voicePromise = (async () => {
           const res = await generateVoiceWithTripleFallback(voiceScriptText, inlineVoiceGender.value, inlineVoiceStyle.value, 1.05, (st) => { aiVoiceStatus = st; }, runSignal);
-          if (res && res.fatal403) { fatalErrorMsg = res.error; activeRunController?.abort(); return null; }
           if (res && res.audioUrl) { aiVoiceUrl = res.audioUrl; aiVoiceEngine = res.engine; }
           else if (res && res.error) noteMsg += ` | Aviso voz: ${res.error}`;
           return aiVoiceUrl;
