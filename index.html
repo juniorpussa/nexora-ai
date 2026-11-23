@@ -122,8 +122,8 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.2 • VOZES ADAM &amp; NATASHA • LEGENDAS TIKTOK SHOP</span></div>
-    <div class="pill-info">🎬 Hollywood Universal v12.2 • 105 Modelos 3D • Vozes Adam &amp; Natasha (+ Clone Exato) • Legendas TikTok Shop Sincronizadas • Lab Importar Vídeo (Zero Custo GPU)</div>
+    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.3 • VOZES ADAM &amp; NATASHA • LEGENDAS &amp; ROTEIROS ÚNICOS</span></div>
+    <div class="pill-info">🎬 Hollywood Universal v12.3 • 105 Modelos 3D • Vozes Adam &amp; Natasha • Gerador Persuasivo Anti-Repetição (10s/15s/20s/30s) • Legendas TikTok Shop • Importar Vídeo</div>
   </div>
 
   <div class="layout">
@@ -214,7 +214,7 @@
 
       <div class="director-banner" id="directorBannerWrap">
         <div class="director-banner-head">
-          <span>🎬 Coreografia v12.1 (Crash-Zoom • Macro Esq→Dir • 3D Esquerda • Vista Panorâmica 3D • Macro Dir→Esq • 3D Direita • Hero Final • Áudio Calibrado p/ Narração):</span>
+          <span>🎬 Coreografia v12.3 (Crash-Zoom • Macro Esq→Dir • 3D Esquerda • Vista Panorâmica 3D • Macro Dir→Esq • 3D Direita • Hero Final • Áudio &amp; Legenda TikTok Shop):</span>
           <small style="color:#86efac;">100% universal nos 105 universos • Zona Segura TikTok Shop</small>
         </div>
         <div class="director-acts-preview" id="directorActsPreview"></div>
@@ -318,10 +318,10 @@
 
           <div class="options-row">
             <label class="toggle-row"><input type="checkbox" id="enableSfxHits" checked /><span><strong>Whoosh Sutil Alternado</strong> (1 corte sim, 1 não • 3 timbres suaves)</span></label>
-            <label class="toggle-row"><input type="checkbox" id="enableVideoVoiceover" /><span><strong>🎙️ Incluir Narração PT-BR no Vídeo</strong> (Ducking automático)</span></label>
+            <label class="toggle-row"><input type="checkbox" id="enableVideoVoiceover" /><span><strong>🎙️ Narração PT-BR + Legendas TikTok Shop</strong> (Digite ou Gere Roteiro Único)</span></label>
           </div>
 
-          <div id="inlineVoiceBox" class="hidden" style="border-top:1px solid #1d283d;padding-top:9px;display:flex;flex-direction:column;gap:8px;">
+          <div id="inlineVoiceBox" style="border-top:1px solid #1d283d;padding-top:9px;display:flex;flex-direction:column;gap:8px;">
             <div class="grid-2">
               <div>
                 <label for="inlineVoiceGender">Gênero da Voz (PT-BR)</label>
@@ -356,10 +356,10 @@
             </div>
             <div>
               <div class="char-meta" style="margin-bottom:4px;">
-                <label for="inlineVoiceScript" style="margin:0;">Roteiro da Narração (Calibrado p/ duração • Sem preço)</label>
-                <button type="button" class="btn-mini" id="btnAutoInlineScript">✨ Gerar Roteiro AIDA</button>
+                <label for="inlineVoiceScript" style="margin:0;">Digite sua Narração PT-BR ou Gere uma Persuasiva Inédita (10s, 15s, 20s ou 30s)</label>
+                <button type="button" class="btn-mini" id="btnAutoInlineScript">✨ Gerar Narração Persuasiva (Sempre Única)</button>
               </div>
-              <textarea id="inlineVoiceScript" placeholder="Escreva sua narração em português ou clique em Gerar Roteiro AIDA..."></textarea>
+              <textarea id="inlineVoiceScript" placeholder="Digite aqui a narração que a voz vai falar ou clique em '✨ Gerar Narração Persuasiva' (Super Gancho + CTA • nunca repete)..."></textarea>
               <div class="char-meta"><span id="inlineCharCount">0 caracteres</span><span id="inlineVoiceReadyTag" style="color:#86efac;"></span></div>
             </div>
           </div>
@@ -431,19 +431,31 @@
             </div>
           </div>
 
-          <div>
-            <label for="labProductName">Nome do Produto (opcional • para montar roteiro AIDA automático)</label>
-            <div style="display:flex;gap:8px;">
-              <input type="text" id="labProductName" placeholder="Ex: Tênis Esportivo HOKA / Óculos Ray-Ban / Perfume Sabah Al Ward" />
-              <button type="button" class="btn-rand" id="btnLabAutoScript">✨ Montar Roteiro</button>
+          <div class="grid-2">
+            <div>
+              <label for="labScriptDuration">7. Duração da Narração (10s, 15s, 20s ou 30s)</label>
+              <select id="labScriptDuration">
+                <option value="auto" selected>🤖 Automático (Duração do Vídeo Importado)</option>
+                <option value="10">⚡ 10 segundos (Super Gancho + CTA Rápido)</option>
+                <option value="15">🔥 15 segundos (Gancho + Benefício + CTA)</option>
+                <option value="20">💎 20 segundos (Gancho + Prova + CTA Forte)</option>
+                <option value="30">🎬 30 segundos (Comercial Completo + CTA)</option>
+              </select>
+            </div>
+            <div>
+              <label for="labProductName">8. Nome do Produto (p/ Gerar Narração Persuasiva)</label>
+              <input type="text" id="labProductName" placeholder="Ex: Tênis Esportivo HOKA / Óculos Ray-Ban / Perfume" />
             </div>
           </div>
 
           <div>
-            <label for="labVoiceScript">Roteiro da Narração &amp; Legenda (PT-BR • Sem preços • Blindado TikTok Shop)</label>
-            <textarea id="labVoiceScript" rows="3" placeholder="Escreva o texto da narração ou clique em Montar Roteiro..."></textarea>
+            <div class="char-meta" style="margin-bottom:5px;">
+              <label for="labVoiceScript" style="margin:0;">Digite a Narração aqui ou Gere uma Persuasiva (Super Gancho + CTA • Nunca Repete)</label>
+              <button type="button" class="btn-rand" id="btnLabAutoScript" style="min-height:30px;padding:0 11px;">✨ Gerar Narração Persuasiva (Nova)</button>
+            </div>
+            <textarea id="labVoiceScript" rows="4" placeholder="Digite aqui a narração que você quer no vídeo OU clique em '✨ Gerar Narração Persuasiva (Nova)' para criar um roteiro inédito com Super Gancho + CTA..."></textarea>
             <div class="char-meta">
-              <span id="labCharInfo">0 caracteres • Importe um vídeo para calibrar a duração exata</span>
+              <span id="labCharInfo">0 caracteres • Escolha 10s, 15s, 20s ou 30s ou importe um vídeo</span>
               <span id="labSyncNote" style="color:#7dd3fc;">Sincronização palavra por palavra (Whisper PT-BR + Fallback)</span>
             </div>
           </div>
@@ -511,7 +523,7 @@
             <label for="studioProductName">Nome do Produto (para gerar roteiro pronto)</label>
             <div style="display:flex;gap:8px;">
               <input type="text" id="studioProductName" placeholder="Ex: Perfume Importado / Mouse Gamer Sem Fio / Tênis Esportivo" />
-              <button type="button" class="btn-rand" id="btnGenerateAidaScript">✨ Montar Roteiro</button>
+              <button type="button" class="btn-rand" id="btnGenerateAidaScript">✨ Gerar Persuasiva (Nova)</button>
             </div>
           </div>
           <div>
@@ -1090,12 +1102,187 @@
 
     const DURATION_CHAR_GUIDE = { 10: { min: 115, max: 165 }, 15: { min: 190, max: 250 }, 20: { min: 265, max: 335 }, 30: { min: 395, max: 485 } };
 
+    // =========================================================================
+    // MOTOR DE ROTEIROS PERSUASIVOS ANTI-REPETIÇÃO (10s, 15s, 20s e 30s)
+    // SUPER GANCHO + CORPO DE DESEJO + PROVA + SUPER CTA • NUNCA REPETE
+    // =========================================================================
+    const PERSUASIVE_POOLS = {
+      hooks10: [
+        (p) => `Para tudo e olha o nível de ${p}!`,
+        (p) => `Sério, quem vê ${p} de perto não acredita no acabamento!`,
+        (p) => `Você ainda não viu nada com a presença de ${p}!`,
+        (p) => `Olha esse detalhe de ${p} que está parando todo mundo!`,
+        (p) => `Esquece o comum e olha de perto o visual de ${p}!`,
+        (p) => `Impossível passar direto sem reparar em ${p}!`,
+        (p) => `Se você exige qualidade real, precisa ver ${p} agora!`,
+        (p) => `É por causa desse acabamento que ${p} está esgotando rápido!`,
+        (p) => `Dá só uma olhada na construção impecável de ${p}!`,
+        (p) => `A diferença entre o básico e o nível superior está em ${p}!`,
+        (p) => `Olha como ${p} muda completamente o nível no primeiro olhar!`,
+        (p) => `Ninguém imagina esse padrão de detalhe até ver ${p} de perto!`,
+        (p) => `Achou que já tinha visto tudo? Olha o acabamento de ${p}!`,
+        (p) => `Esse é o detalhe de ${p} que faz todo mundo perguntar onde você comprou!`,
+        (p) => `Olha a precisão e o estilo marcante de ${p}!`,
+        (p) => `Quem entende de bom gosto bate o olho em ${p} e já reconhece!`
+      ],
+      hooksLong: [
+        (p) => `Para tudo por alguns segundos e olha de perto o nível absurdo de ${p}!`,
+        (p) => `Você já percebeu como um único detalhe muda tudo? Olha a presença de ${p}!`,
+        (p) => `Chega de gastar com coisa frágil que decepciona na primeira semana — conhece ${p}!`,
+        (p) => `Sério, olha a câmera chegando perto de ${p} e repara nesse acabamento fora da curva!`,
+        (p) => `Se você gosta de chamar atenção sem fazer esforço, precisa ver o que ${p} entrega!`,
+        (p) => `Não é à toa que ${p} virou febre entre quem não abre mão de qualidade!`,
+        (p) => `Bate o olho nos detalhes de ${p} e entende na hora por que todo mundo está querendo um!`,
+        (p) => `Quer saber o que separa um produto comum de uma escolha de alto padrão? Olha ${p}!`,
+        (p) => `Atenção nesse visual: ${p} foi feito para quem repara em cada acabamento!`,
+        (p) => `Se você busca estilo, resistência e presença real no dia a dia, olha bem para ${p}!`,
+        (p) => `Olha esse design de perto — ${p} entrega um impacto visual que impressiona de cara!`,
+        (p) => `Tem coisa que só vendo de perto para acreditar, e ${p} é exatamente assim!`,
+        (p) => `Esquece o mais do mesmo: olha como ${p} eleva o seu padrão no primeiro instante!`,
+        (p) => `Quando o acabamento fala por si, não precisa exagerar — repara em cada linha de ${p}!`
+      ],
+      bodiesShort: [
+        () => `Acabamento impecável, textura real e presença marcante no primeiro olhar.`,
+        () => `Cada linha foi desenhada para entregar conforto, durabilidade e destaque imediato.`,
+        () => `Visual sofisticado de perto, construção firme e estilo que combina com tudo.`,
+        () => `Qualidade que você enxerga nos mínimos detalhes e sente logo no primeiro uso.`,
+        () => `Design moderno, material resistente e aquele toque de alto padrão que chama atenção.`,
+        () => `Leve, versátil e com um acabamento tão bem feito que parece peça de vitrine.`,
+        () => `Presença forte, encaixe perfeito e acabamento limpo em cada ângulo.`,
+        () => `Feito para durar de verdade e se destacar em qualquer ocasião do seu dia.`,
+        () => `Textura refinada, visual marcante e praticidade que faz diferença na rotina.`,
+        () => `Cada detalhe transmite cuidado, firmeza e um estilo impossível de ignorar.`,
+        () => `Combina desempenho no dia a dia com um visual limpo de tirar o fôlego.`,
+        () => `Construção caprichada, acabamento de alto nível e presença que impõe respeito.`
+      ],
+      bodiesMedium: [
+        () => `Cada detalhe foi pensado para unir acabamento impecável, conforto real e um visual que chama atenção de longe.`,
+        () => `Olha a precisão das linhas e a textura do material: entrega firmeza, durabilidade e presença marcante o dia inteiro.`,
+        () => `Ele foge completamente do comum, trazendo design moderno, construção sólida e aquele aspecto sofisticado que eleva seu estilo.`,
+        () => `No uso diário a diferença aparece na hora — praticidade real, acabamento caprichado e visual digno de vitrine.`,
+        () => `Do primeiro toque aos mínimos relevos, tudo nele foi construído para oferecer desempenho, estilo e longa duração.`,
+        () => `Combina leveza, resistência e um visual extremamente limpo que funciona tanto na rotina corrida quanto em momentos especiais.`,
+        () => `É aquele tipo de escolha inteligente que entrega muito mais presença, conforto e acabamento do que você espera.`,
+        () => `Repara na qualidade das bordas e do material: zero cara de produto genérico, feito sob medida para quem é exigente.`,
+        () => `Pensado para acompanhar o seu ritmo sem perder a elegância, unindo funcionalidade direta com um design de impacto.`,
+        () => `Cada ângulo mostra o cuidado na fabricação, entregando personalidade forte e confiança desde o primeiro uso.`
+      ],
+      proofsExtra: [
+        () => `Não é exagero: quem recebe em casa se surpreende com o peso, o toque e a fidelidade de cada detalhe.`,
+        () => `Fica incrível de qualquer ângulo e transforma completamente a sua experiência logo no primeiro dia.`,
+        () => `É a escolha certa tanto para dar um upgrade no seu dia a dia quanto para surpreender num presente marcante.`,
+        () => `Você percebe a superioridade assim que tira da caixa — acabamento limpo, firme e pronto para impressionar.`,
+        () => `Por isso tanta gente está garantindo o seu antes do estoque virar: entrega estilo e confiança sem complicação.`,
+        () => `Funciona perfeitamente para quem valoriza praticidade, visual atual e qualidade que acompanha a rotina intensa.`,
+        () => `Cada detalhe conversa entre si para entregar um resultado harmônico, bonito de perto e extremamente funcional.`,
+        () => `Quando você coloca lado a lado com modelos comuns, a diferença de acabamento e presença fica óbvia na hora.`,
+        () => `Foi desenvolvido para entregar aquela sensação imediata de acerto — você usa uma vez e não larga mais.`,
+        () => `Combina perfeitamente com quem busca presença de alto nível, acabamento impecável e zero dor de cabeça.`
+      ],
+      bridges30: [
+        () => `Sabe aquela frustração de escolher algo bonito na foto e se decepcionar pessoalmente? Aqui acontece exatamente o contrário.`,
+        () => `Enquanto a maioria dos modelos entrega só o básico, esse aqui se destaca logo nos detalhes que quase ninguém capricha.`,
+        () => `Se você repara em textura, firmeza e design bem resolvido, vai entender na hora por que esse modelo virou favorito.`,
+        () => `A gente sabe como faz diferença usar algo que transmite cuidado e confiança em cada momento do dia.`,
+        () => `Ele foi projetado para resolver a rotina com estilo, entregando uma experiência muito acima da média desde o primeiro contato.`,
+        () => `Não importa se é para o trabalho, passeio ou uso diário: ele entrega presença e versatilidade sem esforço.`,
+        () => `Olhando assim bem de perto, dá para ver claramente o padrão elevado em cada curva, textura e encaixe.`,
+        () => `É o equilíbrio exato entre visual marcante, resistência real e praticidade para quem não aceita menos que o melhor.`
+      ],
+      ctas: [
+        () => `Garanta o seu na sacolinha aqui embaixo antes que acabe!`,
+        () => `Toque na sacolinha aqui embaixo e garanta o seu agora mesmo!`,
+        () => `Clique no carrinho aqui embaixo e aproveite enquanto ainda tem disponível!`,
+        () => `Corre na sacolinha aqui embaixo para garantir o seu hoje!`,
+        () => `Já garante o seu direto na sacolinha aqui embaixo antes que esgote!`,
+        () => `Toque no carrinho aqui embaixo agora e leve o seu para casa!`,
+        () => `Não deixa passar — garanta o seu na sacolinha aqui embaixo!`,
+        () => `Aproveita agora na sacolinha aqui embaixo enquanto ainda está disponível!`,
+        () => `Clica aqui embaixo no carrinho e garanta o seu antes da próxima reposição!`,
+        () => `Garante o seu hoje mesmo tocando na sacolinha aqui embaixo!`,
+        () => `O seu está te esperando na sacolinha aqui embaixo — garanta agora!`,
+        () => `Toque aqui embaixo no carrinho e sinta essa diferença pessoalmente!`,
+        () => `Garanta o seu direto no carrinho aqui embaixo antes que acabe o estoque!`,
+        () => `Clique na sacolinha aqui embaixo agora e não fique sem o seu!`
+      ]
+    };
+
+    const SCRIPT_HISTORY_KEY = "nexora_used_scripts_v123";
+    let scriptGenCounter = 0;
+
+    function loadScriptHistory() {
+      try {
+        const raw = localStorage.getItem(SCRIPT_HISTORY_KEY);
+        const parsed = raw ? JSON.parse(raw) : null;
+        if (parsed && Array.isArray(parsed.sigs)) return parsed;
+      } catch {}
+      return { sigs: [], lastHook: -1, lastBody: -1, lastProof: -1, lastBridge: -1, lastCta: -1 };
+    }
+
+    function saveScriptHistory(hist) {
+      try {
+        hist.sigs = hist.sigs.slice(-80);
+        localStorage.setItem(SCRIPT_HISTORY_KEY, JSON.stringify(hist));
+      } catch {}
+    }
+
+    function pickDifferentIndex(len, avoidIdx) {
+      if (len <= 1) return 0;
+      let idx = cryptoRandInt(len);
+      if (idx === avoidIdx) idx = (idx + 1 + cryptoRandInt(len - 1)) % len;
+      return idx;
+    }
+
     function buildAidaScript(prodName, sec) {
       const p = (prodName || "este modelo").trim();
-      if (sec <= 11) return `Olha o nível de acabamento de ${p}! Cada detalhe impressiona no primeiro olhar e entrega presença real. Garanta o seu na sacolinha aqui embaixo antes que acabe!`;
-      if (sec <= 16) return `Você já viu algo com esse nível de acabamento? Olha de perto os detalhes reais de ${p}, feito para entregar presença marcante e qualidade no dia a dia. Garanta o seu na sacolinha aqui embaixo agora mesmo!`;
-      if (sec <= 22) return `Você já viu algo com esse nível de acabamento? Olha só os detalhes reais de ${p}! Cada linha foi pensada para entregar presença marcante, conforto e qualidade que você sente na hora. É aquele tipo de escolha que chama atenção de perto. Garanta o seu na sacolinha aqui embaixo!`;
-      return `Se você busca qualidade real e presença marcante no primeiro olhar, precisa conhecer ${p}! Olha de perto esse acabamento impecável, os detalhes reais e como ele se destaca no uso do dia a dia. Feito para quem valoriza estilo, durabilidade e confiança em cada momento. Não deixe passar — garanta o seu na sacolinha aqui embaixo agora mesmo!`;
+      const dur = Number(sec) || 10;
+      const hist = loadScriptHistory();
+      scriptGenCounter++;
+
+      let bestText = "";
+      let chosenSig = "";
+      let hIdx = 0, bIdx = 0, prIdx = -1, brIdx = -1, cIdx = 0;
+
+      for (let attempt = 0; attempt < 25; attempt++) {
+        if (dur <= 11) {
+          hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooks10.length, hist.lastHook);
+          bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesShort.length, hist.lastBody);
+          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas.length, hist.lastCta);
+          chosenSig = `10-${hIdx}-${bIdx}-${cIdx}`;
+          bestText = `${PERSUASIVE_POOLS.hooks10[hIdx](p)} ${PERSUASIVE_POOLS.bodiesShort[bIdx]()} ${PERSUASIVE_POOLS.ctas[cIdx]()}`;
+        } else if (dur <= 16) {
+          hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksLong.length, hist.lastHook);
+          bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesMedium.length, hist.lastBody);
+          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas.length, hist.lastCta);
+          chosenSig = `15-${hIdx}-${bIdx}-${cIdx}`;
+          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.ctas[cIdx]()}`;
+        } else if (dur <= 22) {
+          hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksLong.length, hist.lastHook);
+          bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesMedium.length, hist.lastBody);
+          prIdx = pickDifferentIndex(PERSUASIVE_POOLS.proofsExtra.length, hist.lastProof);
+          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas.length, hist.lastCta);
+          chosenSig = `20-${hIdx}-${bIdx}-${prIdx}-${cIdx}`;
+          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.proofsExtra[prIdx]()} ${PERSUASIVE_POOLS.ctas[cIdx]()}`;
+        } else {
+          hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksLong.length, hist.lastHook);
+          brIdx = pickDifferentIndex(PERSUASIVE_POOLS.bridges30.length, hist.lastBridge);
+          bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesMedium.length, hist.lastBody);
+          prIdx = pickDifferentIndex(PERSUASIVE_POOLS.proofsExtra.length, hist.lastProof);
+          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas.length, hist.lastCta);
+          chosenSig = `30-${hIdx}-${brIdx}-${bIdx}-${prIdx}-${cIdx}`;
+          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bridges30[brIdx]()} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.proofsExtra[prIdx]()} ${PERSUASIVE_POOLS.ctas[cIdx]()}`;
+        }
+        if (!hist.sigs.includes(chosenSig)) break;
+      }
+
+      hist.sigs.push(chosenSig);
+      hist.lastHook = hIdx;
+      hist.lastBody = bIdx;
+      if (prIdx >= 0) hist.lastProof = prIdx;
+      if (brIdx >= 0) hist.lastBridge = brIdx;
+      hist.lastCta = cIdx;
+      saveScriptHistory(hist);
+      return bestText;
     }
 
     const modeBtns = document.querySelectorAll(".mode-btn");
@@ -1161,6 +1348,7 @@
     const labSubtitleStyle = document.getElementById("labSubtitleStyle");
     const labSubtitlePos = document.getElementById("labSubtitlePos");
     const labOrigVol = document.getElementById("labOrigVol");
+    const labScriptDuration = document.getElementById("labScriptDuration");
     const labProductName = document.getElementById("labProductName");
     const labVoiceScript = document.getElementById("labVoiceScript");
     const labCharInfo = document.getElementById("labCharInfo");
@@ -1294,16 +1482,16 @@
     });
 
     enableVideoVoiceover.addEventListener("change", () => {
-      inlineVoiceBox.classList.toggle("hidden", !enableVideoVoiceover.checked);
       if (enableVideoVoiceover.checked && !inlineVoiceScript.value.trim() && !savedVoiceBuf) {
         inlineVoiceScript.value = buildAidaScript(productDetailHint.value.trim() || "este modelo", Number(minDuration.value) || 10);
       }
       updateInlineVoiceUI();
     });
     inlineVoiceGender.addEventListener("change", () => populateVoiceSelectWithCloneLabel(inlineVoiceStyle, inlineVoiceGender.value));
-    inlineVoiceScript.addEventListener("input", () => { savedVoiceBuf = null; savedVoiceUrl = ""; savedWhisperChunks = null; savedVoiceMeta = ""; updateInlineVoiceUI(); });
+    inlineVoiceScript.addEventListener("input", () => { savedVoiceBuf = null; savedVoiceUrl = ""; savedWhisperChunks = null; savedVoiceMeta = ""; if (inlineVoiceScript.value.trim()) enableVideoVoiceover.checked = true; updateInlineVoiceUI(); });
     btnAutoInlineScript.addEventListener("click", () => {
-      savedVoiceBuf = null; savedVoiceMeta = "";
+      savedVoiceBuf = null; savedVoiceUrl = ""; savedWhisperChunks = null; savedVoiceMeta = "";
+      enableVideoVoiceover.checked = true;
       inlineVoiceScript.value = buildAidaScript(productDetailHint.value.trim() || "este modelo", Number(minDuration.value) || 10);
       updateInlineVoiceUI();
     });
@@ -2591,7 +2779,6 @@
 
     async function renderImportedVideoWithVoiceAndCaptions(videoFile, videoArrayBuf, voiceArrayBuf, scriptText, whisperChunks, subStyle, subPos, origVolScale, audioCtx) {
       await ensureCaptionFontsLoaded();
-      await ensureCaptionFontsLoaded();
       if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume().catch(() => {});
 
       const vidObjUrl = URL.createObjectURL(videoFile);
@@ -2674,11 +2861,6 @@
         captionBlocks = buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, voiceDecoded, voiceRateUsed, 0.06);
       }
 
-      let captionBlocks = [];
-      if (captionCfg && captionCfg.style && captionCfg.style !== "none" && captionCfg.text && voiceMixedOk) {
-        captionBlocks = buildWordTimingsFromWhisperOrEstimate(captionCfg.text, captionCfg.whisperChunks, voiceDecodedForSubs, voiceRateForSubs, 0.06);
-      }
-
       const recProf = pickRecorderProfile();
       const stream = new MediaStream(tracks);
       let rec;
@@ -2729,6 +2911,7 @@
     }
 
     async function renderHollywoodMaster(mediaItems, totalSec, dna, editMode, withSfx, audioCtx, soundtrackArrayBuf, voiceoverArrayBuf = null, allowLightBg = false, captionCfg = null) {
+      await ensureCaptionFontsLoaded();
       if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume().catch(() => {});
 
       const loaded = [];
@@ -2855,6 +3038,11 @@
           }
         }
         tracks.push(...dest.stream.getAudioTracks());
+      }
+
+      let captionBlocks = [];
+      if (captionCfg && captionCfg.style && captionCfg.style !== "none" && captionCfg.text && voiceMixedOk) {
+        captionBlocks = buildWordTimingsFromWhisperOrEstimate(captionCfg.text, captionCfg.whisperChunks, voiceDecodedForSubs, voiceRateForSubs, 0.06);
       }
 
       const recProf = pickRecorderProfile();
@@ -3669,19 +3857,28 @@
     });
 
     // === VIDEO LAB (IMPORTAR VÍDEO PRONTO + NARRAÇÃO + LEGENDAS • ZERO CUSTO VÍDEO) ===
+    function getEffectiveLabDuration() {
+      if (labScriptDuration && labScriptDuration.value !== "auto") {
+        return Number(labScriptDuration.value) || 10;
+      }
+      return Math.max(5, Math.round(importedLabDurationSec || 10));
+    }
+
     function updateLabCharUI() {
-      const dur = Math.max(5, Math.round(importedLabDurationSec || 10));
+      const dur = getEffectiveLabDuration();
       const idealMin = Math.round(dur * 11.5);
       const idealMax = Math.round(dur * 16.5);
       const len = labVoiceScript.value.trim().length;
-      labCharInfo.textContent = `${len} caracteres • Ideal p/ ${dur}s: ${idealMin} a ${idealMax} caracteres`;
+      labCharInfo.textContent = `${len} caracteres • Alvo ${dur}s (ideal: ${idealMin} a ${idealMax} chars)`;
     }
 
     labVoiceGender.addEventListener("change", () => populateVoiceSelectWithCloneLabel(labVoiceStyle, labVoiceGender.value));
+    labScriptDuration?.addEventListener("change", updateLabCharUI);
     labVoiceScript.addEventListener("input", updateLabCharUI);
     btnLabAutoScript.addEventListener("click", () => {
       const prod = labProductName.value.trim() || productDetailHint.value.trim() || "este modelo";
-      labVoiceScript.value = buildAidaScript(prod, importedLabDurationSec || 10);
+      const targetDur = getEffectiveLabDuration();
+      labVoiceScript.value = buildAidaScript(prod, targetDur);
       updateLabCharUI();
     });
 
@@ -3698,7 +3895,7 @@
         importedLabDurationSec = Math.max(3, Number((labVideoPreview.duration || 10).toFixed(1)));
         labVideoInfo.textContent = `✅ Vídeo carregado: ${f.name} (${importedLabDurationSec}s • ${labVideoPreview.videoWidth}x${labVideoPreview.videoHeight})`;
         if (!labVoiceScript.value.trim()) {
-          labVoiceScript.value = buildAidaScript(labProductName.value.trim() || "este modelo", importedLabDurationSec);
+          labVoiceScript.value = buildAidaScript(labProductName.value.trim() || "este modelo", getEffectiveLabDuration());
         }
         updateLabCharUI();
       };
