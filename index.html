@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — Hollywood v12.6 • Narração Dinâmica TikTok Shop + Produto Obrigatório</title>
+  <title>NEXORA.AI — Hollywood v12.7 • Vozes ElevenLabs Persuasivas • Sync Milimétrico</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
@@ -128,8 +128,8 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.6 • NARRAÇÃO DINÂMICA (1.20x) + PRODUTO OBRIGATÓRIO</span></div>
-    <div class="pill-info">🎬 Hollywood Universal v12.6 • 105 Modelos 3D • Narração Dinâmica Acelerada (13–14s em 10s) • Produto Obrigatório (Zero Genérico) • Adam &amp; Natasha • Legendas 23px</div>
+    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.7 • ELEVENLABS PERSUASIVAS • SYNC MILIMÉTRICO</span></div>
+    <div class="pill-info">🎬 Hollywood Universal v12.7 • 105 Modelos 3D • 10 Vozes Persuasivas ElevenLabs (Zero Distorção) • Sync Exato por Clock de Áudio • Produto Obrigatório</div>
   </div>
 
   <div class="layout">
@@ -150,7 +150,7 @@
         </button>
         <button type="button" class="mode-btn" data-mode="voice">
           <strong>🎙️ Narração PT-BR</strong>
-          <small>Adam, Natasha + Clone Exato</small>
+          <small>10 Vozes ElevenLabs Persuasivas</small>
         </button>
         <button type="button" class="mode-btn" data-mode="removebg">
           <strong>✂️ Remover Fundo</strong>
@@ -332,8 +332,8 @@
               <div>
                 <label for="inlineVoiceGender">Gênero da Voz (PT-BR)</label>
                 <select id="inlineVoiceGender">
-                  <option value="male" selected>👨 Masculina (Adam #1)</option>
-                  <option value="female">👩 Feminina (Natasha #1)</option>
+                  <option value="male" selected>👨 Masculina (ElevenLabs)</option>
+                  <option value="female">👩 Feminina (ElevenLabs)</option>
                 </select>
               </div>
               <div>
@@ -343,10 +343,10 @@
               <div>
                 <label for="inlineVoiceSpeed">Ritmo / Dinamismo</label>
                 <select id="inlineVoiceSpeed">
-                  <option value="1.12">Comercial Suave (1.12x)</option>
-                  <option value="1.20" selected>⚡ Dinâmico TikTok (1.20x • Padrão)</option>
-                  <option value="1.28">🔥 Rápido Viral (1.28x)</option>
-                  <option value="1.35">🚀 Ultra Hard-Sell (1.35x)</option>
+                  <option value="1.05">Comercial Natural (1.05x)</option>
+                  <option value="1.14" selected>⚡ Dinâmico TikTok (1.14x • Padrão)</option>
+                  <option value="1.18">🔥 Rápido Viral (1.18x)</option>
+                  <option value="1.20">🚀 Máximo ElevenLabs (1.20x)</option>
                 </select>
               </div>
             </div>
@@ -396,35 +396,10 @@
 
       <div id="videoLabSection" class="hidden">
         <div class="step-label">
-          <span>🧪 Importar Vídeo Pronto • Narração PT-BR + Legendas TikTok Shop</span>
+          <span>🧪 Importar Vídeo Pronto • Vozes ElevenLabs + Legendas Sincronizadas</span>
           <small style="color:#86efac;">Zero custo de vídeo GPU • Mantém a trilha do vídeo original</small>
         </div>
         <div class="sub-panel">
-          <div class="clone-card" id="cloneCardLab" style="border-color:#f59e0b88;">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
-              <strong style="font-size:12px;color:#fde047;">🧬 PASSO ÚNICO — Ativar Voz EXATA do Adam e da Natasha (do CapCut)</strong>
-              <small style="font-size:10.5px;color:#cbd5e1;">Envie seu <strong>AUDIO ADAM.mp4</strong> e <strong>AUDIO NATASHA.mp4</strong> 1 vez (fica salvo!)</small>
-            </div>
-            <div class="clone-row">
-              <div class="clone-slot">
-                <strong>⭐ Voz #1 Masculina: Adam</strong>
-                <span class="clone-badge" id="adamCloneBadgeLab">⚠️ Ainda sem clone — clique abaixo e envie AUDIO ADAM.mp4</span>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
-                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;background:#1e3a29;border-color:#22c55e;">🎙️ Clonar AUDIO ADAM.mp4<input type="file" id="cloneFileAdamLab" accept="audio/*,video/mp4" style="display:none;" /></label>
-                  <button type="button" class="btn-mini hidden" id="btnClearCloneAdamLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
-                </div>
-              </div>
-              <div class="clone-slot">
-                <strong>⭐ Voz #1 Feminina: Natasha</strong>
-                <span class="clone-badge" id="natashaCloneBadgeLab">⚠️ Ainda sem clone — clique abaixo e envie AUDIO NATASHA.mp4</span>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
-                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;background:#1e3a29;border-color:#22c55e;">🎙️ Clonar AUDIO NATASHA.mp4<input type="file" id="cloneFileNatashaLab" accept="audio/*,video/mp4" style="display:none;" /></label>
-                  <button type="button" class="btn-mini hidden" id="btnClearCloneNatashaLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <label class="video-drop-box" for="labVideoFile">
             <strong style="font-size:13.5px;color:#86efac;">📂 Clique para Importar seu Vídeo Pronto (.MP4 ou .WEBM)</strong>
             <span id="labVideoInfo" style="font-size:11.5px;color:#94a3b8;">Envie qualquer vídeo 9:16 já gerado (Tênis, Perfume, Relógio, Óculos, Whey...) — a trilha sonora original é preservada automaticamente.</span>
@@ -434,23 +409,23 @@
 
           <div class="grid-3">
             <div>
-              <label for="labVoiceGender">1. Gênero da Voz</label>
+              <label for="labVoiceGender">1. Gênero (ElevenLabs)</label>
               <select id="labVoiceGender">
-                <option value="male" selected>👨 Masculina (Adam #1)</option>
-                <option value="female">👩 Feminina (Natasha #1)</option>
+                <option value="male" selected>👨 Masculina (ElevenLabs)</option>
+                <option value="female">👩 Feminina (ElevenLabs)</option>
               </select>
             </div>
             <div>
-              <label for="labVoiceStyle">2. Locutor PT-BR</label>
+              <label for="labVoiceStyle">2. Locutor Persuasivo PT-BR</label>
               <select id="labVoiceStyle"></select>
             </div>
             <div>
-              <label for="labVoiceSpeed">3. Ritmo / Dinamismo</label>
+              <label for="labVoiceSpeed">3. Ritmo da Fala (Zero Distorção)</label>
               <select id="labVoiceSpeed">
-                <option value="1.12">Comercial Suave (1.12x)</option>
-                <option value="1.20" selected>⚡ Dinâmico TikTok (1.20x • Padrão)</option>
-                <option value="1.28">🔥 Rápido Viral (1.28x)</option>
-                <option value="1.35">🚀 Ultra Hard-Sell (1.35x)</option>
+                <option value="1.05">Comercial Natural (1.05x)</option>
+                <option value="1.14" selected>⚡ Dinâmico TikTok (1.14x • Padrão)</option>
+                <option value="1.18">🔥 Rápido Viral (1.18x)</option>
+                <option value="1.20">🚀 Máximo ElevenLabs (1.20x)</option>
               </select>
             </div>
           </div>
@@ -496,13 +471,13 @@
           </div>
 
           <div>
-            <label for="labScriptDuration">8. Duração do Vídeo / Cálculo Dinâmico (Ex: vídeo 10s = narração 13–14s acelerada)</label>
+            <label for="labScriptDuration">8. Duração do Vídeo (Calibração Exata p/ ElevenLabs 1.14x • Sem Distorcer a Voz)</label>
             <select id="labScriptDuration">
-              <option value="auto" selected>🤖 Automático (Duração do Vídeo Importado • Dinâmico)</option>
-              <option value="10">⚡ Vídeo 10s → Roteiro ~13–14s acelerado (~175 chars • Alto Dinamismo)</option>
-              <option value="15">🔥 Vídeo 15s → Roteiro ~19–21s acelerado (~265 chars • Alta Retenção)</option>
-              <option value="20">💎 Vídeo 20s → Roteiro ~26–28s acelerado (~355 chars • Prova + CTA)</option>
-              <option value="30">🎬 Vídeo 30s → Roteiro ~39–42s acelerado (~520 chars • Comercial Completo)</option>
+              <option value="auto" selected>🤖 Automático (Duração exata do vídeo importado)</option>
+              <option value="10">⚡ Vídeo 10s (~135–155 chars • Encaixe exato sem acelerar pitch)</option>
+              <option value="15">🔥 Vídeo 15s (~210–245 chars • Gancho + Benefício + CTA)</option>
+              <option value="20">💎 Vídeo 20s (~285–330 chars • Gancho + Prova + CTA)</option>
+              <option value="30">🎬 Vídeo 30s (~430–485 chars • Comercial Completo)</option>
             </select>
           </div>
 
@@ -519,10 +494,32 @@
             <label for="labVoiceScript" style="margin-bottom:4px;">Roteiro da Narração &amp; Legenda (Personalizado p/ o Produto • Super Gancho + CTA • Nunca Repete)</label>
             <textarea id="labVoiceScript" rows="4" placeholder="1º escreva o produto acima (ex: Óculos de Sol) e clique em '✨ Gerar Narração Persuasiva', ou digite o seu próprio roteiro aqui..."></textarea>
             <div class="char-meta">
-              <span id="labCharInfo">0 caracteres • Calibrado p/ ritmo dinâmico TikTok Shop (zero pausa morta)</span>
-              <span id="labSyncNote" style="color:#7dd3fc;">Frase 100% completa + Ritmo Acelerado + Whisper PT-BR</span>
+              <span id="labCharInfo">0 caracteres • Calibrado p/ ElevenLabs 1.14x com voz 100% natural</span>
+              <span id="labSyncNote" style="color:#7dd3fc;">Sync por Clock de Áudio Real + Whisper PT-BR</span>
             </div>
           </div>
+
+          <details class="clone-card" id="cloneCardLab">
+            <summary style="cursor:pointer;font-size:11.5px;font-weight:800;color:#7dd3fc;">🧬 Opcional: Clonar Voz Própria (MiniMax) — as vozes acima já são 100% ElevenLabs</summary>
+            <div class="clone-row" style="margin-top:8px;">
+              <div class="clone-slot">
+                <strong>🧬 Clone Masculino (Opcional)</strong>
+                <span class="clone-badge" id="adamCloneBadgeLab">Não configurado (usando vozes ElevenLabs)</span>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Enviar Áudio Masc<input type="file" id="cloneFileAdamLab" accept="audio/*,video/mp4" style="display:none;" /></label>
+                  <button type="button" class="btn-mini hidden" id="btnClearCloneAdamLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
+                </div>
+              </div>
+              <div class="clone-slot">
+                <strong>🧬 Clone Feminino (Opcional)</strong>
+                <span class="clone-badge" id="natashaCloneBadgeLab">Não configurado (usando vozes ElevenLabs)</span>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Enviar Áudio Fem<input type="file" id="cloneFileNatashaLab" accept="audio/*,video/mp4" style="display:none;" /></label>
+                  <button type="button" class="btn-mini hidden" id="btnClearCloneNatashaLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
@@ -531,17 +528,17 @@
         <div class="sub-panel">
           <label>1. Escolha o Gênero da Voz</label>
           <div class="voice-split">
-            <button type="button" class="gender-btn active" id="btnGenderMale">👨 Voz Masculina (Adam #1)</button>
-            <button type="button" class="gender-btn" id="btnGenderFemale">👩 Voz Feminina (Natasha #1)</button>
+            <button type="button" class="gender-btn active" id="btnGenderMale">👨 Voz Masculina (ElevenLabs)</button>
+            <button type="button" class="gender-btn" id="btnGenderFemale">👩 Voz Feminina (ElevenLabs)</button>
           </div>
           <div class="grid-3">
             <div>
               <label for="studioVoiceDuration">2. Duração do Vídeo Alvo</label>
               <select id="studioVoiceDuration">
-                <option value="10" selected>Vídeo 10s (Roteiro 13–14s dinâmico • ~175 chars)</option>
-                <option value="15">Vídeo 15s (Roteiro 19–21s dinâmico • ~265 chars)</option>
-                <option value="20">Vídeo 20s (Roteiro 26–28s dinâmico • ~355 chars)</option>
-                <option value="30">Vídeo 30s (Roteiro 39–42s dinâmico • ~520 chars)</option>
+                <option value="10" selected>Vídeo 10s (~135–155 chars • ElevenLabs 1.14x)</option>
+                <option value="15">Vídeo 15s (~210–245 chars • ElevenLabs 1.14x)</option>
+                <option value="20">Vídeo 20s (~285–330 chars • ElevenLabs 1.14x)</option>
+                <option value="30">Vídeo 30s (~430–485 chars • ElevenLabs 1.14x)</option>
               </select>
             </div>
             <div>
@@ -551,10 +548,10 @@
             <div>
               <label for="studioVoiceSpeed">4. Ritmo / Dinamismo</label>
               <select id="studioVoiceSpeed">
-                <option value="1.12">Comercial Suave (1.12x)</option>
-                <option value="1.20" selected>⚡ Dinâmico TikTok (1.20x • Padrão)</option>
-                <option value="1.28">🔥 Rápido Viral (1.28x)</option>
-                <option value="1.35">🚀 Ultra Hard-Sell (1.35x)</option>
+                <option value="1.05">Comercial Natural (1.05x)</option>
+                <option value="1.14" selected>⚡ Dinâmico TikTok (1.14x • Padrão)</option>
+                <option value="1.18">🔥 Rápido Viral (1.18x)</option>
+                <option value="1.20">🚀 Máximo ElevenLabs (1.20x)</option>
               </select>
             </div>
           </div>
@@ -1107,22 +1104,24 @@
 
     const VOICE_STYLES = {
       male: [
-        { id: "male_adam", label: "⭐ Adam (Principal • Grave Comercial)" },
-        { id: "male_tiktok", label: "👨 Brian (Jovem TikTok Dinâmica)" },
-        { id: "male_exec", label: "👨 Daniel (Executivo Luxo Confiante)" },
-        { id: "male_impact", label: "👨 George (Grave Forte Impacto)" }
+        { id: "male_brian", label: "⭐ Brian (ElevenLabs • Grave Forte & Persuasivo)" },
+        { id: "male_roger", label: "🔥 Roger (ElevenLabs • Comercial Dinâmico & Viral)" },
+        { id: "male_daniel", label: "💎 Daniel (ElevenLabs • Luxo Executivo & Autoridade)" },
+        { id: "male_charlie", label: "📱 Charlie (ElevenLabs • Jovem TikTok / UGC)" },
+        { id: "male_george", label: "🎬 George (ElevenLabs • Narrador Marcante)" }
       ],
       female: [
-        { id: "female_natasha", label: "⭐ Natasha (Principal • Viral Comercial)" },
-        { id: "female_viral", label: "👩 Jessica (Viral TikTok Energética)" },
-        { id: "female_tiktok", label: "👩 Rachel (Natural UGC Conversacional)" },
-        { id: "female_lux", label: "👩 Charlotte (Elegante Luxo)" }
+        { id: "female_jessica", label: "⭐ Jessica (ElevenLabs • Viral TikTok Energética)" },
+        { id: "female_aria", label: "🔥 Aria (ElevenLabs • Persuasiva Moderna & Dinâmica)" },
+        { id: "female_sarah", label: "💎 Sarah (ElevenLabs • Clara & Confiante Comercial)" },
+        { id: "female_laura", label: "📱 Laura (ElevenLabs • Jovem UGC Espontânea)" },
+        { id: "female_charlotte", label: "✨ Charlotte (ElevenLabs • Luxo & Beleza)" }
       ]
     };
 
     const CLONE_STORAGE_KEYS = {
-      male_adam: "nexora_clone_male_adam",
-      female_natasha: "nexora_clone_female_natasha"
+      male_clone: "nexora_clone_male_custom",
+      female_clone: "nexora_clone_female_custom"
     };
 
     function getSavedCloneVoiceId(voiceId) {
@@ -1142,10 +1141,10 @@
 
     // Calibração Dinâmica TikTok Shop: vídeo de 10s recebe roteiro de ~13–14s (~165–205 chars) falado em ritmo dinâmico (1.20x)
     const DURATION_CHAR_GUIDE = {
-      10: { min: 162, max: 205 },
-      15: { min: 242, max: 295 },
-      20: { min: 325, max: 395 },
-      30: { min: 480, max: 565 }
+      10: { min: 128, max: 158 },
+      15: { min: 205, max: 245 },
+      20: { min: 280, max: 330 },
+      30: { min: 425, max: 485 }
     };
 
     // =========================================================================
@@ -1199,155 +1198,149 @@
     const CATEGORY_BENEFITS = {
       eyewear: {
         short: [
-          (m) => `Lentes com proteção real e nitidez absurda sob o sol, numa armação leve que encaixa perfeito no rosto sem apertar.`,
-          (m) => `Visual marcante com lentes que bloqueiam o reflexo na hora e conforto o dia todo — muda completamente a sua presença.`,
-          (m) => `Acabamento impecável nas hastes, lentes nítidas de alto padrão e caimento perfeito para dirigir, sair ou curtir o sol.`,
-          (m) => `Proteção visual de verdade com design icônico que valoriza qualquer rosto e deixa seu visual com cara de grife na hora.`,
-          (m) => `Levíssimo no rosto, zero incômodo no nariz e lentes cristalinas que entregam conforto e estilo do começo ao fim do dia.`,
-          (m) => `Cada detalhe da armação e das lentes foi feito para unir proteção solar de nível alto com um estilo impossível de ignorar.`
+          (m) => `Lentes nítidas com proteção solar real e armação leve que não aperta.`,
+          (m) => `Bloqueia o reflexo na hora e traz caimento impecável o dia inteiro.`,
+          (m) => `Hastes firmes, lentes cristalinas e visual de grife no primeiro olhar.`,
+          (m) => `Proteção visual de verdade com design icônico que valoriza seu rosto.`,
+          (m) => `Levíssimo no rosto, zero incômodo e nitidez absurda sob o sol forte.`
         ],
         proof: [
-          (m) => `Quem coloca ${m.dem} ${m.name} no rosto sente a leveza na hora e já nota como o visual sobe de nível imediatamente.`,
-          (m) => `É o tipo de ${m.name} que combina com roupa casual ou social e faz todo mundo perguntar onde você comprou.`,
-          (m) => `Zero armação torta ou lente fraca: entrega nitidez limpa no sol forte e acabamento firme que dura muito mais.`,
-          (m) => `Você abre a embalagem, veste no rosto e entende na hora por que ${m.dem} ${m.name} está viralizando tanto.`
+          (m) => `Quem veste ${m.dem} ${m.name} sente a leveza na hora e vê o visual subir de nível.`,
+          (m) => `Combina com roupa casual ou social e faz todo mundo perguntar onde você comprou.`,
+          (m) => `Entrega nitidez limpa no sol forte e acabamento firme que dura muito mais.`
         ]
       },
       footwear: {
         short: [
-          (m) => `Amortecimento super macio que absorve cada impacto, cabedal leve que deixa o pé respirar e pisada firme o dia inteiro.`,
-          (m) => `Conforto absurdo desde o primeiro passo, solado estável e um visual esportivo moderno que chama atenção por onde você anda.`,
-          (m) => `Leveza impressionante nos pés, acabamento reforçado nas costuras e aderência segura para caminhada, treino ou rotina corrida.`,
-          (m) => `Chega de terminar o dia com o pé doendo: entrega maciez real na pisada, estabilidade e um design arrojado de vitrine.`,
-          (m) => `Material respirável, encaixe anatômico firme e entressola confortável que transforma cada passo no treino ou no dia a dia.`
+          (m) => `Amortecimento macio que absorve impacto e pisada leve o dia inteiro.`,
+          (m) => `Conforto absurdo desde o primeiro passo com solado firme e respirável.`,
+          (m) => `Leveza impressionante nos pés, costura reforçada e visual esportivo top.`,
+          (m) => `Acaba com o pé cansado: entrega maciez real, estabilidade e muito estilo.`,
+          (m) => `Encaixe anatômico firme e entressola macia para treino ou rotina corrida.`
         ],
         proof: [
-          (m) => `Quem calça ${m.dem} ${m.name} pela primeira vez não quer mais tirar do pé — conforto e estilo andando juntos.`,
-          (m) => `Fica sensacional no pé em qualquer ângulo e entrega durabilidade de verdade para aguentar o seu ritmo diário.`,
-          (m) => `Quando você sente o amortecimento e vê o acabamento de perto, percebe que ${m.dem} ${m.name} está em outro patamar.`
+          (m) => `Quem calça ${m.dem} ${m.name} pela primeira vez não quer mais tirar do pé.`,
+          (m) => `Fica sensacional em qualquer ângulo e aguenta firme o seu ritmo diário.`,
+          (m) => `Quando você sente o amortecimento, vê que ${m.dem} ${m.name} é outro nível.`
         ]
       },
       perfume: {
         short: [
-          (m) => `Fragrância envolvente com projeção marcante e fixação prolongada que deixa um rastro sofisticado por onde você passa.`,
-          (m) => `Notas intensas e equilibradas que grudam na pele por horas, unindo frasco luxuoso com um aroma impossível de esquecer.`,
-          (m) => `Aquele cheiro elegante que chama atenção assim que você entra no ambiente e faz todo mundo perguntar qual perfume você usa.`,
-          (m) => `Saída vibrante, coração sofisticado e fixação de alto nível — entrega presença de perfumaria importada em cada borrifada.`,
-          (m) => `Acabamento impecável no frasco e uma assinatura olfativa marcante que acompanha você do trabalho até a noite.`
+          (m) => `Fragrância envolvente com projeção marcante e fixação por horas.`,
+          (m) => `Notas intensas que grudam na pele e deixam rastro luxuoso no ar.`,
+          (m) => `Cheiro elegante que chama atenção na hora e rende elogios o dia todo.`,
+          (m) => `Saída vibrante, coração sofisticado e presença de perfumaria importada.`,
+          (m) => `Frasco luxuoso com assinatura marcante do trabalho até a noite.`
         ],
         proof: [
-          (m) => `Basta duas borrifadas ${m.prepCom} ${m.name} para sentir o rastro envolvente e receber elogios o dia inteiro.`,
-          (m) => `É o tipo de fragrância viciante que vira sua marca registrada e impressiona desde o primeiro segundo na pele.`,
-          (m) => `Quem experimenta ${m.dem} ${m.name} se surpreende com a duração na pele e o acabamento de luxo do frasco.`
+          (m) => `Duas borrifadas ${m.prepCom} ${m.name} já garantem rastro intenso o dia inteiro.`,
+          (m) => `É aquela fragrância viciante que vira sua marca registrada no primeiro uso.`,
+          (m) => `Quem testa ${m.dem} ${m.name} se surpreende com a duração real na pele.`
         ]
       },
       watch: {
         short: [
-          (m) => `Presença marcante no pulso, caixa com acabamento cirúrgico e detalhes de alta precisão que impõem respeito no primeiro olhar.`,
-          (m) => `Design sofisticado que combina com roupa social ou casual, pulseira confortável e brilho impecável sob qualquer luz.`,
-          (m) => `Mostrador nítido de alto impacto, construção sólida de verdade e aquele visual de luxo que transforma sua postura na hora.`,
-          (m) => `Cada relevo da caixa e do mostrador entrega padrão elevado, peso gostoso no pulso e elegância para qualquer ocasião.`
+          (m) => `Presença marcante no pulso, caixa cirúrgica e brilho de alta precisão.`,
+          (m) => `Combina com roupa social ou casual, pulseira confortável e visual luxo.`,
+          (m) => `Mostrador nítido de alto impacto e construção sólida que impõe respeito.`,
+          (m) => `Acabamento impecável em cada relevo e peso gostoso no pulso.`
         ],
         proof: [
-          (m) => `Você coloca ${m.dem} ${m.name} no pulso e já sente o peso da qualidade — impossível passar despercebido.`,
-          (m) => `É aquele acessório definitivo que valoriza o look inteiro e rende elogios em qualquer reunião ou evento.`,
-          (m) => `Olhando de perto o acabamento do vidro e dos detalhes, fica claro por que ${m.dem} ${m.name} está esgotando rápido.`
+          (m) => `Você coloca ${m.dem} ${m.name} no pulso e já sente o peso da qualidade real.`,
+          (m) => `Valoriza o look inteiro na hora e rende elogios em qualquer ocasião.`,
+          (m) => `De perto, o brilho do vidro mostra por que ${m.dem} ${m.name} esgota rápido.`
         ]
       },
       supplement: {
         short: [
-          (m) => `Fórmula concentrada de alta pureza e rápida absorção para dar mais energia, recuperação e resultado real na sua rotina.`,
-          (m) => `Dissolve fácil, sabor incrível e entrega os nutrientes exatos que o seu corpo precisa para evoluir todo dia com consistência.`,
-          (m) => `Qualidade de alto padrão em cada dose, pensado para quem leva treino, saúde e disposição a sério sem perder tempo.`,
-          (m) => `Praticidade imediata no seu dia a dia com concentração real que faz diferença visível na disposição e no desempenho.`
+          (m) => `Fórmula pura de rápida absorção para mais energia e resultado real.`,
+          (m) => `Dissolve fácil, sabor incrível e nutrição exata para evoluir todo dia.`,
+          (m) => `Alta concentração em cada dose para turbinar treino e disposição.`,
+          (m) => `Praticidade imediata e qualidade confiável que faz diferença na rotina.`
         ],
         proof: [
-          (m) => `Quem inclui ${m.dem} ${m.name} na rotina sente a diferença na disposição e não troca por fórmulas genéricas.`,
-          (m) => `É a escolha certa para quem busca qualidade confiável, ótima absorção e rendimento excelente em cada pote.`,
-          (m) => `Por isso tanta gente já está repondo o estoque de ${m.name} antes que acabe de novo.`
+          (m) => `Quem inclui ${m.dem} ${m.name} na rotina sente a disposição subir rápido.`,
+          (m) => `Rendimento excelente em cada pote e absorção muito acima do comum.`
         ]
       },
       tech: {
         short: [
-          (m) => `Resposta instantânea, ergonomia super confortável e acabamento moderno que turbina sua produtividade e seu conforto todo dia.`,
-          (m) => `Construção sólida, uso super prático e desempenho estável que elimina travamentos e eleva o nível do seu setup na hora.`,
-          (m) => `Design inteligente pensado nos mínimos detalhes, toque preciso e praticidade real para facilitar a sua rotina sem complicação.`,
-          (m) => `Visual clean de alto padrão com tecnologia confiável que entrega performance muito acima dos modelos comuns.`
+          (m) => `Resposta instantânea, ergonomia confortável e visual moderno no setup.`,
+          (m) => `Construção sólida, uso prático e desempenho firme sem travamentos.`,
+          (m) => `Toque preciso, design inteligente e praticidade real no seu dia a dia.`,
+          (m) => `Visual clean de alto padrão com performance muito acima dos comuns.`
         ],
         proof: [
-          (m) => `Você conecta ${m.dem} ${m.name} uma vez e já sente na hora o salto de conforto, velocidade e qualidade.`,
-          (m) => `Quem testa no dia a dia se impressiona com a precisão e o acabamento caprichado de cada detalhe.`,
-          (m) => `É o upgrade inteligente que transforma sua rotina sem dor de cabeça e deixa seu espaço com visual profissional.`
+          (m) => `Você conecta ${m.dem} ${m.name} uma vez e já sente o salto de conforto.`,
+          (m) => `Quem testa no dia a dia se impressiona com a precisão de cada detalhe.`
         ]
       },
       bag_wallet: {
         short: [
-          (m) => `Design slim inteligente que organiza tudo com facilidade sem fazer volume, unindo material resistente e visual sofisticado.`,
-          (m) => `Acabamento impecável nas costuras, toque macio de alto padrão e espaço na medida certa para acompanhar você em qualquer lugar.`,
-          (m) => `Praticidade imediata no dia a dia com estrutura firme que protege seus itens e deixa seu estilo muito mais alinhado.`,
-          (m) => `Leve, elegante e super bem dividida — acaba com a bagunça e entrega cara de acessório de luxo logo no primeiro toque.`
+          (m) => `Design slim inteligente que organiza tudo sem fazer volume nenhum.`,
+          (m) => `Costura impecável, material resistente e espaço na medida certa.`,
+          (m) => `Estrutura firme que protege seus itens com visual sofisticado de luxo.`,
+          (m) => `Leve, bem dividida e com acabamento premium logo no primeiro toque.`
         ],
         proof: [
-          (m) => `Quem passa a usar ${m.dem} ${m.name} nunca mais volta para modelos comuns que desgastam ou fazem volume à toa.`,
-          (m) => `Fica linda de qualquer ângulo, aguenta o uso intenso e ainda é uma opção incrível para presentear.`,
-          (m) => `Você pega na mão e sente na hora a firmeza do material e o cuidado em cada acabamento.`
+          (m) => `Quem usa ${m.dem} ${m.name} nunca mais volta para modelos que fazem volume.`,
+          (m) => `Aguenta o uso intenso todo dia e ainda é um presente impecável.`
         ]
       },
       jewelry: {
         short: [
-          (m) => `Brilho intenso de alto padrão, acabamento delicado e caimento impecável que valoriza qualquer produção no primeiro olhar.`,
-          (m) => `Design sofisticado que captura a luz de todos os ângulos, super confortável de usar e perfeito para o dia ou para a noite.`,
-          (m) => `Cada detalhe entrega elegância real e presença marcante, elevando o seu visual sem precisar exagerar em nada.`
+          (m) => `Brilho intenso de joalheria e acabamento fino que valoriza seu visual.`,
+          (m) => `Captura a luz em todos os ângulos com caimento leve e super elegante.`,
+          (m) => `Presença marcante que transforma qualquer produção no primeiro olhar.`
         ],
         proof: [
-          (m) => `Quem usa ${m.dem} ${m.name} recebe elogios na hora — tem brilho vivo e acabamento digno de vitrine de joalheria.`,
-          (m) => `É a peça coringa que transforma até o look mais básico e também surpreende como presente inesquecível.`
+          (m) => `Quem usa ${m.dem} ${m.name} recebe elogios na hora pelo brilho vivo.`,
+          (m) => `Peça coringa que eleva até o look básico e impressiona de perto.`
         ]
       },
       beauty: {
         short: [
-          (m) => `Textura leve de absorção imediata que entrega toque macio sem pesar, deixando o resultado visível já nas primeiras aplicações.`,
-          (m) => `Cuidado de alto nível com acabamento natural e confortável, ideal para usar todos os dias e sentir a diferença na hora.`,
-          (m) => `Prático, eficiente e com fórmula pensada para valorizar sua rotina de beleza com resultado bonito e duradouro.`
+          (m) => `Textura leve de absorção rápida e resultado visível já no primeiro uso.`,
+          (m) => `Toque macio sem pesar, acabamento natural e cuidado de alto nível.`,
+          (m) => `Prático e eficiente para deixar sua rotina muito mais bonita todo dia.`
         ],
         proof: [
-          (m) => `Quem testa ${m.dem} ${m.name} se apaixona já no primeiro uso — toque leve, acabamento lindo e zero desconforto.`,
-          (m) => `Não é à toa que ${m.dem} ${m.name} virou favorito de quem ama cuidado prático que realmente entrega resultado.`
+          (m) => `Quem testa ${m.dem} ${m.name} se apaixona pelo toque leve e natural.`,
+          (m) => `Virou favorito de quem quer resultado real sem complicação.`
         ]
       },
       fashion: {
         short: [
-          (m) => `Caimento impecável no corpo, tecido macio que respira o dia inteiro e corte moderno que valoriza o seu visual na hora.`,
-          (m) => `Costura reforçada, toque super confortável na pele e estilo versátil que combina fácil com qualquer peça do seu guarda-roupa.`,
-          (m) => `Não amassa fácil, veste super bem e entrega aquela presença alinhada tanto para a rotina corrida quanto para sair.`
+          (m) => `Caimento impecável no corpo, tecido macio e corte moderno que destaca.`,
+          (m) => `Costura reforçada, toque confortável e estilo que combina com tudo.`,
+          (m) => `Veste super bem o dia inteiro e entrega presença alinhada na hora.`
         ],
         proof: [
-          (m) => `Você veste ${m.dem} ${m.name} uma vez e já percebe a diferença no caimento e no conforto o dia todo.`,
-          (m) => `É aquela peça essencial de alta qualidade que todo mundo elogia e você vai querer ter mais de uma.`
+          (m) => `Você veste ${m.dem} ${m.name} uma vez e já sente a diferença no conforto.`,
+          (m) => `Peça coringa de alto padrão que todo mundo elogia quando vê.`
         ]
       },
       home_auto: {
         short: [
-          (m) => `Praticidade imediata na sua rotina, material resistente de verdade e design inteligente que economiza tempo todos os dias.`,
-          (m) => `Acabamento firme, super fácil de usar e pensado para resolver o seu dia a dia com muito mais eficiência e estilo.`,
-          (m) => `Une funcionalidade direta, alta durabilidade e um visual moderno que deixa o seu espaço muito mais organizado e bonito.`
+          (m) => `Praticidade imediata na rotina, material resistente e design inteligente.`,
+          (m) => `Fácil de usar, acabamento firme e economia de tempo todos os dias.`,
+          (m) => `Alta durabilidade com visual moderno que facilita muito o seu dia.`
         ],
         proof: [
-          (m) => `Depois que você testa ${m.dem} ${m.name} na prática, se pergunta como ficou tanto tempo sem ter um desses.`,
-          (m) => `Entrega resistência real no uso diário e faz diferença visível logo na primeira vez que você usa.`
+          (m) => `Depois de testar ${m.dem} ${m.name}, você não entende como viveu sem.`,
+          (m) => `Entrega resistência real no uso diário já na primeira vez.`
         ]
       },
       universal: {
         short: [
-          (m) => `Acabamento impecável em cada detalhe, material resistente de alto padrão e presença marcante logo no primeiro olhar.`,
-          (m) => `Visual sofisticado de perto, construção firme de verdade e praticidade que eleva completamente o seu dia a dia.`,
-          (m) => `Design moderno, textura refinada e qualidade superior que você enxerga nos mínimos detalhes e sente no primeiro uso.`,
-          (m) => `Combina estilo marcante, durabilidade real e acabamento de vitrine — foge totalmente dos modelos comuns.`
+          (m) => `Acabamento impecável, material resistente e presença no primeiro olhar.`,
+          (m) => `Visual sofisticado de perto, construção firme e estilo de vitrine.`,
+          (m) => `Design moderno, textura refinada e qualidade que você sente na hora.`,
+          (m) => `Combina durabilidade real com um visual limpo impossível de ignorar.`
         ],
         proof: [
-          (m) => `Quem recebe ${m.dem} ${m.name} em casa se surpreende com o peso, o toque e a fidelidade de cada acabamento.`,
-          (m) => `Colocando lado a lado com opções comuns, a superioridade ${m.prepCom} ${m.name} salta aos olhos na hora.`,
-          (m) => `Fica incrível de qualquer ângulo e entrega aquela sensação imediata de escolha certa logo no primeiro dia.`
+          (m) => `Quem recebe ${m.dem} ${m.name} em casa se surpreende com cada detalhe.`,
+          (m) => `Lado a lado com comuns, a diferença ${m.prepCom} ${m.name} salta aos olhos.`
         ]
       }
     };
@@ -1355,38 +1348,33 @@
     const PERSUASIVE_POOLS = {
       hooksDynamic: [
         (m) => `Para tudo e olha ${m.dem} ${m.name}!`,
-        (m) => `Sério, quem vê ${m.dem} ${m.name} de perto não acredita!`,
-        (m) => `É por isso que ${m.dem} ${m.name} está esgotando tão rápido!`,
-        (m) => `Impossível passar direto sem reparar ${m.prepEm} ${m.name}!`,
-        (m) => `Esquece o comum e olha o nível ${m.prepCom} ${m.name}!`,
-        (m) => `Achou que já tinha visto tudo? Olha ${m.dem} ${m.name}!`,
-        (m) => `Você precisa ver o acabamento real ${m.prepCom} ${m.name}!`,
-        (m) => `Olha por que todo mundo está querendo ${m.dem} ${m.name}!`,
-        (m) => `Se você exige alto padrão, bate o olho ${m.prepEm} ${m.name}!`,
-        (m) => `Chega de gastar com coisa frágil — olha ${m.dem} ${m.name}!`,
-        (m) => `Atenção nesse detalhe: olha a presença ${m.prepCom} ${m.name}!`,
-        (m) => `Dá só uma olhada na perfeição ${m.prepCom} ${m.name}!`,
-        (m) => `Quer elevar o seu nível na hora? Conhece ${m.dem} ${m.name}!`,
-        (m) => `Ninguém imagina esse padrão até ver ${m.dem} ${m.name} de perto!`
+        (m) => `Quem vê ${m.dem} ${m.name} de perto não acredita!`,
+        (m) => `É por isso que ${m.dem} ${m.name} esgota rápido!`,
+        (m) => `Impossível não reparar ${m.prepEm} ${m.name}!`,
+        (m) => `Esquece o comum e olha ${m.dem} ${m.name}!`,
+        (m) => `Olha o nível real ${m.prepCom} ${m.name}!`,
+        (m) => `Se você exige qualidade, olha ${m.dem} ${m.name}!`,
+        (m) => `Chega de coisa frágil — olha ${m.dem} ${m.name}!`,
+        (m) => `Dá só uma olhada ${m.prepEm} ${m.name}!`,
+        (m) => `Olha por que todos querem ${m.dem} ${m.name}!`,
+        (m) => `Bate o olho na perfeição ${m.prepCom} ${m.name}!`,
+        (m) => `Quer subir o nível? Olha ${m.dem} ${m.name}!`
       ],
       bridges: [
-        (m) => `Sabe aquele medo de comprar bonito na foto e se decepcionar pessoalmente? Com ${m.dem} ${m.name} acontece exatamente o contrário.`,
-        (m) => `Enquanto a maioria entrega só o básico, ${m.dem} ${m.name} capricha exatamente nos detalhes que fazem toda a diferença.`,
-        (m) => `Olhando assim bem de perto, dá para ver claramente o padrão superior em cada linha, textura e acabamento.`,
-        (m) => `Não importa se é para usar todo dia ou para dar um presente marcante: ${m.pron} entrega presença e confiança sem esforço.`,
-        (m) => `Quando você testa no dia a dia, percebe na hora como um design bem feito muda completamente a sua experiência.`
+        (m) => `Sabe o medo de comprar bonito na foto e se decepcionar? Com ${m.dem} ${m.name} é o oposto.`,
+        (m) => `Enquanto os comuns entregam o básico, ${m.dem} ${m.name} capricha em cada detalhe.`,
+        (m) => `De perto, dá para ver claramente o padrão superior em cada linha e acabamento.`,
+        (m) => `Perfeito para usar todo dia ou presentear: ${m.pron} entrega presença sem esforço.`
       ],
       ctasDynamic: [
-        (m) => `Garanta ${m.poss} na sacolinha aqui embaixo antes que acabe!`,
-        (m) => `Toque na sacolinha aqui embaixo e garanta ${m.poss} agora mesmo!`,
-        (m) => `Clique no carrinho aqui embaixo e aproveite enquanto ainda tem!`,
-        (m) => `Corre na sacolinha aqui embaixo para garantir ${m.poss} hoje!`,
-        (m) => `Toque no carrinho aqui embaixo agora e leve ${m.poss} para casa!`,
-        (m) => `Não deixa passar — garanta ${m.poss} na sacolinha aqui embaixo!`,
-        (m) => `Clica aqui embaixo no carrinho antes que o estoque esgote!`,
-        (m) => `Aproveita agora na sacolinha aqui embaixo e sinta a diferença!`,
-        (m) => `Garante ${m.poss} hoje mesmo tocando no carrinho aqui embaixo!`,
-        (m) => `Clique na sacolinha aqui embaixo agora e não fique sem ${m.poss}!`
+        (m) => `Garanta ${m.poss} na sacolinha aqui embaixo!`,
+        (m) => `Toque na sacolinha aqui embaixo agora!`,
+        (m) => `Clique no carrinho aqui embaixo antes que acabe!`,
+        (m) => `Corre na sacolinha aqui embaixo hoje!`,
+        (m) => `Toque no carrinho aqui embaixo e leve ${m.poss}!`,
+        (m) => `Não perca — garanta na sacolinha aqui embaixo!`,
+        (m) => `Clica no carrinho aqui embaixo antes de esgotar!`,
+        (m) => `Aproveita agora na sacolinha aqui embaixo!`
       ]
     };
 
@@ -1617,13 +1605,14 @@
       selectEl.innerHTML = list.map((v) => `<option value="${v.id}">${v.label}</option>`).join("");
     }
     function populateVoiceSelectWithCloneLabel(selectEl, gender) {
-      const list = VOICE_STYLES[gender] || VOICE_STYLES.male;
+      const baseList = VOICE_STYLES[gender] || VOICE_STYLES.male;
+      const cloneKey = gender === "female" ? "female_clone" : "male_clone";
+      const cloned = getSavedCloneVoiceId(cloneKey);
+      const list = cloned
+        ? [...baseList, { id: cloneKey, label: gender === "female" ? "🧬 Minha Voz Clonada (Feminina)" : "🧬 Minha Voz Clonada (Masculina)" }]
+        : baseList;
       const cur = selectEl.value;
-      selectEl.innerHTML = list.map((v) => {
-        const cloned = getSavedCloneVoiceId(v.id);
-        const suffix = cloned ? " • 🧬 Clone Exato ✓" : "";
-        return `<option value="${v.id}">${v.label}${suffix}</option>`;
-      }).join("");
+      selectEl.innerHTML = list.map((v) => `<option value="${v.id}">${v.label}</option>`).join("");
       if (cur && list.some((x) => x.id === cur)) selectEl.value = cur;
     }
     populateVoiceSelectWithCloneLabel(inlineVoiceStyle, "male");
@@ -1631,29 +1620,27 @@
     populateVoiceSelectWithCloneLabel(labVoiceStyle, "male");
 
     function refreshCloneBadgesUI() {
-      const adamId = getSavedCloneVoiceId("male_adam");
-      const natId = getSavedCloneVoiceId("female_natasha");
-      const cardLab = document.getElementById("cloneCardLab");
-      if (cardLab) cardLab.style.borderColor = (adamId && natId) ? "#22c55e88" : "#f59e0b88";
+      const mId = getSavedCloneVoiceId("male_clone");
+      const fId = getSavedCloneVoiceId("female_clone");
       for (const id of ["adamCloneBadgeLab", "adamCloneBadgeStudio"]) {
         const el = document.getElementById(id);
         if (el) {
-          el.textContent = adamId ? "✅ Clone Exato Adam Ativo (Voz idêntica ao seu áudio)" : "⚠️ Sem clone ainda — clique no botão abaixo e envie AUDIO ADAM.mp4";
-          el.classList.toggle("active", Boolean(adamId));
+          el.textContent = mId ? "✅ Clone Masculino salvo (disponível no seletor)" : "Opcional (já usando vozes ElevenLabs)";
+          el.classList.toggle("active", Boolean(mId));
         }
       }
       for (const id of ["natashaCloneBadgeLab", "natashaCloneBadgeStudio"]) {
         const el = document.getElementById(id);
         if (el) {
-          el.textContent = natId ? "✅ Clone Exato Natasha Ativo (Voz idêntica ao seu áudio)" : "⚠️ Sem clone ainda — clique no botão abaixo e envie AUDIO NATASHA.mp4";
-          el.classList.toggle("active", Boolean(natId));
+          el.textContent = fId ? "✅ Clone Feminino salvo (disponível no seletor)" : "Opcional (já usando vozes ElevenLabs)";
+          el.classList.toggle("active", Boolean(fId));
         }
       }
       for (const id of ["btnClearCloneAdamLab", "btnClearCloneAdamStudio"]) {
-        document.getElementById(id)?.classList.toggle("hidden", !adamId);
+        document.getElementById(id)?.classList.toggle("hidden", !mId);
       }
       for (const id of ["btnClearCloneNatashaLab", "btnClearCloneNatashaStudio"]) {
-        document.getElementById(id)?.classList.toggle("hidden", !natId);
+        document.getElementById(id)?.classList.toggle("hidden", !fId);
       }
       populateVoiceSelectWithCloneLabel(inlineVoiceStyle, inlineVoiceGender.value);
       populateVoiceSelectWithCloneLabel(studioVoiceStyle, studioGender);
@@ -2838,42 +2825,43 @@
       }
     }
 
-    function buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, audioBuffer, playbackRate = 1.0, offsetSec = 0.05, trimStartSec = 0) {
+    function buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, audioBuffer, playbackRate = 1.0, offsetSec = 0.0, trimStartSec = 0) {
       const rate = Math.max(0.7, Number(playbackRate) || 1.0);
       const rawScriptWords = String(scriptText || "").replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
-      const validWhisper = Array.isArray(whisperChunks)
-        ? whisperChunks
-            .map((c) => {
-              const txt = String(c?.text || "").trim();
-              const ts = Array.isArray(c?.timestamp) ? c.timestamp : [];
-              const s = typeof ts[0] === "number" ? ts[0] : null;
-              const e = typeof ts[1] === "number" ? ts[1] : (s !== null ? s + 0.28 : null);
-              return txt && s !== null && e !== null ? { text: txt, start: s, end: Math.max(s + 0.08, e) } : null;
-            })
-            .filter(Boolean)
-        : [];
+
+      // Clean Whisper word chunks safely (fix null end timestamps & enforce strict monotonic timeline)
+      const validWhisper = [];
+      if (Array.isArray(whisperChunks)) {
+        for (let i = 0; i < whisperChunks.length; i++) {
+          const c = whisperChunks[i];
+          const txt = String(c?.text || "").trim();
+          const ts = Array.isArray(c?.timestamp) ? c.timestamp : [];
+          const s = typeof ts[0] === "number" ? ts[0] : null;
+          let e = typeof ts[1] === "number" ? ts[1] : null;
+          if (!txt || s === null) continue;
+          if (e === null || e <= s) {
+            const nextTs = whisperChunks[i + 1]?.timestamp;
+            const nextS = Array.isArray(nextTs) && typeof nextTs[0] === "number" ? nextTs[0] : null;
+            e = nextS && nextS > s ? nextS : s + 0.24;
+          }
+          validWhisper.push({ text: txt, start: s, end: Math.max(s + 0.06, e) });
+        }
+      }
 
       let words = [];
       if (validWhisper.length >= 2) {
-        if (rawScriptWords.length > 0 && Math.abs(validWhisper.length - rawScriptWords.length) <= Math.max(2, Math.round(rawScriptWords.length * 0.12))) {
-          words = rawScriptWords.map((sw, idx) => {
-            const wIdx = Math.min(validWhisper.length - 1, Math.round((idx / Math.max(1, rawScriptWords.length - 1)) * (validWhisper.length - 1)));
-            const w = validWhisper[wIdx];
-            return {
-              text: sw,
-              start: offsetSec + Math.max(0, w.start - trimStartSec) / rate,
-              end: offsetSec + Math.max(0.08, w.end - trimStartSec) / rate,
-              isCta: TIKTOK_CTA_WORDS.has(stripAccentsUpper(sw))
-            };
-          });
-        } else {
-          words = validWhisper.map((w) => ({
-            text: w.text,
+        // Use Whisper's ACTUAL timestamps so every word locks 100% to the audio!
+        // Only copy script spelling when exact 1:1 token match (never merge two words onto the same timestamp!)
+        const exactCountMatch = rawScriptWords.length === validWhisper.length;
+        words = validWhisper.map((w, idx) => {
+          const displayTxt = exactCountMatch ? rawScriptWords[idx] : w.text;
+          return {
+            text: displayTxt,
             start: offsetSec + Math.max(0, w.start - trimStartSec) / rate,
-            end: offsetSec + Math.max(0.08, w.end - trimStartSec) / rate,
-            isCta: TIKTOK_CTA_WORDS.has(stripAccentsUpper(w.text))
-          }));
-        }
+            end: offsetSec + Math.max(0.06, w.end - trimStartSec) / rate,
+            isCta: TIKTOK_CTA_WORDS.has(stripAccentsUpper(displayTxt))
+          };
+        });
       } else if (rawScriptWords.length > 0) {
         const bounds = detectSpeechBounds(audioBuffer);
         const startT = offsetSec + Math.max(0, bounds.start - trimStartSec) / rate;
@@ -2881,7 +2869,7 @@
         const span = Math.max(0.8, endT - startT);
         const weights = rawScriptWords.map((w) => {
           const cleanLen = Math.max(2, w.replace(/[^A-Za-zÀ-ÿ0-9]/g, "").length);
-          const pauseBonus = /[.!?]$/.test(w) ? 3.2 : /[,;:—-]$/.test(w) ? 1.8 : 0;
+          const pauseBonus = /[.!?]$/.test(w) ? 2.6 : /[,;:—-]$/.test(w) ? 1.4 : 0;
           return cleanLen + pauseBonus;
         });
         const totalW = weights.reduce((a, b) => a + b, 0);
@@ -2894,7 +2882,7 @@
         });
       }
 
-      // Group into crisp TikTok Shop blocks of 2–3 words (max ~18 chars)
+      // Group into crisp TikTok Shop blocks of 2–3 words (max ~17 chars)
       const blocks = [];
       let buf = [];
       let bufChars = 0;
@@ -2922,11 +2910,14 @@
       }
       flush();
 
-      // Close tiny visual gaps (< 0.22s) for smooth high-retention subtitle flow
+      // Close visual gaps (< 0.55s) so subtitles stay continuous and never flash blank mid-sentence
       for (let i = 0; i < blocks.length - 1; i++) {
-        if (blocks[i + 1].start - blocks[i].end < 0.22) {
+        if (blocks[i + 1].start - blocks[i].end < 0.55) {
           blocks[i].end = blocks[i + 1].start;
         }
+      }
+      if (blocks.length > 0) {
+        blocks[blocks.length - 1].end += 0.25;
       }
       return blocks;
     }
@@ -3121,7 +3112,60 @@
       const crop = { sx: 0, sy: 0, sw: vid.videoWidth || 720, sh: vid.videoHeight || 1280 };
 
       try { vid.currentTime = 0; } catch {}
-      await sleep(80);
+      await sleep(60);
+
+      // STEP 1: Decode ALL audio buffers BEFORE scheduling any start time (eliminates 0.7s sync drift!)
+      let origDecoded = null;
+      let voiceDecoded = null;
+      if (audioCtx && audioCtx.state === "running") {
+        if (videoArrayBuf && origVolScale > 0.01) {
+          try { origDecoded = await audioCtx.decodeAudioData(videoArrayBuf.slice(0)); } catch {}
+        }
+        if (voiceArrayBuf) {
+          try { voiceDecoded = await audioCtx.decodeAudioData(voiceArrayBuf.slice(0)); } catch {}
+        }
+      }
+
+      // Calculate trim & pitch-safe fit (NEVER pitch-shift with AudioBufferSourceNode!)
+      let voiceTrimStart = 0;
+      let voiceRateUsed = 1.0;
+      let usePitchSafeAudioEl = false;
+      let voiceAudioEl = null;
+      let voiceAudioObjUrl = "";
+      let voiceElemSrc = null;
+
+      if (voiceDecoded) {
+        const bounds = detectSpeechBounds(voiceDecoded);
+        voiceTrimStart = Math.max(0, bounds.start - 0.015);
+        const speechSpan = Math.max(0.5, bounds.end - voiceTrimStart);
+        const availSec = Math.max(1.5, totalSec - 0.12);
+        if (speechSpan > availSec + 0.08) {
+          // User typed an extra-long script: use HTMLAudioElement with preservesPitch=true (ZERO Donald Duck!)
+          voiceRateUsed = Math.min(1.26, speechSpan / availSec);
+          usePitchSafeAudioEl = true;
+        }
+      }
+
+      if (usePitchSafeAudioEl && voiceArrayBuf) {
+        try {
+          voiceAudioObjUrl = URL.createObjectURL(new Blob([voiceArrayBuf], { type: "audio/mpeg" }));
+          voiceAudioEl = new Audio(voiceAudioObjUrl);
+          voiceAudioEl.preload = "auto";
+          voiceAudioEl.preservesPitch = true;
+          voiceAudioEl.webkitPreservesPitch = true;
+          voiceAudioEl.mozPreservesPitch = true;
+          voiceAudioEl.playbackRate = voiceRateUsed;
+          await new Promise((res) => {
+            const tm = setTimeout(res, 2500);
+            voiceAudioEl.oncanplaythrough = () => { clearTimeout(tm); res(); };
+            voiceAudioEl.onerror = () => { clearTimeout(tm); res(); };
+          });
+          try { voiceAudioEl.currentTime = voiceTrimStart; } catch {}
+        } catch {
+          usePitchSafeAudioEl = false;
+          voiceRateUsed = 1.0;
+        }
+      }
 
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -3130,85 +3174,53 @@
       const canvasStream = canvas.captureStream(30);
       const tracks = [...canvasStream.getVideoTracks()];
       let clockOsc = null;
-      let voiceRateUsed = 1.0;
-      let voiceTrimStart = 0;
-      let voiceDecoded = null;
       let captionBlocks = [];
       let origAudioMixedOk = false;
       let mediaElemAudioSrc = null;
+      let audioOriginCtxTime = 0;
 
+      if (subStyle && subStyle !== "none" && scriptText) {
+        captionBlocks = buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, voiceDecoded, voiceRateUsed, 0.0, voiceTrimStart);
+      }
+
+      let dest = null, comp = null;
       if (audioCtx && audioCtx.state === "running") {
-        const dest = audioCtx.createMediaStreamDestination();
-        const comp = audioCtx.createDynamicsCompressor();
+        dest = audioCtx.createMediaStreamDestination();
+        comp = audioCtx.createDynamicsCompressor();
         comp.threshold.value = -8; comp.knee.value = 12; comp.ratio.value = 4;
         comp.connect(dest);
 
-        const startAt = audioCtx.currentTime + 0.05;
         clockOsc = audioCtx.createOscillator();
         const cg = audioCtx.createGain(); cg.gain.value = 0.00001;
-        clockOsc.connect(cg); cg.connect(dest); clockOsc.start(startAt);
+        clockOsc.connect(cg); cg.connect(dest); clockOsc.start();
 
-        // 1) Mix original video's soundtrack: try decodeAudioData first, then ALWAYS fallback to live <video> MediaElementSource!
-        if (origVolScale > 0.01) {
-          if (videoArrayBuf) {
-            try {
-              const origDecoded = await audioCtx.decodeAudioData(videoArrayBuf.slice(0));
-              const origSrc = audioCtx.createBufferSource();
-              origSrc.buffer = origDecoded;
-              const og = audioCtx.createGain();
-              og.gain.setValueAtTime(origVolScale, startAt);
-              origSrc.connect(og); og.connect(comp);
-              origSrc.start(startAt);
-              origSrc.stop(startAt + totalSec + 0.15);
-              origAudioMixedOk = true;
-            } catch {}
-          }
-          if (!origAudioMixedOk) {
-            try {
-              vid.muted = false;
-              vid.volume = 1.0;
-              mediaElemAudioSrc = audioCtx.createMediaElementSource(vid);
-              const og = audioCtx.createGain();
-              og.gain.setValueAtTime(origVolScale, startAt);
-              mediaElemAudioSrc.connect(og);
-              og.connect(comp);
-              origAudioMixedOk = true;
-            } catch {
-              vid.muted = true;
-            }
-          }
-        }
-
-        // 2) Mix PT-BR voiceover with silence-trim & guaranteed complete-sentence fit!
-        if (voiceArrayBuf) {
+        if (origVolScale > 0.01 && !origDecoded) {
           try {
-            voiceDecoded = await audioCtx.decodeAudioData(voiceArrayBuf.slice(0));
-            const bounds = detectSpeechBounds(voiceDecoded);
-            voiceTrimStart = Math.max(0, bounds.start - 0.02);
-            const speechSpan = Math.max(0.5, bounds.end - voiceTrimStart);
-            const availSec = Math.max(1.5, totalSec - 0.14);
-            if (speechSpan > availSec) {
-              voiceRateUsed = Math.min(1.44, speechSpan / availSec);
-            } else {
-              // Subtle energetic boost (1.04x) so narration always keeps crisp TikTok dynamism
-              voiceRateUsed = 1.04;
-            }
-            const vSrc = audioCtx.createBufferSource();
-            vSrc.buffer = voiceDecoded;
-            vSrc.playbackRate.value = voiceRateUsed;
-            const vg = audioCtx.createGain();
-            vg.gain.setValueAtTime(1.18, startAt);
-            vSrc.connect(vg); vg.connect(comp);
-            vSrc.start(startAt + 0.05, voiceTrimStart);
-            vSrc.stop(startAt + totalSec + 0.15);
-          } catch {}
+            vid.muted = false;
+            vid.volume = 1.0;
+            mediaElemAudioSrc = audioCtx.createMediaElementSource(vid);
+            const og = audioCtx.createGain();
+            og.gain.value = origVolScale;
+            mediaElemAudioSrc.connect(og);
+            og.connect(comp);
+            origAudioMixedOk = true;
+          } catch {
+            vid.muted = true;
+          }
         }
-
+        if (usePitchSafeAudioEl && voiceAudioEl) {
+          try {
+            voiceElemSrc = audioCtx.createMediaElementSource(voiceAudioEl);
+            const vg = audioCtx.createGain();
+            vg.gain.value = 1.16;
+            voiceElemSrc.connect(vg);
+            vg.connect(comp);
+          } catch {
+            usePitchSafeAudioEl = false;
+            voiceRateUsed = 1.0;
+          }
+        }
         tracks.push(...dest.stream.getAudioTracks());
-      }
-
-      if (subStyle && subStyle !== "none" && scriptText) {
-        captionBlocks = buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, voiceDecoded, voiceRateUsed, 0.05, voiceTrimStart);
       }
 
       const recProf = pickRecorderProfile();
@@ -3223,11 +3235,40 @@
         rec.onstop = () => {
           if (clockOsc) { try { clockOsc.stop(); } catch {} }
           if (mediaElemAudioSrc) { try { mediaElemAudioSrc.disconnect(); } catch {} }
+          if (voiceElemSrc) { try { voiceElemSrc.disconnect(); } catch {} }
+          if (voiceAudioEl) { try { voiceAudioEl.pause(); } catch {} }
+          if (voiceAudioObjUrl) URL.revokeObjectURL(voiceAudioObjUrl);
           resolve(new Blob(chunks, { type: recProf.baseType || rec.mimeType || "video/mp4" }));
         };
       });
 
+      // STEP 2: Start MediaRecorder, video, and schedule audio ALL AT THE EXACT SAME INSTANT!
       rec.start(200);
+      if (audioCtx && audioCtx.state === "running" && comp) {
+        audioOriginCtxTime = audioCtx.currentTime + 0.04;
+        if (origDecoded && origVolScale > 0.01) {
+          const origSrc = audioCtx.createBufferSource();
+          origSrc.buffer = origDecoded;
+          const og = audioCtx.createGain();
+          og.gain.setValueAtTime(origVolScale, audioOriginCtxTime);
+          origSrc.connect(og); og.connect(comp);
+          origSrc.start(audioOriginCtxTime);
+          origSrc.stop(audioOriginCtxTime + totalSec + 0.12);
+          origAudioMixedOk = true;
+        }
+        if (usePitchSafeAudioEl && voiceAudioEl) {
+          voiceAudioEl.play().catch(() => {});
+        } else if (voiceDecoded) {
+          const vSrc = audioCtx.createBufferSource();
+          vSrc.buffer = voiceDecoded;
+          vSrc.playbackRate.value = 1.0; // STRICTLY 1.0 — ZERO PITCH DISTORTION!
+          const vg = audioCtx.createGain();
+          vg.gain.setValueAtTime(1.16, audioOriginCtxTime);
+          vSrc.connect(vg); vg.connect(comp);
+          vSrc.start(audioOriginCtxTime, voiceTrimStart);
+          vSrc.stop(audioOriginCtxTime + totalSec + 0.12);
+        }
+      }
       vid.play().catch(() => {});
       const startTime = performance.now();
       const fillEl = document.getElementById("renderProgressFill");
@@ -3244,6 +3285,7 @@
           if (elapsed >= totalSec + 0.08) {
             finished = true; stop();
             vid.pause();
+            if (voiceAudioEl) voiceAudioEl.pause();
             if (rec.state !== "inactive") rec.stop();
             resolve(); return;
           }
@@ -3251,7 +3293,13 @@
           if (vid.readyState >= 2) {
             drawCroppedCover(ctx, vid, crop, 1.0, 0, 0, 0, 1, "none");
             if (captionBlocks.length > 0) {
-              drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, elapsed, subStyle, subPos, subSize);
+              // Drive captions from the EXACT hardware audio clock!
+              const captionClock = (usePitchSafeAudioEl && voiceAudioEl)
+                ? Math.max(0, (voiceAudioEl.currentTime - voiceTrimStart) / voiceRateUsed)
+                : (audioCtx && audioOriginCtxTime > 0)
+                  ? Math.max(0, audioCtx.currentTime - audioOriginCtxTime)
+                  : elapsed;
+              drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, captionClock, subStyle, subPos, subSize);
             }
           }
         });
@@ -3294,116 +3342,45 @@
       let musicMixedOk = false;
       let voiceMixedOk = false;
       let voiceDecodedForSubs = null;
+      let soundtrackDecoded = null;
       let voiceRateForSubs = 1.0;
       let voiceTrimForSubs = 0;
+      let audioOriginCtxTime = 0;
 
+      // STEP 1: Decode audio buffers BEFORE scheduling any start time (millisecond-accurate sync!)
       if (audioCtx && audioCtx.state === "running") {
-        const dest = audioCtx.createMediaStreamDestination();
-        const comp = audioCtx.createDynamicsCompressor();
-        comp.threshold.value = -8; comp.knee.value = 12; comp.ratio.value = 4;
-        comp.connect(dest);
-
-        const startAt = audioCtx.currentTime + 0.05;
-        clockOsc = audioCtx.createOscillator();
-        const cg = audioCtx.createGain(); cg.gain.value = 0.00001;
-        clockOsc.connect(cg); cg.connect(dest); clockOsc.start(startAt);
-
         if (voiceoverArrayBuf) {
           try {
-            const vDec = await audioCtx.decodeAudioData(voiceoverArrayBuf.slice(0));
-            voiceDecodedForSubs = vDec;
-            const bounds = detectSpeechBounds(vDec);
-            voiceTrimForSubs = Math.max(0, bounds.start - 0.02);
-            const speechSpan = Math.max(0.5, bounds.end - voiceTrimForSubs);
-            const availSec = Math.max(1.5, totalSec - 0.14);
-            if (speechSpan > availSec) {
-              voiceRateForSubs = Math.min(1.44, speechSpan / availSec);
-            } else {
-              voiceRateForSubs = 1.04;
-            }
-            const vSrc = audioCtx.createBufferSource();
-            vSrc.buffer = vDec;
-            vSrc.playbackRate.value = voiceRateForSubs;
-            const vg = audioCtx.createGain();
-            vg.gain.setValueAtTime(1.16, startAt);
-            vSrc.connect(vg); vg.connect(comp);
-            vSrc.start(startAt + 0.05, voiceTrimForSubs);
-            vSrc.stop(startAt + totalSec + 0.12);
+            voiceDecodedForSubs = await audioCtx.decodeAudioData(voiceoverArrayBuf.slice(0));
+            const bounds = detectSpeechBounds(voiceDecodedForSubs);
+            voiceTrimForSubs = Math.max(0, bounds.start - 0.015);
             voiceMixedOk = true;
           } catch {}
         }
-
         if (soundtrackArrayBuf) {
           try {
-            const decoded = await audioCtx.decodeAudioData(soundtrackArrayBuf.slice(0));
-            const dropOffset = findLoudestDropOffset(decoded, totalSec);
-            const src = audioCtx.createBufferSource();
-            src.buffer = decoded;
-            src.loop = true;
-            const mg = audioCtx.createGain();
-            // Studio-calibrated volume: 0.28 without built-in narration (leaves headroom for CapCut voiceover), 0.12 with built-in narration
-            const baseVol = voiceMixedOk ? 0.12 : 0.28;
-            mg.gain.setValueAtTime(0.03, startAt);
-            mg.gain.linearRampToValueAtTime(baseVol, startAt + 0.10);
-
-            if (withSfx && !voiceMixedOk) {
-              let lastScheduled = startAt + 0.10;
-              const fadeStart = startAt + Math.max(0.8, totalSec - 0.65);
-              for (let i = 1; i < segments.length; i++) {
-                if (i % 2 !== 1) continue;
-                const cutT = startAt + segments[i].start;
-                const dIn = cutT - 0.08;
-                const dLow = cutT - 0.01;
-                const dOut = cutT + 0.10;
-                if (dIn > lastScheduled + 0.04 && dOut < fadeStart - 0.06) {
-                  mg.gain.setValueAtTime(baseVol, dIn);
-                  mg.gain.linearRampToValueAtTime(baseVol * 0.86, dLow);
-                  mg.gain.linearRampToValueAtTime(baseVol, dOut);
-                  lastScheduled = dOut;
-                }
-              }
-            }
-
-            const fadeAt = startAt + Math.max(0.75, totalSec - 0.55);
-            mg.gain.setValueAtTime(baseVol, fadeAt);
-            mg.gain.linearRampToValueAtTime(0.01, startAt + totalSec);
-            src.connect(mg); mg.connect(comp);
-            src.start(startAt, dropOffset);
-            src.stop(startAt + totalSec + 0.15);
+            soundtrackDecoded = await audioCtx.decodeAudioData(soundtrackArrayBuf.slice(0));
             musicMixedOk = true;
           } catch {}
         }
+      }
 
-        if (withSfx) {
-          const len = Math.floor(audioCtx.sampleRate * 1.2);
-          const nBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
-          const d = nBuf.getChannelData(0);
-          for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-          // Subtle, low-level Hollywood SFX calibrated so voiceover (built-in or CapCut) stays 100% clear
-          const sfxScale = voiceMixedOk ? 0.18 : 0.36;
+      let dest = null, comp = null;
+      if (audioCtx && audioCtx.state === "running") {
+        dest = audioCtx.createMediaStreamDestination();
+        comp = audioCtx.createDynamicsCompressor();
+        comp.threshold.value = -8; comp.knee.value = 12; comp.ratio.value = 4;
+        comp.connect(dest);
 
-          scheduleSoftSubHit(audioCtx, comp, startAt, 0.72 * sfxScale);
-
-          const lastIdx = segments.length - 1;
-          for (let idx = 1; idx < segments.length; idx++) {
-            const cutT = startAt + segments[idx].start;
-            if (idx === lastIdx && lastIdx >= 2) {
-              scheduleCinemaRiser(audioCtx, comp, nBuf, cutT, 0.48, 0.85 * sfxScale);
-              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, 2, 0.90 * sfxScale);
-              scheduleSoftSubHit(audioCtx, comp, cutT, 0.70 * sfxScale);
-            } else if (idx % 2 === 1) {
-              const variant = Math.floor(idx / 2) % 3;
-              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, variant, 0.85 * sfxScale);
-              scheduleSoftSubHit(audioCtx, comp, cutT, 0.50 * sfxScale);
-            }
-          }
-        }
+        clockOsc = audioCtx.createOscillator();
+        const cg = audioCtx.createGain(); cg.gain.value = 0.00001;
+        clockOsc.connect(cg); cg.connect(dest); clockOsc.start();
         tracks.push(...dest.stream.getAudioTracks());
       }
 
       let captionBlocks = [];
       if (captionCfg && captionCfg.style && captionCfg.style !== "none" && captionCfg.text && voiceMixedOk) {
-        captionBlocks = buildWordTimingsFromWhisperOrEstimate(captionCfg.text, captionCfg.whisperChunks, voiceDecodedForSubs, voiceRateForSubs, 0.05, voiceTrimForSubs);
+        captionBlocks = buildWordTimingsFromWhisperOrEstimate(captionCfg.text, captionCfg.whisperChunks, voiceDecodedForSubs, voiceRateForSubs, 0.0, voiceTrimForSubs);
       }
 
       const recProf = pickRecorderProfile();
@@ -3419,6 +3396,72 @@
       });
 
       rec.start(200);
+      if (audioCtx && audioCtx.state === "running" && comp) {
+        const startAt = audioCtx.currentTime + 0.04;
+        audioOriginCtxTime = startAt;
+        if (voiceDecodedForSubs) {
+          const vSrc = audioCtx.createBufferSource();
+          vSrc.buffer = voiceDecodedForSubs;
+          vSrc.playbackRate.value = 1.0; // STRICTLY 1.0 — ZERO PITCH DISTORTION!
+          const vg = audioCtx.createGain();
+          vg.gain.setValueAtTime(1.16, startAt);
+          vSrc.connect(vg); vg.connect(comp);
+          vSrc.start(startAt, voiceTrimForSubs);
+          vSrc.stop(startAt + totalSec + 0.12);
+        }
+        if (soundtrackDecoded) {
+          const dropOffset = findLoudestDropOffset(soundtrackDecoded, totalSec);
+          const sSrc = audioCtx.createBufferSource();
+          sSrc.buffer = soundtrackDecoded;
+          sSrc.loop = true;
+          const mg = audioCtx.createGain();
+          const baseVol = voiceMixedOk ? 0.12 : 0.28;
+          mg.gain.setValueAtTime(0.03, startAt);
+          mg.gain.linearRampToValueAtTime(baseVol, startAt + 0.10);
+          if (withSfx && !voiceMixedOk) {
+            let lastScheduled = startAt + 0.10;
+            const fadeStart = startAt + Math.max(0.8, totalSec - 0.65);
+            for (let i = 1; i < segments.length; i++) {
+              if (i % 2 !== 1) continue;
+              const cutT = startAt + segments[i].start;
+              const dIn = cutT - 0.08, dLow = cutT - 0.01, dOut = cutT + 0.10;
+              if (dIn > lastScheduled + 0.04 && dOut < fadeStart - 0.06) {
+                mg.gain.setValueAtTime(baseVol, dIn);
+                mg.gain.linearRampToValueAtTime(baseVol * 0.86, dLow);
+                mg.gain.linearRampToValueAtTime(baseVol, dOut);
+                lastScheduled = dOut;
+              }
+            }
+          }
+          const fadeAt = startAt + Math.max(0.75, totalSec - 0.55);
+          mg.gain.setValueAtTime(baseVol, fadeAt);
+          mg.gain.linearRampToValueAtTime(0.01, startAt + totalSec);
+          sSrc.connect(mg); mg.connect(comp);
+          sSrc.start(startAt, dropOffset);
+          sSrc.stop(startAt + totalSec + 0.15);
+        }
+        if (withSfx) {
+          const len = Math.floor(audioCtx.sampleRate * 1.2);
+          const nBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+          const d = nBuf.getChannelData(0);
+          for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+          const sfxScale = voiceMixedOk ? 0.18 : 0.36;
+          scheduleSoftSubHit(audioCtx, comp, startAt, 0.72 * sfxScale);
+          const lastIdx = segments.length - 1;
+          for (let idx = 1; idx < segments.length; idx++) {
+            const cutT = startAt + segments[idx].start;
+            if (idx === lastIdx && lastIdx >= 2) {
+              scheduleCinemaRiser(audioCtx, comp, nBuf, cutT, 0.48, 0.85 * sfxScale);
+              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, 2, 0.90 * sfxScale);
+              scheduleSoftSubHit(audioCtx, comp, cutT, 0.70 * sfxScale);
+            } else if (idx % 2 === 1) {
+              const variant = Math.floor(idx / 2) % 3;
+              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, variant, 0.85 * sfxScale);
+              scheduleSoftSubHit(audioCtx, comp, cutT, 0.50 * sfxScale);
+            }
+          }
+        }
+      }
       const startTime = performance.now();
       const fillEl = document.getElementById("renderProgressFill");
       const secEl = document.getElementById("renderProgressSec");
@@ -3558,7 +3601,8 @@
             drawCinematicVignette(ctx, canvas.width, canvas.height, 0.24);
           }
           if (captionBlocks.length > 0 && captionCfg) {
-            drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, elapsed, captionCfg.style, captionCfg.pos || "safe_tiktok", captionCfg.size || "normal");
+            const rhmCapClock = (audioCtx && audioOriginCtxTime > 0) ? Math.max(0, audioCtx.currentTime - audioOriginCtxTime) : elapsed;
+            drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, rhmCapClock, captionCfg.style, captionCfg.pos || "safe_tiktok", captionCfg.size || "normal");
           }
         });
       });
@@ -3669,7 +3713,7 @@
             voiceBuf = savedVoiceBuf;
           } else if (inlineVoiceScript.value.trim()) {
             stage.innerHTML = `<div class="status-msg"><strong>Gerando narração PT-BR...</strong><br/><span id="remixVoiceSt">conectando...</span></div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:65%"></div></div>`;
-            const vRes = await generateVoiceWithTripleFallback(inlineVoiceScript.value.trim(), inlineVoiceGender.value, inlineVoiceStyle.value, Number(inlineVoiceSpeed?.value) || 1.20, (st) => {
+            const vRes = await generateVoiceWithTripleFallback(inlineVoiceScript.value.trim(), inlineVoiceGender.value, inlineVoiceStyle.value, Number(inlineVoiceSpeed?.value) || 1.14, (st) => {
               const el = document.getElementById("remixVoiceSt"); if (el) el.textContent = st;
             }, null);
             if (vRes && vRes.audioUrl) {
@@ -3770,7 +3814,7 @@
 
       const sec = Number(studioVoiceDuration.value) || 10;
       const voiceId = studioVoiceStyle.value;
-      const speed = Number(studioVoiceSpeed.value) || 1.20;
+      const speed = Number(studioVoiceSpeed.value) || 1.14;
       const genderLabel = studioGender === "male" ? "Voz Masculina" : "Voz Feminina";
 
       activeRunController = new AbortController();
@@ -3925,7 +3969,7 @@
       let voicePromise = Promise.resolve(null);
       if (wantsVoice && !savedVoiceBuf && voiceScriptText) {
         voicePromise = (async () => {
-          const res = await generateVoiceWithTripleFallback(voiceScriptText, inlineVoiceGender.value, inlineVoiceStyle.value, Number(inlineVoiceSpeed?.value) || 1.20, (st) => { aiVoiceStatus = st; }, runSignal);
+          const res = await generateVoiceWithTripleFallback(voiceScriptText, inlineVoiceGender.value, inlineVoiceStyle.value, Number(inlineVoiceSpeed?.value) || 1.14, (st) => { aiVoiceStatus = st; }, runSignal);
           if (res && res.audioUrl) { aiVoiceUrl = res.audioUrl; aiVoiceEngine = res.engine; }
           else if (res && res.error) noteMsg += ` | Aviso voz: ${res.error}`;
           return aiVoiceUrl;
@@ -4199,22 +4243,22 @@
     ["cloneFileAdamLab", "cloneFileAdamStudio"].forEach((id) => {
       document.getElementById(id)?.addEventListener("change", (e) => {
         const f = e.target.files?.[0];
-        if (f) handleCloneVoiceUpload("male_adam", "Adam", f);
+        if (f) handleCloneVoiceUpload("male_clone", "Masculina Clonada", f);
         e.target.value = "";
       });
     });
     ["cloneFileNatashaLab", "cloneFileNatashaStudio"].forEach((id) => {
       document.getElementById(id)?.addEventListener("change", (e) => {
         const f = e.target.files?.[0];
-        if (f) handleCloneVoiceUpload("female_natasha", "Natasha", f);
+        if (f) handleCloneVoiceUpload("female_clone", "Feminina Clonada", f);
         e.target.value = "";
       });
     });
     ["btnClearCloneAdamLab", "btnClearCloneAdamStudio"].forEach((id) => {
-      document.getElementById(id)?.addEventListener("click", () => { setSavedCloneVoiceId("male_adam", ""); refreshCloneBadgesUI(); });
+      document.getElementById(id)?.addEventListener("click", () => { setSavedCloneVoiceId("male_clone", ""); refreshCloneBadgesUI(); });
     });
     ["btnClearCloneNatashaLab", "btnClearCloneNatashaStudio"].forEach((id) => {
-      document.getElementById(id)?.addEventListener("click", () => { setSavedCloneVoiceId("female_natasha", ""); refreshCloneBadgesUI(); });
+      document.getElementById(id)?.addEventListener("click", () => { setSavedCloneVoiceId("female_clone", ""); refreshCloneBadgesUI(); });
     });
 
     // === VIDEO LAB (IMPORTAR VÍDEO PRONTO + NARRAÇÃO + LEGENDAS • ZERO CUSTO VÍDEO) ===
@@ -4227,8 +4271,8 @@
 
     function updateLabCharUI() {
       const dur = getEffectiveLabDuration();
-      const idealMin = Math.round(dur * 16.2);
-      const idealMax = Math.round(dur * 20.0);
+      const idealMin = Math.round(dur * 12.8);
+      const idealMax = Math.round(dur * 15.8);
       const len = labVoiceScript.value.trim().length;
       labCharInfo.textContent = `${len} caracteres • Vídeo ${dur}s (roteiro dinâmico ideal: ${idealMin} a ${idealMax} chars)`;
     }
@@ -4346,7 +4390,7 @@
       const gender = labVoiceGender.value;
       const voiceId = labVoiceStyle.value;
       const voiceLabel = labVoiceStyle.options[labVoiceStyle.selectedIndex]?.text || voiceId;
-      const speed = Number(labVoiceSpeed.value) || 1.20;
+      const speed = Number(labVoiceSpeed.value) || 1.14;
       const subStyle = labSubtitleStyle.value;
       const subPos = labSubtitlePos.value;
       const subSize = labSubtitleSize.value;
