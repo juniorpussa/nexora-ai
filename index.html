@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — Hollywood v12.5 • Vozes Adam &amp; Natasha (Clone Exato) • Trilha + Legendas Compactas</title>
+  <title>NEXORA.AI — Hollywood v12.6 • Narração Dinâmica TikTok Shop + Produto Obrigatório</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
@@ -33,6 +33,12 @@
     .video-drop-box:hover { border-color: #22c55e; background: #0a1726; }
     .video-drop-box input { display: none; }
     .lab-mini-video { max-height: 185px; aspect-ratio: 9/16; border-radius: 10px; border: 1px solid #2a3c5e; background: #000; display: none; margin-top: 6px; }
+    .req-box { background: rgba(245,158,11,0.08); border: 1.5px solid #f59e0b88; border-radius: 10px; padding: 9px 10px; }
+    .req-box.filled { background: rgba(34,197,94,0.07); border-color: #22c55e88; }
+    .req-box.err-shake { border-color: #ef4444 !important; background: rgba(239,68,68,0.12) !important; }
+    .req-tag { background: #f59e0b; color: #1a1000; font-size: 9.5px; font-weight: 900; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+    .req-box.filled .req-tag { background: #22c55e; color: #041208; }
+    .req-err-txt { font-size: 11px; color: #fca5a5; font-weight: 700; margin-top: 4px; display: none; }
     .mode-btn { background: #080c14; border: 1.5px solid #233048; border-radius: 11px; padding: 10px 11px; cursor: pointer; text-align: left; color: #cbd5e1; transition: 0.15s; }
     .mode-btn.active { border-color: #22c55e; background: #0d2217; color: #fff; }
     .mode-btn strong { display: block; font-size: 12.5px; margin-bottom: 2px; }
@@ -122,8 +128,8 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.5 • ADAM &amp; NATASHA EXATOS • TRILHA + LEGENDAS COMPACTAS</span></div>
-    <div class="pill-info">🎬 Hollywood Universal v12.5 • 105 Modelos 3D • Trilha Original Garantida • Frase 100% Completa • Legendas Compactas (23px) • Clone Exato Adam &amp; Natasha</div>
+    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.6 • NARRAÇÃO DINÂMICA (1.20x) + PRODUTO OBRIGATÓRIO</span></div>
+    <div class="pill-info">🎬 Hollywood Universal v12.6 • 105 Modelos 3D • Narração Dinâmica Acelerada (13–14s em 10s) • Produto Obrigatório (Zero Genérico) • Adam &amp; Natasha • Legendas 23px</div>
   </div>
 
   <div class="layout">
@@ -322,17 +328,26 @@
           </div>
 
           <div id="inlineVoiceBox" style="border-top:1px solid #1d283d;padding-top:9px;display:flex;flex-direction:column;gap:8px;">
-            <div class="grid-2">
+            <div class="grid-3">
               <div>
                 <label for="inlineVoiceGender">Gênero da Voz (PT-BR)</label>
                 <select id="inlineVoiceGender">
-                  <option value="male" selected>👨 Voz Masculina (Adam #1)</option>
-                  <option value="female">👩 Voz Feminina (Natasha #1)</option>
+                  <option value="male" selected>👨 Masculina (Adam #1)</option>
+                  <option value="female">👩 Feminina (Natasha #1)</option>
                 </select>
               </div>
               <div>
                 <label for="inlineVoiceStyle">Voz / Locutor</label>
                 <select id="inlineVoiceStyle"></select>
+              </div>
+              <div>
+                <label for="inlineVoiceSpeed">Ritmo / Dinamismo</label>
+                <select id="inlineVoiceSpeed">
+                  <option value="1.12">Comercial Suave (1.12x)</option>
+                  <option value="1.20" selected>⚡ Dinâmico TikTok (1.20x • Padrão)</option>
+                  <option value="1.28">🔥 Rápido Viral (1.28x)</option>
+                  <option value="1.35">🚀 Ultra Hard-Sell (1.35x)</option>
+                </select>
               </div>
             </div>
             <div class="grid-3">
@@ -356,18 +371,23 @@
               <div>
                 <label for="inlineSubtitlePos">Posição Segura</label>
                 <select id="inlineSubtitlePos">
-                  <option value="safe_tiktok" selected>🛡️ Zona Segura (71%)</option>
+                  <option value="safe_tiktok" selected>🛡️ Zona Segura (72.5%)</option>
                   <option value="center">🎯 Centro (52%)</option>
                   <option value="top">⬆️ Topo (22%)</option>
                 </select>
               </div>
             </div>
-            <div>
-              <div class="char-meta" style="margin-bottom:4px;">
-                <label for="inlineVoiceScript" style="margin:0;">Digite sua Narração PT-BR ou Gere uma Persuasiva Inédita (10s, 15s, 20s ou 30s)</label>
-                <button type="button" class="btn-mini" id="btnAutoInlineScript">✨ Gerar Narração Persuasiva (Sempre Única)</button>
+            <div class="req-box" id="inlineProdReqBox">
+              <label for="inlineProductName" style="color:#fde047;">Qual é o produto? <span class="req-tag">OBRIGATÓRIO P/ GERAR NARRAÇÃO</span></label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <input type="text" id="inlineProductName" style="flex:1;min-width:190px;" placeholder="Ex: Óculos de Sol / Tênis Esportivo / Perfume Árabe / Relógio" />
+                <button type="button" class="btn-rand" id="btnAutoInlineScript">✨ Gerar Narração Persuasiva</button>
               </div>
-              <textarea id="inlineVoiceScript" placeholder="Digite aqui a narração que a voz vai falar ou clique em '✨ Gerar Narração Persuasiva' (Super Gancho + CTA • nunca repete)..."></textarea>
+              <div class="req-err-txt" id="inlineProdErr">⚠️ Obrigatório digitar o nome do produto acima (ex: Óculos de Sol) antes de gerar a narração!</div>
+            </div>
+            <div>
+              <label for="inlineVoiceScript" style="margin-bottom:4px;">Roteiro da Narração PT-BR (Roteiro de 13–14s dinâmico p/ vídeo de 10s • Edite se quiser)</label>
+              <textarea id="inlineVoiceScript" placeholder="Escreva o produto acima e clique em '✨ Gerar Narração Persuasiva', ou digite sua narração aqui..."></textarea>
               <div class="char-meta"><span id="inlineCharCount">0 caracteres</span><span id="inlineVoiceReadyTag" style="color:#86efac;"></span></div>
             </div>
           </div>
@@ -425,12 +445,12 @@
               <select id="labVoiceStyle"></select>
             </div>
             <div>
-              <label for="labVoiceSpeed">3. Velocidade da Voz</label>
+              <label for="labVoiceSpeed">3. Ritmo / Dinamismo</label>
               <select id="labVoiceSpeed">
-                <option value="0.98">Natural (0.98x)</option>
-                <option value="1.05" selected>Comercial TikTok (1.05x)</option>
-                <option value="1.12">Rápida Retenção (1.12x)</option>
-                <option value="1.18">Acelerada Hard-Sell (1.18x)</option>
+                <option value="1.12">Comercial Suave (1.12x)</option>
+                <option value="1.20" selected>⚡ Dinâmico TikTok (1.20x • Padrão)</option>
+                <option value="1.28">🔥 Rápido Viral (1.28x)</option>
+                <option value="1.35">🚀 Ultra Hard-Sell (1.35x)</option>
               </select>
             </div>
           </div>
@@ -475,32 +495,32 @@
             </div>
           </div>
 
-          <div class="grid-2">
-            <div>
-              <label for="labScriptDuration">8. Duração da Narração (10s, 15s, 20s ou 30s)</label>
-              <select id="labScriptDuration">
-                <option value="auto" selected>🤖 Automático (Duração do Vídeo Importado)</option>
-                <option value="10">⚡ 10 segundos (~115 chars • Cabe 100% sem cortar)</option>
-                <option value="15">🔥 15 segundos (~185 chars • Gancho + Benefício + CTA)</option>
-                <option value="20">💎 20 segundos (~250 chars • Gancho + Prova + CTA)</option>
-                <option value="30">🎬 30 segundos (~375 chars • Comercial Completo)</option>
-              </select>
+          <div>
+            <label for="labScriptDuration">8. Duração do Vídeo / Cálculo Dinâmico (Ex: vídeo 10s = narração 13–14s acelerada)</label>
+            <select id="labScriptDuration">
+              <option value="auto" selected>🤖 Automático (Duração do Vídeo Importado • Dinâmico)</option>
+              <option value="10">⚡ Vídeo 10s → Roteiro ~13–14s acelerado (~175 chars • Alto Dinamismo)</option>
+              <option value="15">🔥 Vídeo 15s → Roteiro ~19–21s acelerado (~265 chars • Alta Retenção)</option>
+              <option value="20">💎 Vídeo 20s → Roteiro ~26–28s acelerado (~355 chars • Prova + CTA)</option>
+              <option value="30">🎬 Vídeo 30s → Roteiro ~39–42s acelerado (~520 chars • Comercial Completo)</option>
+            </select>
+          </div>
+
+          <div class="req-box" id="labProdReqBox">
+            <label for="labProductName" style="color:#fde047;">9. Escreva o Produto <span class="req-tag">OBRIGATÓRIO ANTES DE GERAR A NARRAÇÃO</span></label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <input type="text" id="labProductName" style="flex:1;min-width:200px;" placeholder="Ex: Óculos de Sol / Tênis Esportivo / Perfume Árabe / Relógio / Whey Protein" />
+              <button type="button" class="btn-rand" id="btnLabAutoScript">✨ Gerar Narração Persuasiva (Nova)</button>
             </div>
-            <div>
-              <label for="labProductName">9. Nome do Produto (p/ Gerar Narração Persuasiva)</label>
-              <input type="text" id="labProductName" placeholder="Ex: Tênis Esportivo HOKA / Óculos Ray-Ban / Perfume" />
-            </div>
+            <div class="req-err-txt" id="labProdErr">⚠️ Obrigatório digitar o produto acima (ex: Óculos de Sol) para a narração falar exatamente sobre ele!</div>
           </div>
 
           <div>
-            <div class="char-meta" style="margin-bottom:5px;">
-              <label for="labVoiceScript" style="margin:0;">Digite a Narração aqui ou Gere uma Persuasiva (Super Gancho + CTA • Nunca Repete)</label>
-              <button type="button" class="btn-rand" id="btnLabAutoScript" style="min-height:30px;padding:0 11px;">✨ Gerar Narração Persuasiva (Nova)</button>
-            </div>
-            <textarea id="labVoiceScript" rows="4" placeholder="Digite aqui a narração que você quer no vídeo OU clique em '✨ Gerar Narração Persuasiva (Nova)' para criar um roteiro inédito com Super Gancho + CTA..."></textarea>
+            <label for="labVoiceScript" style="margin-bottom:4px;">Roteiro da Narração &amp; Legenda (Personalizado p/ o Produto • Super Gancho + CTA • Nunca Repete)</label>
+            <textarea id="labVoiceScript" rows="4" placeholder="1º escreva o produto acima (ex: Óculos de Sol) e clique em '✨ Gerar Narração Persuasiva', ou digite o seu próprio roteiro aqui..."></textarea>
             <div class="char-meta">
-              <span id="labCharInfo">0 caracteres • Escolha 10s, 15s, 20s ou 30s ou importe um vídeo</span>
-              <span id="labSyncNote" style="color:#7dd3fc;">Frase 100% completa + Sincronia Whisper PT-BR</span>
+              <span id="labCharInfo">0 caracteres • Calibrado p/ ritmo dinâmico TikTok Shop (zero pausa morta)</span>
+              <span id="labSyncNote" style="color:#7dd3fc;">Frase 100% completa + Ritmo Acelerado + Whisper PT-BR</span>
             </div>
           </div>
         </div>
@@ -516,12 +536,12 @@
           </div>
           <div class="grid-3">
             <div>
-              <label for="studioVoiceDuration">2. Duração Alvo</label>
+              <label for="studioVoiceDuration">2. Duração do Vídeo Alvo</label>
               <select id="studioVoiceDuration">
-                <option value="10" selected>10 segundos (~155 chars)</option>
-                <option value="15">15 segundos (~235 chars)</option>
-                <option value="20">20 segundos (~315 chars)</option>
-                <option value="30">30 segundos (~460 chars)</option>
+                <option value="10" selected>Vídeo 10s (Roteiro 13–14s dinâmico • ~175 chars)</option>
+                <option value="15">Vídeo 15s (Roteiro 19–21s dinâmico • ~265 chars)</option>
+                <option value="20">Vídeo 20s (Roteiro 26–28s dinâmico • ~355 chars)</option>
+                <option value="30">Vídeo 30s (Roteiro 39–42s dinâmico • ~520 chars)</option>
               </select>
             </div>
             <div>
@@ -529,21 +549,22 @@
               <select id="studioVoiceStyle"></select>
             </div>
             <div>
-              <label for="studioVoiceSpeed">4. Velocidade da Fala</label>
+              <label for="studioVoiceSpeed">4. Ritmo / Dinamismo</label>
               <select id="studioVoiceSpeed">
-                <option value="0.98">Natural (0.98x)</option>
-                <option value="1.05" selected>Comercial TikTok (1.05x)</option>
-                <option value="1.12">Rápida Retenção (1.12x)</option>
-                <option value="1.18">Acelerada Hard-Sell (1.18x)</option>
+                <option value="1.12">Comercial Suave (1.12x)</option>
+                <option value="1.20" selected>⚡ Dinâmico TikTok (1.20x • Padrão)</option>
+                <option value="1.28">🔥 Rápido Viral (1.28x)</option>
+                <option value="1.35">🚀 Ultra Hard-Sell (1.35x)</option>
               </select>
             </div>
           </div>
-          <div>
-            <label for="studioProductName">Nome do Produto (para gerar roteiro pronto)</label>
-            <div style="display:flex;gap:8px;">
-              <input type="text" id="studioProductName" placeholder="Ex: Perfume Importado / Mouse Gamer Sem Fio / Tênis Esportivo" />
+          <div class="req-box" id="studioProdReqBox">
+            <label for="studioProductName" style="color:#fde047;">Escreva o Produto <span class="req-tag">OBRIGATÓRIO ANTES DE GERAR A NARRAÇÃO</span></label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <input type="text" id="studioProductName" style="flex:1;min-width:200px;" placeholder="Ex: Óculos de Sol / Perfume Importado / Tênis Esportivo / Relógio" />
               <button type="button" class="btn-rand" id="btnGenerateAidaScript">✨ Gerar Persuasiva (Nova)</button>
             </div>
+            <div class="req-err-txt" id="studioProdErr">⚠️ Obrigatório digitar o nome do produto acima (ex: Óculos de Sol) antes de gerar a narração!</div>
           </div>
           <div>
             <label for="studioVoiceScript">Roteiro em Português (PT-BR)</label>
@@ -1119,121 +1140,257 @@
       } catch {}
     }
 
-    const DURATION_CHAR_GUIDE = { 10: { min: 95, max: 132 }, 15: { min: 160, max: 205 }, 20: { min: 225, max: 275 }, 30: { min: 340, max: 405 } };
+    // Calibração Dinâmica TikTok Shop: vídeo de 10s recebe roteiro de ~13–14s (~165–205 chars) falado em ritmo dinâmico (1.20x)
+    const DURATION_CHAR_GUIDE = {
+      10: { min: 162, max: 205 },
+      15: { min: 242, max: 295 },
+      20: { min: 325, max: 395 },
+      30: { min: 480, max: 565 }
+    };
 
     // =========================================================================
-    // MOTOR DE ROTEIROS PERSUASIVOS ANTI-REPETIÇÃO (10s, 15s, 20s e 30s)
-    // CALIBRADO P/ FALAR 100% DA FRASE SEM CORTAR O CTA • NUNCA REPETE
+    // MOTOR DE ROTEIROS PERSUASIVOS ESPECÍFICOS POR PRODUTO (ANTI-REPETIÇÃO)
+    // ZERO GENÉRICO • CATEGORIA AUTOMÁTICA • RITMO DINÂMICO 10s/15s/20s/30s
     // =========================================================================
+    function inferPtMeta(rawName) {
+      const name = String(rawName || "").trim();
+      const norm = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      const firstWord = norm.split(/\s+/)[0] || "";
+      const isPluralOculos = /\boculos\b/.test(norm);
+      const femFirstWords = new Set([
+        "bolsa", "carteira", "mochila", "camiseta", "camisa", "blusa", "regata", "jaqueta",
+        "calca", "saia", "bermuda", "sandalia", "bota", "rasteirinha", "sapatilha", "pulseira",
+        "corrente", "joia", "tornozeleira", "gargantilha", "garrafa", "caneca", "cafeteira",
+        "frigideira", "panela", "lanterna", "pelicula", "capinha", "capa", "escova", "chapinha",
+        "mascara", "base", "pomada", "creatina", "proteina", "vitamina", "glutamina", "lente",
+        "armacao", "maleta", "caixa", "luminaria", "cama", "almofada", "toalha", "manta",
+        "maquiagem", "agua", "colonia", "essencia", "fragrancia", "calcinha", "cueca", "meia", "luva"
+      ]);
+      const isFem = !isPluralOculos && (femFirstWords.has(firstWord) || (firstWord.endsWith("a") && !["mapa", "sofa", "pijama", "sistema", "aroma", "clima", "dia", "cinema", "tema", "creme"].includes(firstWord)));
+      return {
+        name,
+        art: isFem ? "a" : "o",
+        dem: isFem ? "essa" : "esse",
+        demEste: isFem ? "esta" : "este",
+        poss: isFem ? "a sua" : "o seu",
+        pron: isFem ? "ela" : "ele",
+        prepDe: isFem ? "da" : "do",
+        prepEm: isFem ? "na" : "no",
+        prepCom: isFem ? "dessa" : "desse"
+      };
+    }
+
+    function detectProductCategory(rawName) {
+      const n = String(rawName || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      if (/\b(oculos|ray.?ban|lente|armacao|polarizad|aviador|wayfarer|solar)\b/.test(n) && !/\bprotetor\b/.test(n)) return "eyewear";
+      if (/\b(tenis|sapato|bota|chinelo|sandalia|hoka|nike|adidas|corrida|calcado|sapatenis|chuteira)\b/.test(n)) return "footwear";
+      if (/\b(perfume|body\s*splash|colonia|fragrancia|arabe|sabah|eau\s*de|desodorante|essencia|parfum)\b/.test(n)) return "perfume";
+      if (/\b(relogio|smartwatch|cronografo|pulseira\s*inteligente|watch|tonneau|automatico)\b/.test(n)) return "watch";
+      if (/\b(whey|creatina|suplemento|magnesio|vitamina|proteina|pre.?treino|colageno|omega|bcaa|termogenico|melatonina)\b/.test(n)) return "supplement";
+      if (/\b(mouse|fone|headset|teclado|caixa\s*de\s*som|carregador|pelicula|suporte|lanterna|ventilador|controle|power\s*bank|camera|microfone|tripe|led|smart|gadget|eletronico)\b/.test(n)) return "tech";
+      if (/\b(carteira|bolsa|mochila|necessaire|mala|pochete|porta.?cartao|bag)\b/.test(n)) return "bag_wallet";
+      if (/\b(joia|colar|corrente|pulseira|anel|brinco|prata|ouro|alianca|pingente|conjunto\s*de\s*joia)\b/.test(n)) return "jewelry";
+      if (/\b(protetor\s*solar|serum|creme|base|batom|shampoo|condicionador|mascara|maquiagem|hidratante|escova|chapinha|secador|skincare|oleo\s*capilar|esfoliante|sabonete)\b/.test(n)) return "beauty";
+      if (/\b(camiseta|regata|jaqueta|moletom|calca|vestido|bone|blusa|bermuda|short|roupa|conjunto|terno|blazer|camisa)\b/.test(n)) return "fashion";
+      if (/\b(garrafa|copo|stanley|cafeteira|organizador|aspirador|carro|automotivo|cozinha|frigideira|liquidificador|panela|mop|ferramenta|parafusadeira)\b/.test(n)) return "home_auto";
+      return "universal";
+    }
+
+    const CATEGORY_BENEFITS = {
+      eyewear: {
+        short: [
+          (m) => `Lentes com proteção real e nitidez absurda sob o sol, numa armação leve que encaixa perfeito no rosto sem apertar.`,
+          (m) => `Visual marcante com lentes que bloqueiam o reflexo na hora e conforto o dia todo — muda completamente a sua presença.`,
+          (m) => `Acabamento impecável nas hastes, lentes nítidas de alto padrão e caimento perfeito para dirigir, sair ou curtir o sol.`,
+          (m) => `Proteção visual de verdade com design icônico que valoriza qualquer rosto e deixa seu visual com cara de grife na hora.`,
+          (m) => `Levíssimo no rosto, zero incômodo no nariz e lentes cristalinas que entregam conforto e estilo do começo ao fim do dia.`,
+          (m) => `Cada detalhe da armação e das lentes foi feito para unir proteção solar de nível alto com um estilo impossível de ignorar.`
+        ],
+        proof: [
+          (m) => `Quem coloca ${m.dem} ${m.name} no rosto sente a leveza na hora e já nota como o visual sobe de nível imediatamente.`,
+          (m) => `É o tipo de ${m.name} que combina com roupa casual ou social e faz todo mundo perguntar onde você comprou.`,
+          (m) => `Zero armação torta ou lente fraca: entrega nitidez limpa no sol forte e acabamento firme que dura muito mais.`,
+          (m) => `Você abre a embalagem, veste no rosto e entende na hora por que ${m.dem} ${m.name} está viralizando tanto.`
+        ]
+      },
+      footwear: {
+        short: [
+          (m) => `Amortecimento super macio que absorve cada impacto, cabedal leve que deixa o pé respirar e pisada firme o dia inteiro.`,
+          (m) => `Conforto absurdo desde o primeiro passo, solado estável e um visual esportivo moderno que chama atenção por onde você anda.`,
+          (m) => `Leveza impressionante nos pés, acabamento reforçado nas costuras e aderência segura para caminhada, treino ou rotina corrida.`,
+          (m) => `Chega de terminar o dia com o pé doendo: entrega maciez real na pisada, estabilidade e um design arrojado de vitrine.`,
+          (m) => `Material respirável, encaixe anatômico firme e entressola confortável que transforma cada passo no treino ou no dia a dia.`
+        ],
+        proof: [
+          (m) => `Quem calça ${m.dem} ${m.name} pela primeira vez não quer mais tirar do pé — conforto e estilo andando juntos.`,
+          (m) => `Fica sensacional no pé em qualquer ângulo e entrega durabilidade de verdade para aguentar o seu ritmo diário.`,
+          (m) => `Quando você sente o amortecimento e vê o acabamento de perto, percebe que ${m.dem} ${m.name} está em outro patamar.`
+        ]
+      },
+      perfume: {
+        short: [
+          (m) => `Fragrância envolvente com projeção marcante e fixação prolongada que deixa um rastro sofisticado por onde você passa.`,
+          (m) => `Notas intensas e equilibradas que grudam na pele por horas, unindo frasco luxuoso com um aroma impossível de esquecer.`,
+          (m) => `Aquele cheiro elegante que chama atenção assim que você entra no ambiente e faz todo mundo perguntar qual perfume você usa.`,
+          (m) => `Saída vibrante, coração sofisticado e fixação de alto nível — entrega presença de perfumaria importada em cada borrifada.`,
+          (m) => `Acabamento impecável no frasco e uma assinatura olfativa marcante que acompanha você do trabalho até a noite.`
+        ],
+        proof: [
+          (m) => `Basta duas borrifadas ${m.prepCom} ${m.name} para sentir o rastro envolvente e receber elogios o dia inteiro.`,
+          (m) => `É o tipo de fragrância viciante que vira sua marca registrada e impressiona desde o primeiro segundo na pele.`,
+          (m) => `Quem experimenta ${m.dem} ${m.name} se surpreende com a duração na pele e o acabamento de luxo do frasco.`
+        ]
+      },
+      watch: {
+        short: [
+          (m) => `Presença marcante no pulso, caixa com acabamento cirúrgico e detalhes de alta precisão que impõem respeito no primeiro olhar.`,
+          (m) => `Design sofisticado que combina com roupa social ou casual, pulseira confortável e brilho impecável sob qualquer luz.`,
+          (m) => `Mostrador nítido de alto impacto, construção sólida de verdade e aquele visual de luxo que transforma sua postura na hora.`,
+          (m) => `Cada relevo da caixa e do mostrador entrega padrão elevado, peso gostoso no pulso e elegância para qualquer ocasião.`
+        ],
+        proof: [
+          (m) => `Você coloca ${m.dem} ${m.name} no pulso e já sente o peso da qualidade — impossível passar despercebido.`,
+          (m) => `É aquele acessório definitivo que valoriza o look inteiro e rende elogios em qualquer reunião ou evento.`,
+          (m) => `Olhando de perto o acabamento do vidro e dos detalhes, fica claro por que ${m.dem} ${m.name} está esgotando rápido.`
+        ]
+      },
+      supplement: {
+        short: [
+          (m) => `Fórmula concentrada de alta pureza e rápida absorção para dar mais energia, recuperação e resultado real na sua rotina.`,
+          (m) => `Dissolve fácil, sabor incrível e entrega os nutrientes exatos que o seu corpo precisa para evoluir todo dia com consistência.`,
+          (m) => `Qualidade de alto padrão em cada dose, pensado para quem leva treino, saúde e disposição a sério sem perder tempo.`,
+          (m) => `Praticidade imediata no seu dia a dia com concentração real que faz diferença visível na disposição e no desempenho.`
+        ],
+        proof: [
+          (m) => `Quem inclui ${m.dem} ${m.name} na rotina sente a diferença na disposição e não troca por fórmulas genéricas.`,
+          (m) => `É a escolha certa para quem busca qualidade confiável, ótima absorção e rendimento excelente em cada pote.`,
+          (m) => `Por isso tanta gente já está repondo o estoque de ${m.name} antes que acabe de novo.`
+        ]
+      },
+      tech: {
+        short: [
+          (m) => `Resposta instantânea, ergonomia super confortável e acabamento moderno que turbina sua produtividade e seu conforto todo dia.`,
+          (m) => `Construção sólida, uso super prático e desempenho estável que elimina travamentos e eleva o nível do seu setup na hora.`,
+          (m) => `Design inteligente pensado nos mínimos detalhes, toque preciso e praticidade real para facilitar a sua rotina sem complicação.`,
+          (m) => `Visual clean de alto padrão com tecnologia confiável que entrega performance muito acima dos modelos comuns.`
+        ],
+        proof: [
+          (m) => `Você conecta ${m.dem} ${m.name} uma vez e já sente na hora o salto de conforto, velocidade e qualidade.`,
+          (m) => `Quem testa no dia a dia se impressiona com a precisão e o acabamento caprichado de cada detalhe.`,
+          (m) => `É o upgrade inteligente que transforma sua rotina sem dor de cabeça e deixa seu espaço com visual profissional.`
+        ]
+      },
+      bag_wallet: {
+        short: [
+          (m) => `Design slim inteligente que organiza tudo com facilidade sem fazer volume, unindo material resistente e visual sofisticado.`,
+          (m) => `Acabamento impecável nas costuras, toque macio de alto padrão e espaço na medida certa para acompanhar você em qualquer lugar.`,
+          (m) => `Praticidade imediata no dia a dia com estrutura firme que protege seus itens e deixa seu estilo muito mais alinhado.`,
+          (m) => `Leve, elegante e super bem dividida — acaba com a bagunça e entrega cara de acessório de luxo logo no primeiro toque.`
+        ],
+        proof: [
+          (m) => `Quem passa a usar ${m.dem} ${m.name} nunca mais volta para modelos comuns que desgastam ou fazem volume à toa.`,
+          (m) => `Fica linda de qualquer ângulo, aguenta o uso intenso e ainda é uma opção incrível para presentear.`,
+          (m) => `Você pega na mão e sente na hora a firmeza do material e o cuidado em cada acabamento.`
+        ]
+      },
+      jewelry: {
+        short: [
+          (m) => `Brilho intenso de alto padrão, acabamento delicado e caimento impecável que valoriza qualquer produção no primeiro olhar.`,
+          (m) => `Design sofisticado que captura a luz de todos os ângulos, super confortável de usar e perfeito para o dia ou para a noite.`,
+          (m) => `Cada detalhe entrega elegância real e presença marcante, elevando o seu visual sem precisar exagerar em nada.`
+        ],
+        proof: [
+          (m) => `Quem usa ${m.dem} ${m.name} recebe elogios na hora — tem brilho vivo e acabamento digno de vitrine de joalheria.`,
+          (m) => `É a peça coringa que transforma até o look mais básico e também surpreende como presente inesquecível.`
+        ]
+      },
+      beauty: {
+        short: [
+          (m) => `Textura leve de absorção imediata que entrega toque macio sem pesar, deixando o resultado visível já nas primeiras aplicações.`,
+          (m) => `Cuidado de alto nível com acabamento natural e confortável, ideal para usar todos os dias e sentir a diferença na hora.`,
+          (m) => `Prático, eficiente e com fórmula pensada para valorizar sua rotina de beleza com resultado bonito e duradouro.`
+        ],
+        proof: [
+          (m) => `Quem testa ${m.dem} ${m.name} se apaixona já no primeiro uso — toque leve, acabamento lindo e zero desconforto.`,
+          (m) => `Não é à toa que ${m.dem} ${m.name} virou favorito de quem ama cuidado prático que realmente entrega resultado.`
+        ]
+      },
+      fashion: {
+        short: [
+          (m) => `Caimento impecável no corpo, tecido macio que respira o dia inteiro e corte moderno que valoriza o seu visual na hora.`,
+          (m) => `Costura reforçada, toque super confortável na pele e estilo versátil que combina fácil com qualquer peça do seu guarda-roupa.`,
+          (m) => `Não amassa fácil, veste super bem e entrega aquela presença alinhada tanto para a rotina corrida quanto para sair.`
+        ],
+        proof: [
+          (m) => `Você veste ${m.dem} ${m.name} uma vez e já percebe a diferença no caimento e no conforto o dia todo.`,
+          (m) => `É aquela peça essencial de alta qualidade que todo mundo elogia e você vai querer ter mais de uma.`
+        ]
+      },
+      home_auto: {
+        short: [
+          (m) => `Praticidade imediata na sua rotina, material resistente de verdade e design inteligente que economiza tempo todos os dias.`,
+          (m) => `Acabamento firme, super fácil de usar e pensado para resolver o seu dia a dia com muito mais eficiência e estilo.`,
+          (m) => `Une funcionalidade direta, alta durabilidade e um visual moderno que deixa o seu espaço muito mais organizado e bonito.`
+        ],
+        proof: [
+          (m) => `Depois que você testa ${m.dem} ${m.name} na prática, se pergunta como ficou tanto tempo sem ter um desses.`,
+          (m) => `Entrega resistência real no uso diário e faz diferença visível logo na primeira vez que você usa.`
+        ]
+      },
+      universal: {
+        short: [
+          (m) => `Acabamento impecável em cada detalhe, material resistente de alto padrão e presença marcante logo no primeiro olhar.`,
+          (m) => `Visual sofisticado de perto, construção firme de verdade e praticidade que eleva completamente o seu dia a dia.`,
+          (m) => `Design moderno, textura refinada e qualidade superior que você enxerga nos mínimos detalhes e sente no primeiro uso.`,
+          (m) => `Combina estilo marcante, durabilidade real e acabamento de vitrine — foge totalmente dos modelos comuns.`
+        ],
+        proof: [
+          (m) => `Quem recebe ${m.dem} ${m.name} em casa se surpreende com o peso, o toque e a fidelidade de cada acabamento.`,
+          (m) => `Colocando lado a lado com opções comuns, a superioridade ${m.prepCom} ${m.name} salta aos olhos na hora.`,
+          (m) => `Fica incrível de qualquer ângulo e entrega aquela sensação imediata de escolha certa logo no primeiro dia.`
+        ]
+      }
+    };
+
     const PERSUASIVE_POOLS = {
-      hooks10: [
-        (p) => `Para tudo e olha ${p}!`,
-        (p) => `Olha o acabamento real de ${p}!`,
-        (p) => `Impossível não reparar em ${p}!`,
-        (p) => `Sério, olha ${p} bem de perto!`,
-        (p) => `Você nunca viu nada igual a ${p}!`,
-        (p) => `Olha esse detalhe incrível de ${p}!`,
-        (p) => `Esquece o comum e olha ${p}!`,
-        (p) => `Quem vê ${p} de perto se apaixona!`,
-        (p) => `Olha o nível superior de ${p}!`,
-        (p) => `É por isso que ${p} está esgotando!`,
-        (p) => `Dá só uma olhada em ${p}!`,
-        (p) => `Olha a presença marcante de ${p}!`,
-        (p) => `Achou que já viu tudo? Olha ${p}!`,
-        (p) => `Bate o olho na perfeição de ${p}!`,
-        (p) => `Se você exige qualidade, olha ${p}!`,
-        (p) => `Esse detalhe de ${p} chama atenção!`
+      hooksDynamic: [
+        (m) => `Para tudo e olha ${m.dem} ${m.name}!`,
+        (m) => `Sério, quem vê ${m.dem} ${m.name} de perto não acredita!`,
+        (m) => `É por isso que ${m.dem} ${m.name} está esgotando tão rápido!`,
+        (m) => `Impossível passar direto sem reparar ${m.prepEm} ${m.name}!`,
+        (m) => `Esquece o comum e olha o nível ${m.prepCom} ${m.name}!`,
+        (m) => `Achou que já tinha visto tudo? Olha ${m.dem} ${m.name}!`,
+        (m) => `Você precisa ver o acabamento real ${m.prepCom} ${m.name}!`,
+        (m) => `Olha por que todo mundo está querendo ${m.dem} ${m.name}!`,
+        (m) => `Se você exige alto padrão, bate o olho ${m.prepEm} ${m.name}!`,
+        (m) => `Chega de gastar com coisa frágil — olha ${m.dem} ${m.name}!`,
+        (m) => `Atenção nesse detalhe: olha a presença ${m.prepCom} ${m.name}!`,
+        (m) => `Dá só uma olhada na perfeição ${m.prepCom} ${m.name}!`,
+        (m) => `Quer elevar o seu nível na hora? Conhece ${m.dem} ${m.name}!`,
+        (m) => `Ninguém imagina esse padrão até ver ${m.dem} ${m.name} de perto!`
       ],
-      hooksLong: [
-        (p) => `Para tudo por um segundo e olha de perto o nível de ${p}!`,
-        (p) => `Você já viu como um detalhe certo muda tudo? Olha ${p}!`,
-        (p) => `Chega de coisa frágil que decepciona rápido — conhece ${p}!`,
-        (p) => `Sério, olha a câmera chegando perto de ${p} e repara nisso!`,
-        (p) => `Se você gosta de chamar atenção sem esforço, precisa ver ${p}!`,
-        (p) => `Não é à toa que ${p} virou febre entre quem exige qualidade!`,
-        (p) => `Bate o olho nos detalhes de ${p} e entende por que todos querem!`,
-        (p) => `Quer ver o que separa o básico do alto padrão? Olha ${p}!`,
-        (p) => `Atenção nesse visual: ${p} foi feito para quem repara em tudo!`,
-        (p) => `Busca estilo, resistência e presença real no dia a dia? Olha ${p}!`,
-        (p) => `Olha esse design de perto — ${p} impressiona logo de cara!`,
-        (p) => `Tem coisa que só vendo de perto para acreditar, igual a ${p}!`,
-        (p) => `Esquece o mais do mesmo: olha como ${p} eleva o seu padrão!`,
-        (p) => `Quando o acabamento fala por si, olha cada linha de ${p}!`
+      bridges: [
+        (m) => `Sabe aquele medo de comprar bonito na foto e se decepcionar pessoalmente? Com ${m.dem} ${m.name} acontece exatamente o contrário.`,
+        (m) => `Enquanto a maioria entrega só o básico, ${m.dem} ${m.name} capricha exatamente nos detalhes que fazem toda a diferença.`,
+        (m) => `Olhando assim bem de perto, dá para ver claramente o padrão superior em cada linha, textura e acabamento.`,
+        (m) => `Não importa se é para usar todo dia ou para dar um presente marcante: ${m.pron} entrega presença e confiança sem esforço.`,
+        (m) => `Quando você testa no dia a dia, percebe na hora como um design bem feito muda completamente a sua experiência.`
       ],
-      bodiesShort: [
-        () => `Acabamento impecável e presença real.`,
-        () => `Conforto, firmeza e destaque imediato.`,
-        () => `Visual sofisticado em cada detalhe.`,
-        () => `Qualidade que você sente no primeiro uso.`,
-        () => `Design moderno, leve e super resistente.`,
-        () => `Construção firme digna de vitrine.`,
-        () => `Encaixe perfeito e brilho em cada ângulo.`,
-        () => `Feito para durar e chamar atenção.`,
-        () => `Textura refinada e estilo marcante.`,
-        () => `Cuidado e alto padrão que saltam aos olhos.`,
-        () => `Visual limpo que eleva o seu estilo.`,
-        () => `Acabamento de luxo sem pagar absurdo.`
-      ],
-      bodiesMedium: [
-        () => `Acabamento impecável, conforto real e um visual que chama atenção de longe.`,
-        () => `Textura refinada e construção firme que entregam durabilidade o dia inteiro.`,
-        () => `Design moderno e sólido que foge do comum e eleva o seu estilo na hora.`,
-        () => `No uso diário a diferença aparece: praticidade real e visual de vitrine.`,
-        () => `Dos mínimos relevos ao toque final, tudo entrega desempenho e longa duração.`,
-        () => `Leve, resistente e versátil para acompanhar a rotina com elegância.`,
-        () => `Escolha inteligente que entrega muito mais presença e acabamento do que promete.`,
-        () => `Repara nas bordas e no material: zero cara de genérico, feito para exigentes.`,
-        () => `Acompanha o seu ritmo sem perder o estilo, unindo função e impacto visual.`,
-        () => `Cada ângulo mostra o cuidado na fabricação e passa confiança imediata.`
-      ],
-      proofsExtra: [
-        () => `Quem recebe em casa se surpreende com o peso e a fidelidade de cada detalhe.`,
-        () => `Fica incrível de qualquer ângulo e transforma a sua rotina logo no primeiro dia.`,
-        () => `Perfeito tanto para o seu uso diário quanto para dar um presente marcante.`,
-        () => `Você percebe a superioridade assim que abre — firme, limpo e impecável.`,
-        () => `Por isso tanta gente garante antes do estoque virar: estilo sem complicação.`,
-        () => `Ideal para quem valoriza praticidade, visual atual e resistência real.`,
-        () => `Colocando lado a lado com modelos comuns, a diferença fica óbvia na hora.`,
-        () => `Sensação imediata de acerto — você usa uma vez e não larga mais.`
-      ],
-      bridges30: [
-        () => `Sabe o medo de comprar algo bonito na foto e se decepcionar? Aqui é o oposto.`,
-        () => `Enquanto a maioria entrega só o básico, esse capricha onde quase ninguém olha.`,
-        () => `Se você repara em textura e firmeza, entende na hora por que virou favorito.`,
-        () => `Faz toda diferença usar algo que transmite cuidado e confiança no dia a dia.`,
-        () => `Projetado para entregar uma experiência acima da média desde o primeiro toque.`,
-        () => `Serve para trabalho, passeio ou rotina intensa com presença sem esforço.`
-      ],
-      ctas10: [
-        () => `Garanta na sacolinha aqui embaixo!`,
-        () => `Toque na sacolinha aqui embaixo agora!`,
-        () => `Clique no carrinho aqui embaixo!`,
-        () => `Corre na sacolinha antes que acabe!`,
-        () => `Garanta o seu aqui embaixo hoje!`,
-        () => `Toque no carrinho e leve o seu!`,
-        () => `Não perca — clique na sacolinha!`,
-        () => `Aproveite agora na sacolinha embaixo!`,
-        () => `Clica no carrinho aqui embaixo!`,
-        () => `O seu está na sacolinha aqui embaixo!`,
-        () => `Toque aqui embaixo e garanta já!`,
-        () => `Garanta direto no carrinho embaixo!`
-      ],
-      ctasLong: [
-        () => `Garanta o seu na sacolinha aqui embaixo antes que acabe!`,
-        () => `Toque na sacolinha aqui embaixo e garanta o seu agora mesmo!`,
-        () => `Clique no carrinho aqui embaixo enquanto ainda tem disponível!`,
-        () => `Corre na sacolinha aqui embaixo para garantir o seu hoje!`,
-        () => `Toque no carrinho aqui embaixo agora e leve o seu para casa!`,
-        () => `Não deixa passar — garanta o seu na sacolinha aqui embaixo!`,
-        () => `Aproveita agora na sacolinha aqui embaixo antes de esgotar!`,
-        () => `Clica aqui embaixo no carrinho e garanta o seu hoje mesmo!`,
-        () => `Toque aqui embaixo no carrinho e sinta essa diferença pessoalmente!`,
-        () => `Clique na sacolinha aqui embaixo agora e não fique sem o seu!`
+      ctasDynamic: [
+        (m) => `Garanta ${m.poss} na sacolinha aqui embaixo antes que acabe!`,
+        (m) => `Toque na sacolinha aqui embaixo e garanta ${m.poss} agora mesmo!`,
+        (m) => `Clique no carrinho aqui embaixo e aproveite enquanto ainda tem!`,
+        (m) => `Corre na sacolinha aqui embaixo para garantir ${m.poss} hoje!`,
+        (m) => `Toque no carrinho aqui embaixo agora e leve ${m.poss} para casa!`,
+        (m) => `Não deixa passar — garanta ${m.poss} na sacolinha aqui embaixo!`,
+        (m) => `Clica aqui embaixo no carrinho antes que o estoque esgote!`,
+        (m) => `Aproveita agora na sacolinha aqui embaixo e sinta a diferença!`,
+        (m) => `Garante ${m.poss} hoje mesmo tocando no carrinho aqui embaixo!`,
+        (m) => `Clique na sacolinha aqui embaixo agora e não fique sem ${m.poss}!`
       ]
     };
 
-    const SCRIPT_HISTORY_KEY = "nexora_used_scripts_v125";
-    let scriptGenCounter = 0;
+    const SCRIPT_HISTORY_KEY = "nexora_used_scripts_v126";
 
     function loadScriptHistory() {
       try {
@@ -1241,12 +1398,12 @@
         const parsed = raw ? JSON.parse(raw) : null;
         if (parsed && Array.isArray(parsed.sigs)) return parsed;
       } catch {}
-      return { sigs: [], lastHook: -1, lastBody: -1, lastProof: -1, lastBridge: -1, lastCta: -1 };
+      return { sigs: [], lastHook: -1, lastBen: -1, lastProof: -1, lastBridge: -1, lastCta: -1 };
     }
 
     function saveScriptHistory(hist) {
       try {
-        hist.sigs = hist.sigs.slice(-80);
+        hist.sigs = hist.sigs.slice(-90);
         localStorage.setItem(SCRIPT_HISTORY_KEY, JSON.stringify(hist));
       } catch {}
     }
@@ -1258,58 +1415,6 @@
       return idx;
     }
 
-    function buildAidaScript(prodName, sec) {
-      const p = (prodName || "este modelo").trim();
-      const dur = Number(sec) || 10;
-      const hist = loadScriptHistory();
-      scriptGenCounter++;
-
-      let bestText = "";
-      let chosenSig = "";
-      let hIdx = 0, bIdx = 0, prIdx = -1, brIdx = -1, cIdx = 0;
-
-      for (let attempt = 0; attempt < 25; attempt++) {
-        if (dur <= 11) {
-          hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooks10.length, hist.lastHook);
-          bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesShort.length, hist.lastBody);
-          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas10.length, hist.lastCta);
-          chosenSig = `10-${hIdx}-${bIdx}-${cIdx}`;
-          bestText = `${PERSUASIVE_POOLS.hooks10[hIdx](p)} ${PERSUASIVE_POOLS.bodiesShort[bIdx]()} ${PERSUASIVE_POOLS.ctas10[cIdx]()}`;
-        } else if (dur <= 16) {
-          hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksLong.length, hist.lastHook);
-          bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesMedium.length, hist.lastBody);
-          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctasLong.length, hist.lastCta);
-          chosenSig = `15-${hIdx}-${bIdx}-${cIdx}`;
-          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.ctasLong[cIdx]()}`;
-        } else if (dur <= 22) {
-          hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksLong.length, hist.lastHook);
-          bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesMedium.length, hist.lastBody);
-          prIdx = pickDifferentIndex(PERSUASIVE_POOLS.proofsExtra.length, hist.lastProof);
-          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctasLong.length, hist.lastCta);
-          chosenSig = `20-${hIdx}-${bIdx}-${prIdx}-${cIdx}`;
-          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.proofsExtra[prIdx]()} ${PERSUASIVE_POOLS.ctasLong[cIdx]()}`;
-        } else {
-          hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksLong.length, hist.lastHook);
-          brIdx = pickDifferentIndex(PERSUASIVE_POOLS.bridges30.length, hist.lastBridge);
-          bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesMedium.length, hist.lastBody);
-          prIdx = pickDifferentIndex(PERSUASIVE_POOLS.proofsExtra.length, hist.lastProof);
-          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctasLong.length, hist.lastCta);
-          chosenSig = `30-${hIdx}-${brIdx}-${bIdx}-${prIdx}-${cIdx}`;
-          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bridges30[brIdx]()} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.proofsExtra[prIdx]()} ${PERSUASIVE_POOLS.ctasLong[cIdx]()}`;
-        }
-        if (!hist.sigs.includes(chosenSig)) break;
-      }
-
-      hist.sigs.push(chosenSig);
-      hist.lastHook = hIdx;
-      hist.lastBody = bIdx;
-      if (prIdx >= 0) hist.lastProof = prIdx;
-      if (brIdx >= 0) hist.lastBridge = brIdx;
-      hist.lastCta = cIdx;
-      saveScriptHistory(hist);
-      return fixPtBrContractions(bestText);
-    }
-
     function fixPtBrContractions(text) {
       return String(text || "")
         .replace(/\bem\s+este\b/gi, (m) => (m[0] === "E" ? "Neste" : "neste"))
@@ -1319,7 +1424,80 @@
         .replace(/\bde\s+este\b/gi, (m) => (m[0] === "D" ? "Deste" : "deste"))
         .replace(/\bde\s+esta\b/gi, (m) => (m[0] === "D" ? "Desta" : "desta"))
         .replace(/\bde\s+esse\b/gi, (m) => (m[0] === "D" ? "Desse" : "desse"))
-        .replace(/\bde\s+essa\b/gi, (m) => (m[0] === "D" ? "Dessa" : "dessa"));
+        .replace(/\bde\s+essa\b/gi, (m) => (m[0] === "D" ? "Dessa" : "dessa"))
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function buildAidaScript(prodName, sec) {
+      const cleanProd = String(prodName || "").trim();
+      if (!cleanProd) return "";
+      const meta = inferPtMeta(cleanProd);
+      const catKey = detectProductCategory(cleanProd);
+      const catPool = CATEGORY_BENEFITS[catKey] || CATEGORY_BENEFITS.universal;
+      const univPool = CATEGORY_BENEFITS.universal;
+      const dur = Number(sec) || 10;
+      const hist = loadScriptHistory();
+
+      let bestText = "";
+      let chosenSig = "";
+      let hIdx = 0, bIdx = 0, pIdx = -1, brIdx = -1, cIdx = 0;
+
+      for (let attempt = 0; attempt < 25; attempt++) {
+        hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksDynamic.length, hist.lastHook);
+        bIdx = pickDifferentIndex(catPool.short.length, hist.lastBen);
+        cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctasDynamic.length, hist.lastCta);
+
+        if (dur <= 11) {
+          // 10s video -> ~13–14s dynamic script (~175–205 chars)
+          chosenSig = `10-${catKey}-${hIdx}-${bIdx}-${cIdx}`;
+          bestText = `${PERSUASIVE_POOLS.hooksDynamic[hIdx](meta)} ${catPool.short[bIdx](meta)} ${PERSUASIVE_POOLS.ctasDynamic[cIdx](meta)}`;
+        } else if (dur <= 16) {
+          // 15s video -> ~19–21s dynamic script (~255–295 chars)
+          pIdx = pickDifferentIndex(catPool.proof.length, hist.lastProof);
+          chosenSig = `15-${catKey}-${hIdx}-${bIdx}-${pIdx}-${cIdx}`;
+          bestText = `${PERSUASIVE_POOLS.hooksDynamic[hIdx](meta)} ${catPool.short[bIdx](meta)} ${catPool.proof[pIdx](meta)} ${PERSUASIVE_POOLS.ctasDynamic[cIdx](meta)}`;
+        } else if (dur <= 22) {
+          // 20s video -> ~26–28s dynamic script (~340–390 chars)
+          brIdx = pickDifferentIndex(PERSUASIVE_POOLS.bridges.length, hist.lastBridge);
+          pIdx = pickDifferentIndex(catPool.proof.length, hist.lastProof);
+          chosenSig = `20-${catKey}-${hIdx}-${brIdx}-${bIdx}-${pIdx}-${cIdx}`;
+          bestText = `${PERSUASIVE_POOLS.hooksDynamic[hIdx](meta)} ${PERSUASIVE_POOLS.bridges[brIdx](meta)} ${catPool.short[bIdx](meta)} ${catPool.proof[pIdx](meta)} ${PERSUASIVE_POOLS.ctasDynamic[cIdx](meta)}`;
+        } else {
+          // 30s video -> ~39–42s dynamic script (~490–560 chars)
+          brIdx = pickDifferentIndex(PERSUASIVE_POOLS.bridges.length, hist.lastBridge);
+          pIdx = pickDifferentIndex(catPool.proof.length, hist.lastProof);
+          const b2Idx = pickDifferentIndex(catPool.short.length, bIdx);
+          const extraLine = catPool.short.length > 1 ? catPool.short[b2Idx](meta) : univPool.short[0](meta);
+          chosenSig = `30-${catKey}-${hIdx}-${brIdx}-${bIdx}-${b2Idx}-${pIdx}-${cIdx}`;
+          bestText = `${PERSUASIVE_POOLS.hooksDynamic[hIdx](meta)} ${PERSUASIVE_POOLS.bridges[brIdx](meta)} ${catPool.short[bIdx](meta)} ${extraLine} ${catPool.proof[pIdx](meta)} ${PERSUASIVE_POOLS.ctasDynamic[cIdx](meta)}`;
+        }
+        if (!hist.sigs.includes(chosenSig)) break;
+      }
+
+      hist.sigs.push(chosenSig);
+      hist.lastHook = hIdx;
+      hist.lastBen = bIdx;
+      if (pIdx >= 0) hist.lastProof = pIdx;
+      if (brIdx >= 0) hist.lastBridge = brIdx;
+      hist.lastCta = cIdx;
+      saveScriptHistory(hist);
+      return fixPtBrContractions(bestText);
+    }
+
+    function requireProductNameForScript(inputEl, boxId, errId) {
+      const val = (inputEl?.value || "").trim();
+      const box = document.getElementById(boxId);
+      const err = document.getElementById(errId);
+      if (!val || val.length < 2) {
+        if (box) { box.classList.remove("filled"); box.classList.add("err-shake"); }
+        if (err) err.style.display = "block";
+        inputEl?.focus();
+        return "";
+      }
+      if (box) { box.classList.remove("err-shake"); box.classList.add("filled"); }
+      if (err) err.style.display = "none";
+      return val;
     }
 
     const modeBtns = document.querySelectorAll(".mode-btn");
@@ -1355,6 +1533,8 @@
     const inlineVoiceBox = document.getElementById("inlineVoiceBox");
     const inlineVoiceGender = document.getElementById("inlineVoiceGender");
     const inlineVoiceStyle = document.getElementById("inlineVoiceStyle");
+    const inlineVoiceSpeed = document.getElementById("inlineVoiceSpeed");
+    const inlineProductName = document.getElementById("inlineProductName");
     const inlineSubtitleStyle = document.getElementById("inlineSubtitleStyle");
     const inlineSubtitleSize = document.getElementById("inlineSubtitleSize");
     const inlineSubtitlePos = document.getElementById("inlineSubtitlePos");
@@ -1516,24 +1696,45 @@
     });
     studioVoiceDuration.addEventListener("change", updateStudioVoiceUI);
     studioVoiceScript.addEventListener("input", updateStudioVoiceUI);
+    function bindReqBoxState(inputEl, boxId, errId) {
+      inputEl?.addEventListener("input", () => {
+        const hasVal = inputEl.value.trim().length >= 2;
+        const box = document.getElementById(boxId);
+        const err = document.getElementById(errId);
+        if (box) { box.classList.toggle("filled", hasVal); if (hasVal) box.classList.remove("err-shake"); }
+        if (err && hasVal) err.style.display = "none";
+      });
+    }
+    bindReqBoxState(inlineProductName, "inlineProdReqBox", "inlineProdErr");
+    bindReqBoxState(labProductName, "labProdReqBox", "labProdErr");
+    bindReqBoxState(studioProductName, "studioProdReqBox", "studioProdErr");
+
     btnGenerateAidaScript.addEventListener("click", () => {
+      const prod = requireProductNameForScript(studioProductName, "studioProdReqBox", "studioProdErr");
+      if (!prod) return;
       const sec = Number(studioVoiceDuration.value) || 10;
-      studioVoiceScript.value = buildAidaScript(studioProductName.value.trim() || productDetailHint.value.trim() || "este modelo", sec);
+      studioVoiceScript.value = buildAidaScript(prod, sec);
       updateStudioVoiceUI();
     });
 
     enableVideoVoiceover.addEventListener("change", () => {
       if (enableVideoVoiceover.checked && !inlineVoiceScript.value.trim() && !savedVoiceBuf) {
-        inlineVoiceScript.value = buildAidaScript(productDetailHint.value.trim() || "este modelo", Number(minDuration.value) || 10);
+        if (inlineProductName.value.trim().length >= 2) {
+          inlineVoiceScript.value = buildAidaScript(inlineProductName.value.trim(), Number(minDuration.value) || 10);
+        } else {
+          inlineProductName?.focus();
+        }
       }
       updateInlineVoiceUI();
     });
     inlineVoiceGender.addEventListener("change", () => populateVoiceSelectWithCloneLabel(inlineVoiceStyle, inlineVoiceGender.value));
     inlineVoiceScript.addEventListener("input", () => { savedVoiceBuf = null; savedVoiceUrl = ""; savedWhisperChunks = null; savedVoiceMeta = ""; if (inlineVoiceScript.value.trim()) enableVideoVoiceover.checked = true; updateInlineVoiceUI(); });
     btnAutoInlineScript.addEventListener("click", () => {
+      const prod = requireProductNameForScript(inlineProductName, "inlineProdReqBox", "inlineProdErr");
+      if (!prod) return;
       savedVoiceBuf = null; savedVoiceUrl = ""; savedWhisperChunks = null; savedVoiceMeta = "";
       enableVideoVoiceover.checked = true;
-      inlineVoiceScript.value = buildAidaScript(productDetailHint.value.trim() || "este modelo", Number(minDuration.value) || 10);
+      inlineVoiceScript.value = buildAidaScript(prod, Number(minDuration.value) || 10);
       updateInlineVoiceUI();
     });
 
@@ -2144,7 +2345,7 @@
           if (btn) { btn.disabled = true; btn.textContent = "🎙️ Gerando frase de teste..."; }
           try {
             const g = voiceKey === "female_natasha" ? "female" : "male";
-            const tRes = await generateVoiceWithTripleFallback("Para tudo e olha esse acabamento! Garanta o seu na sacolinha aqui embaixo!", g, voiceKey, 1.05, null, null);
+            const tRes = await generateVoiceWithTripleFallback("Para tudo e olha esse acabamento! Garanta o seu na sacolinha aqui embaixo!", g, voiceKey, 1.20, null, null);
             if (!tRes || !tRes.audioUrl) throw new Error(tRes?.error || "Falha ao testar voz.");
             const b = await fetchMediaBlob(tRes.audioUrl);
             const u = URL.createObjectURL(b);
@@ -2985,9 +3186,12 @@
             const bounds = detectSpeechBounds(voiceDecoded);
             voiceTrimStart = Math.max(0, bounds.start - 0.02);
             const speechSpan = Math.max(0.5, bounds.end - voiceTrimStart);
-            const availSec = Math.max(1.5, totalSec - 0.22);
+            const availSec = Math.max(1.5, totalSec - 0.14);
             if (speechSpan > availSec) {
-              voiceRateUsed = Math.min(1.45, speechSpan / availSec);
+              voiceRateUsed = Math.min(1.44, speechSpan / availSec);
+            } else {
+              // Subtle energetic boost (1.04x) so narration always keeps crisp TikTok dynamism
+              voiceRateUsed = 1.04;
             }
             const vSrc = audioCtx.createBufferSource();
             vSrc.buffer = voiceDecoded;
@@ -3111,9 +3315,11 @@
             const bounds = detectSpeechBounds(vDec);
             voiceTrimForSubs = Math.max(0, bounds.start - 0.02);
             const speechSpan = Math.max(0.5, bounds.end - voiceTrimForSubs);
-            const availSec = Math.max(1.5, totalSec - 0.22);
+            const availSec = Math.max(1.5, totalSec - 0.14);
             if (speechSpan > availSec) {
-              voiceRateForSubs = Math.min(1.45, speechSpan / availSec);
+              voiceRateForSubs = Math.min(1.44, speechSpan / availSec);
+            } else {
+              voiceRateForSubs = 1.04;
             }
             const vSrc = audioCtx.createBufferSource();
             vSrc.buffer = vDec;
@@ -3463,7 +3669,7 @@
             voiceBuf = savedVoiceBuf;
           } else if (inlineVoiceScript.value.trim()) {
             stage.innerHTML = `<div class="status-msg"><strong>Gerando narração PT-BR...</strong><br/><span id="remixVoiceSt">conectando...</span></div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:65%"></div></div>`;
-            const vRes = await generateVoiceWithTripleFallback(inlineVoiceScript.value.trim(), inlineVoiceGender.value, inlineVoiceStyle.value, 1.05, (st) => {
+            const vRes = await generateVoiceWithTripleFallback(inlineVoiceScript.value.trim(), inlineVoiceGender.value, inlineVoiceStyle.value, Number(inlineVoiceSpeed?.value) || 1.20, (st) => {
               const el = document.getElementById("remixVoiceSt"); if (el) el.textContent = st;
             }, null);
             if (vRes && vRes.audioUrl) {
@@ -3564,7 +3770,7 @@
 
       const sec = Number(studioVoiceDuration.value) || 10;
       const voiceId = studioVoiceStyle.value;
-      const speed = Number(studioVoiceSpeed.value) || 1.05;
+      const speed = Number(studioVoiceSpeed.value) || 1.20;
       const genderLabel = studioGender === "male" ? "Voz Masculina" : "Voz Feminina";
 
       activeRunController = new AbortController();
@@ -3719,7 +3925,7 @@
       let voicePromise = Promise.resolve(null);
       if (wantsVoice && !savedVoiceBuf && voiceScriptText) {
         voicePromise = (async () => {
-          const res = await generateVoiceWithTripleFallback(voiceScriptText, inlineVoiceGender.value, inlineVoiceStyle.value, 1.05, (st) => { aiVoiceStatus = st; }, runSignal);
+          const res = await generateVoiceWithTripleFallback(voiceScriptText, inlineVoiceGender.value, inlineVoiceStyle.value, Number(inlineVoiceSpeed?.value) || 1.20, (st) => { aiVoiceStatus = st; }, runSignal);
           if (res && res.audioUrl) { aiVoiceUrl = res.audioUrl; aiVoiceEngine = res.engine; }
           else if (res && res.error) noteMsg += ` | Aviso voz: ${res.error}`;
           return aiVoiceUrl;
@@ -4021,17 +4227,18 @@
 
     function updateLabCharUI() {
       const dur = getEffectiveLabDuration();
-      const idealMin = Math.round(dur * 9.5);
-      const idealMax = Math.round(dur * 13.2);
+      const idealMin = Math.round(dur * 16.2);
+      const idealMax = Math.round(dur * 20.0);
       const len = labVoiceScript.value.trim().length;
-      labCharInfo.textContent = `${len} caracteres • Alvo ${dur}s (ideal: ${idealMin} a ${idealMax} chars)`;
+      labCharInfo.textContent = `${len} caracteres • Vídeo ${dur}s (roteiro dinâmico ideal: ${idealMin} a ${idealMax} chars)`;
     }
 
     labVoiceGender.addEventListener("change", () => populateVoiceSelectWithCloneLabel(labVoiceStyle, labVoiceGender.value));
     labScriptDuration?.addEventListener("change", updateLabCharUI);
     labVoiceScript.addEventListener("input", updateLabCharUI);
     btnLabAutoScript.addEventListener("click", () => {
-      const prod = labProductName.value.trim() || productDetailHint.value.trim() || "este modelo";
+      const prod = requireProductNameForScript(labProductName, "labProdReqBox", "labProdErr");
+      if (!prod) return;
       const targetDur = getEffectiveLabDuration();
       labVoiceScript.value = buildAidaScript(prod, targetDur);
       updateLabCharUI();
@@ -4048,9 +4255,11 @@
       labVideoPreview.style.display = "block";
       labVideoPreview.onloadedmetadata = () => {
         importedLabDurationSec = Math.max(3, Number((labVideoPreview.duration || 10).toFixed(1)));
-        labVideoInfo.textContent = `✅ Vídeo carregado: ${f.name} (${importedLabDurationSec}s • ${labVideoPreview.videoWidth}x${labVideoPreview.videoHeight})`;
-        if (!labVoiceScript.value.trim()) {
-          labVoiceScript.value = buildAidaScript(labProductName.value.trim() || "este modelo", getEffectiveLabDuration());
+        labVideoInfo.textContent = `✅ Vídeo carregado: ${f.name} (${importedLabDurationSec}s • ${labVideoPreview.videoWidth}x${labVideoPreview.videoHeight}) — agora escreva o produto abaixo!`;
+        if (!labVoiceScript.value.trim() && labProductName.value.trim().length >= 2) {
+          labVoiceScript.value = buildAidaScript(labProductName.value.trim(), getEffectiveLabDuration());
+        } else if (!labProductName.value.trim()) {
+          labProductName?.focus();
         }
         updateLabCharUI();
       };
@@ -4137,7 +4346,7 @@
       const gender = labVoiceGender.value;
       const voiceId = labVoiceStyle.value;
       const voiceLabel = labVoiceStyle.options[labVoiceStyle.selectedIndex]?.text || voiceId;
-      const speed = Number(labVoiceSpeed.value) || 1.05;
+      const speed = Number(labVoiceSpeed.value) || 1.20;
       const subStyle = labSubtitleStyle.value;
       const subPos = labSubtitlePos.value;
       const subSize = labSubtitleSize.value;
