@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — Hollywood v12.4 • 105 Vídeos • Vozes Adam &amp; Natasha (Clone WAV) • Legendas Padrão TikTok Shop</title>
+  <title>NEXORA.AI — Hollywood v12.5 • Vozes Adam &amp; Natasha (Clone Exato) • Trilha + Legendas Compactas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
@@ -122,8 +122,8 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.4 • ADAM &amp; NATASHA EXATOS • LEGENDAS PADRÃO TIKTOK SHOP</span></div>
-    <div class="pill-info">🎬 Hollywood Universal v12.4 • 105 Modelos 3D • Adam &amp; Natasha (Clone WAV + ElevenLabs) • Legendas Compactas Padrão TikTok Shop • Roteiros Únicos</div>
+    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.5 • ADAM &amp; NATASHA EXATOS • TRILHA + LEGENDAS COMPACTAS</span></div>
+    <div class="pill-info">🎬 Hollywood Universal v12.5 • 105 Modelos 3D • Trilha Original Garantida • Frase 100% Completa • Legendas Compactas (23px) • Clone Exato Adam &amp; Natasha</div>
   </div>
 
   <div class="layout">
@@ -348,9 +348,9 @@
               <div>
                 <label for="inlineSubtitleSize">Tamanho da Letra</label>
                 <select id="inlineSubtitleSize">
-                  <option value="small">🔹 Compacta (Discreta)</option>
-                  <option value="normal" selected>✅ Padrão TikTok Shop</option>
-                  <option value="medium">🔸 Média (Destaque)</option>
+                  <option value="small">🔹 Extra Compacta (19px)</option>
+                  <option value="normal" selected>✅ Padrão TikTok Shop (23px)</option>
+                  <option value="medium">🔸 Média (28px)</option>
                 </select>
               </div>
               <div>
@@ -377,12 +377,37 @@
       <div id="videoLabSection" class="hidden">
         <div class="step-label">
           <span>🧪 Importar Vídeo Pronto • Narração PT-BR + Legendas TikTok Shop</span>
-          <small style="color:#86efac;">Zero custo de vídeo GPU • Reaproveite seus MP4 já prontos</small>
+          <small style="color:#86efac;">Zero custo de vídeo GPU • Mantém a trilha do vídeo original</small>
         </div>
         <div class="sub-panel">
+          <div class="clone-card" id="cloneCardLab" style="border-color:#f59e0b88;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+              <strong style="font-size:12px;color:#fde047;">🧬 PASSO ÚNICO — Ativar Voz EXATA do Adam e da Natasha (do CapCut)</strong>
+              <small style="font-size:10.5px;color:#cbd5e1;">Envie seu <strong>AUDIO ADAM.mp4</strong> e <strong>AUDIO NATASHA.mp4</strong> 1 vez (fica salvo!)</small>
+            </div>
+            <div class="clone-row">
+              <div class="clone-slot">
+                <strong>⭐ Voz #1 Masculina: Adam</strong>
+                <span class="clone-badge" id="adamCloneBadgeLab">⚠️ Ainda sem clone — clique abaixo e envie AUDIO ADAM.mp4</span>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;background:#1e3a29;border-color:#22c55e;">🎙️ Clonar AUDIO ADAM.mp4<input type="file" id="cloneFileAdamLab" accept="audio/*,video/mp4" style="display:none;" /></label>
+                  <button type="button" class="btn-mini hidden" id="btnClearCloneAdamLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
+                </div>
+              </div>
+              <div class="clone-slot">
+                <strong>⭐ Voz #1 Feminina: Natasha</strong>
+                <span class="clone-badge" id="natashaCloneBadgeLab">⚠️ Ainda sem clone — clique abaixo e envie AUDIO NATASHA.mp4</span>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;background:#1e3a29;border-color:#22c55e;">🎙️ Clonar AUDIO NATASHA.mp4<input type="file" id="cloneFileNatashaLab" accept="audio/*,video/mp4" style="display:none;" /></label>
+                  <button type="button" class="btn-mini hidden" id="btnClearCloneNatashaLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <label class="video-drop-box" for="labVideoFile">
             <strong style="font-size:13.5px;color:#86efac;">📂 Clique para Importar seu Vídeo Pronto (.MP4 ou .WEBM)</strong>
-            <span id="labVideoInfo" style="font-size:11.5px;color:#94a3b8;">Envie qualquer vídeo 9:16 já gerado (Tênis, Perfume, Relógio, Óculos, Whey...) para testar voz e legendas sem gastar créditos de vídeo.</span>
+            <span id="labVideoInfo" style="font-size:11.5px;color:#94a3b8;">Envie qualquer vídeo 9:16 já gerado (Tênis, Perfume, Relógio, Óculos, Whey...) — a trilha sonora original é preservada automaticamente.</span>
             <input type="file" id="labVideoFile" accept="video/mp4,video/webm,video/*" />
             <video id="labVideoPreview" class="lab-mini-video" muted playsinline controls></video>
           </label>
@@ -423,9 +448,9 @@
             <div>
               <label for="labSubtitleSize">5. Tamanho da Letra</label>
               <select id="labSubtitleSize">
-                <option value="small">🔹 Compacta (Menor e Discreta)</option>
-                <option value="normal" selected>✅ Padrão TikTok Shop (Calibrado)</option>
-                <option value="medium">🔸 Média (Mais Destaque)</option>
+                <option value="small">🔹 Extra Compacta (19px)</option>
+                <option value="normal" selected>✅ Padrão TikTok Shop (23px • Compacta)</option>
+                <option value="medium">🔸 Média (28px)</option>
               </select>
             </div>
           </div>
@@ -434,17 +459,17 @@
             <div>
               <label for="labSubtitlePos">6. Posição Segura da Legenda</label>
               <select id="labSubtitlePos">
-                <option value="safe_tiktok" selected>🛡️ Zona Segura TikTok (71% • Abaixo do Produto)</option>
+                <option value="safe_tiktok" selected>🛡️ Zona Segura TikTok (72.5% • Abaixo do Produto)</option>
                 <option value="center">🎯 Centro da Tela (52%)</option>
                 <option value="top">⬆️ Topo Seguro (22%)</option>
               </select>
             </div>
             <div>
-              <label for="labOrigVol">7. Volume do Vídeo Original</label>
+              <label for="labOrigVol">7. Volume da Trilha do Vídeo Original</label>
               <select id="labOrigVol">
-                <option value="0.85" selected>🔊 Manter Trilha Baixa (85% • Ideal v12.1)</option>
-                <option value="0.50">🔉 Reduzir Mais (50%)</option>
-                <option value="0.25">🔈 Bem Baixinho (25%)</option>
+                <option value="0.75" selected>🔊 Trilha Original Baixa (75% • Ideal p/ Voz)</option>
+                <option value="1.0">🔊 Trilha Original Normal (100%)</option>
+                <option value="0.45">🔉 Bem Baixinha (45%)</option>
                 <option value="0">🔇 Silenciar Original (0%)</option>
               </select>
             </div>
@@ -455,10 +480,10 @@
               <label for="labScriptDuration">8. Duração da Narração (10s, 15s, 20s ou 30s)</label>
               <select id="labScriptDuration">
                 <option value="auto" selected>🤖 Automático (Duração do Vídeo Importado)</option>
-                <option value="10">⚡ 10 segundos (Super Gancho + CTA Rápido)</option>
-                <option value="15">🔥 15 segundos (Gancho + Benefício + CTA)</option>
-                <option value="20">💎 20 segundos (Gancho + Prova + CTA Forte)</option>
-                <option value="30">🎬 30 segundos (Comercial Completo + CTA)</option>
+                <option value="10">⚡ 10 segundos (~115 chars • Cabe 100% sem cortar)</option>
+                <option value="15">🔥 15 segundos (~185 chars • Gancho + Benefício + CTA)</option>
+                <option value="20">💎 20 segundos (~250 chars • Gancho + Prova + CTA)</option>
+                <option value="30">🎬 30 segundos (~375 chars • Comercial Completo)</option>
               </select>
             </div>
             <div>
@@ -475,32 +500,7 @@
             <textarea id="labVoiceScript" rows="4" placeholder="Digite aqui a narração que você quer no vídeo OU clique em '✨ Gerar Narração Persuasiva (Nova)' para criar um roteiro inédito com Super Gancho + CTA..."></textarea>
             <div class="char-meta">
               <span id="labCharInfo">0 caracteres • Escolha 10s, 15s, 20s ou 30s ou importe um vídeo</span>
-              <span id="labSyncNote" style="color:#7dd3fc;">Sincronização palavra por palavra (Whisper PT-BR + Fallback)</span>
-            </div>
-          </div>
-
-          <div class="clone-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
-              <strong style="font-size:11.5px;color:#86efac;">🧬 Voz Exata Adam &amp; Natasha (Envie AUDIO ADAM.mp4 e AUDIO NATASHA.mp4 1 vez • Conversão WAV automática)</strong>
-              <small style="font-size:10.5px;color:#94a3b8;">Envie AUDIO ADAM.mp4 / AUDIO NATASHA.mp4 1 vez para clonar o timbre exato</small>
-            </div>
-            <div class="clone-row">
-              <div class="clone-slot">
-                <strong>⭐ Voz #1 Masculina: Adam</strong>
-                <span class="clone-badge" id="adamCloneBadgeLab">Padrão: ElevenLabs Adam (pronto p/ usar)</span>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
-                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Clonar Áudio Adam<input type="file" id="cloneFileAdamLab" accept="audio/*,video/mp4" style="display:none;" /></label>
-                  <button type="button" class="btn-mini hidden" id="btnClearCloneAdamLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
-                </div>
-              </div>
-              <div class="clone-slot">
-                <strong>⭐ Voz #1 Feminina: Natasha</strong>
-                <span class="clone-badge" id="natashaCloneBadgeLab">Padrão: ElevenLabs Sarah (clique p/ clonar Natasha exata)</span>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
-                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Clonar Áudio Natasha<input type="file" id="cloneFileNatashaLab" accept="audio/*,video/mp4" style="display:none;" /></label>
-                  <button type="button" class="btn-mini hidden" id="btnClearCloneNatashaLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
-                </div>
-              </div>
+              <span id="labSyncNote" style="color:#7dd3fc;">Frase 100% completa + Sincronia Whisper PT-BR</span>
             </div>
           </div>
         </div>
@@ -1119,114 +1119,120 @@
       } catch {}
     }
 
-    const DURATION_CHAR_GUIDE = { 10: { min: 115, max: 165 }, 15: { min: 190, max: 250 }, 20: { min: 265, max: 335 }, 30: { min: 395, max: 485 } };
+    const DURATION_CHAR_GUIDE = { 10: { min: 95, max: 132 }, 15: { min: 160, max: 205 }, 20: { min: 225, max: 275 }, 30: { min: 340, max: 405 } };
 
     // =========================================================================
     // MOTOR DE ROTEIROS PERSUASIVOS ANTI-REPETIÇÃO (10s, 15s, 20s e 30s)
-    // SUPER GANCHO + CORPO DE DESEJO + PROVA + SUPER CTA • NUNCA REPETE
+    // CALIBRADO P/ FALAR 100% DA FRASE SEM CORTAR O CTA • NUNCA REPETE
     // =========================================================================
     const PERSUASIVE_POOLS = {
       hooks10: [
-        (p) => `Para tudo e olha o nível de ${p}!`,
-        (p) => `Sério, quem vê ${p} de perto não acredita no acabamento!`,
-        (p) => `Você ainda não viu nada com a presença de ${p}!`,
-        (p) => `Olha esse detalhe de ${p} que está parando todo mundo!`,
-        (p) => `Esquece o comum e olha de perto o visual de ${p}!`,
-        (p) => `Impossível passar direto sem reparar em ${p}!`,
-        (p) => `Se você exige qualidade real, precisa ver ${p} agora!`,
-        (p) => `É por causa desse acabamento que ${p} está esgotando rápido!`,
-        (p) => `Dá só uma olhada na construção impecável de ${p}!`,
-        (p) => `A diferença entre o básico e o nível superior está em ${p}!`,
-        (p) => `Olha como ${p} muda completamente o nível no primeiro olhar!`,
-        (p) => `Ninguém imagina esse padrão de detalhe até ver ${p} de perto!`,
-        (p) => `Achou que já tinha visto tudo? Olha o acabamento de ${p}!`,
-        (p) => `Esse é o detalhe de ${p} que faz todo mundo perguntar onde você comprou!`,
-        (p) => `Olha a precisão e o estilo marcante de ${p}!`,
-        (p) => `Quem entende de bom gosto bate o olho em ${p} e já reconhece!`
+        (p) => `Para tudo e olha ${p}!`,
+        (p) => `Olha o acabamento real de ${p}!`,
+        (p) => `Impossível não reparar em ${p}!`,
+        (p) => `Sério, olha ${p} bem de perto!`,
+        (p) => `Você nunca viu nada igual a ${p}!`,
+        (p) => `Olha esse detalhe incrível de ${p}!`,
+        (p) => `Esquece o comum e olha ${p}!`,
+        (p) => `Quem vê ${p} de perto se apaixona!`,
+        (p) => `Olha o nível superior de ${p}!`,
+        (p) => `É por isso que ${p} está esgotando!`,
+        (p) => `Dá só uma olhada em ${p}!`,
+        (p) => `Olha a presença marcante de ${p}!`,
+        (p) => `Achou que já viu tudo? Olha ${p}!`,
+        (p) => `Bate o olho na perfeição de ${p}!`,
+        (p) => `Se você exige qualidade, olha ${p}!`,
+        (p) => `Esse detalhe de ${p} chama atenção!`
       ],
       hooksLong: [
-        (p) => `Para tudo por alguns segundos e olha de perto o nível absurdo de ${p}!`,
-        (p) => `Você já percebeu como um único detalhe muda tudo? Olha a presença de ${p}!`,
-        (p) => `Chega de gastar com coisa frágil que decepciona na primeira semana — conhece ${p}!`,
-        (p) => `Sério, olha a câmera chegando perto de ${p} e repara nesse acabamento fora da curva!`,
-        (p) => `Se você gosta de chamar atenção sem fazer esforço, precisa ver o que ${p} entrega!`,
-        (p) => `Não é à toa que ${p} virou febre entre quem não abre mão de qualidade!`,
-        (p) => `Bate o olho nos detalhes de ${p} e entende na hora por que todo mundo está querendo um!`,
-        (p) => `Quer saber o que separa um produto comum de uma escolha de alto padrão? Olha ${p}!`,
-        (p) => `Atenção nesse visual: ${p} foi feito para quem repara em cada acabamento!`,
-        (p) => `Se você busca estilo, resistência e presença real no dia a dia, olha bem para ${p}!`,
-        (p) => `Olha esse design de perto — ${p} entrega um impacto visual que impressiona de cara!`,
-        (p) => `Tem coisa que só vendo de perto para acreditar, e ${p} é exatamente assim!`,
-        (p) => `Esquece o mais do mesmo: olha como ${p} eleva o seu padrão no primeiro instante!`,
-        (p) => `Quando o acabamento fala por si, não precisa exagerar — repara em cada linha de ${p}!`
+        (p) => `Para tudo por um segundo e olha de perto o nível de ${p}!`,
+        (p) => `Você já viu como um detalhe certo muda tudo? Olha ${p}!`,
+        (p) => `Chega de coisa frágil que decepciona rápido — conhece ${p}!`,
+        (p) => `Sério, olha a câmera chegando perto de ${p} e repara nisso!`,
+        (p) => `Se você gosta de chamar atenção sem esforço, precisa ver ${p}!`,
+        (p) => `Não é à toa que ${p} virou febre entre quem exige qualidade!`,
+        (p) => `Bate o olho nos detalhes de ${p} e entende por que todos querem!`,
+        (p) => `Quer ver o que separa o básico do alto padrão? Olha ${p}!`,
+        (p) => `Atenção nesse visual: ${p} foi feito para quem repara em tudo!`,
+        (p) => `Busca estilo, resistência e presença real no dia a dia? Olha ${p}!`,
+        (p) => `Olha esse design de perto — ${p} impressiona logo de cara!`,
+        (p) => `Tem coisa que só vendo de perto para acreditar, igual a ${p}!`,
+        (p) => `Esquece o mais do mesmo: olha como ${p} eleva o seu padrão!`,
+        (p) => `Quando o acabamento fala por si, olha cada linha de ${p}!`
       ],
       bodiesShort: [
-        () => `Acabamento impecável, textura real e presença marcante no primeiro olhar.`,
-        () => `Cada linha foi desenhada para entregar conforto, durabilidade e destaque imediato.`,
-        () => `Visual sofisticado de perto, construção firme e estilo que combina com tudo.`,
-        () => `Qualidade que você enxerga nos mínimos detalhes e sente logo no primeiro uso.`,
-        () => `Design moderno, material resistente e aquele toque de alto padrão que chama atenção.`,
-        () => `Leve, versátil e com um acabamento tão bem feito que parece peça de vitrine.`,
-        () => `Presença forte, encaixe perfeito e acabamento limpo em cada ângulo.`,
-        () => `Feito para durar de verdade e se destacar em qualquer ocasião do seu dia.`,
-        () => `Textura refinada, visual marcante e praticidade que faz diferença na rotina.`,
-        () => `Cada detalhe transmite cuidado, firmeza e um estilo impossível de ignorar.`,
-        () => `Combina desempenho no dia a dia com um visual limpo de tirar o fôlego.`,
-        () => `Construção caprichada, acabamento de alto nível e presença que impõe respeito.`
+        () => `Acabamento impecável e presença real.`,
+        () => `Conforto, firmeza e destaque imediato.`,
+        () => `Visual sofisticado em cada detalhe.`,
+        () => `Qualidade que você sente no primeiro uso.`,
+        () => `Design moderno, leve e super resistente.`,
+        () => `Construção firme digna de vitrine.`,
+        () => `Encaixe perfeito e brilho em cada ângulo.`,
+        () => `Feito para durar e chamar atenção.`,
+        () => `Textura refinada e estilo marcante.`,
+        () => `Cuidado e alto padrão que saltam aos olhos.`,
+        () => `Visual limpo que eleva o seu estilo.`,
+        () => `Acabamento de luxo sem pagar absurdo.`
       ],
       bodiesMedium: [
-        () => `Cada detalhe foi pensado para unir acabamento impecável, conforto real e um visual que chama atenção de longe.`,
-        () => `Olha a precisão das linhas e a textura do material: entrega firmeza, durabilidade e presença marcante o dia inteiro.`,
-        () => `Ele foge completamente do comum, trazendo design moderno, construção sólida e aquele aspecto sofisticado que eleva seu estilo.`,
-        () => `No uso diário a diferença aparece na hora — praticidade real, acabamento caprichado e visual digno de vitrine.`,
-        () => `Do primeiro toque aos mínimos relevos, tudo nele foi construído para oferecer desempenho, estilo e longa duração.`,
-        () => `Combina leveza, resistência e um visual extremamente limpo que funciona tanto na rotina corrida quanto em momentos especiais.`,
-        () => `É aquele tipo de escolha inteligente que entrega muito mais presença, conforto e acabamento do que você espera.`,
-        () => `Repara na qualidade das bordas e do material: zero cara de produto genérico, feito sob medida para quem é exigente.`,
-        () => `Pensado para acompanhar o seu ritmo sem perder a elegância, unindo funcionalidade direta com um design de impacto.`,
-        () => `Cada ângulo mostra o cuidado na fabricação, entregando personalidade forte e confiança desde o primeiro uso.`
+        () => `Acabamento impecável, conforto real e um visual que chama atenção de longe.`,
+        () => `Textura refinada e construção firme que entregam durabilidade o dia inteiro.`,
+        () => `Design moderno e sólido que foge do comum e eleva o seu estilo na hora.`,
+        () => `No uso diário a diferença aparece: praticidade real e visual de vitrine.`,
+        () => `Dos mínimos relevos ao toque final, tudo entrega desempenho e longa duração.`,
+        () => `Leve, resistente e versátil para acompanhar a rotina com elegância.`,
+        () => `Escolha inteligente que entrega muito mais presença e acabamento do que promete.`,
+        () => `Repara nas bordas e no material: zero cara de genérico, feito para exigentes.`,
+        () => `Acompanha o seu ritmo sem perder o estilo, unindo função e impacto visual.`,
+        () => `Cada ângulo mostra o cuidado na fabricação e passa confiança imediata.`
       ],
       proofsExtra: [
-        () => `Não é exagero: quem recebe em casa se surpreende com o peso, o toque e a fidelidade de cada detalhe.`,
-        () => `Fica incrível de qualquer ângulo e transforma completamente a sua experiência logo no primeiro dia.`,
-        () => `É a escolha certa tanto para dar um upgrade no seu dia a dia quanto para surpreender num presente marcante.`,
-        () => `Você percebe a superioridade assim que tira da caixa — acabamento limpo, firme e pronto para impressionar.`,
-        () => `Por isso tanta gente está garantindo o seu antes do estoque virar: entrega estilo e confiança sem complicação.`,
-        () => `Funciona perfeitamente para quem valoriza praticidade, visual atual e qualidade que acompanha a rotina intensa.`,
-        () => `Cada detalhe conversa entre si para entregar um resultado harmônico, bonito de perto e extremamente funcional.`,
-        () => `Quando você coloca lado a lado com modelos comuns, a diferença de acabamento e presença fica óbvia na hora.`,
-        () => `Foi desenvolvido para entregar aquela sensação imediata de acerto — você usa uma vez e não larga mais.`,
-        () => `Combina perfeitamente com quem busca presença de alto nível, acabamento impecável e zero dor de cabeça.`
+        () => `Quem recebe em casa se surpreende com o peso e a fidelidade de cada detalhe.`,
+        () => `Fica incrível de qualquer ângulo e transforma a sua rotina logo no primeiro dia.`,
+        () => `Perfeito tanto para o seu uso diário quanto para dar um presente marcante.`,
+        () => `Você percebe a superioridade assim que abre — firme, limpo e impecável.`,
+        () => `Por isso tanta gente garante antes do estoque virar: estilo sem complicação.`,
+        () => `Ideal para quem valoriza praticidade, visual atual e resistência real.`,
+        () => `Colocando lado a lado com modelos comuns, a diferença fica óbvia na hora.`,
+        () => `Sensação imediata de acerto — você usa uma vez e não larga mais.`
       ],
       bridges30: [
-        () => `Sabe aquela frustração de escolher algo bonito na foto e se decepcionar pessoalmente? Aqui acontece exatamente o contrário.`,
-        () => `Enquanto a maioria dos modelos entrega só o básico, esse aqui se destaca logo nos detalhes que quase ninguém capricha.`,
-        () => `Se você repara em textura, firmeza e design bem resolvido, vai entender na hora por que esse modelo virou favorito.`,
-        () => `A gente sabe como faz diferença usar algo que transmite cuidado e confiança em cada momento do dia.`,
-        () => `Ele foi projetado para resolver a rotina com estilo, entregando uma experiência muito acima da média desde o primeiro contato.`,
-        () => `Não importa se é para o trabalho, passeio ou uso diário: ele entrega presença e versatilidade sem esforço.`,
-        () => `Olhando assim bem de perto, dá para ver claramente o padrão elevado em cada curva, textura e encaixe.`,
-        () => `É o equilíbrio exato entre visual marcante, resistência real e praticidade para quem não aceita menos que o melhor.`
+        () => `Sabe o medo de comprar algo bonito na foto e se decepcionar? Aqui é o oposto.`,
+        () => `Enquanto a maioria entrega só o básico, esse capricha onde quase ninguém olha.`,
+        () => `Se você repara em textura e firmeza, entende na hora por que virou favorito.`,
+        () => `Faz toda diferença usar algo que transmite cuidado e confiança no dia a dia.`,
+        () => `Projetado para entregar uma experiência acima da média desde o primeiro toque.`,
+        () => `Serve para trabalho, passeio ou rotina intensa com presença sem esforço.`
       ],
-      ctas: [
+      ctas10: [
+        () => `Garanta na sacolinha aqui embaixo!`,
+        () => `Toque na sacolinha aqui embaixo agora!`,
+        () => `Clique no carrinho aqui embaixo!`,
+        () => `Corre na sacolinha antes que acabe!`,
+        () => `Garanta o seu aqui embaixo hoje!`,
+        () => `Toque no carrinho e leve o seu!`,
+        () => `Não perca — clique na sacolinha!`,
+        () => `Aproveite agora na sacolinha embaixo!`,
+        () => `Clica no carrinho aqui embaixo!`,
+        () => `O seu está na sacolinha aqui embaixo!`,
+        () => `Toque aqui embaixo e garanta já!`,
+        () => `Garanta direto no carrinho embaixo!`
+      ],
+      ctasLong: [
         () => `Garanta o seu na sacolinha aqui embaixo antes que acabe!`,
         () => `Toque na sacolinha aqui embaixo e garanta o seu agora mesmo!`,
-        () => `Clique no carrinho aqui embaixo e aproveite enquanto ainda tem disponível!`,
+        () => `Clique no carrinho aqui embaixo enquanto ainda tem disponível!`,
         () => `Corre na sacolinha aqui embaixo para garantir o seu hoje!`,
-        () => `Já garante o seu direto na sacolinha aqui embaixo antes que esgote!`,
         () => `Toque no carrinho aqui embaixo agora e leve o seu para casa!`,
         () => `Não deixa passar — garanta o seu na sacolinha aqui embaixo!`,
-        () => `Aproveita agora na sacolinha aqui embaixo enquanto ainda está disponível!`,
-        () => `Clica aqui embaixo no carrinho e garanta o seu antes da próxima reposição!`,
-        () => `Garante o seu hoje mesmo tocando na sacolinha aqui embaixo!`,
-        () => `O seu está te esperando na sacolinha aqui embaixo — garanta agora!`,
+        () => `Aproveita agora na sacolinha aqui embaixo antes de esgotar!`,
+        () => `Clica aqui embaixo no carrinho e garanta o seu hoje mesmo!`,
         () => `Toque aqui embaixo no carrinho e sinta essa diferença pessoalmente!`,
-        () => `Garanta o seu direto no carrinho aqui embaixo antes que acabe o estoque!`,
         () => `Clique na sacolinha aqui embaixo agora e não fique sem o seu!`
       ]
     };
 
-    const SCRIPT_HISTORY_KEY = "nexora_used_scripts_v123";
+    const SCRIPT_HISTORY_KEY = "nexora_used_scripts_v125";
     let scriptGenCounter = 0;
 
     function loadScriptHistory() {
@@ -1266,30 +1272,30 @@
         if (dur <= 11) {
           hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooks10.length, hist.lastHook);
           bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesShort.length, hist.lastBody);
-          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas.length, hist.lastCta);
+          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas10.length, hist.lastCta);
           chosenSig = `10-${hIdx}-${bIdx}-${cIdx}`;
-          bestText = `${PERSUASIVE_POOLS.hooks10[hIdx](p)} ${PERSUASIVE_POOLS.bodiesShort[bIdx]()} ${PERSUASIVE_POOLS.ctas[cIdx]()}`;
+          bestText = `${PERSUASIVE_POOLS.hooks10[hIdx](p)} ${PERSUASIVE_POOLS.bodiesShort[bIdx]()} ${PERSUASIVE_POOLS.ctas10[cIdx]()}`;
         } else if (dur <= 16) {
           hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksLong.length, hist.lastHook);
           bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesMedium.length, hist.lastBody);
-          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas.length, hist.lastCta);
+          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctasLong.length, hist.lastCta);
           chosenSig = `15-${hIdx}-${bIdx}-${cIdx}`;
-          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.ctas[cIdx]()}`;
+          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.ctasLong[cIdx]()}`;
         } else if (dur <= 22) {
           hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksLong.length, hist.lastHook);
           bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesMedium.length, hist.lastBody);
           prIdx = pickDifferentIndex(PERSUASIVE_POOLS.proofsExtra.length, hist.lastProof);
-          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas.length, hist.lastCta);
+          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctasLong.length, hist.lastCta);
           chosenSig = `20-${hIdx}-${bIdx}-${prIdx}-${cIdx}`;
-          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.proofsExtra[prIdx]()} ${PERSUASIVE_POOLS.ctas[cIdx]()}`;
+          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.proofsExtra[prIdx]()} ${PERSUASIVE_POOLS.ctasLong[cIdx]()}`;
         } else {
           hIdx = pickDifferentIndex(PERSUASIVE_POOLS.hooksLong.length, hist.lastHook);
           brIdx = pickDifferentIndex(PERSUASIVE_POOLS.bridges30.length, hist.lastBridge);
           bIdx = pickDifferentIndex(PERSUASIVE_POOLS.bodiesMedium.length, hist.lastBody);
           prIdx = pickDifferentIndex(PERSUASIVE_POOLS.proofsExtra.length, hist.lastProof);
-          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctas.length, hist.lastCta);
+          cIdx = pickDifferentIndex(PERSUASIVE_POOLS.ctasLong.length, hist.lastCta);
           chosenSig = `30-${hIdx}-${brIdx}-${bIdx}-${prIdx}-${cIdx}`;
-          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bridges30[brIdx]()} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.proofsExtra[prIdx]()} ${PERSUASIVE_POOLS.ctas[cIdx]()}`;
+          bestText = `${PERSUASIVE_POOLS.hooksLong[hIdx](p)} ${PERSUASIVE_POOLS.bridges30[brIdx]()} ${PERSUASIVE_POOLS.bodiesMedium[bIdx]()} ${PERSUASIVE_POOLS.proofsExtra[prIdx]()} ${PERSUASIVE_POOLS.ctasLong[cIdx]()}`;
         }
         if (!hist.sigs.includes(chosenSig)) break;
       }
@@ -1313,8 +1319,7 @@
         .replace(/\bde\s+este\b/gi, (m) => (m[0] === "D" ? "Deste" : "deste"))
         .replace(/\bde\s+esta\b/gi, (m) => (m[0] === "D" ? "Desta" : "desta"))
         .replace(/\bde\s+esse\b/gi, (m) => (m[0] === "D" ? "Desse" : "desse"))
-        .replace(/\bde\s+essa\b/gi, (m) => (m[0] === "D" ? "Dessa" : "dessa"))
-        .replace(/\bde\s+um\b/gi, (m) => (m[0] === "D" ? "De um" : "de um"));
+        .replace(/\bde\s+essa\b/gi, (m) => (m[0] === "D" ? "Dessa" : "dessa"));
     }
 
     const modeBtns = document.querySelectorAll(".mode-btn");
@@ -1448,17 +1453,19 @@
     function refreshCloneBadgesUI() {
       const adamId = getSavedCloneVoiceId("male_adam");
       const natId = getSavedCloneVoiceId("female_natasha");
+      const cardLab = document.getElementById("cloneCardLab");
+      if (cardLab) cardLab.style.borderColor = (adamId && natId) ? "#22c55e88" : "#f59e0b88";
       for (const id of ["adamCloneBadgeLab", "adamCloneBadgeStudio"]) {
         const el = document.getElementById(id);
         if (el) {
-          el.textContent = adamId ? "✅ Clone Exato Adam Ativo (MiniMax salvo)" : "Sem clone: usa ElevenLabs Adam ID (envie AUDIO ADAM.mp4 p/ voz exata)";
+          el.textContent = adamId ? "✅ Clone Exato Adam Ativo (Voz idêntica ao seu áudio)" : "⚠️ Sem clone ainda — clique no botão abaixo e envie AUDIO ADAM.mp4";
           el.classList.toggle("active", Boolean(adamId));
         }
       }
       for (const id of ["natashaCloneBadgeLab", "natashaCloneBadgeStudio"]) {
         const el = document.getElementById(id);
         if (el) {
-          el.textContent = natId ? "✅ Clone Exato Natasha Ativo (MiniMax salvo)" : "Sem clone: usa ElevenLabs Sarah (envie AUDIO NATASHA.mp4 p/ voz exata)";
+          el.textContent = natId ? "✅ Clone Exato Natasha Ativo (Voz idêntica ao seu áudio)" : "⚠️ Sem clone ainda — clique no botão abaixo e envie AUDIO NATASHA.mp4";
           el.classList.toggle("active", Boolean(natId));
         }
       }
@@ -2081,7 +2088,7 @@
         try {
           ac = new AC();
           const decoded = await ac.decodeAudioData(ab.slice(0));
-          const wavBlob = encodeMonoWavBuffer(decoded, 20, 22050);
+          const wavBlob = encodeMonoWavBuffer(decoded, 15, 16000);
           const dataUrl = await blobToDataUrl(wavBlob);
           return { base64: dataUrl.split(",")[1] || "", mime: "audio/wav", sec: Math.min(20, decoded.duration).toFixed(1) };
         } catch {}
@@ -2116,8 +2123,10 @@
             <div class="dl-title">✅ Voz Exata "${labelName}" Clonada e Ativa!</div>
             <div class="dl-dna" id="clonedIdText">${rc.customVoiceId}</div>
             <div class="dl-grid" style="margin-bottom:8px;">
-              <button type="button" id="btnCopyCloneId" class="dl-btn main">📋 Copiar ID (${envVarName})</button>
+              <button type="button" id="btnTestClonedVoice" class="dl-btn main">🔊 Ouvir Teste da Voz "${labelName}" Agora</button>
+              <button type="button" id="btnCopyCloneId" class="dl-btn remix">📋 Copiar ID p/ Cloudflare Pages (${envVarName})</button>
             </div>
+            <div id="cloneTestAudioWrap" style="margin-top:6px;"></div>
             <div style="font-size:11.5px;color:#cbd5e1;line-height:1.45;">
               ✓ Já está <strong>ativa agora neste navegador</strong> ao escolher <strong>⭐ ${labelName}</strong>.<br/>
               💡 <strong>Dica SaaS:</strong> se quiser que TODOS os seus clientes já usem essa voz exata automaticamente, adicione a variável <code>${envVarName}</code> com esse ID no Cloudflare Pages.
@@ -2128,6 +2137,25 @@
           navigator.clipboard?.writeText(rc.customVoiceId).catch(() => {});
           const b = document.getElementById("btnCopyCloneId");
           if (b) b.textContent = "✓ ID Copiado!";
+        });
+        document.getElementById("btnTestClonedVoice")?.addEventListener("click", async () => {
+          const btn = document.getElementById("btnTestClonedVoice");
+          const wrap = document.getElementById("cloneTestAudioWrap");
+          if (btn) { btn.disabled = true; btn.textContent = "🎙️ Gerando frase de teste..."; }
+          try {
+            const g = voiceKey === "female_natasha" ? "female" : "male";
+            const tRes = await generateVoiceWithTripleFallback("Para tudo e olha esse acabamento! Garanta o seu na sacolinha aqui embaixo!", g, voiceKey, 1.05, null, null);
+            if (!tRes || !tRes.audioUrl) throw new Error(tRes?.error || "Falha ao testar voz.");
+            const b = await fetchMediaBlob(tRes.audioUrl);
+            const u = URL.createObjectURL(b);
+            if (wrap) wrap.innerHTML = `<audio class="voice-player" src="${u}" controls autoplay></audio><div style="font-size:11px;color:#86efac;margin-top:4px;">✓ Motor usado: ${tRes.engine}</div>`;
+            if (btn) btn.textContent = "🔊 Gerar Novo Teste";
+          } catch (e) {
+            if (wrap) wrap.innerHTML = `<div class="err-msg">${e.message}</div>`;
+            if (btn) btn.textContent = "🔊 Tentar Teste Novamente";
+          } finally {
+            if (btn) btn.disabled = false;
+          }
         });
       } catch (err) {
         stage.innerHTML = `<div class="err-msg">Erro ao clonar voz ${labelName}: ${err.message}</div>`;
@@ -2609,7 +2637,7 @@
       }
     }
 
-    function buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, audioBuffer, playbackRate = 1.0, offsetSec = 0.06) {
+    function buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, audioBuffer, playbackRate = 1.0, offsetSec = 0.05, trimStartSec = 0) {
       const rate = Math.max(0.7, Number(playbackRate) || 1.0);
       const rawScriptWords = String(scriptText || "").replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
       const validWhisper = Array.isArray(whisperChunks)
@@ -2632,23 +2660,23 @@
             const w = validWhisper[wIdx];
             return {
               text: sw,
-              start: offsetSec + w.start / rate,
-              end: offsetSec + w.end / rate,
+              start: offsetSec + Math.max(0, w.start - trimStartSec) / rate,
+              end: offsetSec + Math.max(0.08, w.end - trimStartSec) / rate,
               isCta: TIKTOK_CTA_WORDS.has(stripAccentsUpper(sw))
             };
           });
         } else {
           words = validWhisper.map((w) => ({
             text: w.text,
-            start: offsetSec + w.start / rate,
-            end: offsetSec + w.end / rate,
+            start: offsetSec + Math.max(0, w.start - trimStartSec) / rate,
+            end: offsetSec + Math.max(0.08, w.end - trimStartSec) / rate,
             isCta: TIKTOK_CTA_WORDS.has(stripAccentsUpper(w.text))
           }));
         }
       } else if (rawScriptWords.length > 0) {
         const bounds = detectSpeechBounds(audioBuffer);
-        const startT = offsetSec + bounds.start / rate;
-        const endT = offsetSec + bounds.end / rate;
+        const startT = offsetSec + Math.max(0, bounds.start - trimStartSec) / rate;
+        const endT = offsetSec + Math.max(0.5, bounds.end - trimStartSec) / rate;
         const span = Math.max(0.8, endT - startT);
         const weights = rawScriptWords.map((w) => {
           const cleanLen = Math.max(2, w.replace(/[^A-Za-zÀ-ÿ0-9]/g, "").length);
@@ -2718,15 +2746,15 @@
       const activeBlock = blocks.find((b) => curTime >= b.start - 0.04 && curTime <= b.end + 0.08);
       if (!activeBlock) return;
 
-      const yRatio = posKey === "top" ? 0.22 : posKey === "center" ? 0.52 : 0.715;
+      const yRatio = posKey === "top" ? 0.22 : posKey === "center" ? 0.52 : 0.725;
       const centerY = Math.round(ch * yRatio);
-      const maxWidth = cw * 0.78;
+      const maxWidth = cw * 0.68;
 
       const elapsedInBlock = Math.max(0, curTime - activeBlock.start);
-      const popScale = elapsedInBlock < 0.08
-        ? 0.90 + easeOutCubic(elapsedInBlock / 0.08) * 0.12
-        : elapsedInBlock < 0.13
-          ? 1.02 - ((elapsedInBlock - 0.08) / 0.05) * 0.02
+      const popScale = elapsedInBlock < 0.075
+        ? 0.92 + easeOutCubic(elapsedInBlock / 0.075) * 0.10
+        : elapsedInBlock < 0.12
+          ? 1.02 - ((elapsedInBlock - 0.075) / 0.045) * 0.02
           : 1.0;
 
       const isUpper = style !== "tiktok_native";
@@ -2750,27 +2778,26 @@
       c2d.textBaseline = "middle";
       c2d.textAlign = "left";
 
-      // True TikTok Shop mobile proportions on 720x1280 canvas
-      const sizeScale = sizeKey === "small" ? 0.85 : sizeKey === "medium" ? 1.18 : 1.0;
-      const rawBase = style === "viral_yellow" ? 34 : style === "capcut_pill" ? 31 : 27;
+      // Compact authentic TikTok Shop proportions on 720x1280 canvas
+      const sizeScale = sizeKey === "small" ? 0.83 : sizeKey === "medium" ? 1.22 : 1.0;
+      const rawBase = style === "viral_yellow" ? 23 : style === "capcut_pill" ? 21 : 20;
       const baseFontSize = Math.round(rawBase * sizeScale);
       const fontFamily = style === "tiktok_native"
-        ? '800 {SZ}px "Poppins", "Montserrat", Inter, sans-serif'
-        : '900 {SZ}px "Montserrat", "Arial Black", Impact, sans-serif';
+        ? '700 {SZ}px "Poppins", "Montserrat", Inter, sans-serif'
+        : '800 {SZ}px "Montserrat", Inter, Arial, sans-serif';
 
       let fontSize = baseFontSize;
-      let spaceW = 14;
+      let spaceW = 10;
       let widths = [];
       let totalW = 0;
 
-      while (fontSize >= 20) {
+      while (fontSize >= 15) {
         c2d.font = fontFamily.replace("{SZ}", String(fontSize));
-        // Generous word gap (0.46x fontSize) so black strokes never merge into adjacent words
-        spaceW = Math.max(11, Math.round(fontSize * (style === "tiktok_native" ? 0.34 : 0.46)));
+        spaceW = Math.max(8, Math.round(fontSize * (style === "tiktok_native" ? 0.34 : 0.45)));
         widths = displayWords.map((w) => c2d.measureText(w.label).width);
         totalW = widths.reduce((a, b) => a + b, 0) + spaceW * Math.max(0, displayWords.length - 1);
         if (totalW <= maxWidth) break;
-        fontSize -= 2;
+        fontSize -= 1;
       }
 
       c2d.translate(cw / 2, centerY);
@@ -2779,15 +2806,15 @@
       const startX = -totalW / 2;
 
       if (style === "tiktok_native") {
-        const padX = 18, padY = 10;
+        const padX = 14, padY = 8;
         const boxW = totalW + padX * 2;
         const boxH = fontSize + padY * 2;
         c2d.save();
-        c2d.shadowColor = "rgba(0,0,0,0.40)";
-        c2d.shadowBlur = 12;
-        c2d.shadowOffsetY = 4;
+        c2d.shadowColor = "rgba(0,0,0,0.38)";
+        c2d.shadowBlur = 10;
+        c2d.shadowOffsetY = 3;
         c2d.fillStyle = "rgba(255,255,255,0.96)";
-        drawRoundedRectPath(c2d, -boxW / 2, -boxH / 2, boxW, boxH, 13);
+        drawRoundedRectPath(c2d, -boxW / 2, -boxH / 2, boxW, boxH, 10);
         c2d.fill();
         c2d.restore();
 
@@ -2800,12 +2827,12 @@
           x += widths[i] + spaceW;
         }
       } else if (style === "capcut_pill") {
-        const bgPadX = 18, bgPadY = 10;
+        const bgPadX = 14, bgPadY = 8;
         const bgW = totalW + bgPadX * 2;
         const bgH = fontSize + bgPadY * 2;
         c2d.save();
         c2d.fillStyle = "rgba(7,11,18,0.58)";
-        drawRoundedRectPath(c2d, -bgW / 2, -bgH / 2, bgW, bgH, 13);
+        drawRoundedRectPath(c2d, -bgW / 2, -bgH / 2, bgW, bgH, 10);
         c2d.fill();
         c2d.restore();
 
@@ -2814,19 +2841,19 @@
           const w = displayWords[i];
           const isAct = i === activeWordIdx;
           if (isAct) {
-            const pPadX = 8, pPadY = 5;
+            const pPadX = 6, pPadY = 4;
             c2d.save();
             c2d.fillStyle = w.isCta ? "#22FF66" : "#FFE600";
-            c2d.shadowColor = "rgba(0,0,0,0.40)";
-            c2d.shadowBlur = 8;
-            drawRoundedRectPath(c2d, x - pPadX, -(fontSize / 2) - pPadY, widths[i] + pPadX * 2, fontSize + pPadY * 2, 10);
+            c2d.shadowColor = "rgba(0,0,0,0.38)";
+            c2d.shadowBlur = 6;
+            drawRoundedRectPath(c2d, x - pPadX, -(fontSize / 2) - pPadY, widths[i] + pPadX * 2, fontSize + pPadY * 2, 8);
             c2d.fill();
             c2d.restore();
             c2d.fillStyle = "#06090F";
             c2d.fillText(w.label, x, 1);
           } else {
             c2d.lineJoin = "round";
-            c2d.lineWidth = Math.max(5, Math.round(fontSize * 0.18));
+            c2d.lineWidth = Math.max(4, Math.round(fontSize * 0.18));
             c2d.strokeStyle = "#000000";
             c2d.strokeText(w.label, x, 1);
             c2d.fillStyle = "#FFFFFF";
@@ -2835,7 +2862,7 @@
           x += widths[i] + spaceW;
         }
       } else {
-        // Default: Viral TikTok Shop (Crisp Compact White + Golden Yellow Active + Lime CTA + Clean Black Outline)
+        // Default: Viral TikTok Shop (Sleek Compact White + Golden Yellow Active + Lime CTA + Crisp 4-5px Black Outline)
         let x = startX;
         for (let i = 0; i < displayWords.length; i++) {
           const w = displayWords[i];
@@ -2843,14 +2870,14 @@
           const wordCenterX = x + widths[i] / 2;
           c2d.save();
           c2d.translate(wordCenterX, 0);
-          if (isAct) c2d.scale(1.05, 1.05);
+          if (isAct) c2d.scale(1.04, 1.04);
           c2d.lineJoin = "round";
           c2d.miterLimit = 2;
-          c2d.lineWidth = Math.max(6, Math.round(fontSize * 0.21));
+          c2d.lineWidth = Math.max(4, Math.round(fontSize * 0.20));
           c2d.strokeStyle = "#000000";
-          c2d.shadowColor = "rgba(0,0,0,0.82)";
-          c2d.shadowBlur = 9;
-          c2d.shadowOffsetY = 4;
+          c2d.shadowColor = "rgba(0,0,0,0.78)";
+          c2d.shadowBlur = 6;
+          c2d.shadowOffsetY = 2;
           c2d.strokeText(w.label, -widths[i] / 2, 0);
           c2d.shadowBlur = 0;
           c2d.shadowOffsetY = 0;
@@ -2903,8 +2930,11 @@
       const tracks = [...canvasStream.getVideoTracks()];
       let clockOsc = null;
       let voiceRateUsed = 1.0;
+      let voiceTrimStart = 0;
       let voiceDecoded = null;
       let captionBlocks = [];
+      let origAudioMixedOk = false;
+      let mediaElemAudioSrc = null;
 
       if (audioCtx && audioCtx.state === "running") {
         const dest = audioCtx.createMediaStreamDestination();
@@ -2917,34 +2947,55 @@
         const cg = audioCtx.createGain(); cg.gain.value = 0.00001;
         clockOsc.connect(cg); cg.connect(dest); clockOsc.start(startAt);
 
-        // Mix original video's audio track (if present & origVolScale > 0)
-        if (videoArrayBuf && origVolScale > 0.01) {
-          try {
-            const origDecoded = await audioCtx.decodeAudioData(videoArrayBuf.slice(0));
-            const origSrc = audioCtx.createBufferSource();
-            origSrc.buffer = origDecoded;
-            const og = audioCtx.createGain();
-            og.gain.setValueAtTime(origVolScale, startAt);
-            origSrc.connect(og); og.connect(comp);
-            origSrc.start(startAt);
-            origSrc.stop(startAt + totalSec + 0.15);
-          } catch {}
+        // 1) Mix original video's soundtrack: try decodeAudioData first, then ALWAYS fallback to live <video> MediaElementSource!
+        if (origVolScale > 0.01) {
+          if (videoArrayBuf) {
+            try {
+              const origDecoded = await audioCtx.decodeAudioData(videoArrayBuf.slice(0));
+              const origSrc = audioCtx.createBufferSource();
+              origSrc.buffer = origDecoded;
+              const og = audioCtx.createGain();
+              og.gain.setValueAtTime(origVolScale, startAt);
+              origSrc.connect(og); og.connect(comp);
+              origSrc.start(startAt);
+              origSrc.stop(startAt + totalSec + 0.15);
+              origAudioMixedOk = true;
+            } catch {}
+          }
+          if (!origAudioMixedOk) {
+            try {
+              vid.muted = false;
+              vid.volume = 1.0;
+              mediaElemAudioSrc = audioCtx.createMediaElementSource(vid);
+              const og = audioCtx.createGain();
+              og.gain.setValueAtTime(origVolScale, startAt);
+              mediaElemAudioSrc.connect(og);
+              og.connect(comp);
+              origAudioMixedOk = true;
+            } catch {
+              vid.muted = true;
+            }
+          }
         }
 
-        // Mix PT-BR voiceover
+        // 2) Mix PT-BR voiceover with silence-trim & guaranteed complete-sentence fit!
         if (voiceArrayBuf) {
           try {
             voiceDecoded = await audioCtx.decodeAudioData(voiceArrayBuf.slice(0));
+            const bounds = detectSpeechBounds(voiceDecoded);
+            voiceTrimStart = Math.max(0, bounds.start - 0.02);
+            const speechSpan = Math.max(0.5, bounds.end - voiceTrimStart);
+            const availSec = Math.max(1.5, totalSec - 0.22);
+            if (speechSpan > availSec) {
+              voiceRateUsed = Math.min(1.45, speechSpan / availSec);
+            }
             const vSrc = audioCtx.createBufferSource();
             vSrc.buffer = voiceDecoded;
-            if (voiceDecoded.duration > totalSec - 0.18) {
-              voiceRateUsed = Math.min(1.24, voiceDecoded.duration / Math.max(1, totalSec - 0.22));
-              vSrc.playbackRate.value = voiceRateUsed;
-            }
+            vSrc.playbackRate.value = voiceRateUsed;
             const vg = audioCtx.createGain();
             vg.gain.setValueAtTime(1.18, startAt);
             vSrc.connect(vg); vg.connect(comp);
-            vSrc.start(startAt + 0.06);
+            vSrc.start(startAt + 0.05, voiceTrimStart);
             vSrc.stop(startAt + totalSec + 0.15);
           } catch {}
         }
@@ -2953,7 +3004,7 @@
       }
 
       if (subStyle && subStyle !== "none" && scriptText) {
-        captionBlocks = buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, voiceDecoded, voiceRateUsed, 0.06);
+        captionBlocks = buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, voiceDecoded, voiceRateUsed, 0.05, voiceTrimStart);
       }
 
       const recProf = pickRecorderProfile();
@@ -2965,7 +3016,11 @@
       const chunks = [];
       rec.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
       const doneP = new Promise((resolve) => {
-        rec.onstop = () => { if (clockOsc) { try { clockOsc.stop(); } catch {} } resolve(new Blob(chunks, { type: recProf.baseType || rec.mimeType || "video/mp4" })); };
+        rec.onstop = () => {
+          if (clockOsc) { try { clockOsc.stop(); } catch {} }
+          if (mediaElemAudioSrc) { try { mediaElemAudioSrc.disconnect(); } catch {} }
+          resolve(new Blob(chunks, { type: recProf.baseType || rec.mimeType || "video/mp4" }));
+        };
       });
 
       rec.start(200);
@@ -3002,7 +3057,7 @@
       URL.revokeObjectURL(vidObjUrl);
       if (activeVideoBlobUrl) URL.revokeObjectURL(activeVideoBlobUrl);
       activeVideoBlobUrl = URL.createObjectURL(outBlob);
-      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: recProf.label, sec: totalSec, captionCount: captionBlocks.length };
+      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: recProf.label, sec: totalSec, captionCount: captionBlocks.length, origAudioMixedOk };
     }
 
     async function renderHollywoodMaster(mediaItems, totalSec, dna, editMode, withSfx, audioCtx, soundtrackArrayBuf, voiceoverArrayBuf = null, allowLightBg = false, captionCfg = null) {
@@ -3036,6 +3091,7 @@
       let voiceMixedOk = false;
       let voiceDecodedForSubs = null;
       let voiceRateForSubs = 1.0;
+      let voiceTrimForSubs = 0;
 
       if (audioCtx && audioCtx.state === "running") {
         const dest = audioCtx.createMediaStreamDestination();
@@ -3052,17 +3108,21 @@
           try {
             const vDec = await audioCtx.decodeAudioData(voiceoverArrayBuf.slice(0));
             voiceDecodedForSubs = vDec;
+            const bounds = detectSpeechBounds(vDec);
+            voiceTrimForSubs = Math.max(0, bounds.start - 0.02);
+            const speechSpan = Math.max(0.5, bounds.end - voiceTrimForSubs);
+            const availSec = Math.max(1.5, totalSec - 0.22);
+            if (speechSpan > availSec) {
+              voiceRateForSubs = Math.min(1.45, speechSpan / availSec);
+            }
             const vSrc = audioCtx.createBufferSource();
             vSrc.buffer = vDec;
-            if (vDec.duration > totalSec - 0.15) {
-              voiceRateForSubs = Math.min(1.22, vDec.duration / Math.max(1, totalSec - 0.18));
-              vSrc.playbackRate.value = voiceRateForSubs;
-            }
+            vSrc.playbackRate.value = voiceRateForSubs;
             const vg = audioCtx.createGain();
-            vg.gain.setValueAtTime(1.14, startAt);
+            vg.gain.setValueAtTime(1.16, startAt);
             vSrc.connect(vg); vg.connect(comp);
-            vSrc.start(startAt + 0.06);
-            vSrc.stop(startAt + totalSec + 0.1);
+            vSrc.start(startAt + 0.05, voiceTrimForSubs);
+            vSrc.stop(startAt + totalSec + 0.12);
             voiceMixedOk = true;
           } catch {}
         }
@@ -3137,7 +3197,7 @@
 
       let captionBlocks = [];
       if (captionCfg && captionCfg.style && captionCfg.style !== "none" && captionCfg.text && voiceMixedOk) {
-        captionBlocks = buildWordTimingsFromWhisperOrEstimate(captionCfg.text, captionCfg.whisperChunks, voiceDecodedForSubs, voiceRateForSubs, 0.06);
+        captionBlocks = buildWordTimingsFromWhisperOrEstimate(captionCfg.text, captionCfg.whisperChunks, voiceDecodedForSubs, voiceRateForSubs, 0.05, voiceTrimForSubs);
       }
 
       const recProf = pickRecorderProfile();
@@ -3961,8 +4021,8 @@
 
     function updateLabCharUI() {
       const dur = getEffectiveLabDuration();
-      const idealMin = Math.round(dur * 11.5);
-      const idealMax = Math.round(dur * 16.5);
+      const idealMin = Math.round(dur * 9.5);
+      const idealMax = Math.round(dur * 13.2);
       const len = labVoiceScript.value.trim().length;
       labCharInfo.textContent = `${len} caracteres • Alvo ${dur}s (ideal: ${idealMin} a ${idealMax} chars)`;
     }
@@ -4008,7 +4068,7 @@
         <video id="outPlayer" class="player-916" src="${out.videoUrl}" controls playsinline></video>
         <div class="dl-box">
           <div class="dl-title">🧪 Vídeo Importado + Narração (${session.voiceLabel}) + ${styleNames[session.subStyle] || session.subStyle}</div>
-          <div class="dl-dna">🎙️ Motor Voz: ${session.voiceEngine} • Duração: ${out.sec.toFixed(1)}s • ${out.captionCount} blocos de legenda • ${out.label}</div>
+          <div class="dl-dna">🎙️ Motor: ${session.voiceEngine} • ${out.origAudioMixedOk ? "🎵 Trilha original mixada ✓" : "🔇 Sem trilha original"} • ${out.sec.toFixed(1)}s • ${out.captionCount} legendas • ${out.label}</div>
           <div class="dl-grid">
             <button type="button" id="btnDlLabVideo" class="dl-btn main">⬇️ Baixar Vídeo Final com Voz &amp; Legenda (.${out.ext.toUpperCase()})</button>
             <button type="button" id="btnPlayLabAgain" class="dl-btn" style="grid-column:span 2;">Reproduzir com Som</button>
