@@ -4,15 +4,23 @@ const DEFAULT_NEGATIVE =
 const MUSIC_CLEAN_NEGATIVE =
   "tropical house, ukulele, cheesy corporate, stock music, elevator music, acoustic guitar, hand claps, happy whistle, lofi, ambient, chill, lounge, soft piano, acoustic, ballad, sleepy, smooth jazz, sad, gloomy, horror, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, harsh noise, clipping, static, muddy";
 
+// Curated top persuasive ElevenLabs Multilingual v2 commercial voices (all fluent & expressive in PT-BR)
 const TTS_VOICE_MAP = {
-  male_adam: { el: "Brian", mm: "Deep_Voice_Man", kk: "pm_alex", preferPtNative: true },
-  male_tiktok: { el: "Brian", mm: "Casual_Guy", kk: "pm_alex" },
-  male_exec: { el: "Daniel", mm: "Patient_Man", kk: "pm_santa" },
-  male_impact: { el: "George", mm: "Deep_Voice_Man", kk: "pm_alex" },
-  female_natasha: { el: "Sarah", mm: "Lively_Girl", kk: "pf_dora", preferPtNative: true },
-  female_viral: { el: "Jessica", mm: "Lively_Girl", kk: "pf_dora" },
-  female_tiktok: { el: "Rachel", mm: "Wise_Woman", kk: "pf_dora" },
-  female_lux: { el: "Charlotte", mm: "Calm_Woman", kk: "pf_dora" }
+  // Male — ElevenLabs Persuasive Commercial
+  male_brian: { el: "Brian", stab: 0.36, style: 0.38, mm: "Deep_Voice_Man", kk: "pm_alex" },
+  male_roger: { el: "Roger", stab: 0.34, style: 0.42, mm: "Casual_Guy", kk: "pm_alex" },
+  male_daniel: { el: "Daniel", stab: 0.38, style: 0.35, mm: "Patient_Man", kk: "pm_santa" },
+  male_charlie: { el: "Charlie", stab: 0.34, style: 0.40, mm: "Casual_Guy", kk: "pm_alex" },
+  male_george: { el: "George", stab: 0.38, style: 0.36, mm: "Deep_Voice_Man", kk: "pm_alex" },
+  // Female — ElevenLabs Persuasive Commercial
+  female_jessica: { el: "Jessica", stab: 0.34, style: 0.42, mm: "Lively_Girl", kk: "pf_dora" },
+  female_aria: { el: "Aria", stab: 0.35, style: 0.40, mm: "Lively_Girl", kk: "pf_dora" },
+  female_sarah: { el: "Sarah", stab: 0.38, style: 0.35, mm: "Wise_Woman", kk: "pf_dora" },
+  female_laura: { el: "Laura", stab: 0.34, style: 0.40, mm: "Lively_Girl", kk: "pf_dora" },
+  female_charlotte: { el: "Charlotte", stab: 0.40, style: 0.34, mm: "Calm_Woman", kk: "pf_dora" },
+  // Legacy / Clone keys fallback
+  male_clone: { el: "Brian", stab: 0.36, style: 0.38, mm: "Deep_Voice_Man", kk: "pm_alex", isCloneSlot: true },
+  female_clone: { el: "Jessica", stab: 0.34, style: 0.42, mm: "Lively_Girl", kk: "pf_dora", isCloneSlot: true }
 };
 
 function json(body, status = 200) {
@@ -188,11 +196,11 @@ export async function onRequestPost(context) {
       return json({ error: lastErr }, 502);
     }
 
-    // 4) CLONAGEM EXATA DE VOZ (Adam / Natasha) VIA MINIMAX VOICE CLONE
+    // 4) CLONAGEM OPCIONAL DE VOZ (MiniMax Voice Clone)
     if (task === "clone_voice") {
       const mime = body.mimeType || "audio/wav";
       const audioInput = body.audioUrl || (body.audioBase64 ? `data:${mime};base64,${body.audioBase64}` : "");
-      if (!audioInput) return json({ error: "Envie um áudio de referência (10s a 30s) para clonar a voz." }, 400);
+      if (!audioInput) return json({ error: "Envie um áudio de referência (10s a 20s) para clonar a voz." }, 400);
 
       const res = await fetch("https://queue.fal.run/fal-ai/minimax/voice-clone", {
         method: "POST",
@@ -209,89 +217,66 @@ export async function onRequestPost(context) {
       return json({ engine: "MiniMax Voice Clone", requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
     }
 
-    // 5) NARRAÇÃO PT-BR (Clone Exato MiniMax -> PT-BR Nativo MiniMax/Kokoro -> ElevenLabs Fallback)
+    // 5) NARRAÇÃO PT-BR — ELEVENLABS MULTILINGUAL v2 PRINCIPAL (ZERO PITCH DISTORTION) + FALLBACK
     if (task === "submit_tts") {
       const text = String(body.text || "").trim();
       if (!text) return json({ error: "Digite o roteiro da narração em português." }, 400);
 
-      const voiceKey = body.voiceId || (body.gender === "female" ? "female_natasha" : "male_adam");
-      const voicePreset = TTS_VOICE_MAP[voiceKey] || TTS_VOICE_MAP.male_adam;
+      const voiceKey = body.voiceId || (body.gender === "female" ? "female_jessica" : "male_brian");
+      const voicePreset = TTS_VOICE_MAP[voiceKey] || (body.gender === "female" ? TTS_VOICE_MAP.female_jessica : TTS_VOICE_MAP.male_brian);
+      const customVoiceId = typeof body.customVoiceId === "string" && body.customVoiceId.trim() ? body.customVoiceId.trim() : "";
 
-      // Priority: browser-saved clone ID > global Cloudflare Pages env var (ADAM_VOICE_ID / NATASHA_VOICE_ID)
-      let customVoiceId = typeof body.customVoiceId === "string" && body.customVoiceId.trim() ? body.customVoiceId.trim() : "";
-      if (!customVoiceId && voiceKey === "male_adam" && context.env.ADAM_VOICE_ID) {
-        customVoiceId = String(context.env.ADAM_VOICE_ID).trim();
-      }
-      if (!customVoiceId && voiceKey === "female_natasha" && context.env.NATASHA_VOICE_ID) {
-        customVoiceId = String(context.env.NATASHA_VOICE_ID).trim();
-      }
+      // ElevenLabs Multilingual v2 accepts speed strictly in [0.7, 1.2] with ZERO pitch distortion!
+      const rawSpeed = Number(body.speed) || 1.15;
+      const elSpeed = Number(Math.min(1.20, Math.max(0.85, rawSpeed)).toFixed(2));
+      const mmSpeed = Number(Math.min(1.28, Math.max(0.85, rawSpeed)).toFixed(2));
 
-      const speed = Math.min(1.40, Math.max(0.85, Number(body.speed) || 1.20));
-      const elSpeed = Math.min(1.20, Math.max(0.85, speed));
       const endpoints = [];
 
-      if (customVoiceId) {
-        const cloneTag = voiceKey === "male_adam" ? "MiniMax Clone Exato (Adam)" : voiceKey === "female_natasha" ? "MiniMax Clone Exato (Natasha)" : "MiniMax Clone Exato";
+      // Only use MiniMax Clone if user explicitly selected the Clone slot and has a cloned ID
+      if (voicePreset.isCloneSlot && customVoiceId) {
         endpoints.push({
-          name: cloneTag,
+          name: "Clone Exato (MiniMax)",
           url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
           payload: {
             text,
-            voice_setting: { voice_id: customVoiceId, speed, vol: 1.0, pitch: 0 },
+            voice_setting: { voice_id: customVoiceId, speed: mmSpeed, vol: 1.0, pitch: 0 },
             language_boost: "Portuguese",
             output_format: "url"
           }
         });
       }
 
-      // If no clone yet for Adam/Natasha, prefer native PT-BR pronunciation (MiniMax PT-BR / Kokoro PT-BR) instead of English-accented ElevenLabs Bill
-      if (voicePreset.preferPtNative) {
-        endpoints.push(
-          {
-            name: "MiniMax PT-BR HD (Sem Clone)",
-            url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
-            payload: {
-              text,
-              voice_setting: { voice_id: voicePreset.mm, speed, vol: 1.0, pitch: 0 },
-              language_boost: "Portuguese",
-              output_format: "url"
-            }
-          },
-          {
-            name: "Kokoro PT-BR Nativo",
-            url: "https://queue.fal.run/fal-ai/kokoro/brazilian-portuguese",
-            payload: { prompt: text, voice: voicePreset.kk, speed }
-          },
-          {
-            name: `ElevenLabs (${voicePreset.el})`,
-            url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
-            payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed: elSpeed }
+      // PRIMARY: ElevenLabs Multilingual v2 (expressive, charismatic, persuasive PT-BR)
+      endpoints.push(
+        {
+          name: `ElevenLabs • ${voicePreset.el}`,
+          url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
+          payload: {
+            text,
+            voice: voicePreset.el,
+            stability: voicePreset.stab || 0.36,
+            similarity_boost: 0.80,
+            style: voicePreset.style || 0.38,
+            speed: elSpeed
           }
-        );
-      } else {
-        endpoints.push(
-          {
-            name: `ElevenLabs (${voicePreset.el})`,
-            url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
-            payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed: elSpeed }
-          },
-          {
-            name: "MiniMax Speech-02 HD",
-            url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
-            payload: {
-              text,
-              voice_setting: { voice_id: voicePreset.mm, speed, vol: 1.0, pitch: 0 },
-              language_boost: "Portuguese",
-              output_format: "url"
-            }
-          },
-          {
-            name: "Kokoro PT-BR",
-            url: "https://queue.fal.run/fal-ai/kokoro/brazilian-portuguese",
-            payload: { prompt: text, voice: voicePreset.kk, speed }
+        },
+        {
+          name: "MiniMax Speech-02 HD",
+          url: "https://queue.fal.run/fal-ai/minimax/speech-02-hd",
+          payload: {
+            text,
+            voice_setting: { voice_id: voicePreset.mm, speed: mmSpeed, vol: 1.0, pitch: 0 },
+            language_boost: "Portuguese",
+            output_format: "url"
           }
-        );
-      }
+        },
+        {
+          name: "Kokoro PT-BR",
+          url: "https://queue.fal.run/fal-ai/kokoro/brazilian-portuguese",
+          payload: { prompt: text, voice: voicePreset.kk, speed: mmSpeed }
+        }
+      );
 
       const startIndex = Math.max(0, Math.min(endpoints.length - 1, Number(body.engineIndex) || 0));
       let lastErr = "Nenhum motor de narração PT-BR disponível.";
