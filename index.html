@@ -107,7 +107,7 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>BLOCKBUSTER v11.5 ULTRA-REAL • 105 VÍDEOS • 105 IMAGENS</span></div>
+    <div class="brand">NEXORA.AI <span>BLOCKBUSTER v11.6 BLINDADO • 105 VÍDEOS • 105 IMAGENS</span></div>
     <div class="pill-info">🎬 Motor Blockbuster 4 Atos Universal (Qualquer Produto) • Super Macro 100mm • Mirror Punch-In &amp; Speed-Ramp • Voz PT-BR • PNG</div>
   </div>
 
@@ -195,7 +195,7 @@
 
       <div class="director-banner" id="directorBannerWrap">
         <div class="director-banner-head">
-          <span>🎬 Coreografia v11.5 Ultra-Real (Virada Lenta Escultural ±40° • 7 Câmeras/Ângulos Distintos • Fumaça Volumétrica Viva • Paleta Travada • Zoom-Out):</span>
+          <span>🎬 Coreografia v11.6 Blindada (Foto Pura Nano Banana + Retry 422 Automático • Virada Lenta ±40° no Kling • 7 Ângulos • Fumaça Viva):</span>
           <small style="color:#86efac;">100% universal nos 105 universos • Zona Segura TikTok Shop</small>
         </div>
         <div class="director-acts-preview" id="directorActsPreview"></div>
@@ -643,50 +643,57 @@
     }
 
     function getActTemplates(m, profile) {
+      const isLight = LIGHT_STUDIO_MODEL_IDS.has(m.id);
       const optics = m.isUGC
-        ? "ultra-realistic vertical 9:16 creator film optics, authentic f/1.8 natural bokeh, real tactile surface grain, zero CGI plastic look"
-        : "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 commercial studio film optics, f/1.4 razor-shallow bokeh, authentic physical micro-texture and natural specular roll-off, zero CGI plastic look";
+        ? "ultra-realistic vertical 9:16 creator still photograph, natural f/1.8 shallow bokeh, authentic tactile surface grain"
+        : isLight
+          ? "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 bright architectural commercial studio photograph, crisp softbox lighting, clean off-white studio depth and authentic physical micro-texture"
+          : "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 commercial studio still photograph, f/1.4 razor-shallow bokeh, clean dark stage with rich atmospheric depth and authentic physical micro-texture";
+
+      const macroBgRule = isLight
+        ? "clean soft bright studio bokeh behind"
+        : "deep out-of-focus dark studio bokeh behind, no white background";
 
       const actHook = {
         key: "hook_hero", shortLabel: "Ato 1 • Baixo 3/4 + Zoom-In", isHuman: false, isMacro: false, editMove: "crashZoom", trans: "mirrorPunch",
-        beat: "0.0s: smooth low-angle 3D dolly zoom-in approaching the grounded product from a 24° front-left angle -> 1.0s: product performs a silky slow 22° sculptural turn catching overhead key light while realistic volumetric smoke wisps drift organically behind -> 2.5s: sharp heroic lock in middle-upper safe zone",
-        desc: (m, orient, isBox) => `ACT 1 (LOW-ANGLE 3/4 HERO ZOOM-IN — 75% FRAME): ${optics}. Monumental low-angle 22-degree front-left three-quarter 3D perspective of the exact product ${orient.short} ${isBox ? "at an elevated 36° angle " : ""}resting heavily on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear for TikTok cart). ${m.lighting}.`
+        beat: "0.0s: smooth low-angle 3D dolly zoom-in approaching the grounded product from a 24° front-left angle -> 1.0s: product performs a silky slow 22° sculptural turn catching overhead key light while realistic atmospheric depth shifts organically behind -> 2.5s: sharp heroic lock in middle-upper safe zone",
+        desc: (m, orient, isBox) => `Shot 1 (Low-angle 3/4 hero composition, 75% frame): ${optics}. Low-angle 22-degree front-left three-quarter 3D perspective of the exact product ${orient.short} ${isBox ? "at an elevated 36-degree angle " : ""}resting solidly on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear pedestal and shadow). ${m.lighting}.`
       };
 
       const actMacro = {
         key: "super_macro", shortLabel: "Ato 2 • Super Macro + Virada Lenta", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "zoomBlur",
-        beat: "0.0s: ultra-realistic 100mm close-up macro filling 100% of the vertical screen with authentic material micro-grain and central details -> 0.8s: silky, slow, continuous 38° sculptural turn from front-three-quarter into a deep lateral close-up revealing side thickness, sculpted edges, controls and real material finish with zero distortion while subtle realistic smoke wisps drift softly in dark bokeh behind -> 2.5s: razor-sharp optical macro glide",
-        desc: (m, orient, isBox, macro) => `ACT 2 (ULTRA-REALISTIC 100MM PROBE-MACRO + SLOW SCULPTURAL TURN — 100% FRAME FILL, ZERO PEDESTAL): Ultra-close 100mm Master Prime macro lens 2cm from the product at a 20-degree oblique angle, cropped tightly onto ONLY the central detail (${macro}) of the exact product ${orient.short}, filling 95–100% of the vertical 9:16 screen so outer borders and pedestal are completely cropped out. ${m.macroAccent}. Physically accurate micro-grain, crisp original markings, zero invented text, zero white background.`
+        beat: "0.0s: ultra-realistic 100mm close-up macro filling 100% of the vertical screen with authentic material micro-grain and central details -> 0.8s: silky, slow, continuous 38° sculptural turn from front-three-quarter into a deep lateral close-up revealing side thickness, sculpted edges, controls and real material finish with zero distortion while subtle realistic atmosphere drifts softly in bokeh behind -> 2.5s: razor-sharp optical macro glide",
+        desc: (m, orient, isBox, macro) => `Shot 2 (Extreme 100mm close-up macro photograph, 95% surface fill, no pedestal visible): Ultra-close 100mm Master Prime macro lens positioned very close at a 20-degree oblique angle, focused tightly on the central detail (${macro}) of the exact product ${orient.short}, filling 95% of the vertical 9:16 frame so outer borders and pedestal fall outside the frame. ${m.macroAccent}. Physically accurate micro-grain, sharp original details, ${macroBgRule}.`
       };
 
       const actProfileLeft = {
         key: "profile_left_pivot", shortLabel: "Ato 3 • Câmera Lateral Esq 60° + Giro", isHuman: false, isMacro: false, editMove: "lightSweep34", trans: "whipPan",
-        beat: "0.0s: distinct 60° left-side lateral camera angle zooming in smoothly on the product's sculpted side profile -> 0.9s: product rotates slowly and smoothly (~40° luxury watch-commercial turn from 60° left profile toward 20° front-left while staying solidly grounded on its base, NEVER flipping 180° to unseen back) as realistic billowing smoke wisps curl continuously behind and catch crisp rim light -> 2.4s: controlled smooth release",
-        desc: (m, orient) => `ACT 3 (DEEP 60° LEFT-SIDE LATERAL CAMERA + SLOW TURN — 78% FRAME): ${optics}. Distinct 60-degree left lateral side camera angle clearly revealing the side thickness, lateral hardware/contours and real depth of the exact product ${orient.short} resting firmly on the EXACT SAME ${m.surface}, centered in the middle-upper safe zone with realistic drifting volumetric smoke/atmosphere behind.`
+        beat: "0.0s: distinct 60° left-side lateral camera angle zooming in smoothly on the product's sculpted side profile -> 0.9s: product rotates slowly and smoothly (~40° luxury commercial turn from 60° left profile toward 20° front-left while staying solidly grounded on its base, NEVER flipping 180° to unseen back) as realistic background atmosphere and reflections move continuously behind -> 2.4s: controlled smooth release",
+        desc: (m, orient) => `Shot 3 (Deep 60-degree left-side lateral perspective, 78% frame): ${optics}. Distinct 60-degree left lateral side angle clearly showing the side thickness, lateral contours and 3D depth of the exact product ${orient.short} resting firmly on the same ${m.surface}, centered in the middle-upper safe zone. ${m.lighting}.`
       };
 
       const actLowWormEye = {
         key: "low_worm_eye", shortLabel: "Ato 4 • Contra-Plongée Base + Subida", isHuman: false, isMacro: false, editMove: "craneRise", trans: "radialFlash",
-        beat: "0.0s: dramatic ultra-low table-level worm's-eye camera resting right along the pedestal edge looking upward (+18°) -> 0.9s: smooth upward crane tilt combined with a slow 30° sculptural turn of the grounded product from right-front toward center while dense realistic volumetric smoke curls slowly across the dark background -> 2.4s: imposing monumental lock",
-        desc: (m, orient) => `ACT 4 (ULTRA-LOW WORM'S-EYE CONTRA-PLONGÉE FROM PEDESTAL EDGE — 78% FRAME): ${optics}. Dramatic low table-level camera positioned right at pedestal height looking upward (+18° elevation) at the exact product ${orient.short} resting heavily on the EXACT SAME ${m.surface}, giving monumental flagship scale in the middle-upper safe zone with real grounded contact shadow and natural drifting volumetric smoke/atmosphere behind.`
+        beat: "0.0s: dramatic ultra-low table-level worm's-eye camera resting right along the pedestal edge looking upward (+18°) -> 0.9s: smooth upward crane tilt combined with a slow 30° sculptural turn of the grounded product from right-front toward center while realistic background atmosphere moves smoothly -> 2.4s: imposing monumental lock",
+        desc: (m, orient) => `Shot 4 (Low table-level upward perspective from pedestal edge, 78% frame): ${optics}. Low camera positioned near pedestal height looking gently upward (+18 degrees) at the exact product ${orient.short} resting heavily on the same ${m.surface}, giving bold flagship scale in the middle-upper safe zone with realistic contact shadow. ${m.lighting}.`
       };
 
       const actMacroEdge = {
         key: "macro_edge", shortLabel: "Ato 5 • Macro Lateral Dir + Virada", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "zoomBlur",
-        beat: "0.0s: ultra-realistic 100mm macro shot from the opposite right-side oblique angle skimming closely along the sculpted bevel, side controls and contour (zero pedestal visible) -> 0.9s: silky slow 35° continuous turn revealing the side profile depth and moving specular light sweep across real surface grain while natural smoke wisps drift softly in deep out-of-focus bokeh -> 2.5s: razor-sharp focus settle",
-        desc: (m, orient, isBox, macro) => `ACT 5 (ULTRA-REALISTIC 100MM RIGHT-SIDE EDGE MACRO + SLOW TURN — 95–100% FILL, ZERO PEDESTAL): Ultra-close 100mm Master Prime macro lens from the opposite right-side diagonal skimming closely along the sculpted edge, side contours and ${macro} of the exact product ${orient.short}, outer edges and pedestal cropped completely out of frame, real physical material finish, crisp moving rim-light and subtle natural bokeh behind, zero white background.`
+        beat: "0.0s: ultra-realistic 100mm macro shot from the opposite right-side oblique angle skimming closely along the sculpted bevel, side controls and contour (zero pedestal visible) -> 0.9s: silky slow 35° continuous turn revealing the side profile depth and moving specular light sweep across real surface grain while subtle bokeh shifts behind -> 2.5s: razor-sharp focus settle",
+        desc: (m, orient, isBox, macro) => `Shot 5 (Extreme 100mm right-side edge macro photograph, 95% fill, no pedestal visible): Ultra-close 100mm Master Prime macro lens from the opposite right-side diagonal focused closely on the sculpted edge, side contours and ${macro} of the exact product ${orient.short}, outer edges and pedestal cropped out of frame, crisp real material texture and specular rim highlight, ${macroBgRule}.`
       };
 
       const actHighDutchRight = {
         key: "high_dutch_right", shortLabel: "Ato 6 • Alto 40° Dir + Dutch 10°", isHuman: false, isMacro: false, editMove: "zoomArcOut", trans: "whipPan",
-        beat: "0.0s: elevated 40° front-right commercial studio camera with a sleek subtle 10° Dutch tilt zooming in gently -> 0.9s: product executes a smooth slow 35° showroom turn from 55° right side toward 20° front-right revealing top geometry and opposite side contours while realistic volumetric smoke curls and drifts dynamically across the background -> 2.3s: smooth controlled pull-back",
-        desc: (m, orient) => `ACT 6 (ELEVATED 40° FRONT-RIGHT + SUBTLE 10° DUTCH ANGLE — 78% FRAME): ${optics}. Distinct 40-degree elevated front-right commercial angle with a sleek subtle 10-degree dynamic tilt revealing upper geometry, right-side depth and authentic materials of the exact product ${orient.short} resting firmly on the EXACT SAME ${m.surface} (NEVER flat 90° top-down cutout pasted upright), centered in the middle-upper safe zone.`
+        beat: "0.0s: elevated 40° front-right commercial studio camera with a sleek subtle 10° Dutch tilt zooming in gently -> 0.9s: product executes a smooth slow 35° showroom turn from 55° right side toward 20° front-right revealing top geometry and opposite side contours while realistic background atmosphere moves smoothly -> 2.3s: smooth controlled pull-back",
+        desc: (m, orient) => `Shot 6 (Elevated 40-degree front-right perspective with subtle 10-degree tilt, 78% frame): ${optics}. Distinct 40-degree elevated front-right commercial angle with a subtle 10-degree dynamic tilt showcasing upper geometry, right-side depth and authentic materials of the exact product ${orient.short} resting firmly on the same ${m.surface}, centered in the middle-upper safe zone. ${m.lighting}.`
       };
 
       const actHero = {
         key: "final_hero", shortLabel: "Ato 7 • Hero Final + Giro & Zoom-Out", isHuman: false, isMacro: false, editMove: "heroPunch", trans: "mirrorPunch",
-        beat: "0.0s: close commanding 3D three-quarter framing as the grounded product finishes a silky slow 18° sculptural settle into its flagship hero pose on the base (zero lifting, zero 180° rear spin, zero glowing strips) -> 1.0s: smooth camera zoom-out pull-back widening cleanly to frame the entire product in the middle-upper safe zone while ultra-realistic volumetric smoke and ambient light curl organically behind -> 2.5s: rock-steady flagship hero lock",
-        desc: (m, orient) => `ACT 7 (FLAGSHIP 3D HERO FINALE WITH ZOOM-OUT — 76% FRAME IN MIDDLE-UPPER SAFE ZONE): ${optics}. Iconic 24-degree front-three-quarter 3D hero perspective (full 3D volume, grounded bottom contact and real shadow — NEVER flat top-down pasted upright) of the exact product ${orient.short} resting firmly on the EXACT SAME ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart) with dramatic overhead spotlight and authentic unlit product finish.`
+        beat: "0.0s: close commanding 3D three-quarter framing as the grounded product finishes a silky slow 18° sculptural settle into its flagship hero pose on the base (zero lifting, zero 180° rear spin, zero glowing strips) -> 1.0s: smooth camera zoom-out pull-back widening cleanly to frame the entire product in the middle-upper safe zone while ultra-realistic background atmosphere and lights move organically -> 2.5s: rock-steady flagship hero lock",
+        desc: (m, orient) => `Shot 7 (Flagship 3D hero portrait composition, 76% frame in middle-upper safe zone): ${optics}. Authoritative 24-degree front-three-quarter 3D hero perspective showing full volume, grounded bottom contact and natural shadow of the exact product ${orient.short} resting firmly on the same ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear pedestal and shadow), authentic unlit product finish. ${m.lighting}.`
       };
 
       if (profile === "cinema_universal") {
@@ -699,19 +706,19 @@
       const humanAct3 = {
         wearable_wrist: {
           shortLabel: "Ato 3 • Toque & Pulso",
-          desc: (m, orient, isBox, macro, dna) => `ACT 3 (TACTILE REAL-WORLD INTERACTION): Natural close-up of ${dna.cast.text.split(",")[0]}'s hand gently adjusting ${macro} and wearing the exact product on their wrist in the same setting (${m.genre}), product razor-sharp and dominant in middle-upper safe zone.`
+          desc: (m, orient, isBox, macro, dna) => `Shot 3 (Tactile real-world lifestyle photograph): Natural close-up of ${dna.cast.text.split(",")[0]}'s hand gently adjusting ${macro} and wearing the exact product on their wrist in the same setting (${m.genre}), product razor-sharp and dominant in middle-upper safe zone.`
         },
         wearable_face: {
           shortLabel: "Ato 3 • Uso Real Corpo",
-          desc: (m, orient, isBox, macro, dna) => `ACT 3 (REAL-WORLD WEARING): Clean close-up of ${dna.cast.text.split(",")[0]} naturally wearing/presenting the exact product in real life in the same setting (${m.genre}), keeping the product razor-sharp in the middle-upper safe zone.`
+          desc: (m, orient, isBox, macro, dna) => `Shot 3 (Real-world wearing photograph): Clean close-up of ${dna.cast.text.split(",")[0]} naturally wearing or presenting the exact product in real life in the same setting (${m.genre}), keeping the product razor-sharp in the middle-upper safe zone.`
         },
         handheld_tech: {
           shortLabel: "Ato 3 • Toque & Controle",
-          desc: (m, orient, isBox, macro, dna) => `ACT 3 (HANDS-ON TACTILE TEST): Natural close-up of ${dna.cast.text.split(",")[0]}'s hand holding and testing ${macro} on the exact product in the same setting (${m.genre}), natural five-finger anatomy, product razor-sharp.`
+          desc: (m, orient, isBox, macro, dna) => `Shot 3 (Hands-on tactile photograph): Natural close-up of ${dna.cast.text.split(",")[0]}'s hand holding and testing ${macro} on the exact product in the same setting (${m.genre}), natural five-finger anatomy, product razor-sharp.`
         },
         beauty_spray: {
           shortLabel: "Ato 3 • Aplicação Real",
-          desc: (m, orient, isBox, macro, dna) => `ACT 3 (REAL APPLICATION): Natural close-up of ${dna.cast.text.split(",")[0]} holding and applying the exact product naturally in the same setting (${m.genre}), keeping the exact bottle/package clearly recognizable and sharp.`
+          desc: (m, orient, isBox, macro, dna) => `Shot 3 (Real application photograph): Natural close-up of ${dna.cast.text.split(",")[0]} holding and applying the exact product naturally in the same setting (${m.genre}), keeping the exact bottle or package clearly recognizable and sharp.`
         }
       }[profile];
 
@@ -1121,23 +1128,59 @@
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
       const allowCyan = NEON_CYAN_MODEL_IDS.has(m.id);
-      const bgPurge = isLightStudio
-        ? "Full-bleed architectural studio to all 4 borders, no bars, no wall text."
-        : "REPLACE 100% of uploaded photo's white/plain background with full-bleed commercial studio environment to all 4 borders — ZERO white background, white floor, white margin or wall text.";
-      const framingLock = act.isMacro
-        ? "EXTREME MACRO CROP LOCK: Fill 95–100% of the vertical 9:16 screen strictly with ultra-sharp close-up surface texture and core details — crop all outer product borders and pedestal completely OUTSIDE the frame. Zero pedestal visible, unlit authentic product finish."
+      const bgRule = isLightStudio
+        ? "Create a seamless edge-to-edge bright architectural studio photograph extending cleanly to all 4 borders with soft sculpted shadows, no letterbox bars and no wall text."
+        : "Completely replace the uploaded photo's original plain or white background with a seamless edge-to-edge commercial studio environment extending to all 4 borders, with no white background, no white floor, no white margins and no wall text.";
+      const framingRule = act.isMacro
+        ? "Extreme macro close-up crop filling 95% of the vertical 9:16 frame strictly with close-up surface texture and core details so all outer edges and pedestal fall outside the frame. Keep the product finish unlit and authentic."
         : isBox
-          ? `CASE & CONTINUITY LOCK: Open box lid locked 100% wide open on the EXACT SAME ${m.surface}.`
-          : `SAFE-ZONE & PEDESTAL CONTINUITY LOCK: Use the EXACT SAME pedestal (${m.surface}) consistently — never swap for a plain cylinder or cube. Product centered in middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart), unlit product shell and unlit pedestal.`;
-      const negLine = `Negative: ${buildNegative(act.isHuman, isBox, isLightStudio, allowCyan)}.`;
-      const body = clampPrompt([
-        `Ultra-realistic 9:16 vertical full-bleed commercial studio photograph (no bars, no text/arrows, true physical camera optics). ${bgPurge}`,
+          ? `Keep the open display tray lid wide open on ${m.surface}.`
+          : `Place the product on ${m.surface} centered in the middle-upper safe zone (leaving the bottom 25% as clean pedestal and shadow), with unlit original product finish and grounded contact shadow.`;
+      const stillLight = isLightStudio
+        ? "Clean bright overhead architectural softbox lighting with gentle natural contact shadow and soft highlights."
+        : `${dna.light.text}. Grounded physical contact shadow.`;
+      const stillBackdrop = isLightStudio
+        ? "Clean minimalist off-white studio backdrop with gentle light falloff."
+        : m.isUGC
+          ? "Authentic real-world background depth with natural f/1.8 optical bokeh."
+          : `Subtle realistic atmospheric depth (${m.lighting}) with authentic natural-colored haze in shallow f/1.4 bokeh.`;
+      const avoidClause = allowCyan
+        ? "Avoid text overlays, watermarks, arrows, black bars, purple or magenta smoke, added glowing strips on the product, or distorted geometry."
+        : isLightStudio
+          ? "Avoid text overlays, watermarks, arrows, black bars, dark gloomy walls, purple or cyan tint, added glowing strips on the product, or distorted geometry."
+          : "Avoid text overlays, watermarks, arrows, black or white bars, white floor, purple/pink/cyan smoke, added glowing strips on the product, or distorted geometry.";
+
+      return clampPrompt([
+        `Edit and place the product from the reference image into an ultra-realistic 9:16 vertical still commercial studio photograph. ${bgRule}`,
         getColorPaletteLock(m),
-        `PRODUCT LOCK: ${getProductSpec()} ${framingLock}`,
+        `Product preservation: ${getProductSpec()} ${framingRule}`,
         act.desc(m, orient, isBox, macroFocus, dna),
-        `Atmosphere & Light: ${getLivingAtmosphereMotion(m)}. ${dna.light.text}. Grounded physical contact shadow.`
-      ].join(" "), 1850);
-      return `${body}\n\n${negLine}`;
+        `Studio lighting and backdrop: ${stillBackdrop} ${stillLight}`,
+        avoidClause
+      ].join(" "), 1650);
+    }
+
+    function buildSafeFallbackKeyframePrompt(m, act, dna) {
+      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
+      const macroFocus = (macroTarget.value.trim() || "surface texture and fine craftsmanship details").slice(0, 90);
+      const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
+      const angleMap = {
+        hook_hero: "low-angle front-left three-quarter 3D studio angle",
+        super_macro: `extreme 100mm macro close-up focusing tightly on ${macroFocus} filling the frame`,
+        profile_left_pivot: "left-side 55-degree three-quarter studio angle showing side depth",
+        low_worm_eye: "low table-level upward angle showing bold product scale",
+        macro_edge: `extreme 100mm diagonal macro close-up focusing on the edge texture and ${macroFocus}`,
+        high_dutch_right: "elevated 40-degree front-right studio angle with subtle dynamic tilt",
+        final_hero: "clean front-three-quarter flagship hero angle centered in the middle-upper safe zone"
+      };
+      const anglePhrase = angleMap[act.key] || "three-quarter 3D studio angle";
+      const bgPhrase = isLightStudio
+        ? `bright clean architectural studio backdrop with soft studio lighting on ${m.surface}`
+        : `dark moody commercial studio setting on ${m.surface} with ${m.lighting} and no white background`;
+      return clampPrompt(
+        `Ultra-realistic 9:16 vertical commercial product photograph of the exact item from the reference photo, ${orient.short}, shot from a ${anglePhrase}, placed in a ${bgPhrase}. Sharp focus, realistic materials, grounded contact shadow, edge-to-edge full frame, no text, no watermarks, no borders.`,
+        700
+      );
     }
 
     function buildActMotionPrompt(m, act, dna) {
@@ -1162,7 +1205,7 @@
           : `Ultra-realistic commercial studio film physics: distinct side/angle camera motion with slow silky product turn, natural light roll-off and ${livingAtmo}.`;
       const prompt = [
         `Ultra-realistic 9:16 ${m.genre}, mute ARRI Alexa 65 commercial studio film, true physical realism, full-bleed edge-to-edge${isLightStudio ? "" : ", ZERO white background or white floor"}. ${paletteLock}`,
-        `LOCK: ${getProductSpec()} ${boxLock} ${settingClause} Light: ${dna.light.text}.`,
+        `LOCK: ${getProductSpec()} ${boxLock} ${settingClause} Light: ${isLightStudio ? 'clean bright architectural studio softbox lighting' : dna.light.text}.`,
         `MOTION: ${act.beat}. ${cameraStyle}`,
         `SHOT (${act.shortLabel}): ${act.desc(m, orient, isBox, macroFocus, dna)}`
       ].join(" ");
@@ -1181,7 +1224,7 @@
       const body = clampPrompt([
         `Ultra-realistic 9:16 full-bleed commercial studio photo (no bars/text/arrows), ${m.genre} (${dna.id}).${bgPurge} ${getColorPaletteLock(m)}`,
         `LOCK: ${getProductSpec()} Centered in middle-upper safe zone (bottom 25% clear).${boxClause}`,
-        `Scene: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Light: ${dna.light.text}.`
+        `Scene: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Light: ${isLightStudio ? 'clean bright architectural studio softbox lighting' : dna.light.text}.`
       ].join(" "), 1850);
       return `${body}\n\n${negLine}`;
     }
@@ -2532,17 +2575,35 @@
           try {
             await imgSem.acquire(runSignal);
             try {
-              pipeStates[i].status = "foto 4K: enviando...";
-              renderPipelineUI();
-              const qImg = await callApi({
-                task: "submit_scene",
-                imageBase64: uploadedBase64,
-                mimeType: uploadedMime,
-                imagePrompt: buildActKeyframePrompt(selectedVidModel, act, dna)
-              }, 28000, runSignal);
-              pipeStates[i].status = "foto 4K: GPU...";
-              const rImg = await pollFalJob(qImg, (st) => { pipeStates[i].status = `foto 4K: ${st}`; }, runSignal);
-              kfUrl = rImg.imageUrl;
+              const promptsToTry = [
+                { label: "foto 4K", prompt: buildActKeyframePrompt(selectedVidModel, act, dna) },
+                { label: "foto 4K (resgate limpo)", prompt: buildSafeFallbackKeyframePrompt(selectedVidModel, act, dna) }
+              ];
+              let imgErr = null;
+              for (let pIdx = 0; pIdx < promptsToTry.length; pIdx++) {
+                try {
+                  pipeStates[i].status = `${promptsToTry[pIdx].label}: enviando...`;
+                  renderPipelineUI();
+                  const qImg = await callApi({
+                    task: "submit_scene",
+                    imageBase64: uploadedBase64,
+                    mimeType: uploadedMime,
+                    imagePrompt: promptsToTry[pIdx].prompt
+                  }, 28000, runSignal);
+                  pipeStates[i].status = `${promptsToTry[pIdx].label}: GPU...`;
+                  const rImg = await pollFalJob(qImg, (st) => { pipeStates[i].status = `${promptsToTry[pIdx].label}: ${st}`; }, runSignal);
+                  if (rImg && rImg.imageUrl) {
+                    kfUrl = rImg.imageUrl;
+                    imgErr = null;
+                    break;
+                  }
+                } catch (eTry) {
+                  if (eTry.message === "ABORTED_RUN" || eTry.status === 403) throw eTry;
+                  imgErr = eTry;
+                  if (pIdx === 0) await sleep(600);
+                }
+              }
+              if (!kfUrl && imgErr) throw imgErr;
               keyframeUrls[i] = kfUrl;
               if (!wantsGpu) {
                 pipeStates[i].done = true;
@@ -2629,7 +2690,7 @@
 
         const readyGpuTotal = assembledPlan.filter((x) => x.type === "video").length;
         if (!assembledPlan.length || (readyGpuTotal === 0 && lastClipErrorMsg)) {
-          throw new Error(lastClipErrorMsg ? `Falha ao gerar cortes 3D: ${lastClipErrorMsg}` : "Nenhum corte finalizou dentro do limite de tempo.");
+          throw new Error(lastClipErrorMsg ? `Falha na geração fal.ai: ${lastClipErrorMsg}` : "Nenhum corte finalizou dentro do limite de tempo.");
         }
         if (deadlineReached) {
           noteMsg = `⚡ Limite de tempo (${fmtClock(limitSec)}) atingido: ${readyGpuTotal} cortes 3D + ${assembledPlan.length - readyGpuTotal} cortes 4K.`;
