@@ -593,12 +593,12 @@
         full: "RIGID 0-DEGREE LOCK: Product stands solidly UPRIGHT facing forward on its natural base resting firmly on the surface. NEVER float, tip sideways, spin or turn to the rear."
       },
       flat: {
-        short: "resting HORIZONTALLY FLAT bolted at 0 degrees facing forward in 3D perspective",
-        full: "RIGID 0-DEGREE LOCK: Product lies HORIZONTALLY FLAT on its natural bottom base facing the camera in crisp 3D perspective. NEVER prop vertically, spin or turn to the rear."
+        short: "lying HORIZONTALLY FLAT on its bottom belly bolted at 0 degrees facing forward in 3D perspective",
+        full: "RIGID 0-DEGREE FLAT LOCK: Product lies HORIZONTALLY FLAT on its natural bottom belly resting firmly on the pedestal surface in 3D perspective. STRICTLY FORBIDDEN to stand upright on its rear end, tilt vertically, float or spin sideways."
       },
       flat_lay: {
         short: "resting neatly FLAT bolted inside the wide-open display tray/surface",
-        full: "RIGID 0-DEGREE LOCK: Product lies neatly FLAT inside the wide-open display tray or surface viewed cleanly from an elevated angle. NEVER close lid or spin."
+        full: "RIGID 0-DEGREE LOCK: Product lies neatly FLAT inside the wide-open display tray or surface viewed cleanly from an elevated angle. NEVER close lid, stand upright or spin."
       }
     };
 
@@ -619,23 +619,23 @@
 
       const actHook = {
         key: "hook_hero", shortLabel: "Ato 1 • Hook Crash-Zoom", isHuman: false, isMacro: false, editMove: "crashZoom", trans: "mirrorPunch",
-        beat: "0.0s: fast aggressive frontal dolly-in crash-zoom toward the bolted product -> 1.0s: crisp specular glint flashes across the front surface while background phenomenon moves vividly -> 2.5s: sharp lock-on hero framing in upper-center safe zone",
-        desc: (m, orient, isBox) => `ACT 1 (PATTERN-INTERRUPT HERO HOOK — 75% FRAME OCCUPATION): ${optics}. The exact product ${orient.short} ${isBox ? "at an elevated 36° angle " : ""}on ${m.surface}, positioned cleanly in the upper-center optical safe zone (bottom 22% clear). ${m.lighting}. High-impact commercial framing with zero clutter.`
+        beat: "0.0s: fast aggressive frontal dolly-in crash-zoom toward the bolted product -> 1.0s: crisp specular glint flashes across the front surface while background phenomenon moves vividly -> 2.5s: sharp lock-on hero framing centered in upper-middle safe zone",
+        desc: (m, orient, isBox) => `ACT 1 (PATTERN-INTERRUPT HERO HOOK — 75% FRAME OCCUPATION): ${optics}. Medium-close elevated hero framing where the pedestal top sits at mid-frame and the exact product ${orient.short} ${isBox ? "at an elevated 36° angle " : ""}on ${m.surface} is centered squarely in the middle-upper optical safe zone (bottom 25% empty pedestal/shadow clear for TikTok Shop cart). ${m.lighting}.`
       };
       const actMacro = {
         key: "super_macro", shortLabel: "Ato 2 • Super Macro 100mm", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "radialFlash",
-        beat: "0.0s: rapid macro punch-in onto authentic material texture -> 1.0s: clean specular rim-light sweeps briskly across real edges and finish -> 2.5s: ultra-crisp micro-detail glide",
-        desc: (m, orient, isBox, macro) => `ACT 2 (EXTREME 100MM SUPER MACRO — 85–95% FRAME OCCUPATION): Extreme 100mm cinema macro lens tightly filling 90% of the 9:16 frame focusing on ${macro} of the exact product ${orient.short} on ${m.surface}. ${m.macroAccent}. Razor-sharp real surface grain, authentic original markings, zero invented text.`
+        beat: "0.0s: ultra-tight 100mm macro punch-in filling the entire vertical screen with the central surface and controls -> 1.0s: crisp specular light glides across micro-textures -> 2.5s: razor-sharp macro detail glide",
+        desc: (m, orient, isBox, macro) => `ACT 2 (EXTREME 100MM MACRO CROP — 95% FRAME FILL, NO WIDE SHOT): Ultra-close 100mm probe-macro lens cropped tightly onto ONLY the central detail (${macro}) of the exact product ${orient.short}, filling 95% of the vertical 9:16 screen so outer edges and pedestal are cropped out of frame. ${m.macroAccent}. Razor-sharp real surface grain, authentic original markings, zero invented text.`
       };
       const actSculpt = {
         key: "sculpt_34", shortLabel: "Ato 3 • Escultura 3/4 + Luz", isHuman: false, isMacro: false, editMove: "lightSweep34", trans: "whipPan",
-        beat: "0.0s: crisp 3/4 front-angled crane elevation (never past 30° side, never showing rear) -> 1.0s: bright rim-light glides across contours as background smoke/sparks/atmosphere flows dynamically -> 2.5s: commanding close sculptural framing",
-        desc: (m, orient) => `ACT 3 (SCULPTURAL 3/4 FRONT ANGLE + LIVING BACKGROUND — 80% FRAME): ${optics}. Dynamic front 3/4 commercial close-up (maximum 25° front angle, front face always visible) of the exact product ${orient.short} on ${m.surface}, carved by moving specular rim-light while the single background phenomenon (${m.envMotion}) flows vividly behind.`
+        beat: "0.0s: crisp 3/4 front-angled crane elevation (maximum 25° angle, bolted flat/upright, never rotating) -> 1.0s: bright rim-light glides across contours as background phenomenon flows vividly -> 2.5s: commanding close sculptural framing",
+        desc: (m, orient) => `ACT 3 (SCULPTURAL 3/4 FRONT ANGLE + LIVING BACKGROUND — 80% FRAME): ${optics}. Dynamic front 3/4 commercial close-up (maximum 25° front angle, product bolted motionless in its resting position) of the exact product ${orient.short} on ${m.surface}, centered in the middle-upper safe zone and carved by moving specular rim-light while ${m.envMotion} flows behind.`
       };
       const actHero = {
         key: "final_hero", shortLabel: "Ato 4 • Hero Autoridade", isHuman: false, isMacro: false, editMove: "heroPunch", trans: "mirrorPunch",
-        beat: "0.0s: authoritative frontal low-angle push-in elevating the product -> 1.0s: overhead spotlight and specular rim-light peak across the entire silhouette -> 2.5s: iconic symmetrical hero lock in upper-center safe zone",
-        desc: (m, orient) => `ACT 4 (SYMMETRICAL AUTHORITY HERO FINALE — 75% FRAME IN UPPER-CENTER SAFE ZONE): ${optics}. Iconic dead-center symmetrical hero shot of the exact product ${orient.short} on ${m.surface}, positioned cleanly in the upper-center safe zone with dramatic overhead lighting, clean surface reflection and commanding flagship presence.`
+        beat: "0.0s: steady frontal push-in keeping the product 100% bolted in its resting position (never standing on rear edge, never spinning, zero added RGB/purple glow) -> 1.0s: overhead spotlight and specular rim-light peak across the silhouette -> 2.5s: iconic symmetrical hero lock in middle-upper safe zone",
+        desc: (m, orient) => `ACT 4 (SYMMETRICAL AUTHORITY HERO FINALE — 78% FRAME IN MIDDLE-UPPER SAFE ZONE): ${optics}. Iconic dead-center symmetrical frontal hero shot of the exact product ${orient.short} on ${m.surface}, centered in the middle-upper safe zone (bottom 25% clear) with dramatic overhead spotlight, crisp natural specular highlights and zero added RGB/purple LEDs.`
       };
 
       if (profile === "cinema_universal") {
@@ -1047,7 +1047,7 @@
     function buildNegative(allowPeople, isBox = false) {
       const parts = [
         "orbiting", "banking", "spin", "turntable", "rear view",
-        "no glowing rim", "no orange underglow", "no illuminated base", "no LED strip",
+        "no glowing rim", "no purple LED", "no neon edge", "no underglow", "no LED strip",
         "invented logo", "altered logo", "text", "subtitles", "watermark",
         "arrows", "red arrow", "black bars", "morphing", "distorted product",
         "floating product", "cartoon", "blur"
@@ -1097,7 +1097,7 @@
         `Photorealistic 9:16 vertical ${m.genre}, mute video, ARRI Alexa 65 cinema realism.`,
         `PRODUCT & CONTINUITY LOCK: ${getProductSpec()}.${boxLock} Keep the exact same universe (${m.name}) and lighting (${dna.light.text}).`,
         `SCENE (${act.shortLabel}): ${act.desc(m, orient, isBox, macroFocus, dna)}`,
-        `BEAT-BY-BEAT CAMERA & LIGHT CHOREOGRAPHY: ${act.beat}. Movement is driven by frontal linear dolly/crash-zoom, crane elevation, specular rim-light sweep across the surface and vivid background motion (${m.envMotion}).`
+        `BEAT-BY-BEAT CAMERA, PRODUCT & SCENARIO MOTION: ${act.beat}. Apply smooth continuous cinema zoom-in and parallax glide, subtle realistic physical presence on the product (crisp traveling specular reflections, micro-glint across textures and grounded contact shadow without spinning 180° or standing upright) combined with vivid living scenario motion behind (${m.envMotion}).`
       ].join("\n\n");
     }
 
@@ -1412,11 +1412,13 @@
 
     function drawCroppedCover(c2d, mediaEl, crop, scale = 1.0, panX = 0, panY = 0, angleRad = 0, alpha = 1, filterStr = "none") {
       const cw = canvas.width, ch = canvas.height;
+      c2d.fillStyle = "#000000";
+      c2d.fillRect(0, 0, cw, ch);
       const cRatio = cw / ch, sRatio = crop.sw / crop.sh;
       let baseW = cw, baseH = ch;
       if (sRatio > cRatio) { baseH = ch; baseW = baseH * sRatio; }
       else { baseW = cw; baseH = baseW / sRatio; }
-      const minSafe = 1.02 + (Math.abs(panX) * 2.1) / cw + (Math.abs(panY) * 2.1) / ch + Math.abs(angleRad) * 2.6;
+      const minSafe = 1.04 + (Math.abs(panX) * 2.35) / baseW + (Math.abs(panY) * 2.35) / baseH + Math.abs(angleRad) * 2.8;
       const sc = Math.max(scale, minSafe);
       const dw = baseW * sc, dh = baseH * sc;
       c2d.save();
@@ -1751,37 +1753,42 @@
             return;
           }
 
-          let scale = 1.03, panX = 0, panY = 0, angle = 0;
+          const smoothCurve = easeInOutQuad(p);
           const dir = (sIdx % 2 === 0 ? 1 : -1) * dna.flipDir;
-          const optBoost = seg.isImg ? 1.35 : 1.0;
+          const optBoost = seg.isImg ? 1.25 : 1.0;
+          let scale = 1.03, panX = 0, panY = 0, angle = 0;
 
           if (isCleanMode) {
-            scale = seg.isImg ? 1.04 + easeOutCubic(p) * 0.10 : 1.02 + easeOutCubic(p) * 0.04;
-            panX = seg.isImg ? Math.sin(p * Math.PI) * 8 : 0;
-            panY = seg.isImg ? (0.5 - p) * 10 : 0;
+            scale = 1.03 + smoothCurve * (seg.isImg ? 0.12 : 0.08);
+            panX = dir * Math.sin(p * Math.PI) * (seg.isImg ? 10 : 6);
+            panY = (0.5 - smoothCurve) * (seg.isImg ? 10 : 6);
           } else {
             if (seg.editMove === "crashZoom") {
-              scale = 1.03 + easeOutCubic(p) * (0.17 + dna.zoomJitter) * optBoost;
-              panY = (0.45 - p) * 10 * optBoost;
+              scale = 1.03 + easeOutCubic(p) * (0.16 + dna.zoomJitter) * optBoost;
+              panY = (0.45 - smoothCurve) * 10 * optBoost;
             } else if (seg.editMove === "macroSweep") {
-              scale = 1.08 + easeInOutQuad(p) * 0.11 * optBoost;
-              panX = dir * (p - 0.5) * 26 * optBoost;
+              scale = 1.18 + smoothCurve * 0.15 * optBoost;
+              panX = dir * (smoothCurve - 0.5) * 26 * optBoost;
+              panY = (0.5 - smoothCurve) * 8;
             } else if (seg.editMove === "craneRise") {
-              scale = 1.04 + easeOutCubic(p) * 0.12 * optBoost;
-              panY = (0.5 - p) * 24 * optBoost;
+              scale = 1.04 + smoothCurve * 0.13 * optBoost;
+              panY = (0.5 - smoothCurve) * 22 * optBoost;
+              panX = dir * Math.sin(p * Math.PI) * 8;
             } else if (seg.editMove === "heroPunch") {
-              const finalPunch = p > 0.72 ? easeOutCubic((p - 0.72) / 0.28) * 0.12 : 0;
-              scale = 1.03 + easeOutCubic(p) * 0.08 + finalPunch;
+              const finalPunch = p > 0.72 ? easeOutCubic((p - 0.72) / 0.28) * 0.10 : 0;
+              scale = 1.03 + smoothCurve * 0.09 + finalPunch;
+              panY = (0.5 - smoothCurve) * 6;
             } else {
-              scale = 1.04 + easeOutCubic(p) * 0.13 * optBoost;
-              panX = dir * (p - 0.5) * 18 * optBoost;
-              angle = dir * (p - 0.5) * 0.012;
+              scale = 1.04 + smoothCurve * 0.13 * optBoost;
+              panX = dir * (smoothCurve - 0.5) * 18 * optBoost;
+              panY = (0.5 - smoothCurve) * 8;
+              angle = dir * (smoothCurve - 0.5) * 0.010;
             }
 
             if (seg.trans === "whipPan" && cEl < 0.14) {
               const wp = 1 - easeOutCubic(cEl / 0.14);
-              panX += dir * wp * 68;
-              scale += wp * 0.08;
+              panX += dir * wp * 62;
+              scale += wp * 0.07;
             }
           }
 
@@ -1789,8 +1796,8 @@
 
           if (isBlockbuster && seg.trans === "radialFlash" && cEl < 0.15) {
             drawSpecularRadialFlash(ctx, canvas.width, canvas.height, 1 - cEl / 0.15);
-          } else if (!isCleanMode && (seg.isImg || seg.editMove === "macroSweep")) {
-            drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.14 * Math.sin(p * Math.PI), dir);
+          } else if (seg.isImg || seg.editMove === "macroSweep") {
+            drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.13 * Math.sin(p * Math.PI), dir);
           }
         });
       });
