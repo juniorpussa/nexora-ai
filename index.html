@@ -591,20 +591,20 @@
 
     const ORIENTATION_RULES = {
       auto: {
-        short: "resting solidly in its natural real-world 3D gravity posture bolted at 0 degrees facing the camera",
-        full: "NATURAL GRAVITY 0-DEGREE LOCK: Place the exact product solidly in its true real-world physical resting posture on the surface (stand solidly upright if naturally vertical like a bottle, watch on stand or supplement; lie solidly horizontal and flat on its natural bottom belly if naturally flat like a mouse, sneaker, sunglasses, wallet or controller). STRICTLY FORBIDDEN to prop a flat product upright on its rear edge, NEVER paste a top-down catalog cutout vertically, NEVER float, tip sideways, spin or turn to the rear."
+        short: "resting solidly in its natural 3D gravity posture at 0 degrees facing camera",
+        full: "NATURAL 0° GRAVITY LOCK: Rest the product in its true physical posture (upright if vertical like bottle/watch; horizontally flat on its bottom belly if flat like mouse/sneaker/glasses). NEVER stand a flat product upright on its rear, paste top-down vertically, float or spin."
       },
       upright: {
-        short: "standing solidly UPRIGHT bolted at 0 degrees facing the camera on its natural base",
-        full: "RIGID 0-DEGREE LOCK: Product stands solidly UPRIGHT facing forward on its natural base resting firmly on the surface. NEVER paste a flat top-down catalog cutout vertically, NEVER float, tip sideways, spin or turn to the rear."
+        short: "standing solidly UPRIGHT at 0 degrees facing camera on its natural base",
+        full: "RIGID 0° UPRIGHT LOCK: Product stands solidly upright facing forward on its base. NEVER paste flat top-down vertically, float, tip or spin."
       },
       flat: {
-        short: "lying HORIZONTALLY FLAT on its bottom belly bolted at 0 degrees facing forward in 3D perspective",
-        full: "RIGID 0-DEGREE FLAT LOCK: Product lies HORIZONTALLY FLAT on its natural bottom belly resting firmly on the pedestal surface in 3D perspective. STRICTLY FORBIDDEN to stand upright on its rear end, paste a top-down catalog view upright, tilt vertically, float or spin sideways."
+        short: "lying HORIZONTALLY FLAT on its bottom belly at 0 degrees in 3D perspective",
+        full: "RIGID 0° FLAT LOCK: Product lies horizontally flat on its natural bottom belly on the pedestal in 3D perspective. NEVER stand upright on its rear end, paste top-down vertically, float or spin."
       },
       flat_lay: {
-        short: "resting neatly FLAT bolted inside the wide-open display tray/surface",
-        full: "RIGID 0-DEGREE LOCK: Product lies neatly FLAT inside the wide-open display tray or surface viewed cleanly from an elevated angle. NEVER close lid, stand upright or spin."
+        short: "resting neatly FLAT inside the wide-open display tray",
+        full: "RIGID 0° LOCK: Product lies neatly flat inside the wide-open display tray at an elevated angle. NEVER close lid, stand upright or spin."
       }
     };
 
@@ -1060,83 +1060,90 @@
     renderImagePresets();
     renderVideoPresets();
 
+    function clampPrompt(text, maxLen = 2150) {
+      const clean = String(text || "").replace(/\s+/g, " ").trim();
+      if (clean.length <= maxLen) return clean;
+      const cut = clean.slice(0, maxLen);
+      const lastSpace = cut.lastIndexOf(" ");
+      return (lastSpace > maxLen - 120 ? cut.slice(0, lastSpace) : cut).trim();
+    }
+
     function buildNegative(allowPeople, isBox = false, allowLightBg = false) {
       const parts = [
         "orbiting", "banking", "spin", "turntable", "rear view",
-        "no purple LED", "no pink LED", "no neon edge", "no underglow", "no LED strip",
-        "invented logo", "altered logo", "text", "wall text", "signage", "subtitles", "watermark",
-        "arrows", "red arrow", "black bars", "white bars", "catalog cutout",
+        "purple LED", "pink LED", "neon edge", "underglow", "LED strip",
+        "invented logo", "text", "wall text", "subtitles", "watermark",
+        "arrows", "black bars", "white bars", "catalog cutout",
         "morphing", "distorted product", "floating product", "cartoon", "blur"
       ];
       if (!allowLightBg) parts.push("white background", "white floor", "white margin");
       if (isBox) parts.push("closing lid", "closed box");
       if (allowPeople) parts.push("deformed hands", "extra fingers");
       else parts.push("people", "hands", "fingers");
-      return parts.join(", ").slice(0, 390);
+      return parts.join(", ").slice(0, 340);
     }
 
     function getProductSpec() {
-      const hint = productDetailHint.value.trim();
+      const hint = productDetailHint.value.trim().slice(0, 160);
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const core = hint
-        ? `${hint} — 100% identical to the uploaded reference photo, exact original silhouette, colors, material texture and original markings preserved, zero invented logos, zero added purple/pink/RGB LEDs or glowing base rim`
-        : `exact product from the uploaded reference photo, 100% faithful to its real design, colors, materials and authentic finish, zero invented logos, zero added purple/pink/RGB LEDs or glowing base rim`;
+        ? `${hint}, 100% identical to reference photo, authentic colors/texture/markings, zero invented logos or purple/pink/RGB LEDs`
+        : `exact product from reference photo, 100% faithful design/colors/finish, zero invented logos or purple/pink/RGB LEDs`;
       return `${core}. ${orient.full}`;
     }
 
     function buildActKeyframePrompt(m, act, dna) {
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
-      const macroFocus = macroTarget.value.trim() || "authentic material texture, precision edges, real hardware and original finish";
+      const macroFocus = (macroTarget.value.trim() || "material texture, precision edges and original finish").slice(0, 120);
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
       const bgPurge = isLightStudio
-        ? "FULL-BLEED STUDIO LOCK: Seamless edge-to-edge architectural studio extending cleanly to all 4 borders, zero black/grey letterbox bars, zero wall text."
-        : "BACKGROUND PURGE LOCK: COMPLETELY DISCARD AND REPLACE 100% of the uploaded photo's original white or plain background. Seamless edge-to-edge cinema environment extending all the way to the top, bottom and side borders — ZERO white background, ZERO white floor, ZERO white margin, ZERO catalog cutout look, ZERO wall signage or text.";
+        ? "Full-bleed architectural studio to all 4 borders, no bars, no wall text."
+        : "REPLACE 100% of uploaded photo's white/plain background with full-bleed cinema environment to all 4 borders — ZERO white background, white floor, white margin or wall text.";
       const boxLock = isBox
-        ? "CASE LOCK: Open box/case lid locked 100% wide open and motionless; elevated framing so the product is completely unobstructed."
-        : "SAFE-ZONE & VISIBILITY LOCK: Product stays bolted at 0 degrees facing camera, centered in the middle-upper optical safe zone (bottom 25% empty dark pedestal/shadow clear for TikTok Shop cart button), unlit product base.";
-
-      return [
-        `Photorealistic 9:16 vertical full-bleed commercial photograph (edge-to-edge, NO black, grey or white bars, ZERO drawn text or arrows).`,
-        bgPurge,
-        `PRODUCT LOCK: ${getProductSpec()}.`,
-        boxLock,
+        ? "Open box lid locked 100% wide open."
+        : "Product centered in middle-upper safe zone (bottom 25% clear pedestal/shadow for TikTok cart), unlit base.";
+      const negLine = `Negative: ${buildNegative(act.isHuman, isBox, isLightStudio)}.`;
+      const body = clampPrompt([
+        `Photorealistic 9:16 vertical full-bleed commercial photo (no bars, no text/arrows). ${bgPurge}`,
+        `PRODUCT LOCK: ${getProductSpec()} ${boxLock}`,
         act.desc(m, orient, isBox, macroFocus, dna),
-        `Lighting & Atmosphere: ${m.envMotion}. ${dna.light.text}. Clean cinema stage with crisp subject separation, grounded contact shadow, zero invented wall text or LEDs.`,
-        `Negative: ${buildNegative(act.isHuman, isBox, isLightStudio)}.`
-      ].join("\n\n");
+        `Lighting: ${m.envMotion}. ${dna.light.text}. Grounded contact shadow.`
+      ].join(" "), 1850);
+      return `${body}\n\n${negLine}`;
     }
 
     function buildActMotionPrompt(m, act, dna) {
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
-      const macroFocus = macroTarget.value.trim() || "authentic material texture, precision edges, real hardware and original finish";
+      const macroFocus = (macroTarget.value.trim() || "material texture, precision edges and original finish").slice(0, 120);
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
       const boxLock = isBox
-        ? " Keep open box/case lid 100% motionless and wide open."
-        : " Keep the product strictly bolted at 0 degrees facing camera in its resting position — zero standing upright on rear end, zero spin, zero rear rotation, zero purple/pink/RGB LED glow.";
-
-      return [
-        `Photorealistic 9:16 vertical ${m.genre}, mute video, ARRI Alexa 65 cinema realism, full-bleed edge-to-edge frame${isLightStudio ? "" : " with ZERO white background or white floor"}.`,
-        `PRODUCT & CONTINUITY LOCK: ${getProductSpec()}.${boxLock} Keep the exact same universe (${m.name}) and lighting (${dna.light.text}).`,
-        `SCENE (${act.shortLabel}): ${act.desc(m, orient, isBox, macroFocus, dna)}`,
-        `BEAT-BY-BEAT CAMERA, PRODUCT & SCENARIO MOTION: ${act.beat}. Apply smooth continuous cinema push-in and parallax glide, realistic traveling specular reflections and micro-glint across real textures with grounded contact shadow (never lifting upright or spinning) combined with vivid living scenario motion behind (${m.envMotion}).`
-      ].join("\n\n");
+        ? "Open lid 100% motionless."
+        : "Product strictly bolted at 0° in resting posture (never upright on rear, never spinning, zero purple/pink/RGB LEDs).";
+      const prompt = [
+        `Photorealistic 9:16 ${m.genre}, mute ARRI Alexa 65 cinema realism, full-bleed edge-to-edge${isLightStudio ? "" : ", ZERO white background or white floor"}.`,
+        `LOCK: ${getProductSpec()} ${boxLock} Universe: ${m.name}. Light: ${dna.light.text}.`,
+        `MOTION: ${act.beat}. Smooth cinema push-in and parallax, traveling specular glint across real textures, grounded shadow, living background motion (${m.envMotion}).`,
+        `SHOT (${act.shortLabel}): ${act.desc(m, orient, isBox, macroFocus, dna)}`
+      ].join(" ");
+      return clampPrompt(prompt, 2150);
     }
 
     function buildStandaloneImagePrompt(m, dna) {
       const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const isBox = isContainerModel(m);
       const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
-      const castClause = m.hasPerson ? ` Person/Creator: ${dna.cast.text}.` : "";
-      const boxClause = isBox ? " Case/box lid fixed 100% wide open." : "";
-      const bgPurge = isLightStudio ? "" : " Completely discard and replace 100% of the uploaded photo's white/plain background with full-bleed edge-to-edge cinema environment (ZERO white background, ZERO white floor).";
-      return [
-        `Photorealistic 9:16 vertical edge-to-edge commercial photograph (NO black or white bars, ZERO drawn text, ZERO arrows), scene: ${m.name} (${dna.id}).${bgPurge}`,
-        `Product Lock: ${getProductSpec()}. Product ${orient.short}, positioned cleanly in the middle-upper optical safe zone (bottom 25% clear).${boxClause}`,
-        `Setting: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Lighting: ${dna.light.text}.`,
-        `Negative: ${buildNegative(m.hasPerson, isBox, isLightStudio)}.`
-      ].join("\n\n");
+      const castClause = m.hasPerson ? ` Creator: ${dna.cast.text}.` : "";
+      const boxClause = isBox ? " Box lid fixed 100% wide open." : "";
+      const bgPurge = isLightStudio ? "" : " Replace 100% of uploaded white/plain background with full-bleed cinema scene (ZERO white background/floor).";
+      const negLine = `Negative: ${buildNegative(m.hasPerson, isBox, isLightStudio)}.`;
+      const body = clampPrompt([
+        `Photorealistic 9:16 full-bleed commercial photo (no bars/text/arrows), ${m.name} (${dna.id}).${bgPurge}`,
+        `LOCK: ${getProductSpec()} Centered in middle-upper safe zone (bottom 25% clear).${boxClause}`,
+        `Scene: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Light: ${dna.light.text}.`
+      ].join(" "), 1850);
+      return `${body}\n\n${negLine}`;
     }
 
     function optimizeUpload(file) {
