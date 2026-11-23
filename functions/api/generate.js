@@ -226,7 +226,8 @@ export async function onRequestPost(context) {
         customVoiceId = String(context.env.NATASHA_VOICE_ID).trim();
       }
 
-      const speed = Math.min(1.25, Math.max(0.85, Number(body.speed) || 1.05));
+      const speed = Math.min(1.40, Math.max(0.85, Number(body.speed) || 1.20));
+      const elSpeed = Math.min(1.20, Math.max(0.85, speed));
       const endpoints = [];
 
       if (customVoiceId) {
@@ -264,7 +265,7 @@ export async function onRequestPost(context) {
           {
             name: `ElevenLabs (${voicePreset.el})`,
             url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
-            payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed }
+            payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed: elSpeed }
           }
         );
       } else {
@@ -272,7 +273,7 @@ export async function onRequestPost(context) {
           {
             name: `ElevenLabs (${voicePreset.el})`,
             url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
-            payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed }
+            payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed: elSpeed }
           },
           {
             name: "MiniMax Speech-02 HD",
