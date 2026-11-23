@@ -107,7 +107,7 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">NEXORA.AI <span>NÍVEL 10 ABSOLUTO • 105 VÍDEOS • 105 IMAGENS</span></div>
+    <div class="brand">NEXORA.AI <span>BLOCKBUSTER v11 • 105 VÍDEOS • 105 IMAGENS</span></div>
     <div class="pill-info">🎬 Motor Blockbuster 4 Atos Universal (Qualquer Produto) • Super Macro 100mm • Mirror Punch-In &amp; Speed-Ramp • Voz PT-BR • PNG</div>
   </div>
 
@@ -173,7 +173,8 @@
               <div>
                 <label for="productOrientation">Posição Física Travada 0° (Zona Segura Superior)</label>
                 <select id="productOrientation">
-                  <option value="upright" selected>Em pé no pedestal/base (Perfume, Garrafa, Relógio, Suplemento)</option>
+                  <option value="auto" selected>🤖 Auto-Universal — Posição Natural Real do Produto (Qualquer Produto)</option>
+                  <option value="upright">Em pé no pedestal/base (Perfume, Garrafa, Relógio, Suplemento)</option>
                   <option value="flat">Deitado horizontal na base (Mouse, Tênis, Óculos, Controle, Carteira)</option>
                   <option value="flat_lay">Em bandeja / maleta aberta (Kit, Joia, Eletrônico)</option>
                 </select>
@@ -468,6 +469,7 @@
     }
 
     const CONTAINER_MODEL_IDS = new Set([3, 23, 37, 52, 67, 71, 77]);
+    const LIGHT_STUDIO_MODEL_IDS = new Set([38, 88]);
 
     const RAW_VIDEO_MODELS = [
       [101,"Master10",false,false,true,"#101 Eclipse Vulcânico & Faíscas Ouro (Ref. Vídeo 1)","Rocha vulcânica + eclipse dourado + brilho estrela + super macro 100mm + faíscas","blockbuster volcanic-eclipse commercial","rugged raw matte-black volcanic basalt rock pedestal in a dramatic pitch-black void","Blazing golden solar eclipse corona glowing far behind with warm star-glint edge highlights and clean front key light","Golden eclipse corona radiates behind as floating golden fire sparks drift slowly through deep f/1.4 bokeh while warm specular light sweeps across the product","extreme 100mm macro filling 90% of the frame showing real surface grain, edges and warm golden rim glint"],
@@ -588,13 +590,17 @@
     }));
 
     const ORIENTATION_RULES = {
+      auto: {
+        short: "resting solidly in its natural real-world 3D gravity posture bolted at 0 degrees facing the camera",
+        full: "NATURAL GRAVITY 0-DEGREE LOCK: Place the exact product solidly in its true real-world physical resting posture on the surface (stand solidly upright if naturally vertical like a bottle, watch on stand or supplement; lie solidly horizontal and flat on its natural bottom belly if naturally flat like a mouse, sneaker, sunglasses, wallet or controller). STRICTLY FORBIDDEN to prop a flat product upright on its rear edge, NEVER paste a top-down catalog cutout vertically, NEVER float, tip sideways, spin or turn to the rear."
+      },
       upright: {
         short: "standing solidly UPRIGHT bolted at 0 degrees facing the camera on its natural base",
-        full: "RIGID 0-DEGREE LOCK: Product stands solidly UPRIGHT facing forward on its natural base resting firmly on the surface. NEVER float, tip sideways, spin or turn to the rear."
+        full: "RIGID 0-DEGREE LOCK: Product stands solidly UPRIGHT facing forward on its natural base resting firmly on the surface. NEVER paste a flat top-down catalog cutout vertically, NEVER float, tip sideways, spin or turn to the rear."
       },
       flat: {
         short: "lying HORIZONTALLY FLAT on its bottom belly bolted at 0 degrees facing forward in 3D perspective",
-        full: "RIGID 0-DEGREE FLAT LOCK: Product lies HORIZONTALLY FLAT on its natural bottom belly resting firmly on the pedestal surface in 3D perspective. STRICTLY FORBIDDEN to stand upright on its rear end, tilt vertically, float or spin sideways."
+        full: "RIGID 0-DEGREE FLAT LOCK: Product lies HORIZONTALLY FLAT on its natural bottom belly resting firmly on the pedestal surface in 3D perspective. STRICTLY FORBIDDEN to stand upright on its rear end, paste a top-down catalog view upright, tilt vertically, float or spin sideways."
       },
       flat_lay: {
         short: "resting neatly FLAT bolted inside the wide-open display tray/surface",
@@ -623,9 +629,9 @@
         desc: (m, orient, isBox) => `ACT 1 (PATTERN-INTERRUPT HERO HOOK — 75% FRAME OCCUPATION): ${optics}. Medium-close elevated hero framing where the pedestal top sits at mid-frame and the exact product ${orient.short} ${isBox ? "at an elevated 36° angle " : ""}on ${m.surface} is centered squarely in the middle-upper optical safe zone (bottom 25% empty pedestal/shadow clear for TikTok Shop cart). ${m.lighting}.`
       };
       const actMacro = {
-        key: "super_macro", shortLabel: "Ato 2 • Super Macro 100mm", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "radialFlash",
-        beat: "0.0s: ultra-tight 100mm macro punch-in filling the entire vertical screen with the central surface and controls -> 1.0s: crisp specular light glides across micro-textures -> 2.5s: razor-sharp macro detail glide",
-        desc: (m, orient, isBox, macro) => `ACT 2 (EXTREME 100MM MACRO CROP — 95% FRAME FILL, NO WIDE SHOT): Ultra-close 100mm probe-macro lens cropped tightly onto ONLY the central detail (${macro}) of the exact product ${orient.short}, filling 95% of the vertical 9:16 screen so outer edges and pedestal are cropped out of frame. ${m.macroAccent}. Razor-sharp real surface grain, authentic original markings, zero invented text.`
+        key: "super_macro", shortLabel: "Ato 2 • Super Macro 100mm", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "zoomBlur",
+        beat: "0.0s: ultra-tight 100mm probe-macro punch-in 3cm from the product surface filling 100% of the vertical frame -> 1.0s: crisp specular light glides slowly across authentic micro-textures and bevels -> 2.5s: razor-sharp optical macro detail glide",
+        desc: (m, orient, isBox, macro) => `ACT 2 (EXTREME 100MM PROBE-MACRO — 95–100% FULL-SCREEN MATERIAL FILL, ZERO WIDE SHOT, ZERO TOP-DOWN CATALOG POSE): Ultra-close 100mm cinema probe-macro lens positioned 3cm from the product at a low 20-degree oblique angle, cropped tightly onto ONLY the central detail (${macro}) of the exact product ${orient.short}, filling 95–100% of the vertical 9:16 frame so outer edges, full silhouette and pedestal are completely cropped out of frame. ${m.macroAccent}. Razor-sharp real surface grain, micro-bevels and authentic original markings, zero invented text, zero white background.`
       };
       const actSculpt = {
         key: "sculpt_34", shortLabel: "Ato 3 • Escultura 3/4 + Luz", isHuman: false, isMacro: false, editMove: "lightSweep34", trans: "whipPan",
@@ -643,9 +649,9 @@
           base: [actHook, actMacro, actSculpt, actHero],
           extras: [
             {
-              key: "macro_edge", shortLabel: "Macro Borda & Brilho", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "hardCut",
-              beat: "0.0s: ultra-tight linear glide across the upper edge and specular highlight -> 1.0s: crisp star-glint passes across real finish -> 2.5s: sharp focus settle",
-              desc: (m, orient, isBox, macro) => `SUPER MACRO ANGLE 2 (90% FRAME): Extreme 100mm macro sliding linearly across the precision rim and ${macro} of the exact product ${orient.short} on ${m.surface}, crisp moving rim-light and f/1.4 dark bokeh behind.`
+              key: "macro_edge", shortLabel: "Macro Borda & Brilho", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "radialFlash",
+              beat: "0.0s: ultra-tight oblique 100mm probe-macro glide across the side contour, bevel and specular highlight -> 1.0s: crisp star-glint sweeps across real finish with subtle background bokeh -> 2.5s: sharp optical focus settle",
+              desc: (m, orient, isBox, macro) => `SUPER MACRO ANGLE 2 (95% FRAME FILL — LOW OBLIQUE 3D ANGLE, ZERO TOP-DOWN CATALOG VIEW): Extreme 100mm probe-macro lens skimming closely across the sculpted edge, contour and ${macro} of the exact product ${orient.short} resting on ${m.surface}, outer edges cropped off-frame with crisp moving rim-light and rich f/1.4 cinema bokeh behind, zero white background.`
             },
             {
               key: "low_monolith", shortLabel: "Contra-Plongée Monólito", isHuman: false, isMacro: false, editMove: "craneRise", trans: "whipPan",
@@ -711,12 +717,22 @@
       const tpl = getActTemplates(m, profile);
       const count = getCutCountForDuration(targetSec);
       const [a1, a2, a3, a4] = tpl.base;
-      const pool = [a2, a3, ...tpl.extras];
+      const macroExtras = tpl.extras.filter((e) => e.isMacro);
+      const wideExtras = tpl.extras.filter((e) => !e.isMacro);
+      const macroCycle = [a2, ...macroExtras];
+      const wideCycle = [a3, ...wideExtras];
+
       const plan = [a1, a2];
-      const midNeeded = Math.max(0, count - 3);
-      for (let i = 0; i < midNeeded; i++) {
-        if (i === 1) plan.push(a3);
-        else plan.push(pool[(i + 2) % pool.length]);
+      let wIdx = 0, mIdx = 1;
+      while (plan.length < count - 1) {
+        const lastWasMacro = Boolean(plan[plan.length - 1].isMacro);
+        if (lastWasMacro) {
+          plan.push(wideCycle[wIdx % wideCycle.length]);
+          wIdx++;
+        } else {
+          plan.push(macroCycle[mIdx % macroCycle.length]);
+          mIdx++;
+        }
       }
       plan.push(a4);
       return plan.slice(0, count);
@@ -1044,73 +1060,82 @@
     renderImagePresets();
     renderVideoPresets();
 
-    function buildNegative(allowPeople, isBox = false) {
+    function buildNegative(allowPeople, isBox = false, allowLightBg = false) {
       const parts = [
         "orbiting", "banking", "spin", "turntable", "rear view",
-        "no glowing rim", "no purple LED", "no neon edge", "no underglow", "no LED strip",
-        "invented logo", "altered logo", "text", "subtitles", "watermark",
-        "arrows", "red arrow", "black bars", "morphing", "distorted product",
-        "floating product", "cartoon", "blur"
+        "no purple LED", "no pink LED", "no neon edge", "no underglow", "no LED strip",
+        "invented logo", "altered logo", "text", "wall text", "signage", "subtitles", "watermark",
+        "arrows", "red arrow", "black bars", "white bars", "catalog cutout",
+        "morphing", "distorted product", "floating product", "cartoon", "blur"
       ];
+      if (!allowLightBg) parts.push("white background", "white floor", "white margin");
       if (isBox) parts.push("closing lid", "closed box");
       if (allowPeople) parts.push("deformed hands", "extra fingers");
       else parts.push("people", "hands", "fingers");
-      return parts.join(", ").slice(0, 355);
+      return parts.join(", ").slice(0, 390);
     }
 
     function getProductSpec() {
       const hint = productDetailHint.value.trim();
-      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.upright;
+      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const core = hint
-        ? `${hint} — 100% identical to the uploaded reference photo, exact original silhouette, colors, material texture and original markings preserved, zero invented logos, zero added LEDs or glowing base rim`
-        : `exact product from the uploaded reference photo, 100% faithful to its real design, colors, materials and authentic finish, zero invented logos, zero added LEDs or glowing base rim`;
+        ? `${hint} — 100% identical to the uploaded reference photo, exact original silhouette, colors, material texture and original markings preserved, zero invented logos, zero added purple/pink/RGB LEDs or glowing base rim`
+        : `exact product from the uploaded reference photo, 100% faithful to its real design, colors, materials and authentic finish, zero invented logos, zero added purple/pink/RGB LEDs or glowing base rim`;
       return `${core}. ${orient.full}`;
     }
 
     function buildActKeyframePrompt(m, act, dna) {
-      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.upright;
+      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const macroFocus = macroTarget.value.trim() || "authentic material texture, precision edges, real hardware and original finish";
       const isBox = isContainerModel(m);
+      const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
+      const bgPurge = isLightStudio
+        ? "FULL-BLEED STUDIO LOCK: Seamless edge-to-edge architectural studio extending cleanly to all 4 borders, zero black/grey letterbox bars, zero wall text."
+        : "BACKGROUND PURGE LOCK: COMPLETELY DISCARD AND REPLACE 100% of the uploaded photo's original white or plain background. Seamless edge-to-edge cinema environment extending all the way to the top, bottom and side borders — ZERO white background, ZERO white floor, ZERO white margin, ZERO catalog cutout look, ZERO wall signage or text.";
       const boxLock = isBox
         ? "CASE LOCK: Open box/case lid locked 100% wide open and motionless; elevated framing so the product is completely unobstructed."
-        : "SAFE-ZONE & VISIBILITY LOCK: Product stays bolted at 0 degrees facing camera, dominating the upper-center optical safe zone (bottom 22% clear for TikTok Shop cart button), never unlit-base glowing.";
+        : "SAFE-ZONE & VISIBILITY LOCK: Product stays bolted at 0 degrees facing camera, centered in the middle-upper optical safe zone (bottom 25% empty dark pedestal/shadow clear for TikTok Shop cart button), unlit product base.";
 
       return [
-        `Photorealistic 9:16 vertical full-bleed commercial photograph (edge-to-edge, NO black or grey bars, ZERO drawn text or arrows).`,
+        `Photorealistic 9:16 vertical full-bleed commercial photograph (edge-to-edge, NO black, grey or white bars, ZERO drawn text or arrows).`,
+        bgPurge,
         `PRODUCT LOCK: ${getProductSpec()}.`,
         boxLock,
         act.desc(m, orient, isBox, macroFocus, dna),
-        `Lighting & Atmosphere: ${m.envMotion}. ${dna.light.text}. Clean stage with sharp subject separation, real contact shadows, unlit product base.`,
-        `Negative: ${buildNegative(act.isHuman, isBox)}.`
+        `Lighting & Atmosphere: ${m.envMotion}. ${dna.light.text}. Clean cinema stage with crisp subject separation, grounded contact shadow, zero invented wall text or LEDs.`,
+        `Negative: ${buildNegative(act.isHuman, isBox, isLightStudio)}.`
       ].join("\n\n");
     }
 
     function buildActMotionPrompt(m, act, dna) {
-      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.upright;
+      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const macroFocus = macroTarget.value.trim() || "authentic material texture, precision edges, real hardware and original finish";
       const isBox = isContainerModel(m);
+      const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
       const boxLock = isBox
         ? " Keep open box/case lid 100% motionless and wide open."
-        : " Keep the product strictly bolted at 0 degrees facing camera — zero spin, zero rear rotation, zero base underglow.";
+        : " Keep the product strictly bolted at 0 degrees facing camera in its resting position — zero standing upright on rear end, zero spin, zero rear rotation, zero purple/pink/RGB LED glow.";
 
       return [
-        `Photorealistic 9:16 vertical ${m.genre}, mute video, ARRI Alexa 65 cinema realism.`,
+        `Photorealistic 9:16 vertical ${m.genre}, mute video, ARRI Alexa 65 cinema realism, full-bleed edge-to-edge frame${isLightStudio ? "" : " with ZERO white background or white floor"}.`,
         `PRODUCT & CONTINUITY LOCK: ${getProductSpec()}.${boxLock} Keep the exact same universe (${m.name}) and lighting (${dna.light.text}).`,
         `SCENE (${act.shortLabel}): ${act.desc(m, orient, isBox, macroFocus, dna)}`,
-        `BEAT-BY-BEAT CAMERA, PRODUCT & SCENARIO MOTION: ${act.beat}. Apply smooth continuous cinema zoom-in and parallax glide, subtle realistic physical presence on the product (crisp traveling specular reflections, micro-glint across textures and grounded contact shadow without spinning 180° or standing upright) combined with vivid living scenario motion behind (${m.envMotion}).`
+        `BEAT-BY-BEAT CAMERA, PRODUCT & SCENARIO MOTION: ${act.beat}. Apply smooth continuous cinema push-in and parallax glide, realistic traveling specular reflections and micro-glint across real textures with grounded contact shadow (never lifting upright or spinning) combined with vivid living scenario motion behind (${m.envMotion}).`
       ].join("\n\n");
     }
 
     function buildStandaloneImagePrompt(m, dna) {
-      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.upright;
+      const orient = ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto;
       const isBox = isContainerModel(m);
+      const isLightStudio = LIGHT_STUDIO_MODEL_IDS.has(m.id);
       const castClause = m.hasPerson ? ` Person/Creator: ${dna.cast.text}.` : "";
       const boxClause = isBox ? " Case/box lid fixed 100% wide open." : "";
+      const bgPurge = isLightStudio ? "" : " Completely discard and replace 100% of the uploaded photo's white/plain background with full-bleed edge-to-edge cinema environment (ZERO white background, ZERO white floor).";
       return [
-        `Photorealistic 9:16 vertical edge-to-edge commercial photograph (NO black bars, ZERO drawn text, ZERO arrows), scene: ${m.name} (${dna.id}).`,
-        `Product Lock: ${getProductSpec()}. Product ${orient.short}, positioned cleanly in the upper-center optical safe zone (bottom 22% clear).${boxClause}`,
+        `Photorealistic 9:16 vertical edge-to-edge commercial photograph (NO black or white bars, ZERO drawn text, ZERO arrows), scene: ${m.name} (${dna.id}).${bgPurge}`,
+        `Product Lock: ${getProductSpec()}. Product ${orient.short}, positioned cleanly in the middle-upper optical safe zone (bottom 25% clear).${boxClause}`,
         `Setting: ${m.prompt}, ${dna.surfaceNuance}.${castClause} Lighting: ${dna.light.text}.`,
-        `Negative: ${buildNegative(m.hasPerson, isBox)}.`
+        `Negative: ${buildNegative(m.hasPerson, isBox, isLightStudio)}.`
       ].join("\n\n");
     }
 
@@ -1142,20 +1167,63 @@
       });
     }
 
-    function setUploadedProduct(dataUrl, base64, mime, isTransparent = false) {
+    function detectWhiteCatalogBg(dataUrl) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const c = document.createElement("canvas");
+            c.width = 48; c.height = 48;
+            const cx = c.getContext("2d", { willReadFrequently: true });
+            cx.drawImage(img, 0, 0, 48, 48);
+            const d = cx.getImageData(0, 0, 48, 48).data;
+            let whiteCount = 0, samples = 0;
+            for (let i = 0; i < 48; i++) {
+              const pts = [[i, 0], [i, 47], [0, i], [47, i]];
+              for (const [x, y] of pts) {
+                const p = (y * 48 + x) * 4;
+                if (d[p + 3] > 230) {
+                  samples++;
+                  if (d[p] > 236 && d[p + 1] > 236 && d[p + 2] > 236) whiteCount++;
+                }
+              }
+            }
+            resolve(samples > 20 && (whiteCount / samples) > 0.62);
+          } catch { resolve(false); }
+        };
+        img.onerror = () => resolve(false);
+        img.src = dataUrl;
+      });
+    }
+
+    function setUploadedProduct(dataUrl, base64, mime, isTransparent = false, hasWhiteBg = false) {
       thumbPreview.src = dataUrl;
       thumbPreview.style.display = "block";
       thumbPreview.classList.toggle("checker-bg", isTransparent);
       uploadedBase64 = base64;
       uploadedMime = mime;
       btnQuickRemoveBg.disabled = false;
+      if (isTransparent) {
+        btnQuickRemoveBg.textContent = "✅ Fundo Removido (PNG Pronto)";
+        btnQuickRemoveBg.style.borderColor = "#22c55e";
+        btnQuickRemoveBg.style.color = "#86efac";
+      } else if (hasWhiteBg) {
+        btnQuickRemoveBg.textContent = "⚠️ Fundo Branco — Remover p/ 10/10 (PNG)";
+        btnQuickRemoveBg.style.borderColor = "#f59e0b";
+        btnQuickRemoveBg.style.color = "#fde047";
+      } else {
+        btnQuickRemoveBg.textContent = "✂️ Remover Fundo (PNG)";
+        btnQuickRemoveBg.style.borderColor = "#2563eb";
+        btnQuickRemoveBg.style.color = "#7dd3fc";
+      }
     }
 
     productImg.addEventListener("change", async (e) => {
       const f = e.target.files?.[0];
       if (!f) return;
       const opt = await optimizeUpload(f);
-      setUploadedProduct(opt.dataUrl, opt.base64, opt.mime, f.type === "image/png");
+      const isWhiteBg = await detectWhiteCatalogBg(opt.dataUrl);
+      setUploadedProduct(opt.dataUrl, opt.base64, opt.mime, f.type === "image/png" && !isWhiteBg, isWhiteBg);
     });
 
     async function callApi(payload, timeoutMs = 26000, outerSignal = null) {
@@ -1350,7 +1418,7 @@
       }
     }
 
-    function detectLetterboxCrop(mediaEl) {
+    function detectLetterboxCrop(mediaEl, allowLightBg = false) {
       const vw = mediaEl.videoWidth || mediaEl.naturalWidth || 720;
       const vh = mediaEl.videoHeight || mediaEl.naturalHeight || 1280;
       const tmp = document.createElement("canvas");
@@ -1359,26 +1427,57 @@
       const tctx = tmp.getContext("2d", { willReadFrequently: true });
       tctx.drawImage(mediaEl, 0, 0, tw, th);
       const data = tctx.getImageData(0, 0, tw, th).data;
+
+      const isUniformBar = (mean, variance) => {
+        if (variance < 16 && mean < 18) return true;
+        if (variance < 14 && mean > 140 && mean < 215) return true;
+        if (!allowLightBg && variance < 32 && mean > 218) return true;
+        return false;
+      };
+
       const isBarRow = (y) => {
-        let sum = 0, sumSq = 0;
-        for (let x = 8; x < tw - 8; x += 2) {
+        let sum = 0, sumSq = 0, n = 0;
+        for (let x = 6; x < tw - 6; x += 2) {
           const i = (y * tw + x) * 4;
           const lum = (data[i] + data[i + 1] + data[i + 2]) / 3;
-          sum += lum; sumSq += lum * lum;
+          sum += lum; sumSq += lum * lum; n++;
         }
-        const n = (tw - 16) / 2, mean = sum / n, variance = sumSq / n - mean * mean;
-        return variance < 9 && (mean < 16 || (mean > 140 && mean < 215));
+        const mean = sum / Math.max(1, n), variance = sumSq / Math.max(1, n) - mean * mean;
+        return isUniformBar(mean, variance);
       };
-      const maxScan = Math.floor(th * 0.24);
-      let top = 0, bottom = th - 1;
-      while (top < maxScan && isBarRow(top)) top++;
-      while (bottom > th - maxScan && isBarRow(bottom)) bottom--;
-      if (top > 4) top += 3;
-      if (bottom < th - 5) bottom -= 3;
-      return { sx: 0, sy: Math.round((top / th) * vh), sw: vw, sh: Math.max(Math.round(vh * 0.55), Math.round(((bottom - top) / th) * vh)) };
+
+      const isBarCol = (x) => {
+        let sum = 0, sumSq = 0, n = 0;
+        for (let y = 10; y < th - 10; y += 2) {
+          const i = (y * tw + x) * 4;
+          const lum = (data[i] + data[i + 1] + data[i + 2]) / 3;
+          sum += lum; sumSq += lum * lum; n++;
+        }
+        const mean = sum / Math.max(1, n), variance = sumSq / Math.max(1, n) - mean * mean;
+        return isUniformBar(mean, variance);
+      };
+
+      const maxScanY = Math.floor(th * 0.28);
+      const maxScanX = Math.floor(tw * 0.16);
+      let top = 0, bottom = th - 1, left = 0, right = tw - 1;
+      while (top < maxScanY && isBarRow(top)) top++;
+      while (bottom > th - maxScanY && isBarRow(bottom)) bottom--;
+      while (left < maxScanX && isBarCol(left)) left++;
+      while (right > tw - maxScanX && isBarCol(right)) right--;
+
+      if (top > 2) top = Math.min(maxScanY, top + 4);
+      if (bottom < th - 3) bottom = Math.max(th - maxScanY, bottom - 4);
+      if (left > 2) left = Math.min(maxScanX, left + 3);
+      if (right < tw - 3) right = Math.max(tw - maxScanX, right - 3);
+
+      const sx = Math.round((left / tw) * vw);
+      const sy = Math.round((top / th) * vh);
+      const sw = Math.max(Math.round(vw * 0.65), Math.round(((right - left) / tw) * vw));
+      const sh = Math.max(Math.round(vh * 0.56), Math.round(((bottom - top) / th) * vh));
+      return { sx, sy, sw: Math.min(vw - sx, sw), sh: Math.min(vh - sy, sh) };
     }
 
-    function loadVideoElement(blob) {
+    function loadVideoElement(blob, allowLightBg = false) {
       return new Promise((resolve, reject) => {
         const url = URL.createObjectURL(blob);
         const vid = document.createElement("video");
@@ -1387,7 +1486,7 @@
         const finish = () => {
           if (settled) return;
           settled = true; clearTimeout(t);
-          resolve({ type: "video", el: vid, blobUrl: url, crop: detectLetterboxCrop(vid) });
+          resolve({ type: "video", el: vid, blobUrl: url, crop: detectLetterboxCrop(vid, allowLightBg) });
         };
         const t = setTimeout(() => { if (!settled) { settled = true; reject(new Error("Timeout ao decodificar MP4.")); } }, 15000);
         vid.onloadeddata = () => {
@@ -1400,11 +1499,11 @@
       });
     }
 
-    function loadImageElement(blob) {
+    function loadImageElement(blob, allowLightBg = false) {
       return new Promise((resolve, reject) => {
         const url = URL.createObjectURL(blob);
         const img = new Image();
-        img.onload = () => resolve({ type: "image", el: img, blobUrl: url, crop: detectLetterboxCrop(img) });
+        img.onload = () => resolve({ type: "image", el: img, blobUrl: url, crop: detectLetterboxCrop(img, allowLightBg) });
         img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Erro ao decodificar imagem 4K.")); };
         img.src = url;
       });
@@ -1511,6 +1610,81 @@
       c2d.restore();
     }
 
+    function drawOpticalStarGlint(c2d, x, y, radius, alpha, rotRad = 0.25) {
+      if (alpha <= 0.015) return;
+      c2d.save();
+      c2d.globalCompositeOperation = "screen";
+      c2d.globalAlpha = Math.min(1, alpha);
+      c2d.translate(x, y);
+      c2d.rotate(rotRad);
+
+      const core = c2d.createRadialGradient(0, 0, 1, 0, 0, radius * 0.42);
+      core.addColorStop(0, "rgba(255,255,255,0.95)");
+      core.addColorStop(0.35, "rgba(255,244,218,0.55)");
+      core.addColorStop(1, "rgba(255,220,160,0)");
+      c2d.fillStyle = core;
+      c2d.beginPath();
+      c2d.arc(0, 0, radius * 0.42, 0, Math.PI * 2);
+      c2d.fill();
+
+      for (let i = 0; i < 2; i++) {
+        c2d.save();
+        c2d.rotate((i * Math.PI) / 2);
+        const ray = c2d.createLinearGradient(-radius, 0, radius, 0);
+        ray.addColorStop(0, "rgba(255,255,255,0)");
+        ray.addColorStop(0.5, "rgba(255,252,240,0.88)");
+        ray.addColorStop(1, "rgba(255,255,255,0)");
+        c2d.fillStyle = ray;
+        c2d.beginPath();
+        c2d.ellipse(0, 0, radius, Math.max(1.8, radius * 0.032), 0, 0, Math.PI * 2);
+        c2d.fill();
+        c2d.restore();
+      }
+      c2d.restore();
+    }
+
+    function drawZoomBlurBurst(c2d, mediaEl, crop, baseScale, panX, panY, angleRad, intensity, filterStr) {
+      if (intensity <= 0.02 || !mediaEl || mediaEl === canvas) return;
+      const cw = canvas.width, ch = canvas.height;
+      const cRatio = cw / ch;
+      const safeSw = Math.max(1, Number(crop && crop.sw) || cw);
+      const safeSh = Math.max(1, Number(crop && crop.sh) || ch);
+      const sRatio = safeSw / safeSh;
+      let baseW = cw, baseH = ch;
+      if (sRatio > cRatio) { baseH = ch; baseW = baseH * sRatio; }
+      else { baseW = cw; baseH = baseW / sRatio; }
+
+      const layers = [
+        { s: baseScale * (1 + intensity * 0.14), a: intensity * 0.30 },
+        { s: baseScale * (1 + intensity * 0.28), a: intensity * 0.18 }
+      ];
+      c2d.save();
+      c2d.globalCompositeOperation = "screen";
+      try { c2d.filter = filterStr || "none"; } catch {}
+      for (const l of layers) {
+        const dw = baseW * l.s, dh = baseH * l.s;
+        c2d.save();
+        c2d.globalAlpha = l.a;
+        c2d.translate(cw / 2 + panX, ch / 2 + panY);
+        if (angleRad !== 0) c2d.rotate(angleRad);
+        c2d.drawImage(mediaEl, crop.sx || 0, crop.sy || 0, safeSw, safeSh, -dw / 2, -dh / 2, dw, dh);
+        c2d.restore();
+      }
+      c2d.restore();
+    }
+
+    function drawCinematicVignette(c2d, cw, ch, strength = 0.26) {
+      if (strength <= 0.01) return;
+      c2d.save();
+      const grad = c2d.createRadialGradient(cw * 0.5, ch * 0.44, cw * 0.34, cw * 0.5, ch * 0.5, ch * 0.72);
+      grad.addColorStop(0, "rgba(0,0,0,0)");
+      grad.addColorStop(0.72, `rgba(0,0,0,${(strength * 0.35).toFixed(3)})`);
+      grad.addColorStop(1, `rgba(0,0,0,${strength.toFixed(3)})`);
+      c2d.fillStyle = grad;
+      c2d.fillRect(0, 0, cw, ch);
+      c2d.restore();
+    }
+
     function scheduleSubtleWhoosh(audioCtx, dest, noiseBuf, cutTime, variant = 0, gainScale = 1.0) {
       const profiles = [
         { fStart: 250, fPeak: 2100, fEnd: 380, q: 1.5, durBefore: 0.11, durAfter: 0.11, gAir: 0.18, gBody: 0.11 },
@@ -1552,12 +1726,30 @@
       const osc = audioCtx.createOscillator();
       const g = audioCtx.createGain();
       osc.type = "sine";
-      osc.frequency.setValueAtTime(74, start);
-      osc.frequency.exponentialRampToValueAtTime(30, start + 0.19);
-      g.gain.setValueAtTime(0.19 * gainScale, start);
-      g.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
+      osc.frequency.setValueAtTime(84, start);
+      osc.frequency.exponentialRampToValueAtTime(29, start + 0.24);
+      g.gain.setValueAtTime(0.24 * gainScale, start);
+      g.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
       osc.connect(g); g.connect(dest);
-      osc.start(start); osc.stop(start + 0.24);
+      osc.start(start); osc.stop(start + 0.30);
+    }
+
+    function scheduleCinemaRiser(audioCtx, dest, noiseBuf, hitTime, dur = 0.55, gainScale = 1.0) {
+      const start = Math.max(audioCtx.currentTime, hitTime - dur);
+      const peak = Math.max(start + 0.08, hitTime - 0.01);
+      const s = audioCtx.createBufferSource();
+      s.buffer = noiseBuf;
+      const bp = audioCtx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.Q.value = 2.4;
+      bp.frequency.setValueAtTime(190, start);
+      bp.frequency.exponentialRampToValueAtTime(3200, peak);
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.001, start);
+      g.gain.exponentialRampToValueAtTime(0.16 * gainScale, peak);
+      g.gain.linearRampToValueAtTime(0.001, hitTime + 0.04);
+      s.connect(bp); bp.connect(g); g.connect(dest);
+      s.start(start); s.stop(hitTime + 0.06);
     }
 
     function pickRecorderProfile() {
@@ -1585,13 +1777,13 @@
     const easeOutCubic = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
     const easeInOutQuad = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
 
-    async function renderHollywoodMaster(mediaItems, totalSec, dna, editMode, withSfx, audioCtx, soundtrackArrayBuf, voiceoverArrayBuf = null) {
+    async function renderHollywoodMaster(mediaItems, totalSec, dna, editMode, withSfx, audioCtx, soundtrackArrayBuf, voiceoverArrayBuf = null, allowLightBg = false) {
       if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume().catch(() => {});
 
       const loaded = [];
       for (const item of mediaItems) {
-        if (item.type === "video") loaded.push(await loadVideoElement(item.blob));
-        else loaded.push(await loadImageElement(item.blob));
+        if (item.type === "video") loaded.push(await loadVideoElement(item.blob, allowLightBg));
+        else loaded.push(await loadImageElement(item.blob, allowLightBg));
       }
 
       const n = loaded.length;
@@ -1689,14 +1881,19 @@
           for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
           const sfxScale = voiceMixedOk ? 0.45 : 0.90;
 
-          scheduleSoftSubHit(audioCtx, comp, startAt, 0.70 * sfxScale);
+          scheduleSoftSubHit(audioCtx, comp, startAt, 0.90 * sfxScale);
 
+          const lastIdx = segments.length - 1;
           for (let idx = 1; idx < segments.length; idx++) {
-            if (idx % 2 === 1) {
-              const cutT = startAt + segments[idx].start;
+            const cutT = startAt + segments[idx].start;
+            if (idx === lastIdx && lastIdx >= 2) {
+              scheduleCinemaRiser(audioCtx, comp, nBuf, cutT, 0.52, sfxScale);
+              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, 2, sfxScale * 1.05);
+              scheduleSoftSubHit(audioCtx, comp, cutT, 0.85 * sfxScale);
+            } else if (idx % 2 === 1) {
               const variant = Math.floor(idx / 2) % 3;
               scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, variant, sfxScale);
-              scheduleSoftSubHit(audioCtx, comp, cutT, 0.55 * sfxScale);
+              scheduleSoftSubHit(audioCtx, comp, cutT, 0.58 * sfxScale);
             }
           }
         }
@@ -1826,10 +2023,29 @@
 
           drawCroppedCover(ctx, mediaEl, item.crop, scale, panX, panY, angle, 1, dna.cssFilter);
 
+          if (isBlockbuster && seg.trans === "zoomBlur" && cEl < 0.16) {
+            drawZoomBlurBurst(ctx, mediaEl, item.crop, scale, panX, panY, angle, 1 - easeOutCubic(cEl / 0.16), dna.cssFilter);
+          }
+          if (isBlockbuster && seg.editMove === "heroPunch" && p > 0.76) {
+            const fp = (p - 0.76) / 0.24;
+            drawZoomBlurBurst(ctx, mediaEl, item.crop, scale, panX, panY, angle, Math.sin(fp * Math.PI) * 0.75, dna.cssFilter);
+          }
           if (isBlockbuster && seg.trans === "radialFlash" && cEl < 0.15) {
             drawSpecularRadialFlash(ctx, canvas.width, canvas.height, 1 - cEl / 0.15);
-          } else if (seg.isImg || seg.editMove === "macroSweep") {
-            drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.13 * Math.sin(p * Math.PI), dir);
+          }
+          if (isBlockbuster && (seg.isImg || seg.editMove === "macroSweep" || seg.editMove === "heroPunch")) {
+            drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, (seg.editMove === "macroSweep" ? 0.18 : 0.12) * Math.sin(p * Math.PI), dir);
+          }
+          if (isBlockbuster && (sIdx === 0 || seg.editMove === "macroSweep" || sIdx === segments.length - 1)) {
+            const glintPeak = Math.max(0, 1 - Math.abs(p - 0.42) / 0.24);
+            if (glintPeak > 0.02) {
+              const gx = canvas.width * (sIdx % 2 === 0 ? 0.36 : 0.64);
+              const gy = canvas.height * 0.34;
+              drawOpticalStarGlint(ctx, gx, gy, 74, glintPeak * 0.78, 0.28 + p * 0.4);
+            }
+          }
+          if (!allowLightBg) {
+            drawCinematicVignette(ctx, canvas.width, canvas.height, 0.24);
           }
         });
       });
@@ -1964,7 +2180,8 @@
           enableSfxHits.checked,
           audioCtx,
           soundtrackBuf,
-          voiceBuf
+          voiceBuf,
+          LIGHT_STUDIO_MODEL_IDS.has(lastMasterSession.vidModel.id)
         );
         const mLabel = mKey === "custom" ? `MP3: ${customAudioName}` : (out.musicMixedOk ? `${MUSIC_PROMPTS[mKey]?.label || newEngine}` : "Whoosh Sutil");
         const audioSummary = out.voiceMixedOk ? `${mLabel} + 🎙️ Narração PT-BR` : mLabel;
@@ -2311,7 +2528,7 @@
                     duration: "5",
                     generateAudio: false,
                     motionPrompt: buildActMotionPrompt(selectedVidModel, act, dna),
-                    negativePrompt: buildNegative(act.isHuman, isBox)
+                    negativePrompt: buildNegative(act.isHuman, isBox, LIGHT_STUDIO_MODEL_IDS.has(selectedVidModel.id))
                   }, 26000, runSignal);
                   if (qVid.engine) engineUsed = qVid.engine;
                   break;
@@ -2403,7 +2620,8 @@
           enableSfxHits.checked,
           audioCtx,
           soundtrackBuf,
-          voiceBuf
+          voiceBuf,
+          LIGHT_STUDIO_MODEL_IDS.has(selectedVidModel.id)
         );
 
         const musicLabel = mKey === "custom" ? `MP3: ${customAudioName}` : (out.musicMixedOk ? `${MUSIC_PROMPTS[mKey]?.label || aiMusicEngine} (${aiMusicEngine})` : "Whoosh Sutil");
