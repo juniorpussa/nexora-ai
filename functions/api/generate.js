@@ -4,8 +4,9 @@ const DEFAULT_NEGATIVE =
 const MUSIC_CLEAN_NEGATIVE =
   "tropical house, ukulele, cheesy corporate, stock music, elevator music, acoustic guitar, hand claps, happy whistle, lofi, ambient, chill, lounge, soft piano, acoustic, ballad, sleepy, smooth jazz, sad, gloomy, horror, vocals, singing, speech, talking, dialogue, rap lyrics, 8-bit, chiptune, harsh noise, clipping, static, muddy";
 
+// Official ElevenLabs Voice ID for legacy Adam is "pNInz6obpgDQGcFmaJgB"
 const TTS_VOICE_MAP = {
-  male_adam: { el: "Adam", mm: "Deep_Voice_Man", kk: "pm_alex" },
+  male_adam: { elId: "pNInz6obpgDQGcFmaJgB", el: "Bill", mm: "Deep_Voice_Man", kk: "pm_alex" },
   male_tiktok: { el: "Brian", mm: "Casual_Guy", kk: "pm_alex" },
   male_exec: { el: "Daniel", mm: "Patient_Man", kk: "pm_santa" },
   male_impact: { el: "George", mm: "Deep_Voice_Man", kk: "pm_alex" },
@@ -190,7 +191,7 @@ export async function onRequestPost(context) {
 
     // 4) CLONAGEM EXATA DE VOZ (Adam / Natasha) VIA MINIMAX VOICE CLONE
     if (task === "clone_voice") {
-      const mime = body.mimeType || "audio/mp4";
+      const mime = body.mimeType || "audio/wav";
       const audioInput = body.audioUrl || (body.audioBase64 ? `data:${mime};base64,${body.audioBase64}` : "");
       if (!audioInput) return json({ error: "Envie um áudio de referência (10s a 30s) para clonar a voz." }, 400);
 
@@ -209,16 +210,26 @@ export async function onRequestPost(context) {
       return json({ engine: "MiniMax Voice Clone", requestId: q.request_id, statusUrl: q.status_url, responseUrl: q.response_url });
     }
 
-    // 5) NARRAÇÃO PT-BR (Clone Exato MiniMax opcional -> ElevenLabs Multilingual v2 -> MiniMax Speech-02 HD -> Kokoro PT-BR)
+    // 5) NARRAÇÃO PT-BR (Clone Exato MiniMax -> ElevenLabs Adam ID / Premade -> MiniMax Speech-02 HD -> Kokoro PT-BR)
     if (task === "submit_tts") {
       const text = String(body.text || "").trim();
       if (!text) return json({ error: "Digite o roteiro da narração em português." }, 400);
 
-      const voicePreset = TTS_VOICE_MAP[body.voiceId] || (body.gender === "female" ? TTS_VOICE_MAP.female_natasha : TTS_VOICE_MAP.male_adam);
-      const customVoiceId = typeof body.customVoiceId === "string" && body.customVoiceId.trim() ? body.customVoiceId.trim() : "";
-      const speed = Math.min(1.25, Math.max(0.85, Number(body.speed) || 1.05));
+      const voiceKey = body.voiceId || (body.gender === "female" ? "female_natasha" : "male_adam");
+      const voicePreset = TTS_VOICE_MAP[voiceKey] || TTS_VOICE_MAP.male_adam;
 
+      // Priority: browser-saved clone ID > global Cloudflare Pages env var (ADAM_VOICE_ID / NATASHA_VOICE_ID)
+      let customVoiceId = typeof body.customVoiceId === "string" && body.customVoiceId.trim() ? body.customVoiceId.trim() : "";
+      if (!customVoiceId && voiceKey === "male_adam" && context.env.ADAM_VOICE_ID) {
+        customVoiceId = String(context.env.ADAM_VOICE_ID).trim();
+      }
+      if (!customVoiceId && voiceKey === "female_natasha" && context.env.NATASHA_VOICE_ID) {
+        customVoiceId = String(context.env.NATASHA_VOICE_ID).trim();
+      }
+
+      const speed = Math.min(1.25, Math.max(0.85, Number(body.speed) || 1.05));
       const endpoints = [];
+
       if (customVoiceId) {
         endpoints.push({
           name: "MiniMax Clone Exato",
@@ -231,9 +242,19 @@ export async function onRequestPost(context) {
           }
         });
       }
+
+      // If voice has an official ElevenLabs legacy Voice ID (like Adam = pNInz6obpgDQGcFmaJgB), try it before premade fallback
+      if (voicePreset.elId) {
+        endpoints.push({
+          name: "ElevenLabs Adam Original",
+          url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
+          payload: { text, voice: voicePreset.elId, stability: 0.45, similarity_boost: 0.82, speed }
+        });
+      }
+
       endpoints.push(
         {
-          name: "ElevenLabs PT-BR",
+          name: `ElevenLabs (${voicePreset.el})`,
           url: "https://queue.fal.run/fal-ai/elevenlabs/tts/multilingual-v2",
           payload: { text, voice: voicePreset.el, stability: 0.45, similarity_boost: 0.80, speed }
         },
