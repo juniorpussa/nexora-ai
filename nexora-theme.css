@@ -1,0 +1,220 @@
+/* ==========================================================================
+   NEXORA.AI — OBSIDIAN AI STUDIO PRO THEME (V1.0)
+   Camada visual não-destrutiva: alta conversão, vidro fosco e iluminação sutil
+   ========================================================================== */
+
+:root {
+  /* Paleta Obsidian Carbon (elevação limpa por camadas, sem azul-marinho genérico) */
+  --bg-page: #06070b !important;
+  --bg-surface: rgba(13, 15, 23, 0.84) !important;
+  --bg-card: rgba(19, 22, 33, 0.88) !important;
+  --bg-input: #0b0d14 !important;
+  --bg-hover: #1b2032 !important;
+
+  /* Bordas arquitetônicas ultrafinas */
+  --border: rgba(255, 255, 255, 0.08) !important;
+  --border-strong: rgba(255, 255, 255, 0.16) !important;
+
+  /* Tipografia de alto contraste sem fadiga visual */
+  --text-main: #f5f7fc !important;
+  --text-soft: #c7cfe0 !important;
+  --text-muted: #7f89a0 !important;
+
+  /* Destaque cirúrgico SaaS AI (Índigo / Violeta Elétrico + Ciano Gelo) */
+  --accent: #7c5cff !important;
+  --accent-dark: #5b3df5 !important;
+  --accent-glow: rgba(124, 92, 255, 0.28) !important;
+  --cyan: #38bdf8 !important;
+  --amber: #f5b942 !important;
+  --danger: #f45b69 !important;
+}
+
+/* Suavização tipográfica padrão Apple / Linear */
+html {
+  background-color: #06070b !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  color-scheme: dark;
+}
+
+/* Fundo cinematográfico com Iluminação de Palco (Ambient Glow) + Grade Sutil */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background-color: #06070b !important;
+  background-image:
+    radial-gradient(ellipse 78% 42% at 50% -10%, rgba(124, 92, 255, 0.22), transparent 68%),
+    radial-gradient(circle 540px at 88% 8%, rgba(56, 189, 248, 0.10), transparent 64%),
+    radial-gradient(circle 480px at 10% 35%, rgba(91, 61, 245, 0.08), transparent 65%),
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px !important;
+  background-attachment: fixed !important;
+  color: var(--text-main) !important;
+}
+
+::selection {
+  background: rgba(124, 92, 255, 0.38);
+  color: #ffffff;
+}
+
+/* Títulos editoriais com peso de software internacional */
+h1, h2, h3, h4 {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* Superfícies em Vidro Fosco (Liquid Glass) com brilho especular na borda superior */
+header,
+nav,
+section,
+aside {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+section,
+aside {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 20px 50px -24px rgba(0, 0, 0, 0.85) !important;
+}
+
+/* Labels mais limpas e organizadas */
+label {
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+/* Inputs, Selects e Textareas padrão Estúdio Pro */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  background-color: var(--bg-input) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  color: var(--text-main) !important;
+  border-radius: 11px !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):hover,
+select:hover,
+textarea:hover {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  background-color: #0f121c !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+select:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: rgba(124, 92, 255, 0.72) !important;
+  box-shadow:
+    0 0 0 3px rgba(124, 92, 255, 0.20),
+    inset 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #5d667d !important;
+}
+
+/* Corrige o fundo branco padrão do Windows nos menus select */
+select option,
+select optgroup {
+  background-color: #0e1018 !important;
+  color: #f5f7fc !important;
+}
+
+/* Remove o botão cinza amador do "Escolher arquivo" */
+input[type="file"]::file-selector-button {
+  background: linear-gradient(180deg, #21263a 0%, #161a29 100%);
+  color: #f5f7fc;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-right: 10px;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: linear-gradient(180deg, #2b314b 0%, #1d2236 100%);
+  border-color: rgba(124, 92, 255, 0.55);
+}
+
+/* Checkboxes e sliders alinhados ao tema */
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"] {
+  accent-color: #7c5cff !important;
+}
+
+/* Micro-interações elegantes em todos os botões */
+button {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
+  transition:
+    transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    filter 0.2s ease !important;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Destaque cinematográfico para o botão principal de geração */
+button[type="submit"],
+#generateBtn,
+#btnGenerate,
+.btn-generate,
+.btn-primary {
+  background-image: linear-gradient(135deg, #7c5cff 0%, #5b3df5 55%, #38bdf8 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 10px 30px -8px rgba(124, 92, 255, 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+button[type="submit"]:hover:not(:disabled),
+#generateBtn:hover:not(:disabled),
+#btnGenerate:hover:not(:disabled),
+.btn-generate:hover:not(:disabled),
+.btn-primary:hover:not(:disabled) {
+  box-shadow:
+    0 14px 36px -6px rgba(124, 92, 255, 0.72),
+    0 0 22px rgba(56, 189, 248, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Barras de rolagem discretas (elimina barras cinzas padrão na lista de 105 universos) */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 92, 255, 0.55);
+}
