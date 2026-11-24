@@ -21,10 +21,40 @@ const TTS_VOICE_MAP = {
   "bf_isabella": { voice: "bf_isabella", label: "Isabella (UK Expressive Female)", gender: "female" },
 };
 
-// Custos de créditos por operação no servidor (calibrado e blindado contra prejuízo)
+// Lista fechada de modelos de imagem autorizados (bloqueia burla de custo)
+const ALLOWED_SCENE_MODELS = new Set([
+  "fal-ai/nano-banana/edit",
+  "fal-ai/nano-banana",
+  "fal-ai/flux-pro/v1.1",
+  "fal-ai/flux-pro/kontext",
+  "fal-ai/flux/dev",
+  "fal-ai/flux/schnell",
+]);
+
+// Lista fechada de modelos de vídeo autorizados e seu custo base (5s) em créditos
+// Modo Híbrido: Econômico (6 cr/5s) e Cinema Pro (12 cr/5s) — 10s dobra automaticamente
+const CLIP_MODEL_TIERS = {
+  // Faixa Cinema Pro (12 créditos / 5s)
+  "fal-ai/kling-video/v2.6/pro/image-to-video": 12,
+  "fal-ai/veo3.1/fast/image-to-video": 12,
+  "fal-ai/kling-video/v2.1/pro/image-to-video": 12,
+  "fal-ai/kling-video/v1.6/pro/image-to-video": 12,
+  // Faixa Econômica (6 créditos / 5s)
+  "fal-ai/kling-video/v2.1/standard/image-to-video": 6,
+  "fal-ai/kling-video/v1.6/standard/image-to-video": 6,
+  "fal-ai/wan-i2v": 6,
+  "fal-ai/wan/v2.1/1.3b/image-to-video": 6,
+  "fal-ai/wan-2.1/image-to-video": 6,
+  "fal-ai/wan-2.2/image-to-video": 6,
+};
+
+const DEFAULT_SCENE_MODEL = "fal-ai/flux-pro/v1.1";
+const DEFAULT_CLIP_MODEL = "fal-ai/kling-video/v2.6/pro/image-to-video";
+
+// Custos de créditos por operação no servidor (blindado contra prejuízo)
 const ACTION_CREDIT_COSTS = {
   submit_scene: 2,
-  submit_clip: 12,      // Base para clipe de 5s (clipe de 10s cobra 24 créditos automaticamente)
+  submit_clip: 12,
   submit_music: 3,
   clone_voice: 3,
   submit_tts: 2,
@@ -69,12 +99,16 @@ function getBearerToken(request) {
   return authHeader.slice(7).trim();
 }
 
-function sanitizeFalEndpoint(rawModel, fallback) {
+function resolveAllowedSceneModel(rawModel) {
   const cleaned = String(rawModel || "").trim().replace(/^\/+/, "");
-  if (cleaned.startsWith("fal-ai/") && /^[a-zA-Z0-9._\/-]+$/.test(cleaned)) {
-    return cleaned;
-  }
-  return fallback;
+  return ALLOWED_SCENE_MODELS.has(cleaned) ? cleaned : DEFAULT_SCENE_MODEL;
+}
+
+function resolveAllowedClipModel(rawModel) {
+  const cleaned = String(rawModel || "").trim().replace(/^\/+/, "");
+  return Object.prototype.hasOwnProperty.call(CLIP_MODEL_TIERS, cleaned)
+    ? cleaned
+    : DEFAULT_CLIP_MODEL;
 }
 
 async function getAuthenticatedUser(env, accessToken) {
@@ -230,7 +264,9 @@ export async function onRequestPost(context) {
       });
     }
 
-    // Validação proporcional de duração para vídeo (evita pagar 10s cobrando 5s)
+    // Validação do modelo e duração proporcional (5s vs 10s)
+    const resolvedSceneModel = resolveAllowedSceneModel(body.model);
+    const resolvedClipModel = resolveAllowedClipModel(body.model);
     const requestedClipSeconds = Number(body.duration || 5);
     const clipDuration = requestedClipSeconds > 5 ? "10" : "5";
 
@@ -238,10 +274,10 @@ export async function onRequestPost(context) {
     let actionDesc = ACTION_DESCRIPTIONS[action] || "Geração no estúdio";
 
     if (action === "submit_clip") {
-      creditCost = clipDuration === "10"
-        ? ACTION_CREDIT_COSTS.submit_clip * 2
-        : ACTION_CREDIT_COSTS.submit_clip;
-      actionDesc = `${ACTION_DESCRIPTIONS.submit_clip} (${clipDuration}s)`;
+      const baseClipCost = CLIP_MODEL_TIERS[resolvedClipModel] || 12;
+      creditCost = clipDuration === "10" ? baseClipCost * 2 : baseClipCost;
+      const tierLabel = baseClipCost <= 6 ? "Econômico" : "Cinema Pro";
+      actionDesc = `${ACTION_DESCRIPTIONS.submit_clip} (${tierLabel} ${clipDuration}s)`;
     }
 
     // Trava de segurança de 600 caracteres para TTS
@@ -270,7 +306,6 @@ export async function onRequestPost(context) {
     let upstream = null;
 
     if (action === "submit_scene") {
-      const modelEndpoint = sanitizeFalEndpoint(body.model, "fal-ai/flux-pro/v1.1");
       const inputPayload = {
         prompt: String(body.prompt || "").trim(),
         image_size: "portrait_16_9",
@@ -278,17 +313,17 @@ export async function onRequestPost(context) {
         enable_safety_checker: false,
         ...(body.image_url ? { image_url: body.image_url } : {}),
       };
-      upstream = await falFetch(modelEndpoint, falKey, "POST", inputPayload);
+      upstream = await falFetch(resolvedSceneModel, falKey, "POST", inputPayload);
     } else if (action === "submit_clip") {
-      const modelEndpoint = sanitizeFalEndpoint(body.model, "fal-ai/kling-video/v2.6/pro/image-to-video");
       const inputPayload = {
         prompt: String(body.prompt || "").trim(),
         image_url: String(body.image_url || "").trim(),
         duration: clipDuration,
         aspect_ratio: "9:16",
         cfg_scale: 0.5,
+        generate_audio: false,
       };
-      upstream = await falFetch(modelEndpoint, falKey, "POST", inputPayload);
+      upstream = await falFetch(resolvedClipModel, falKey, "POST", inputPayload);
     } else if (action === "submit_music") {
       const prompt = String(body.prompt || "upbeat energetic commercial background track").trim();
       const duration = Math.min(45, Math.max(8, Number(body.duration || 15)));
