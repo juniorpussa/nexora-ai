@@ -152,3 +152,4 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: "Erro ao criar checkout PagBank: " + (err?.message || "erro interno") }, 500);
   }
 }
+
