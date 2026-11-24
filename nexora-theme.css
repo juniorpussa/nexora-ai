@@ -1,6 +1,6 @@
 /* ==========================================================================
-   NEXORA.AI — OBSIDIAN AI FLAGSHIP STUDIO (V2.0)
-   Redesign completo não-destrutivo | Estética SaaS AI Internacional
+   NEXORA.AI — OBSIDIAN AI FLAGSHIP STUDIO (V2.1 — REFINO 9.7/10)
+   Camada visual não-destrutiva | Polimento cirúrgico de alta conversão
    ========================================================================== */
 
 :root {
@@ -83,7 +83,6 @@ body {
   padding: 13px 22px !important;
 }
 
-/* Logo SVG transformada automaticamente para Violeta/Índigo Elétrico */
 .brand-logo {
   width: 40px !important;
   height: 40px !important;
@@ -138,7 +137,7 @@ body {
   box-shadow: 0 0 20px rgba(124, 92, 255, 0.18);
 }
 
-/* === DOCK DE FERRAMENTAS (ABAS PRINCIPAIS ESTILO ESTÚDIO PRO) === */
+/* === DOCK DE FERRAMENTAS (ABAS PRINCIPAIS) === */
 .shell {
   margin-top: 22px !important;
 }
@@ -205,7 +204,7 @@ body {
   color: #d8d4ff !important;
 }
 
-/* === CARTÕES DO ESTÚDIO (VIDRO OBSIDIANA COM ELEVAÇÃO REAL) === */
+/* === CARTÕES DO ESTÚDIO === */
 .studio-col {
   gap: 18px !important;
 }
@@ -296,29 +295,46 @@ body {
   background: rgba(11, 13, 21, 0.72) !important;
   border: 1px solid rgba(255, 255, 255, 0.07) !important;
   border-radius: 15px !important;
-  padding: 16px !important;
+  padding: 15px !important;
+}
+
+.grid-2, .grid-3 {
+  gap: 10px !important;
 }
 
 .field label, .box-group label, .audio-panel label, .sub-panel label {
   color: #8f9bb5 !important;
   font-size: 10.5px !important;
-  letter-spacing: 0.06em !important;
+  letter-spacing: 0.05em !important;
 }
 
-/* === INPUTS, SELECTS E TEXTAREAS === */
+/* === INPUTS, SELECTS E TEXTAREAS (SEM CORTAR TEXTO) === */
 select, input[type="text"], input[type="file"].inline-file, textarea {
-  background: #090b12 !important;
+  background-color: #090b12 !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
   border-radius: 11px !important;
   color: #f5f7ff !important;
-  padding: 10px 13px !important;
+  padding: 10px 12px !important;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.55);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease !important;
+}
+
+select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  font-size: 12px !important;
+  letter-spacing: -0.01em !important;
+  padding: 9px 26px 9px 10px !important;
+  text-overflow: ellipsis !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 9px center !important;
+  background-size: 13px 13px !important;
 }
 
 select:hover, input[type="text"]:hover, textarea:hover {
   border-color: rgba(255, 255, 255, 0.20) !important;
-  background: #0d101a !important;
+  background-color: #0d101a !important;
 }
 
 select:focus, input[type="text"]:focus, textarea:focus {
@@ -348,7 +364,7 @@ input[type="file"]::file-selector-button {
   cursor: pointer;
 }
 
-/* === BANNER DIRETOR DE CENA & PAINEL AVANÇADO === */
+/* === BANNER DIRETOR DE CENA (ZERA SOBRA VERDE) === */
 .director-banner {
   background: linear-gradient(135deg, rgba(124, 92, 255, 0.13) 0%, rgba(16, 20, 34, 0.88) 55%, rgba(56, 189, 248, 0.08) 100%) !important;
   border: 1px solid rgba(124, 92, 255, 0.30) !important;
@@ -358,6 +374,12 @@ input[type="file"]::file-selector-button {
 
 .director-banner-head {
   color: #eef2ff !important;
+}
+
+.director-banner-head > span:last-child,
+.director-banner-head small,
+.director-banner-head [style*="color"] {
+  color: #a5b4fc !important;
 }
 
 .act-pill {
@@ -405,7 +427,7 @@ details.adv-panel summary {
 
 .preset-grid {
   gap: 10px !important;
-  max-height: 290px !important;
+  max-height: 295px !important;
 }
 
 .preset-item {
@@ -430,6 +452,23 @@ details.adv-panel summary {
     0 8px 24px -10px rgba(124, 92, 255, 0.55) !important;
 }
 
+.preset-top {
+  align-items: flex-start !important;
+  gap: 8px !important;
+  margin-bottom: 5px !important;
+}
+
+.preset-top strong {
+  font-size: 11.8px !important;
+  line-height: 1.35 !important;
+}
+
+.preset-top > span {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
 .badge-cat {
   background: rgba(255, 255, 255, 0.07) !important;
   color: #cbd5e1 !important;
@@ -452,6 +491,45 @@ details.adv-panel summary {
   border: 1px solid rgba(217, 70, 239, 0.35);
 }
 
+/* === CHECKBOXES DA ETAPA 03 EM PÍLULAS ALINHADAS === */
+.options-row {
+  gap: 10px !important;
+  padding: 2px 0 4px !important;
+}
+
+.audio-panel label.toggle-row,
+.sub-panel label.toggle-row,
+.box-group label.toggle-row,
+label.toggle-row {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  margin-bottom: 0 !important;
+  padding: 8px 13px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 10px !important;
+  color: #e2e8f0 !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  transition: border-color 0.18s ease, background 0.18s ease !important;
+}
+
+label.toggle-row:hover {
+  background: rgba(124, 92, 255, 0.10) !important;
+  border-color: rgba(167, 139, 250, 0.38) !important;
+}
+
+label.toggle-row input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  accent-color: #7c5cff !important;
+}
+
 /* === ÁUDIO, NARRAÇÃO, IMPORTAÇÃO E CAMPO OBRIGATÓRIO === */
 .gender-btn {
   background: rgba(12, 14, 23, 0.85) !important;
@@ -467,14 +545,15 @@ details.adv-panel summary {
 }
 
 .btn-mini {
-  background: rgba(124, 92, 255, 0.16) !important;
-  color: #ddd6fe !important;
-  border: 1px solid rgba(139, 92, 246, 0.45) !important;
-  border-radius: 9px !important;
+  background: rgba(124, 92, 255, 0.18) !important;
+  color: #eef2ff !important;
+  border: 1px solid rgba(139, 92, 246, 0.50) !important;
+  border-radius: 10px !important;
 }
 
 .btn-mini:hover {
-  background: rgba(124, 92, 255, 0.28) !important;
+  background: rgba(124, 92, 255, 0.32) !important;
+  border-color: rgba(167, 139, 250, 0.78) !important;
   color: #ffffff !important;
 }
 
@@ -548,7 +627,7 @@ details.adv-panel summary {
     inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
 }
 
-/* === PALCO DE PREVIEW 9:16 (ESTILO MONITOR CINEMA / IPHONE PRO) === */
+/* === PALCO DE PREVIEW 9:16 (ZERA PLAY VERDE -> VIOLETA/CIANO) === */
 .preview-stage {
   background:
     radial-gradient(circle at 50% 18%, rgba(124, 92, 255, 0.18), transparent 58%),
@@ -568,6 +647,11 @@ details.adv-panel summary {
     0 24px 50px rgba(0, 0, 0, 0.75),
     0 0 0 5px rgba(255, 255, 255, 0.03),
     0 0 40px rgba(124, 92, 255, 0.22) !important;
+}
+
+/* Converte o ícone de Play verde antigo para o violeta elétrico da marca */
+.phone-frame-ghost > :not(.phone-safe-bar) {
+  filter: hue-rotate(108deg) saturate(1.25) brightness(1.12);
 }
 
 .phone-frame-ghost::before {
@@ -686,5 +770,8 @@ video.player-916, img.preview-916 {
   .card {
     padding: 16px !important;
     border-radius: 16px !important;
+  }
+  select {
+    font-size: 16px !important;
   }
 }
