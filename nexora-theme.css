@@ -1,220 +1,690 @@
 /* ==========================================================================
-   NEXORA.AI — OBSIDIAN AI STUDIO PRO THEME (V1.0)
-   Camada visual não-destrutiva: alta conversão, vidro fosco e iluminação sutil
+   NEXORA.AI — OBSIDIAN AI FLAGSHIP STUDIO (V2.0)
+   Redesign completo não-destrutivo | Estética SaaS AI Internacional
    ========================================================================== */
 
 :root {
-  /* Paleta Obsidian Carbon (elevação limpa por camadas, sem azul-marinho genérico) */
-  --bg-page: #06070b !important;
-  --bg-surface: rgba(13, 15, 23, 0.84) !important;
-  --bg-card: rgba(19, 22, 33, 0.88) !important;
-  --bg-input: #0b0d14 !important;
-  --bg-hover: #1b2032 !important;
+  --bg-page: #05060a !important;
+  --bg-surface: rgba(13, 15, 24, 0.88) !important;
+  --bg-card: rgba(19, 22, 34, 0.90) !important;
+  --bg-input: #0a0c13 !important;
+  --bg-hover: #1a1f31 !important;
 
-  /* Bordas arquitetônicas ultrafinas */
-  --border: rgba(255, 255, 255, 0.08) !important;
+  --border: rgba(255, 255, 255, 0.085) !important;
   --border-strong: rgba(255, 255, 255, 0.16) !important;
 
-  /* Tipografia de alto contraste sem fadiga visual */
-  --text-main: #f5f7fc !important;
-  --text-soft: #c7cfe0 !important;
-  --text-muted: #7f89a0 !important;
+  --text-main: #f5f7ff !important;
+  --text-soft: #cbd3e6 !important;
+  --text-muted: #848ea6 !important;
 
-  /* Destaque cirúrgico SaaS AI (Índigo / Violeta Elétrico + Ciano Gelo) */
   --accent: #7c5cff !important;
   --accent-dark: #5b3df5 !important;
-  --accent-glow: rgba(124, 92, 255, 0.28) !important;
+  --accent-glow: rgba(124, 92, 255, 0.30) !important;
   --cyan: #38bdf8 !important;
   --amber: #f5b942 !important;
   --danger: #f45b69 !important;
+
+  --radius-lg: 20px !important;
+  --radius-md: 14px !important;
+  --radius-sm: 10px !important;
+  --shadow-card:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 24px 60px -24px rgba(0, 0, 0, 0.85) !important;
 }
 
-/* Suavização tipográfica padrão Apple / Linear */
-html {
-  background-color: #06070b !important;
+/* === FUNDO DE ESTÚDIO CINEMATOGRÁFICO (AMBIENT GLOW + GRADE SUTIL) === */
+html, body {
+  background-color: #05060a !important;
+  color: var(--text-main) !important;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
   color-scheme: dark;
 }
 
-/* Fundo cinematográfico com Iluminação de Palco (Ambient Glow) + Grade Sutil */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  background-color: #06070b !important;
   background-image:
-    radial-gradient(ellipse 78% 42% at 50% -10%, rgba(124, 92, 255, 0.22), transparent 68%),
-    radial-gradient(circle 540px at 88% 8%, rgba(56, 189, 248, 0.10), transparent 64%),
-    radial-gradient(circle 480px at 10% 35%, rgba(91, 61, 245, 0.08), transparent 65%),
-    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px) !important;
-  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px !important;
+    radial-gradient(ellipse 72% 38% at 50% -6%, rgba(124, 92, 255, 0.24), transparent 68%),
+    radial-gradient(circle 520px at 88% 12%, rgba(56, 189, 248, 0.11), transparent 62%),
+    radial-gradient(circle 460px at 8% 42%, rgba(99, 102, 241, 0.09), transparent 64%),
+    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 44px 44px, 44px 44px !important;
   background-attachment: fixed !important;
-  color: var(--text-main) !important;
+  padding-bottom: 56px !important;
 }
 
 ::selection {
-  background: rgba(124, 92, 255, 0.38);
+  background: rgba(124, 92, 255, 0.42);
   color: #ffffff;
 }
 
-/* Títulos editoriais com peso de software internacional */
-h1, h2, h3, h4 {
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
-  letter-spacing: -0.025em !important;
+/* === NAVBAR FLAGSHIP EM VIDRO FOSCO === */
+.navbar {
+  background: rgba(7, 8, 14, 0.78) !important;
+  backdrop-filter: blur(20px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45) !important;
 }
 
-/* Superfícies em Vidro Fosco (Liquid Glass) com brilho especular na borda superior */
-header,
-nav,
-section,
-aside {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+.navbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 5%, rgba(124, 92, 255, 0.55) 35%, rgba(56, 189, 248, 0.55) 65%, transparent 95%);
+  pointer-events: none;
 }
 
-section,
-aside {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 20px 50px -24px rgba(0, 0, 0, 0.85) !important;
+.navbar-inner {
+  padding: 13px 22px !important;
 }
 
-/* Labels mais limpas e organizadas */
-label {
-  letter-spacing: 0.03em;
-  color: var(--text-muted);
+/* Logo SVG transformada automaticamente para Violeta/Índigo Elétrico */
+.brand-logo {
+  width: 40px !important;
+  height: 40px !important;
+  filter: hue-rotate(108deg) saturate(1.25) brightness(1.06) drop-shadow(0 0 18px rgba(124, 92, 255, 0.55)) !important;
 }
 
-/* Inputs, Selects e Textareas padrão Estúdio Pro */
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-select,
-textarea {
-  background-color: var(--bg-input) !important;
+.brand-name {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif !important;
+  font-size: 21px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.brand-name .dot-ai {
+  background: linear-gradient(135deg, #a78bfa 0%, #7c5cff 50%, #38bdf8 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.brand-tag {
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.22), rgba(56, 189, 248, 0.16)) !important;
+  border: 1px solid rgba(167, 139, 250, 0.42) !important;
+  color: #ddd6fe !important;
+  padding: 3px 8px !important;
+  box-shadow: 0 0 14px rgba(124, 92, 255, 0.22);
+}
+
+.brand-sub {
+  color: #8b95ad !important;
+  font-size: 11.5px !important;
+}
+
+.trust-chip {
+  background: rgba(255, 255, 255, 0.035) !important;
   border: 1px solid rgba(255, 255, 255, 0.09) !important;
-  color: var(--text-main) !important;
-  border-radius: 11px !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+  color: #d4dcf0 !important;
+  padding: 6px 12px !important;
+  font-weight: 600 !important;
+  backdrop-filter: blur(8px);
 }
 
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):hover,
-select:hover,
-textarea:hover {
-  border-color: rgba(255, 255, 255, 0.18) !important;
-  background-color: #0f121c !important;
+.trust-chip.live {
+  background: rgba(124, 92, 255, 0.14) !important;
+  border-color: rgba(124, 92, 255, 0.42) !important;
+  color: #ddd6fe !important;
 }
 
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
-select:focus,
-textarea:focus {
-  outline: none !important;
-  border-color: rgba(124, 92, 255, 0.72) !important;
+.credits-pill {
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.22), rgba(56, 189, 248, 0.18)) !important;
+  border: 1px solid rgba(124, 92, 255, 0.48) !important;
+  color: #eef2ff !important;
+  box-shadow: 0 0 20px rgba(124, 92, 255, 0.18);
+}
+
+/* === DOCK DE FERRAMENTAS (ABAS PRINCIPAIS ESTILO ESTÚDIO PRO) === */
+.shell {
+  margin-top: 22px !important;
+}
+
+.mode-switch {
+  background: rgba(10, 12, 20, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 18px !important;
+  padding: 7px !important;
+  gap: 8px !important;
+  margin-bottom: 22px !important;
+  backdrop-filter: blur(18px);
   box-shadow:
-    0 0 0 3px rgba(124, 92, 255, 0.20),
-    inset 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 18px 40px -18px rgba(0, 0, 0, 0.75);
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: #5d667d !important;
+.mode-btn {
+  position: relative;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 13px !important;
+  padding: 13px 15px !important;
+  min-height: 68px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* Corrige o fundo branco padrão do Windows nos menus select */
-select option,
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.045) !important;
+  border-color: rgba(255, 255, 255, 0.09) !important;
+  transform: translateY(-1px) !important;
+}
+
+.mode-btn.active {
+  background: linear-gradient(155deg, rgba(124, 92, 255, 0.28) 0%, rgba(56, 189, 248, 0.10) 100%) !important;
+  border: 1px solid rgba(167, 139, 250, 0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 10px 28px -8px rgba(124, 92, 255, 0.48) !important;
+}
+
+.mode-btn.active::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #a78bfa, #38bdf8);
+}
+
+.mode-btn strong {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif !important;
+  font-size: 13.5px !important;
+  letter-spacing: -0.01em;
+}
+
+.mode-btn small {
+  color: #828ca6 !important;
+}
+
+.mode-btn.active small {
+  color: #d8d4ff !important;
+}
+
+/* === CARTÕES DO ESTÚDIO (VIDRO OBSIDIANA COM ELEVAÇÃO REAL) === */
+.studio-col {
+  gap: 18px !important;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(17, 20, 31, 0.90) 0%, rgba(11, 13, 21, 0.94) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.085) !important;
+  border-radius: 20px !important;
+  padding: 22px !important;
+  backdrop-filter: blur(18px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 24px 60px -28px rgba(0, 0, 0, 0.9) !important;
+}
+
+.step-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  padding-bottom: 13px !important;
+  margin-bottom: 16px !important;
+}
+
+.step-title {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.015em !important;
+  gap: 11px !important;
+}
+
+.step-num {
+  width: 27px !important;
+  height: 27px !important;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, #8b5cf6 0%, #5b3df5 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  font-size: 11.5px !important;
+  box-shadow: 0 4px 14px rgba(124, 92, 255, 0.45);
+}
+
+.step-meta {
+  color: #848ea6 !important;
+  font-size: 11.5px !important;
+}
+
+.step-meta strong {
+  color: #a5b4fc !important;
+}
+
+/* === UPLOAD E GRUPOS INTERNOS === */
+.upload-area {
+  background: radial-gradient(circle at 50% 25%, rgba(124, 92, 255, 0.10), transparent 70%), rgba(10, 12, 20, 0.85) !important;
+  border: 1.5px dashed rgba(167, 139, 250, 0.32) !important;
+  border-radius: 15px !important;
+  transition: all 0.2s ease !important;
+}
+
+.upload-area:hover {
+  border-color: rgba(124, 92, 255, 0.85) !important;
+  background: radial-gradient(circle at 50% 25%, rgba(124, 92, 255, 0.18), transparent 72%), rgba(14, 17, 28, 0.92) !important;
+  box-shadow: 0 0 28px rgba(124, 92, 255, 0.16);
+}
+
+.upload-icon {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.22), rgba(56, 189, 248, 0.16)) !important;
+  border: 1px solid rgba(167, 139, 250, 0.42) !important;
+  color: #ddd6fe !important;
+  box-shadow: 0 6px 18px rgba(124, 92, 255, 0.22);
+}
+
+.btn-quick-bg {
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: #d6def5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 10px !important;
+  padding: 10px !important;
+}
+
+.btn-quick-bg:hover:not(:disabled) {
+  background: rgba(124, 92, 255, 0.22) !important;
+  border-color: rgba(167, 139, 250, 0.55) !important;
+  color: #ffffff !important;
+}
+
+.box-group {
+  background: rgba(11, 13, 21, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 15px !important;
+  padding: 16px !important;
+}
+
+.field label, .box-group label, .audio-panel label, .sub-panel label {
+  color: #8f9bb5 !important;
+  font-size: 10.5px !important;
+  letter-spacing: 0.06em !important;
+}
+
+/* === INPUTS, SELECTS E TEXTAREAS === */
+select, input[type="text"], input[type="file"].inline-file, textarea {
+  background: #090b12 !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 11px !important;
+  color: #f5f7ff !important;
+  padding: 10px 13px !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.55);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease !important;
+}
+
+select:hover, input[type="text"]:hover, textarea:hover {
+  border-color: rgba(255, 255, 255, 0.20) !important;
+  background: #0d101a !important;
+}
+
+select:focus, input[type="text"]:focus, textarea:focus {
+  border-color: rgba(124, 92, 255, 0.85) !important;
+  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.22), inset 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
 select optgroup {
-  background-color: #0e1018 !important;
-  color: #f5f7fc !important;
+  background: #0a0c14 !important;
+  color: #a78bfa !important;
 }
 
-/* Remove o botão cinza amador do "Escolher arquivo" */
+select option {
+  background: #0f121d !important;
+  color: #f5f7ff !important;
+}
+
 input[type="file"]::file-selector-button {
-  background: linear-gradient(180deg, #21263a 0%, #161a29 100%);
-  color: #f5f7fc;
+  background: linear-gradient(180deg, #22273c 0%, #161a2a 100%);
+  color: #f5f7ff;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   padding: 6px 12px;
   margin-right: 10px;
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-weight: 700;
   font-size: 12px;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-input[type="file"]::file-selector-button:hover {
-  background: linear-gradient(180deg, #2b314b 0%, #1d2236 100%);
-  border-color: rgba(124, 92, 255, 0.55);
+/* === BANNER DIRETOR DE CENA & PAINEL AVANÇADO === */
+.director-banner {
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.13) 0%, rgba(16, 20, 34, 0.88) 55%, rgba(56, 189, 248, 0.08) 100%) !important;
+  border: 1px solid rgba(124, 92, 255, 0.30) !important;
+  border-radius: 14px !important;
+  padding: 13px 15px !important;
 }
 
-/* Checkboxes e sliders alinhados ao tema */
-input[type="checkbox"],
-input[type="radio"],
-input[type="range"] {
-  accent-color: #7c5cff !important;
+.director-banner-head {
+  color: #eef2ff !important;
 }
 
-/* Micro-interações elegantes em todos os botões */
-button {
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
-  transition:
-    transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.22s ease,
-    border-color 0.2s ease,
-    background 0.2s ease,
-    filter 0.2s ease !important;
+.act-pill {
+  background: rgba(255, 255, 255, 0.045) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  color: #cbd5e1 !important;
+  padding: 5px 10px !important;
 }
 
-button:hover:not(:disabled) {
+.act-pill.human {
+  background: rgba(124, 92, 255, 0.18) !important;
+  border-color: rgba(167, 139, 250, 0.45) !important;
+  color: #e9d5ff !important;
+}
+
+.act-pill.macro {
+  background: rgba(245, 185, 66, 0.14) !important;
+  border-color: rgba(245, 185, 66, 0.42) !important;
+  color: #fde68a !important;
+}
+
+details.adv-panel {
+  background: rgba(11, 13, 21, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 14px !important;
+  padding: 13px 15px !important;
+}
+
+details.adv-panel summary {
+  color: #c4b5fd !important;
+}
+
+/* === CATÁLOGO DOS 105 UNIVERSOS === */
+.btn-rand {
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.22), rgba(56, 189, 248, 0.16)) !important;
+  color: #eef2ff !important;
+  border: 1px solid rgba(167, 139, 250, 0.42) !important;
+  border-radius: 11px !important;
+}
+
+.btn-rand:hover {
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.36), rgba(56, 189, 248, 0.26)) !important;
+  border-color: rgba(167, 139, 250, 0.75) !important;
+}
+
+.preset-grid {
+  gap: 10px !important;
+  max-height: 290px !important;
+}
+
+.preset-item {
+  background: rgba(12, 14, 23, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  border-radius: 13px !important;
+  padding: 12px 13px !important;
+  transition: all 0.18s ease !important;
+}
+
+.preset-item:hover {
+  background: rgba(22, 26, 42, 0.92) !important;
+  border-color: rgba(167, 139, 250, 0.35) !important;
   transform: translateY(-1px);
-  filter: brightness(1.06);
 }
 
-button:active:not(:disabled) {
-  transform: translateY(0);
+.preset-item.active {
+  background: linear-gradient(145deg, rgba(124, 92, 255, 0.22) 0%, rgba(16, 18, 32, 0.96) 100%) !important;
+  border-color: rgba(139, 92, 246, 0.85) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 24px -10px rgba(124, 92, 255, 0.55) !important;
 }
 
-/* Destaque cinematográfico para o botão principal de geração */
-button[type="submit"],
-#generateBtn,
-#btnGenerate,
-.btn-generate,
-.btn-primary {
-  background-image: linear-gradient(135deg, #7c5cff 0%, #5b3df5 55%, #38bdf8 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+.badge-cat {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px !important;
+  padding: 2px 7px !important;
+}
+
+.badge-n10 {
+  background: linear-gradient(135deg, rgba(245, 185, 66, 0.22), rgba(217, 119, 6, 0.18)) !important;
+  color: #fde68a !important;
+  border: 1px solid rgba(245, 185, 66, 0.42);
+  border-radius: 6px !important;
+  padding: 2px 6px !important;
+}
+
+.badge-ugc {
+  background: rgba(217, 70, 239, 0.18) !important;
+  color: #f5d0fe !important;
+  border: 1px solid rgba(217, 70, 239, 0.35);
+}
+
+/* === ÁUDIO, NARRAÇÃO, IMPORTAÇÃO E CAMPO OBRIGATÓRIO === */
+.gender-btn {
+  background: rgba(12, 14, 23, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 11px !important;
+}
+
+.gender-btn.active {
+  background: rgba(124, 92, 255, 0.20) !important;
+  border-color: rgba(139, 92, 246, 0.80) !important;
+  color: #eef2ff !important;
+  box-shadow: 0 0 18px rgba(124, 92, 255, 0.22);
+}
+
+.btn-mini {
+  background: rgba(124, 92, 255, 0.16) !important;
+  color: #ddd6fe !important;
+  border: 1px solid rgba(139, 92, 246, 0.45) !important;
+  border-radius: 9px !important;
+}
+
+.btn-mini:hover {
+  background: rgba(124, 92, 255, 0.28) !important;
   color: #ffffff !important;
+}
+
+.req-box {
+  background: linear-gradient(135deg, rgba(245, 185, 66, 0.10), rgba(14, 16, 26, 0.90)) !important;
+  border: 1px solid rgba(245, 185, 66, 0.48) !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+}
+
+.req-box.filled {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.10), rgba(14, 16, 26, 0.90)) !important;
+  border-color: rgba(52, 211, 153, 0.50) !important;
+}
+
+.req-tag {
+  background: linear-gradient(135deg, #fbbf24, #d97706) !important;
+  color: #160e00 !important;
+  border-radius: 6px !important;
+}
+
+.req-box.filled .req-tag {
+  background: linear-gradient(135deg, #34d399, #10b981) !important;
+  color: #03150e !important;
+}
+
+.video-drop-box {
+  background: radial-gradient(circle at 50% 20%, rgba(124, 92, 255, 0.14), transparent 72%), rgba(10, 12, 20, 0.88) !important;
+  border: 1.5px dashed rgba(167, 139, 250, 0.42) !important;
+  border-radius: 15px !important;
+}
+
+.video-drop-box:hover {
+  border-color: rgba(124, 92, 255, 0.85) !important;
+  background: rgba(124, 92, 255, 0.12) !important;
+}
+
+.clone-card {
+  background: rgba(11, 13, 21, 0.80) !important;
+  border: 1px dashed rgba(167, 139, 250, 0.30) !important;
+}
+
+.clone-slot {
+  background: #090b12 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* === BOTÃO PRINCIPAL DE AÇÃO (HIGH-CONVERSION CTA) === */
+.btn-generate {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 52%, #38bdf8 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+  border-radius: 15px !important;
+  padding: 18px 24px !important;
+  font-size: 15.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.25);
   box-shadow:
-    0 10px 30px -8px rgba(124, 92, 255, 0.58),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+    0 14px 36px -8px rgba(124, 92, 255, 0.62),
+    0 0 24px rgba(56, 189, 248, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34) !important;
 }
 
-button[type="submit"]:hover:not(:disabled),
-#generateBtn:hover:not(:disabled),
-#btnGenerate:hover:not(:disabled),
-.btn-generate:hover:not(:disabled),
-.btn-primary:hover:not(:disabled) {
+.btn-generate:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.07) !important;
   box-shadow:
-    0 14px 36px -6px rgba(124, 92, 255, 0.72),
-    0 0 22px rgba(56, 189, 248, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+    0 18px 44px -8px rgba(124, 92, 255, 0.78),
+    0 0 32px rgba(56, 189, 248, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
 }
 
-/* Barras de rolagem discretas (elimina barras cinzas padrão na lista de 105 universos) */
-::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+/* === PALCO DE PREVIEW 9:16 (ESTILO MONITOR CINEMA / IPHONE PRO) === */
+.preview-stage {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(124, 92, 255, 0.18), transparent 58%),
+    radial-gradient(circle at 50% 95%, rgba(56, 189, 248, 0.10), transparent 55%),
+    #07080f !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 99px;
+.phone-frame-ghost {
+  width: 168px !important;
+  border-radius: 28px !important;
+  border: 2px solid rgba(255, 255, 255, 0.16) !important;
+  background: linear-gradient(180deg, #131726 0%, #090b13 100%) !important;
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.75),
+    0 0 0 5px rgba(255, 255, 255, 0.03),
+    0 0 40px rgba(124, 92, 255, 0.22) !important;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
-  border-radius: 99px;
+.phone-frame-ghost::before {
+  width: 46px !important;
+  height: 11px !important;
+  top: 10px !important;
+  background: #040508 !important;
+  border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(124, 92, 255, 0.55);
+.phone-safe-bar {
+  background: rgba(245, 185, 66, 0.14) !important;
+  border: 1px dashed rgba(245, 185, 66, 0.50) !important;
+  color: #fde68a !important;
+}
+
+.feature-bullets {
+  background: rgba(14, 17, 28, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 14px !important;
+  padding: 14px 16px !important;
+  gap: 9px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+video.player-916, img.preview-916 {
+  border-radius: 22px !important;
+  border: 2px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.75),
+    0 0 36px rgba(124, 92, 255, 0.20) !important;
+}
+
+.dl-box {
+  background: rgba(14, 17, 28, 0.90) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 15px !important;
+}
+
+.dl-dna {
+  color: #a5b4fc !important;
+}
+
+.dl-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 10px !important;
+}
+
+.dl-btn.main {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 55%, #38bdf8 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(124, 92, 255, 0.42);
+}
+
+.dl-btn.remix {
+  background: rgba(124, 92, 255, 0.14) !important;
+  color: #ddd6fe !important;
+  border: 1px solid rgba(167, 139, 250, 0.45) !important;
+}
+
+.timer-badge {
+  background: rgba(124, 92, 255, 0.18) !important;
+  border-color: rgba(139, 92, 246, 0.65) !important;
+  color: #ddd6fe !important;
+}
+
+.progress-bar-wrap {
+  background: rgba(255, 255, 255, 0.07) !important;
+}
+
+.progress-bar-fill {
+  background: linear-gradient(90deg, #7c5cff, #38bdf8) !important;
+}
+
+.btn-use-ready {
+  background: rgba(124, 92, 255, 0.18) !important;
+  color: #ddd6fe !important;
+  border-color: rgba(139, 92, 246, 0.55) !important;
+}
+
+/* === BARRA DE ROLAGEM E RODAPÉ === */
+::-webkit-scrollbar,
+.preset-grid::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+::-webkit-scrollbar-track,
+.preset-grid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+::-webkit-scrollbar-thumb,
+.preset-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 99px !important;
+}
+
+::-webkit-scrollbar-thumb:hover,
+.preset-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 92, 255, 0.60) !important;
+}
+
+.site-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+  color: #6b748a !important;
+}
+
+/* Mantém a fluidez perfeita no celular */
+@media (max-width: 680px) {
+  .mode-switch {
+    padding: 6px !important;
+    border-radius: 14px !important;
+  }
+  .card {
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
 }
