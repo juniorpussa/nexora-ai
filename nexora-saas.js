@@ -36,141 +36,295 @@
   }
 
   function ensureStyles() {
-    if (document.getElementById("nexoraSaasProStyles")) return;
+    if (document.getElementById("nexoraLuxurySaasStyles")) return;
     const style = document.createElement("style");
-    style.id = "nexoraSaasProStyles";
+    style.id = "nexoraLuxurySaasStyles";
     style.textContent = `
-      #nxProDock {
-        position: fixed;
-        top: 12px;
-        right: 16px;
-        z-index: 9990;
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+      :root {
+        --nx-bg-obsidian: #05070c;
+        --nx-glass: rgba(12, 17, 29, 0.78);
+        --nx-glass-strong: rgba(15, 22, 38, 0.92);
+        --nx-border: rgba(148, 163, 184, 0.14);
+        --nx-border-glow: rgba(56, 189, 248, 0.35);
+        --nx-gold: #fbbf24;
+        --nx-gold-soft: rgba(251, 191, 36, 0.12);
+        --nx-cyan: #38bdf8;
+        --nx-text-main: #f8fafc;
+        --nx-text-muted: #94a3b8;
+      }
+
+      /* Atmosfera de fundo sofisticada com iluminação ambiental sutil (Mesh Gradient) */
+      body {
+        background-color: var(--nx-bg-obsidian) !important;
+        background-image:
+          radial-gradient(ellipse 80% 50% at 15% -10%, rgba(14, 165, 233, 0.13), transparent 60%),
+          radial-gradient(ellipse 65% 45% at 88% -5%, rgba(245, 158, 11, 0.08), transparent 55%),
+          radial-gradient(ellipse 70% 50% at 50% 105%, rgba(37, 99, 235, 0.09), transparent 65%) !important;
+        background-attachment: fixed !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        color: var(--nx-text-main) !important;
+        -webkit-font-smoothing: antialiased;
+        letter-spacing: -0.01em;
+      }
+
+      /* Refinamento de cartões, painéis e inputs nativos do estúdio */
+      section, .card, [class*="panel"], [class*="card"], [class*="box"] {
+        border-color: var(--nx-border) !important;
+      }
+
+      input, select, textarea {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+      }
+
+      input:focus, select:focus, textarea:focus {
+        border-color: rgba(56, 189, 248, 0.55) !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12) !important;
+        outline: none !important;
+      }
+
+      /* Barra Executiva SaaS encaixada no topo (zero sobreposição) */
+      #nxExecTopBar {
+        position: sticky;
+        top: 0;
+        z-index: 9995;
+        width: 100%;
+        background: rgba(6, 9, 17, 0.84);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
+      }
+
+      .nx-exec-inner {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 10px 20px;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 8px;
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: rgba(11, 17, 30, 0.92);
-        border: 1px solid rgba(148, 163, 184, 0.24);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
-        backdrop-filter: blur(12px);
-        font-family: inherit;
+        justify-content: space-between;
+        gap: 12px;
       }
-      .nx-pro-chip {
+
+      .nx-exec-left, .nx-exec-right {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nx-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #10b981;
+        box-shadow: 0 0 10px #10b981;
+      }
+
+      .nx-plan-tag {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 5px 11px;
+        gap: 7px;
+        padding: 5px 12px;
         border-radius: 999px;
         font-size: 12px;
-        font-weight: 700;
-        background: rgba(245, 158, 11, 0.14);
-        color: #fbbf24;
-        border: 1px solid rgba(245, 158, 11, 0.35);
+        font-weight: 600;
+        color: #e2e8f0;
+        background: rgba(30, 41, 59, 0.55);
+        border: 1px solid rgba(148, 163, 184, 0.18);
       }
-      .nx-pro-btn {
-        padding: 6px 12px;
+
+      .nx-credits-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 14px;
         border-radius: 999px;
-        font-size: 12px;
+        font-size: 12.5px;
         font-weight: 700;
-        cursor: pointer;
-        border: 1px solid rgba(148, 163, 184, 0.25);
-        background: rgba(20, 30, 48, 0.9);
-        color: #f1f5f9;
-        transition: all 0.15s ease;
-      }
-      .nx-pro-btn:hover {
-        border-color: rgba(56, 189, 248, 0.6);
-        color: #ffffff;
-      }
-      .nx-pro-btn-cta {
-        background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
-        border: none;
-        color: #ffffff;
-        box-shadow: 0 6px 18px rgba(14, 165, 233, 0.3);
-      }
-      .nx-pro-btn-admin {
-        background: rgba(245, 158, 11, 0.2);
-        border: 1px solid rgba(251, 191, 36, 0.55);
         color: #fde68a;
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(217, 119, 6, 0.08));
+        border: 1px solid rgba(251, 191, 36, 0.35);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
       }
-      .nx-pro-backdrop {
+
+      .nx-nav-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 10px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #e2e8f0;
+        background: rgba(15, 23, 42, 0.72);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        cursor: pointer;
+        transition: all 0.18s ease;
+      }
+
+      .nx-nav-btn:hover {
+        background: rgba(30, 41, 59, 0.92);
+        border-color: rgba(56, 189, 248, 0.45);
+        color: #ffffff;
+        transform: translateY(-1px);
+      }
+
+      .nx-nav-btn-primary {
+        background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+        border: 1px solid rgba(125, 211, 252, 0.35);
+        color: #ffffff;
+        font-weight: 700;
+        box-shadow: 0 8px 22px rgba(2, 132, 199, 0.32);
+      }
+
+      .nx-nav-btn-primary:hover {
+        filter: brightness(1.08);
+        border-color: rgba(186, 230, 253, 0.6);
+      }
+
+      .nx-nav-btn-gold {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(180, 83, 9, 0.16));
+        border: 1px solid rgba(251, 191, 36, 0.45);
+        color: #fde68a;
+        font-weight: 700;
+      }
+
+      .nx-user-chip {
+        font-size: 12px;
+        color: #94a3b8;
+        max-width: 190px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding: 0 4px;
+      }
+
+      /* Modais Executivos Glassmorphism */
+      .nx-modal-overlay {
         position: fixed;
         inset: 0;
         z-index: 99999;
         display: none;
         align-items: center;
         justify-content: center;
-        padding: 16px;
-        background: rgba(2, 6, 23, 0.78);
-        backdrop-filter: blur(8px);
+        padding: 20px;
+        background: rgba(3, 5, 10, 0.82);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
       }
-      .nx-pro-backdrop.open {
+
+      .nx-modal-overlay.open {
         display: flex;
+        animation: nxFadeIn 0.18s ease-out;
       }
-      .nx-pro-modal {
+
+      @keyframes nxFadeIn {
+        from { opacity: 0; transform: scale(0.98); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      .nx-modal-card {
         width: 100%;
-        max-width: 500px;
+        max-width: 520px;
         max-height: 88vh;
         overflow-y: auto;
-        background: #0d1322;
-        border: 1px solid rgba(148, 163, 184, 0.24);
-        border-radius: 20px;
-        padding: 22px;
+        background: linear-gradient(180deg, rgba(16, 23, 39, 0.96) 0%, rgba(9, 13, 23, 0.98) 100%);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 22px;
+        padding: 26px;
         color: #f8fafc;
-        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.7);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.07);
       }
-      .nx-pro-modal h3 {
-        margin: 0 0 6px 0;
-        font-size: 18px;
+
+      .nx-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .nx-modal-title {
+        margin: 0;
+        font-size: 19px;
         font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #ffffff;
       }
-      .nx-pro-sub {
-        margin: 0 0 14px 0;
-        font-size: 13px;
+
+      .nx-modal-subtitle {
+        margin: 0 0 18px 0;
+        font-size: 13.5px;
+        line-height: 1.5;
         color: #94a3b8;
       }
-      .nx-pro-input {
+
+      .nx-input-luxury {
         width: 100%;
-        margin-bottom: 10px;
-        padding: 11px 13px;
+        margin-bottom: 12px;
+        padding: 12px 14px;
         border-radius: 12px;
-        border: 1px solid rgba(148, 163, 184, 0.25);
-        background: #070b14;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background: rgba(5, 8, 15, 0.85);
         color: #f8fafc;
-        font-size: 13px;
+        font-size: 13.5px;
       }
-      .nx-pro-err {
-        color: #fca5a5;
-        font-size: 12px;
-        margin-bottom: 10px;
-      }
-      .nx-pro-ok {
-        color: #86efac;
-        font-size: 12px;
-        margin-bottom: 10px;
-      }
-      .nx-pro-card {
+
+      .nx-plan-option {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        gap: 12px;
-        padding: 12px;
-        border-radius: 14px;
-        background: rgba(18, 27, 45, 0.85);
-        border: 1px solid rgba(148, 163, 184, 0.15);
-        margin-bottom: 8px;
-        font-size: 12px;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 15px 16px;
+        border-radius: 16px;
+        background: rgba(18, 27, 46, 0.72);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        margin-bottom: 10px;
+        transition: all 0.18s ease;
       }
-      @media (max-width: 640px) {
-        #nxProDock {
-          top: auto;
-          bottom: 12px;
-          right: 12px;
-          left: 12px;
+
+      .nx-plan-option:hover {
+        border-color: rgba(56, 189, 248, 0.45);
+        background: rgba(23, 34, 58, 0.88);
+      }
+
+      .nx-plan-option.featured {
+        border-color: rgba(251, 191, 36, 0.42);
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(245, 158, 11, 0.08));
+      }
+
+      .nx-alert-err {
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        font-size: 12.5px;
+        margin-bottom: 12px;
+      }
+
+      .nx-alert-ok {
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #6ee7b7;
+        font-size: 12.5px;
+        margin-bottom: 12px;
+      }
+
+      @media (max-width: 768px) {
+        .nx-exec-inner {
+          padding: 10px 14px;
           justify-content: center;
-          border-radius: 16px;
+        }
+        .nx-user-chip {
+          display: none;
         }
       }
     `;
@@ -179,68 +333,90 @@
 
   function ensureUi() {
     ensureStyles();
-    if (!document.getElementById("nxProDock")) {
-      const dock = document.createElement("div");
-      dock.id = "nxProDock";
-      dock.innerHTML = `
-        <span id="nxProCredits" class="nx-pro-chip">✦ Créditos: --</span>
-        <button id="nxProBtnPlans" type="button" class="nx-pro-btn">Planos</button>
-        <button id="nxProBtnLedger" type="button" class="nx-pro-btn">Extrato</button>
-        <button id="nxProBtnAdmin" type="button" class="nx-pro-btn nx-pro-btn-admin" style="display:none;">Painel Admin</button>
-        <button id="nxProBtnAuth" type="button" class="nx-pro-btn nx-pro-btn-cta">Entrar</button>
+
+    // Remove eventual dock antigo se existir
+    const oldDock = document.getElementById("nxProDock");
+    if (oldDock) oldDock.remove();
+
+    if (!document.getElementById("nxExecTopBar")) {
+      const bar = document.createElement("div");
+      bar.id = "nxExecTopBar";
+      bar.innerHTML = `
+        <div class="nx-exec-inner">
+          <div class="nx-exec-left">
+            <span class="nx-plan-tag">
+              <span class="nx-status-dot"></span>
+              <span id="nxExecPlanText">NEXORA.AI Studio</span>
+            </span>
+            <span id="nxExecCreditsPill" class="nx-credits-pill">✦ Saldo: -- créditos</span>
+          </div>
+          <div class="nx-exec-right">
+            <span id="nxExecUserEmail" class="nx-user-chip"></span>
+            <button id="nxExecBtnPlans" type="button" class="nx-nav-btn nx-nav-btn-gold">Planos e Recarga</button>
+            <button id="nxExecBtnLedger" type="button" class="nx-nav-btn">Extrato</button>
+            <button id="nxExecBtnAdmin" type="button" class="nx-nav-btn" style="display:none;border-color:rgba(251,191,36,0.5);color:#fde68a;">Painel Admin</button>
+            <button id="nxExecBtnAuth" type="button" class="nx-nav-btn nx-nav-btn-primary">Entrar / Criar Conta</button>
+          </div>
+        </div>
       `;
-      document.body.appendChild(dock);
+      document.body.insertBefore(bar, document.body.firstChild);
     }
 
-    if (!document.getElementById("nxProBackdrop")) {
-      const backdrop = document.createElement("div");
-      backdrop.id = "nxProBackdrop";
-      backdrop.className = "nx-pro-backdrop";
-      backdrop.innerHTML = `<div id="nxProModalBox" class="nx-pro-modal"></div>`;
-      backdrop.addEventListener("click", (e) => {
-        if (e.target === backdrop) closeModal();
+    if (!document.getElementById("nxExecOverlay")) {
+      const overlay = document.createElement("div");
+      overlay.id = "nxExecOverlay";
+      overlay.className = "nx-modal-overlay";
+      overlay.innerHTML = `<div id="nxExecModalCard" class="nx-modal-card"></div>`;
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeModal();
       });
-      document.body.appendChild(backdrop);
+      document.body.appendChild(overlay);
     }
 
-    document.getElementById("nxProBtnAuth").onclick = () => {
+    document.getElementById("nxExecBtnAuth").onclick = () => {
       if (state.session) handleLogout();
       else openAuthModal("login");
     };
-    document.getElementById("nxProBtnPlans").onclick = openPlansModal;
-    document.getElementById("nxProBtnLedger").onclick = openLedgerModal;
-    document.getElementById("nxProBtnAdmin").onclick = openAdminModal;
+    document.getElementById("nxExecBtnPlans").onclick = openPlansModal;
+    document.getElementById("nxExecBtnLedger").onclick = openLedgerModal;
+    document.getElementById("nxExecBtnAdmin").onclick = openAdminModal;
   }
 
   function closeModal() {
-    const backdrop = document.getElementById("nxProBackdrop");
-    if (backdrop) backdrop.classList.remove("open");
+    const overlay = document.getElementById("nxExecOverlay");
+    if (overlay) overlay.classList.remove("open");
   }
 
   function openModal(html) {
     ensureUi();
-    const backdrop = document.getElementById("nxProBackdrop");
-    const box = document.getElementById("nxProModalBox");
-    box.innerHTML = html;
-    backdrop.classList.add("open");
+    const overlay = document.getElementById("nxExecOverlay");
+    const card = document.getElementById("nxExecModalCard");
+    card.innerHTML = html;
+    overlay.classList.add("open");
   }
 
-  function renderDock() {
+  function renderTopBar() {
     ensureUi();
-    const creditsEl = document.getElementById("nxProCredits");
-    const authBtn = document.getElementById("nxProBtnAuth");
-    const adminBtn = document.getElementById("nxProBtnAdmin");
+    const planText = document.getElementById("nxExecPlanText");
+    const creditsPill = document.getElementById("nxExecCreditsPill");
+    const emailEl = document.getElementById("nxExecUserEmail");
+    const authBtn = document.getElementById("nxExecBtnAuth");
+    const adminBtn = document.getElementById("nxExecBtnAdmin");
 
     if (state.session && state.user) {
       const c = Number.isFinite(state.credits) ? state.credits : 0;
-      creditsEl.textContent = `✦ ${c} créditos`;
+      planText.textContent = state.planName || "Conta Ativa";
+      creditsPill.textContent = `✦ ${c} créditos disponíveis`;
+      emailEl.textContent = state.user.email || "";
       authBtn.textContent = "Sair";
-      authBtn.className = "nx-pro-btn";
-      adminBtn.style.display = state.isAdmin ? "inline-block" : "none";
+      authBtn.className = "nx-nav-btn";
+      adminBtn.style.display = state.isAdmin ? "inline-flex" : "none";
     } else {
-      creditsEl.textContent = "✦ Créditos: --";
-      authBtn.textContent = "Entrar / Cadastrar";
-      authBtn.className = "nx-pro-btn nx-pro-btn-cta";
+      planText.textContent = "Estúdio Comercial 9:16";
+      creditsPill.textContent = "✦ Entre para ver seu saldo";
+      emailEl.textContent = "";
+      authBtn.textContent = "Entrar / Criar Conta";
+      authBtn.className = "nx-nav-btn nx-nav-btn-primary";
       adminBtn.style.display = "none";
     }
   }
@@ -281,18 +457,18 @@
         state.session = null;
         state.user = null;
         state.credits = null;
-        renderDock();
+        renderTopBar();
       }
       return null;
     }
     state.user = data.user || null;
     state.credits = Number(data.user?.credits ?? 0);
-    state.planName = data.user?.plan_name || "Ativo";
+    state.planName = data.user?.plan_name || "Conta Ativa";
     state.isAdmin = Boolean(data.user?.is_admin);
     state.ledger = Array.isArray(data.ledger) ? data.ledger : [];
     state.adminUsers = Array.isArray(data.adminUsers) ? data.adminUsers : [];
     if (data.publicConfig) state.publicConfig = data.publicConfig;
-    renderDock();
+    renderTopBar();
     return data;
   }
 
@@ -300,41 +476,45 @@
     state.authMode = mode;
     const isRegister = mode === "register";
     openModal(`
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <h3>${isRegister ? "Criar Conta — NEXORA.AI" : "Entrar — NEXORA.AI"}</h3>
-        <button type="button" class="nx-pro-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
+      <div class="nx-modal-header">
+        <h3 class="nx-modal-title">${isRegister ? "Criar Conta Profissional" : "Acessar NEXORA.AI"}</h3>
+        <button type="button" class="nx-nav-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
       </div>
-      <p class="nx-pro-sub">${isRegister ? "Crie sua conta para acessar o estúdio e gerenciar seus créditos." : "Entre com seu e-mail e senha para usar o estúdio."}</p>
-      <div id="nxProAuthFb"></div>
-      ${isRegister ? '<input id="nxProName" type="text" class="nx-pro-input" placeholder="Seu nome ou loja" />' : ""}
-      <input id="nxProEmail" type="email" class="nx-pro-input" placeholder="seu@email.com" autocomplete="email" />
-      <input id="nxProPass" type="password" class="nx-pro-input" placeholder="Sua senha (mínimo 6 caracteres)" autocomplete="current-password" />
-      <div style="display:flex;gap:8px;margin-top:6px;">
-        <button id="nxProAuthSubmit" type="button" class="nx-pro-btn nx-pro-btn-cta" style="flex:1;padding:11px;">
-          ${isRegister ? "Criar Conta" : "Entrar"}
+      <p class="nx-modal-subtitle">
+        ${isRegister
+          ? "Crie sua conta agora e receba créditos iniciais para produzir seus primeiros anúncios."
+          : "Entre com seu e-mail e senha para carregar seus créditos e criar vídeos e imagens."}
+      </p>
+      <div id="nxExecAuthFb"></div>
+      ${isRegister ? '<input id="nxExecName" type="text" class="nx-input-luxury" placeholder="Seu nome ou nome da loja" />' : ""}
+      <input id="nxExecEmail" type="email" class="nx-input-luxury" placeholder="seu@email.com" autocomplete="email" />
+      <input id="nxExecPass" type="password" class="nx-input-luxury" placeholder="Sua senha (mínimo 6 caracteres)" autocomplete="current-password" />
+      <div style="display:flex;gap:10px;margin-top:6px;">
+        <button id="nxExecAuthSubmit" type="button" class="nx-nav-btn nx-nav-btn-primary" style="flex:1;padding:12px;">
+          ${isRegister ? "Criar Minha Conta" : "Entrar no Estúdio"}
         </button>
-        <button type="button" class="nx-pro-btn" onclick="window.NexoraSaas.openAuthModal('${isRegister ? "login" : "register"}')">
+        <button type="button" class="nx-nav-btn" onclick="window.NexoraSaas.openAuthModal('${isRegister ? "login" : "register"}')">
           ${isRegister ? "Já tenho conta" : "Criar conta"}
         </button>
       </div>
     `);
 
-    document.getElementById("nxProAuthSubmit").onclick = async () => {
-      const fb = document.getElementById("nxProAuthFb");
-      const email = (document.getElementById("nxProEmail")?.value || "").trim();
-      const password = document.getElementById("nxProPass")?.value || "";
-      const fullName = (document.getElementById("nxProName")?.value || "").trim();
+    document.getElementById("nxExecAuthSubmit").onclick = async () => {
+      const fb = document.getElementById("nxExecAuthFb");
+      const email = (document.getElementById("nxExecEmail")?.value || "").trim();
+      const password = document.getElementById("nxExecPass")?.value || "";
+      const fullName = (document.getElementById("nxExecName")?.value || "").trim();
 
       if (!email || !password) {
-        fb.innerHTML = `<div class="nx-pro-err">Informe e-mail e senha.</div>`;
+        fb.innerHTML = `<div class="nx-alert-err">Preencha seu e-mail e sua senha.</div>`;
         return;
       }
 
-      fb.innerHTML = `<div class="nx-pro-ok">Conectando...</div>`;
+      fb.innerHTML = `<div class="nx-alert-ok">Autenticando com segurança...</div>`;
       try {
         const sb = await initSupabaseClient();
         if (!sb) {
-          fb.innerHTML = `<div class="nx-pro-err">Não foi possível conectar ao servidor de acesso.</div>`;
+          fb.innerHTML = `<div class="nx-alert-err">Servidor de acesso indisponível no momento.</div>`;
           return;
         }
         const authResp = isRegister
@@ -342,14 +522,14 @@
           : await sb.auth.signInWithPassword({ email, password });
 
         if (authResp.error) {
-          fb.innerHTML = `<div class="nx-pro-err">${authResp.error.message}</div>`;
+          fb.innerHTML = `<div class="nx-alert-err">${authResp.error.message}</div>`;
           return;
         }
         state.session = authResp.data.session;
         await refreshProfileFromServer();
         closeModal();
       } catch (err) {
-        fb.innerHTML = `<div class="nx-pro-err">${err?.message || "Erro ao entrar."}</div>`;
+        fb.innerHTML = `<div class="nx-alert-err">${err?.message || "Erro ao acessar conta."}</div>`;
       }
     };
   }
@@ -364,27 +544,36 @@
     state.isAdmin = false;
     state.ledger = [];
     state.adminUsers = [];
-    renderDock();
+    renderTopBar();
   }
 
   function openPlansModal() {
     openModal(`
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <h3>Planos e Créditos</h3>
-        <button type="button" class="nx-pro-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
+      <div class="nx-modal-header">
+        <h3 class="nx-modal-title">Planos e Recarga de Créditos</h3>
+        <button type="button" class="nx-nav-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
       </div>
-      <p class="nx-pro-sub">Escolha o pacote ideal para produzir vídeos e imagens comerciais 9:16.</p>
-      <div class="nx-pro-card">
-        <div><strong>Inicial — 60 Créditos</strong><br/><span style="color:#94a3b8;">Testes e campanhas rápidas</span></div>
-        <strong style="color:#fbbf24;">R$ 40,00</strong>
+      <p class="nx-modal-subtitle">Escolha o pacote ideal para escalar seus vídeos e fotos de alta conversão.</p>
+      <div class="nx-plan-option">
+        <div>
+          <strong style="font-size:14px;color:#fff;">Pacote Inicial — 60 Créditos</strong><br/>
+          <span style="font-size:12px;color:#94a3b8;">Ideal para validar produtos e primeiras campanhas</span>
+        </div>
+        <strong style="font-size:15px;color:#fde68a;">R$ 40,00</strong>
       </div>
-      <div class="nx-pro-card">
-        <div><strong>Criador — 180 Créditos</strong><br/><span style="color:#94a3b8;">Produção diária para afiliados e lojas</span></div>
-        <strong style="color:#fbbf24;">R$ 97,00</strong>
+      <div class="nx-plan-option featured">
+        <div>
+          <strong style="font-size:14px;color:#fff;">Plano Criador Pro — 180 Créditos</strong><br/>
+          <span style="font-size:12px;color:#cbd5e1;">Mais escolhido • Rotina diária de vídeos 9:16</span>
+        </div>
+        <strong style="font-size:15px;color:#fde68a;">R$ 97,00</strong>
       </div>
-      <div class="nx-pro-card">
-        <div><strong>Escala — 450 Créditos</strong><br/><span style="color:#94a3b8;">Alto volume de vídeos e fotos</span></div>
-        <strong style="color:#fbbf24;">R$ 197,00</strong>
+      <div class="nx-plan-option">
+        <div>
+          <strong style="font-size:14px;color:#fff;">Plano Escala — 450 Créditos</strong><br/>
+          <span style="font-size:12px;color:#94a3b8;">Alta produção para lojas e múltiplas contas</span>
+        </div>
+        <strong style="font-size:15px;color:#fde68a;">R$ 197,00</strong>
       </div>
     `);
   }
@@ -400,23 +589,26 @@
           .map((item) => {
             const d = Number(item.delta || 0);
             const sign = d > 0 ? `+${d}` : `${d}`;
-            const col = d >= 0 ? "#86efac" : "#fca5a5";
+            const col = d >= 0 ? "#6ee7b7" : "#fca5a5";
             return `
-              <div class="nx-pro-card">
-                <div><strong>${item.description || item.task || "Movimentação"}</strong><br/><span style="color:#94a3b8;">Saldo após: ${item.balance_after ?? "--"}</span></div>
-                <strong style="color:${col};">${sign}</strong>
+              <div class="nx-plan-option">
+                <div>
+                  <strong style="color:#f8fafc;">${item.description || item.task || "Movimentação"}</strong><br/>
+                  <span style="font-size:12px;color:#94a3b8;">Saldo após: ${item.balance_after ?? "--"} créditos</span>
+                </div>
+                <strong style="font-size:14px;color:${col};">${sign}</strong>
               </div>
             `;
           })
           .join("")
-      : `<p class="nx-pro-sub">Nenhuma movimentação ainda.</p>`;
+      : `<p class="nx-modal-subtitle">Nenhuma movimentação registrada ainda.</p>`;
 
     openModal(`
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <h3>Extrato de Créditos</h3>
-        <button type="button" class="nx-pro-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
+      <div class="nx-modal-header">
+        <h3 class="nx-modal-title">Extrato de Créditos</h3>
+        <button type="button" class="nx-nav-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
       </div>
-      <p class="nx-pro-sub">Saldo atual: <strong>${state.credits ?? 0}</strong> créditos</p>
+      <p class="nx-modal-subtitle">Saldo atual: <strong style="color:#fde68a;">${state.credits ?? 0} créditos</strong></p>
       <div style="max-height:55vh;overflow-y:auto;">${items}</div>
     `);
   }
@@ -429,53 +621,53 @@
       .join("");
 
     openModal(`
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <h3>Painel Admin</h3>
-        <button type="button" class="nx-pro-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
+      <div class="nx-modal-header">
+        <h3 class="nx-modal-title">Painel Administrativo</h3>
+        <button type="button" class="nx-nav-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
       </div>
-      <p class="nx-pro-sub">Liberar ou ajustar créditos de clientes na hora.</p>
-      <div id="nxProAdminFb"></div>
-      <select id="nxProAdminUser" class="nx-pro-input">${opts}</select>
-      <input id="nxProAdminAmt" type="number" class="nx-pro-input" value="60" placeholder="Quantidade de créditos" />
-      <input id="nxProAdminPlan" type="text" class="nx-pro-input" placeholder="Nome do plano (opcional)" />
-      <button id="nxProAdminSave" type="button" class="nx-pro-btn nx-pro-btn-cta" style="width:100%;padding:11px;">
-        Salvar Créditos
+      <p class="nx-modal-subtitle">Adicione ou ajuste créditos de qualquer cliente instantaneamente.</p>
+      <div id="nxExecAdminFb"></div>
+      <select id="nxExecAdminUser" class="nx-input-luxury">${opts}</select>
+      <input id="nxExecAdminAmt" type="number" class="nx-input-luxury" value="60" placeholder="Quantidade de créditos" />
+      <input id="nxExecAdminPlan" type="text" class="nx-input-luxury" placeholder="Nome do plano (ex: Plano Criador Pro)" />
+      <button id="nxExecAdminSave" type="button" class="nx-nav-btn nx-nav-btn-primary" style="width:100%;padding:12px;">
+        Aplicar Créditos Agora
       </button>
     `);
 
-    document.getElementById("nxProAdminSave").onclick = async () => {
-      const fb = document.getElementById("nxProAdminFb");
-      const targetUserId = document.getElementById("nxProAdminUser")?.value;
-      const amount = parseInt(document.getElementById("nxProAdminAmt")?.value || "0", 10);
-      const planName = (document.getElementById("nxProAdminPlan")?.value || "").trim();
+    document.getElementById("nxExecAdminSave").onclick = async () => {
+      const fb = document.getElementById("nxExecAdminFb");
+      const targetUserId = document.getElementById("nxExecAdminUser")?.value;
+      const amount = parseInt(document.getElementById("nxExecAdminAmt")?.value || "0", 10);
+      const planName = (document.getElementById("nxExecAdminPlan")?.value || "").trim();
 
       if (!targetUserId || !amount) {
-        fb.innerHTML = `<div class="nx-pro-err">Escolha o cliente e informe a quantidade.</div>`;
+        fb.innerHTML = `<div class="nx-alert-err">Selecione o cliente e informe a quantidade.</div>`;
         return;
       }
 
-      fb.innerHTML = `<div class="nx-pro-ok">Atualizando...</div>`;
+      fb.innerHTML = `<div class="nx-alert-ok">Atualizando saldo...</div>`;
       const res = await fetch("/api/me", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${state.session.access_token}`,
         },
-        body: JSON.stringify({ targetUserId, amount, planName, description: "Liberação pelo Painel Admin" }),
+        body: JSON.stringify({ targetUserId, amount, planName, description: "Liberação pelo Painel Administrativo" }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        fb.innerHTML = `<div class="nx-pro-err">${data.error || "Erro ao salvar."}</div>`;
+        fb.innerHTML = `<div class="nx-alert-err">${data.error || "Erro ao salvar."}</div>`;
         return;
       }
       await refreshProfileFromServer();
-      fb.innerHTML = `<div class="nx-pro-ok">Pronto! Novo saldo: ${data.newBalance} créditos.</div>`;
+      fb.innerHTML = `<div class="nx-alert-ok">Atualizado com sucesso! Novo saldo: ${data.newBalance} créditos.</div>`;
     };
   }
 
   function installFetchInterceptor() {
-    if (window.__nxProFetchWrapped) return;
-    window.__nxProFetchWrapped = true;
+    if (window.__nxExecFetchWrapped) return;
+    window.__nxExecFetchWrapped = true;
     const origFetch = window.fetch.bind(window);
 
     window.fetch = async function (input, init = {}) {
@@ -496,7 +688,7 @@
         resp.clone().json().then((payload) => {
           if (payload && typeof payload.credits === "number") {
             state.credits = payload.credits;
-            renderDock();
+            renderTopBar();
           }
           if (resp.status === 401) openAuthModal("login");
           else if (resp.status === 402 || payload?.code === "INSUFFICIENT_CREDITS") openPlansModal();
@@ -508,7 +700,7 @@
 
   async function boot() {
     ensureUi();
-    renderDock();
+    renderTopBar();
     installFetchInterceptor();
     try {
       const sb = await initSupabaseClient();
@@ -525,7 +717,7 @@
             state.user = null;
             state.credits = null;
             state.isAdmin = false;
-            renderDock();
+            renderTopBar();
           }
         });
       }
