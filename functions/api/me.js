@@ -56,17 +56,25 @@ export async function onRequestGet(context) {
       return jsonResponse({ error: "Configuração do servidor incompleta." }, 500);
     }
 
+    const publicConfig = {
+      supabaseUrl: env.SUPABASE_URL,
+      supabaseAnonKey: env.SUPABASE_ANON_KEY,
+    };
+
     const token = getBearerToken(request);
+    if (!token) {
+      return jsonResponse({ user: null, publicConfig }, 200);
+    }
+
     const user = await getAuthenticatedUser(env, token);
     if (!user) {
-      return jsonResponse({ error: "Sessão expirada. Faça login novamente." }, 401);
+      return jsonResponse({ user: null, publicConfig, error: "Sessão expirada." }, 401);
     }
 
     const adminEmail = String(env.ADMIN_EMAIL || "").trim().toLowerCase();
     const userEmail = String(user.email || "").trim().toLowerCase();
     const isAdminEnv = Boolean(adminEmail && userEmail && adminEmail === userEmail);
 
-    // Busca perfil do usuário
     const profileUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}&select=*`;
     const profRes = await fetch(profileUrl, {
       method: "GET",
@@ -76,7 +84,6 @@ export async function onRequestGet(context) {
     let profiles = profRes.ok ? await profRes.json() : [];
     let profile = Array.isArray(profiles) && profiles.length > 0 ? profiles[0] : null;
 
-    // Garante criação do perfil caso ainda não exista
     if (!profile) {
       const insertRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles`, {
         method: "POST",
@@ -100,7 +107,6 @@ export async function onRequestGet(context) {
       };
     }
 
-    // Sincroniza flag is_admin se o e-mail bater com ADMIN_EMAIL
     if (isAdminEnv && !profile.is_admin) {
       await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}`, {
         method: "PATCH",
@@ -111,7 +117,6 @@ export async function onRequestGet(context) {
       profile.plan_name = "Administrador";
     }
 
-    // Busca últimas 30 movimentações de créditos
     const ledgerUrl = `${env.SUPABASE_URL}/rest/v1/credit_ledger?user_id=eq.${encodeURIComponent(user.id)}&select=id,delta,balance_after,task,description,created_at&order=created_at.desc&limit=30`;
     const ledgerRes = await fetch(ledgerUrl, {
       method: "GET",
@@ -119,7 +124,6 @@ export async function onRequestGet(context) {
     });
     const ledger = ledgerRes.ok ? await ledgerRes.json() : [];
 
-    // Se for administrador, também retorna lista resumida de clientes para gestão
     let usersList = [];
     if (profile.is_admin) {
       const allUsersUrl = `${env.SUPABASE_URL}/rest/v1/profiles?select=id,email,full_name,credits,plan_name,is_admin,created_at&order=created_at.desc&limit=100`;
@@ -141,10 +145,7 @@ export async function onRequestGet(context) {
         plan_name: profile.plan_name || "Teste Grátis",
         is_admin: Boolean(profile.is_admin),
       },
-      publicConfig: {
-        supabaseUrl: env.SUPABASE_URL,
-        supabaseAnonKey: env.SUPABASE_ANON_KEY,
-      },
+      publicConfig,
       ledger: Array.isArray(ledger) ? ledger : [],
       adminUsers: Array.isArray(usersList) ? usersList : [],
     });
@@ -153,7 +154,6 @@ export async function onRequestGet(context) {
   }
 }
 
-// Endpoint exclusivo do Administrador para adicionar ou ajustar créditos de clientes
 export async function onRequestPost(context) {
   const { request, env } = context;
 
