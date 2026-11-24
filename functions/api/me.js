@@ -92,7 +92,7 @@ export async function onRequestGet(context) {
           id: user.id,
           email: user.email,
           full_name: user.user_metadata?.full_name || userEmail.split("@")[0],
-          credits: 15,
+          credits: 4,
           plan_name: isAdminEnv ? "Administrador" : "Teste Grátis",
           is_admin: isAdminEnv,
         }),
@@ -101,7 +101,7 @@ export async function onRequestGet(context) {
       profile = Array.isArray(inserted) && inserted[0] ? inserted[0] : {
         id: user.id,
         email: user.email,
-        credits: 15,
+        credits: 4,
         plan_name: isAdminEnv ? "Administrador" : "Teste Grátis",
         is_admin: isAdminEnv,
       };
