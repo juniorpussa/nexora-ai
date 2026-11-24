@@ -263,12 +263,28 @@
     }
   }
 
+  async function fetchPublicConfig() {
+    if (state.publicConfig?.supabaseUrl && state.publicConfig?.supabaseAnonKey) {
+      return state.publicConfig;
+    }
+    try {
+      const res = await fetch("/api/me", { method: "GET" });
+      const data = await res.json().catch(() => ({}));
+      if (data?.publicConfig?.supabaseUrl && data?.publicConfig?.supabaseAnonKey) {
+        state.publicConfig = data.publicConfig;
+        return state.publicConfig;
+      }
+    } catch (_) {}
+    return null;
+  }
+
   async function initSupabaseClient() {
     if (state.sb) return state.sb;
     await loadScript(SUPABASE_CDN);
 
-    let url = state.publicConfig?.supabaseUrl || "";
-    let anonKey = state.publicConfig?.supabaseAnonKey || "";
+    const cfg = await fetchPublicConfig();
+    let url = cfg?.supabaseUrl || "";
+    let anonKey = cfg?.supabaseAnonKey || "";
 
     if (!url || !anonKey) {
       const metaUrl = document.querySelector('meta[name="supabase-url"]')?.content || "";
@@ -576,18 +592,14 @@
     installFetchInterceptor();
 
     try {
-      await loadScript(SUPABASE_CDN);
-      // Lê url e anon key via /api/me apenas se já houver sessão salva, ou via meta tags
-      const metaUrl = document.querySelector('meta[name="supabase-url"]')?.content || "";
-      const metaKey = document.querySelector('meta[name="supabase-anon-key"]')?.content || "";
-      if (metaUrl && metaKey) {
-        state.sb = window.supabase.createClient(metaUrl, metaKey);
-        const { data } = await state.sb.auth.getSession();
+      const sb = await initSupabaseClient();
+      if (sb) {
+        const { data } = await sb.auth.getSession();
         if (data?.session) {
           state.session = data.session;
           await refreshProfileFromServer();
         }
-        state.sb.auth.onAuthStateChange(async (_event, newSession) => {
+        sb.auth.onAuthStateChange(async (_event, newSession) => {
           state.session = newSession || null;
           if (state.session) {
             await refreshProfileFromServer();
