@@ -76,7 +76,10 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    if (!env.PAGBANK_TOKEN) {
+    const pagbankToken = String(env.PAGBANK_TOKEN || "").trim();
+    const pagbankEmail = String(env.PAGBANK_EMAIL || "comercial@jcaatacadista.com.br").trim();
+
+    if (!pagbankToken) {
       return jsonResponse({ error: "Token do PagBank (PAGBANK_TOKEN) não configurado no servidor." }, 500);
     }
 
@@ -100,18 +103,16 @@ export async function onRequestPost(context) {
 
     const origin = new URL(request.url).origin;
     const referenceId = `${user.id}|${plan.id}`;
-    const pagbankEmail = env.PAGBANK_EMAIL || "comercial@jcaatacadista.com.br";
 
     const formParams = new URLSearchParams();
     formParams.append("email", pagbankEmail);
-    formParams.append("token", env.PAGBANK_TOKEN);
+    formParams.append("token", pagbankToken);
     formParams.append("currency", "BRL");
     formParams.append("itemId1", plan.id);
     formParams.append("itemDescription1", plan.title);
     formParams.append("itemAmount1", plan.price);
     formParams.append("itemQuantity1", "1");
     formParams.append("reference", referenceId);
-    formParams.append("senderEmail", user.email);
     formParams.append("redirectURL", `${origin}/?pagamento=aprovado`);
     formParams.append("notificationURL", `${origin}/api/webhook`);
 
@@ -129,8 +130,10 @@ export async function onRequestPost(context) {
 
     if (!pbRes.ok || !checkoutCode) {
       const msgMatch = xmlText.match(/<message>([^<]+)<\/message>/i);
-      const detail = msgMatch ? msgMatch[1] : "Verifique se o e-mail e o token do PagBank pertencem à mesma conta.";
-      return jsonResponse({ error: `Erro no PagBank: ${detail}` }, 502);
+      const detail = msgMatch
+        ? `${msgMatch[1]} (Status ${pbRes.status})`
+        : `HTTP ${pbRes.status}: ${xmlText.slice(0, 120) || "Unauthorized - confira PAGBANK_EMAIL e PAGBANK_TOKEN"}`;
+      return jsonResponse({ error: `PagBank: ${detail}` }, 502);
     }
 
     const payLink = `https://pagseguro.uol.com.br/v2/checkout/payment.html?code=${encodeURIComponent(checkoutCode)}`;
@@ -152,4 +155,3 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: "Erro ao criar checkout PagBank: " + (err?.message || "erro interno") }, 500);
   }
 }
-
