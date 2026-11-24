@@ -2,26 +2,26 @@ const PLANS = {
   inicial_60: {
     id: "inicial_60",
     name: "Pacote Inicial",
-    title: "NEXORA.AI — Pacote Inicial (60 Créditos)",
-    description: "60 créditos para gerar vídeos 9:16, imagens e narrações no NEXORA.AI",
+    title: "NEXORA.AI - Pacote Inicial (60 Creditos)",
     credits: 60,
     price: 40.0,
+    amountCents: 4000,
   },
   criador_180: {
     id: "criador_180",
     name: "Plano Criador Pro",
-    title: "NEXORA.AI — Plano Criador Pro (180 Créditos)",
-    description: "180 créditos para rotina diária de vídeos 9:16 no NEXORA.AI",
+    title: "NEXORA.AI - Plano Criador Pro (180 Creditos)",
     credits: 180,
     price: 97.0,
+    amountCents: 9700,
   },
   escala_450: {
     id: "escala_450",
     name: "Plano Escala",
-    title: "NEXORA.AI — Plano Escala (450 Créditos)",
-    description: "450 créditos para alta produção em múltiplas contas no NEXORA.AI",
+    title: "NEXORA.AI - Plano Escala (450 Creditos)",
     credits: 450,
     price: 197.0,
+    amountCents: 19700,
   },
 };
 
@@ -79,8 +79,8 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    if (!env.MP_ACCESS_TOKEN) {
-      return jsonResponse({ error: "Chave do Mercado Pago (MP_ACCESS_TOKEN) não configurada no servidor." }, 500);
+    if (!env.PAGBANK_TOKEN) {
+      return jsonResponse({ error: "Token do PagBank (PAGBANK_TOKEN) não configurado no servidor." }, 500);
     }
 
     if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY) {
@@ -102,64 +102,61 @@ export async function onRequestPost(context) {
     }
 
     const origin = new URL(request.url).origin;
+    const referenceId = `${user.id}|${plan.id}`;
 
-    const preferencePayload = {
-      items: [
-        {
-          id: plan.id,
-          title: plan.title,
-          description: plan.description,
-          quantity: 1,
-          currency_id: "BRL",
-          unit_price: plan.price,
-        },
-      ],
-      payer: {
+    const checkoutPayload = {
+      reference_id: referenceId,
+      customer: {
         email: user.email,
       },
-      external_reference: `${user.id}|${plan.id}`,
-      metadata: {
-        user_id: user.id,
-        user_email: user.email,
-        package_id: plan.id,
-        plan_name: plan.name,
-        credits: plan.credits,
-      },
-      notification_url: `${origin}/api/webhook`,
-      back_urls: {
-        success: `${origin}/?pagamento=aprovado`,
-        pending: `${origin}/?pagamento=pendente`,
-        failure: `${origin}/?pagamento=cancelado`,
-      },
-      statement_descriptor: "NEXORA.AI",
+      customer_modifiable: true,
+      items: [
+        {
+          reference_id: plan.id,
+          name: plan.title,
+          quantity: 1,
+          unit_amount: plan.amountCents,
+        },
+      ],
+      payment_methods: [
+        { type: "PIX" },
+        { type: "CREDIT_CARD" },
+        { type: "DEBIT_CARD" },
+        { type: "BOLETO" },
+      ],
+      redirect_url: `${origin}/?pagamento=aprovado`,
+      notification_urls: [`${origin}/api/webhook`],
+      payment_notification_urls: [`${origin}/api/webhook`],
     };
 
-    if (origin.startsWith("https://")) {
-      preferencePayload.auto_return = "approved";
-    }
-
-    const mpRes = await fetch("https://api.mercadopago.com/checkout/preferences", {
+    const pbRes = await fetch("https://api.pagseguro.com/checkouts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${env.MP_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${env.PAGBANK_TOKEN}`,
       },
-      body: JSON.stringify(preferencePayload),
+      body: JSON.stringify(checkoutPayload),
     });
 
-    const mpData = await mpRes.json().catch(() => ({}));
+    const pbData = await pbRes.json().catch(() => ({}));
+    const payLink = Array.isArray(pbData?.links)
+      ? pbData.links.find((l) => l.rel === "PAY")?.href
+      : null;
 
-    if (!mpRes.ok || !mpData.init_point) {
-      const detail = mpData?.message || mpData?.error || "Não foi possível gerar o link de pagamento.";
-      return jsonResponse({ error: `Erro no Mercado Pago: ${detail}` }, 502);
+    if (!pbRes.ok || !payLink) {
+      const detail =
+        pbData?.error_messages?.[0]?.description ||
+        pbData?.message ||
+        "Não foi possível gerar o link de pagamento no PagBank.";
+      return jsonResponse({ error: `Erro no PagBank: ${detail}` }, 502);
     }
 
     return jsonResponse({
       ok: true,
-      preferenceId: mpData.id,
-      checkoutUrl: mpData.init_point,
-      init_point: mpData.init_point,
-      url: mpData.init_point,
+      checkoutId: pbData.id,
+      checkoutUrl: payLink,
+      init_point: payLink,
+      url: payLink,
       plan: {
         id: plan.id,
         name: plan.name,
@@ -168,6 +165,6 @@ export async function onRequestPost(context) {
       },
     });
   } catch (err) {
-    return jsonResponse({ error: "Erro ao criar checkout: " + (err?.message || "erro interno") }, 500);
+    return jsonResponse({ error: "Erro ao criar checkout PagBank: " + (err?.message || "erro interno") }, 500);
   }
 }
