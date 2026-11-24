@@ -2,258 +2,1078 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXORA.AI — Hollywood v12.7 • Vozes ElevenLabs Persuasivas • Sync Milimétrico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#05070c" />
+  <title>NEXORA.AI — Estúdio Cinema IA para E-commerce &amp; TikTok Shop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@800;900&family=Plus+Jakarta+Sans:wght@700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, sans-serif; }
-    body { background: #06080d; color: #f4f6fb; min-height: 100vh; padding: 16px; }
-    .topbar { max-width: 1360px; margin: 0 auto 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid #182030; padding-bottom: 12px; }
-    .brand { font-size: 21px; font-weight: 900; letter-spacing: 0.05em; color: #fff; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .brand span { background: #22c55e; color: #041108; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 800; }
-    .pill-info { background: #0d2217; border: 1px solid #1f5c3a; padding: 6px 13px; border-radius: 999px; font-size: 12px; color: #86efac; font-weight: 700; }
-    .layout { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: 1.32fr 0.68fr; gap: 16px; }
-    @media (max-width: 980px) { .layout { grid-template-columns: 1fr; } }
-    .panel { background: #0d121d; border: 1px solid #1b2538; border-radius: 16px; padding: 16px; }
-    .step-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #22c55e; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .step-label small { color: #94a3b8; font-weight: 600; text-transform: none; }
-    .mode-switch { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin-bottom: 14px; }
-    @media (max-width: 920px) { .mode-switch { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 580px) { .mode-switch { grid-template-columns: 1fr 1fr; } }
-    .clone-card { background: #0b1424; border: 1px dashed #2d4a77; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 7px; }
-    .clone-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    @media (max-width: 560px) { .clone-row { grid-template-columns: 1fr; } }
-    .clone-slot { background: #0f1b30; border: 1px solid #22385c; border-radius: 9px; padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; font-size: 11px; }
-    .clone-slot strong { color: #e2e8f0; font-size: 11.5px; }
-    .clone-badge { font-size: 10px; font-weight: 800; color: #94a3b8; }
-    .clone-badge.active { color: #86efac; }
-    .video-drop-box { border: 1.5px dashed #22c55e88; border-radius: 12px; padding: 14px; background: #08101c; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-    .video-drop-box:hover { border-color: #22c55e; background: #0a1726; }
-    .video-drop-box input { display: none; }
-    .lab-mini-video { max-height: 185px; aspect-ratio: 9/16; border-radius: 10px; border: 1px solid #2a3c5e; background: #000; display: none; margin-top: 6px; }
-    .req-box { background: rgba(245,158,11,0.08); border: 1.5px solid #f59e0b88; border-radius: 10px; padding: 9px 10px; }
-    .req-box.filled { background: rgba(34,197,94,0.07); border-color: #22c55e88; }
-    .req-box.err-shake { border-color: #ef4444 !important; background: rgba(239,68,68,0.12) !important; }
-    .req-tag { background: #f59e0b; color: #1a1000; font-size: 9.5px; font-weight: 900; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
-    .req-box.filled .req-tag { background: #22c55e; color: #041208; }
-    .req-err-txt { font-size: 11px; color: #fca5a5; font-weight: 700; margin-top: 4px; display: none; }
-    .mode-btn { background: #080c14; border: 1.5px solid #233048; border-radius: 11px; padding: 10px 11px; cursor: pointer; text-align: left; color: #cbd5e1; transition: 0.15s; }
-    .mode-btn.active { border-color: #22c55e; background: #0d2217; color: #fff; }
-    .mode-btn strong { display: block; font-size: 12.5px; margin-bottom: 2px; }
-    .mode-btn small { font-size: 10.5px; color: #94a3b8; line-height: 1.25; display: block; }
-    .mode-btn.active small { color: #86efac; }
+    :root {
+      --bg-page: #05080f;
+      --bg-surface: #0b111e;
+      --bg-card: #0f1727;
+      --bg-input: #131d31;
+      --bg-hover: #17233b;
+      --border: #1d2a42;
+      --border-strong: #2c3e60;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-soft: #cbd5e1;
+      --accent: #22c55e;
+      --accent-dark: #16a34a;
+      --accent-glow: rgba(34, 197, 94, 0.22);
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --danger: #f87171;
+      --radius-lg: 18px;
+      --radius-md: 13px;
+      --radius-sm: 9px;
+      --shadow-card: 0 12px 34px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--bg-page);
+      color: var(--text-main);
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      background-image:
+        radial-gradient(ellipse 80% 42% at 15% -5%, rgba(34, 197, 94, 0.11), transparent 60%),
+        radial-gradient(ellipse 70% 40% at 85% -10%, rgba(56, 189, 248, 0.10), transparent 60%);
+      padding-bottom: 40px;
+    }
+
+    /* === STICKY FLAGSHIP NAVBAR === */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(5, 8, 15, 0.86);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(30, 45, 72, 0.85);
+    }
+    .navbar-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 11px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 14px rgba(34, 197, 94, 0.35));
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.05;
+    }
+    .brand-name {
+      font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-name .dot-ai {
+      background: linear-gradient(135deg, #22c55e, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-tag {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.16);
+      border: 1px solid rgba(34, 197, 94, 0.42);
+      color: #86efac;
+      text-transform: uppercase;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .trust-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .trust-chip {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #cbd5e1;
+      background: rgba(15, 23, 39, 0.9);
+      border: 1px solid var(--border);
+      padding: 6px 11px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .trust-chip.live {
+      border-color: rgba(34, 197, 94, 0.38);
+      background: rgba(13, 34, 23, 0.78);
+      color: #86efac;
+    }
+    .credits-pill {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #e0f2fe;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.16), rgba(34, 197, 94, 0.16));
+      border: 1px solid rgba(56, 189, 248, 0.42);
+      padding: 6px 13px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    /* === MAIN WORKSPACE === */
+    .shell {
+      max-width: 1400px;
+      margin: 18px auto 0;
+      padding: 0 20px;
+    }
+
+    /* Tool Tabs Bar */
+    .mode-switch {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .mode-btn {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      cursor: pointer;
+      text-align: left;
+      color: var(--text-soft);
+      transition: transform 0.14s ease, border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-height: 66px;
+    }
+    .mode-btn:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-card);
+      transform: translateY(-1px);
+    }
+    .mode-btn.active {
+      border-color: var(--accent);
+      background: linear-gradient(155deg, rgba(34, 197, 94, 0.16), rgba(11, 24, 20, 0.96));
+      color: #fff;
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.25), 0 8px 24px rgba(34, 197, 94, 0.12);
+    }
+    .mode-btn strong {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .mode-btn small {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+    .mode-btn.active small { color: #a7f3d0; }
+
+    /* Two-column Studio Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.38fr) minmax(330px, 0.62fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .studio-col {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 13px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(29, 42, 66, 0.7);
+    }
+    .step-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.01em;
+    }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: rgba(34, 197, 94, 0.16);
+      border: 1px solid rgba(34, 197, 94, 0.45);
+      color: #86efac;
+      font-size: 11px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-meta {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .step-meta strong { color: #86efac; }
+
     .hidden { display: none !important; }
-    .row-top { display: grid; grid-template-columns: 185px 1fr; gap: 12px; margin-bottom: 12px; }
-    @media (max-width: 600px) { .row-top { grid-template-columns: 1fr; } }
-    .upload-col { display: flex; flex-direction: column; gap: 7px; }
-    .upload-area { border: 1.5px dashed #2b3954; border-radius: 12px; padding: 10px; text-align: center; background: #080c14; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 158px; }
-    .upload-area:hover { border-color: #22c55e; }
+
+    /* Form Controls & Grids */
+    .row-top {
+      display: grid;
+      grid-template-columns: 195px 1fr;
+      gap: 14px;
+    }
+    .upload-col { display: flex; flex-direction: column; gap: 8px; }
+    .upload-area {
+      border: 1.5px dashed #33486e;
+      border-radius: var(--radius-md);
+      padding: 14px 10px;
+      text-align: center;
+      background: var(--bg-card);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 176px;
+      transition: border-color 0.16s ease, background 0.16s ease;
+    }
+    .upload-area:hover { border-color: var(--accent); background: #111c30; }
     .upload-area input { display: none; }
-    .upload-area img { max-height: 102px; border-radius: 8px; margin-top: 8px; display: none; object-fit: contain; }
-    .checker-bg { background-image: linear-gradient(45deg, #1e293b 25%, transparent 25%), linear-gradient(-45deg, #1e293b 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1e293b 75%), linear-gradient(-45deg, transparent 75%, #1e293b 75%); background-size: 16px 16px; background-position: 0 0, 0 8px, 8px -8px, -8px 0; background-color: #0f172a; }
-    .btn-quick-bg { background: #14223b; color: #7dd3fc; border: 1px solid #2563eb; border-radius: 9px; padding: 7px 10px; font-size: 11.5px; font-weight: 800; cursor: pointer; width: 100%; }
-    .btn-quick-bg:hover { background: #1d3257; }
+    .upload-area img { max-height: 112px; max-width: 100%; border-radius: 9px; margin-top: 8px; display: none; object-fit: contain; }
+    .upload-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      color: #86efac;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .checker-bg {
+      background-image:
+        linear-gradient(45deg, #1e293b 25%, transparent 25%),
+        linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #1e293b 75%),
+        linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+      background-color: #0f172a;
+    }
+    .btn-quick-bg {
+      background: rgba(37, 99, 235, 0.16);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.45);
+      border-radius: var(--radius-sm);
+      padding: 9px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.15s;
+    }
+    .btn-quick-bg:hover:not(:disabled) { background: rgba(37, 99, 235, 0.28); color: #fff; }
     .btn-quick-bg:disabled { opacity: 0.45; cursor: not-allowed; }
-    .box-group { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: center; gap: 9px; }
-    .box-group label, .audio-panel label, .sub-panel label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 3px; font-weight: 700; text-transform: uppercase; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 9px; }
-    @media (max-width: 560px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
-    select, input[type="text"], input[type="file"].inline-file, textarea { width: 100%; background: #111827; border: 1px solid #29364f; border-radius: 9px; color: #f8fafc; padding: 8px 10px; font-size: 12.5px; outline: none; }
-    textarea { resize: vertical; min-height: 76px; line-height: 1.45; }
-    select:focus, input[type="text"]:focus, textarea:focus { border-color: #22c55e; }
-    .director-banner { background: linear-gradient(90deg, rgba(16, 42, 29, 0.92), rgba(13, 29, 52, 0.92)); border: 1px solid #22c55e66; border-radius: 11px; padding: 10px 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
-    .director-banner-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 12px; color: #dcfce7; font-weight: 700; }
+
+    .box-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 11px;
+    }
+    .field label, .box-group label, .audio-panel label, .sub-panel label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 11px; }
+
+    select, input[type="text"], input[type="file"].inline-file, textarea {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    select { min-height: 41px; cursor: pointer; }
+    input[type="text"] { min-height: 41px; }
+    textarea { resize: vertical; min-height: 86px; line-height: 1.5; }
+    select:focus, input[type="text"]:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14);
+    }
+    select optgroup { background: #0c1322; color: #86efac; font-weight: 800; }
+    select option { background: #11192b; color: #f8fafc; font-weight: 500; }
+
+    /* Collapsible Advanced Details */
+    details.adv-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 11px 14px;
+    }
+    details.adv-panel summary {
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      color: #93c5fd;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      user-select: none;
+    }
+    details.adv-panel summary::-webkit-details-marker { display: none; }
+    details.adv-panel summary::after {
+      content: "▾";
+      font-size: 14px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+    details.adv-panel[open] summary::after { transform: rotate(180deg); }
+    .adv-body {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(29, 42, 66, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Director Banner */
+    .director-banner {
+      background: linear-gradient(120deg, rgba(14, 38, 26, 0.78), rgba(14, 28, 52, 0.78));
+      border: 1px solid rgba(34, 197, 94, 0.34);
+      border-radius: var(--radius-md);
+      padding: 11px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .director-banner-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 12px;
+      color: #dcfce7;
+      font-weight: 700;
+    }
     .director-acts-preview { display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; }
-    .act-pill { background: #0b1626; border: 1px solid #264269; color: #93c5fd; padding: 3px 8px; border-radius: 999px; font-weight: 700; }
+    .act-pill {
+      background: rgba(11, 22, 38, 0.92);
+      border: 1px solid #264269;
+      color: #93c5fd;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
     .act-pill.human { background: #1a112c; border-color: #7c3aed; color: #d8b4fe; }
-    .act-pill.macro { background: #1f1909; border-color: #eab308; color: #fde047; }
-    .sla-bar { background: #0c1a2e; border: 1px solid #1e40af; border-radius: 10px; padding: 9px 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; color: #bfdbfe; }
-    .sla-bar strong { color: #38bdf8; }
-    .sla-controls { display: flex; gap: 8px; flex-wrap: wrap; }
-    .sla-controls select { width: auto; background: #0a1426; border-color: #2563eb; font-weight: 700; color: #e0f2fe; padding: 6px 9px; font-size: 12px; }
-    .catalog-box { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 11px; margin-bottom: 12px; }
-    .filter-bar { display: grid; grid-template-columns: 1fr 225px auto; gap: 8px; margin-bottom: 9px; }
-    @media (max-width: 640px) { .filter-bar { grid-template-columns: 1fr; } }
-    .btn-rand { background: #182338; color: #7dd3fc; border: 1px solid #2d3f63; border-radius: 9px; padding: 0 12px; font-size: 12px; font-weight: 800; cursor: pointer; min-height: 36px; white-space: nowrap; }
-    .preset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; max-height: 255px; overflow-y: auto; padding-right: 4px; }
-    @media (max-width: 560px) { .preset-grid { grid-template-columns: 1fr; } }
-    .preset-item { background: #101725; border: 1px solid #233048; border-radius: 9px; padding: 8px 10px; cursor: pointer; text-align: left; color: #e2e8f0; transition: 0.12s; }
-    .preset-item:hover { border-color: #3b4f75; }
-    .preset-item.active { border-color: #22c55e; background: #0e2218; }
-    .preset-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 2px; }
-    .preset-top strong { font-size: 11.8px; color: #fff; }
-    .badge-cat { font-size: 9.5px; padding: 2px 6px; border-radius: 5px; background: #1c273d; color: #7dd3fc; font-weight: 700; white-space: nowrap; }
+    .act-pill.macro { background: #211b08; border-color: #ca8a04; color: #fde047; }
+
+    /* Catalog Grid */
+    .filter-bar {
+      display: grid;
+      grid-template-columns: 1fr 225px auto;
+      gap: 9px;
+      margin-bottom: 11px;
+    }
+    .btn-rand {
+      background: linear-gradient(135deg, #162542, #1b2f52);
+      color: #7dd3fc;
+      border: 1px solid #2d4a77;
+      border-radius: var(--radius-sm);
+      padding: 0 14px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      min-height: 41px;
+      white-space: nowrap;
+      transition: 0.15s;
+    }
+    .btn-rand:hover { border-color: var(--cyan); color: #fff; background: #1d345c; }
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      max-height: 270px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    .preset-grid::-webkit-scrollbar { width: 6px; }
+    .preset-grid::-webkit-scrollbar-track { background: #0a101c; border-radius: 6px; }
+    .preset-grid::-webkit-scrollbar-thumb { background: #263858; border-radius: 6px; }
+    .preset-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 11px;
+      cursor: pointer;
+      text-align: left;
+      color: #e2e8f0;
+      transition: border-color 0.13s, background 0.13s;
+    }
+    .preset-item:hover { border-color: #3d5680; background: var(--bg-hover); }
+    .preset-item.active {
+      border-color: var(--accent);
+      background: linear-gradient(145deg, rgba(34, 197, 94, 0.16), rgba(14, 34, 24, 0.9));
+      box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.2);
+    }
+    .preset-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 3px; }
+    .preset-top strong { font-size: 12px; color: #fff; font-weight: 700; }
+    .badge-cat { font-size: 9.5px; padding: 2px 6px; border-radius: 5px; background: #1c2840; color: #7dd3fc; font-weight: 700; white-space: nowrap; }
     .badge-ugc { font-size: 9.5px; padding: 2px 5px; border-radius: 5px; background: #3b1d4a; color: #f0abfc; font-weight: 700; margin-left: 3px; }
     .badge-n10 { font-size: 9.5px; padding: 2px 5px; border-radius: 5px; background: #14532d; color: #86efac; font-weight: 800; margin-left: 3px; }
-    .preset-item p { font-size: 10.8px; color: #94a3b8; line-height: 1.3; }
-    .audio-panel, .sub-panel { background: #080c14; border: 1px solid #1e293e; border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 9px; }
-    .voice-split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .gender-btn { background: #101829; border: 1.5px solid #263552; color: #cbd5e1; border-radius: 9px; padding: 9px; font-size: 12.5px; font-weight: 800; cursor: pointer; text-align: center; }
-    .gender-btn.active { border-color: #22c55e; background: #0e2418; color: #86efac; }
-    .char-meta { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; flex-wrap: wrap; gap: 6px; }
-    .btn-mini { background: #182338; color: #86efac; border: 1px solid #22543d; border-radius: 7px; padding: 5px 10px; font-size: 11px; font-weight: 700; cursor: pointer; }
-    .options-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
-    .toggle-row { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #cbd5e1; cursor: pointer; }
-    .btn-generate { width: 100%; background: #22c55e; color: #041208; border: none; border-radius: 12px; padding: 15px; font-size: 14px; font-weight: 900; cursor: pointer; }
-    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
-    .action-inline { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
-    .btn-cancel { background: rgba(248,113,113,0.14); color: #fca5a5; border: 1px solid rgba(248,113,113,0.35); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
-    .btn-use-ready { background: rgba(34,197,94,0.16); color: #86efac; border: 1px solid rgba(34,197,94,0.45); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
-    .preview-stage { background: #070a10; border: 1px solid #1b2436; border-radius: 14px; min-height: 640px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; gap: 12px; }
-    video.player-916, img.preview-916 { width: 100%; max-width: 300px; aspect-ratio: 9/16; object-fit: cover; border-radius: 14px; background: #000; border: 1px solid #26334d; }
-    img.preview-png { width: 100%; max-width: 320px; max-height: 360px; object-fit: contain; border-radius: 14px; border: 1px solid #26334d; padding: 12px; }
+    .preset-item p { font-size: 11px; color: var(--text-muted); line-height: 1.35; }
+
+    /* Audio, Narration & Video Lab Panels */
+    .audio-panel, .sub-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .voice-split { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .gender-btn {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-strong);
+      color: var(--text-soft);
+      border-radius: 10px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.15s;
+    }
+    .gender-btn.active {
+      border-color: var(--accent);
+      background: rgba(34, 197, 94, 0.15);
+      color: #86efac;
+    }
+    .char-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .btn-mini {
+      background: #17243b;
+      color: #86efac;
+      border: 1px solid #22543d;
+      border-radius: 8px;
+      padding: 6px 11px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .options-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; padding: 2px 0; }
+    .toggle-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: #e2e8f0;
+      cursor: pointer;
+      user-select: none;
+    }
+    .toggle-row input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .req-box {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1.5px solid rgba(245, 158, 11, 0.55);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      transition: border-color 0.18s, background 0.18s;
+    }
+    .req-box.filled {
+      background: rgba(34, 197, 94, 0.07);
+      border-color: rgba(34, 197, 94, 0.55);
+    }
+    .req-box.err-shake {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.14) !important;
+    }
+    .req-tag {
+      background: var(--amber);
+      color: #1a1000;
+      font-size: 9.5px;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 5px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .req-box.filled .req-tag { background: var(--accent); color: #041208; }
+    .req-err-txt { font-size: 11.5px; color: #fca5a5; font-weight: 700; margin-top: 6px; display: none; }
+
+    .video-drop-box {
+      border: 1.5px dashed rgba(34, 197, 94, 0.55);
+      border-radius: var(--radius-md);
+      padding: 18px 14px;
+      background: linear-gradient(160deg, rgba(12, 26, 20, 0.65), rgba(11, 17, 30, 0.9));
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: 0.16s;
+    }
+    .video-drop-box:hover { border-color: var(--accent); background: rgba(16, 36, 26, 0.8); }
+    .video-drop-box input { display: none; }
+    .lab-mini-video {
+      max-height: 200px;
+      aspect-ratio: 9/16;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+      background: #000;
+      display: none;
+      margin-top: 8px;
+    }
+
+    .clone-card {
+      background: var(--bg-card);
+      border: 1px dashed #2d4a77;
+      border-radius: var(--radius-md);
+      padding: 11px 13px;
+    }
+    .clone-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 9px; }
+    .clone-slot {
+      background: #0c1425;
+      border: 1px solid #223659;
+      border-radius: 9px;
+      padding: 9px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 11px;
+    }
+    .clone-slot strong { color: #e2e8f0; font-size: 12px; }
+    .clone-badge { font-size: 10.5px; font-weight: 700; color: var(--text-muted); }
+    .clone-badge.active { color: #86efac; }
+
+    /* Primary CTA Button */
+    .btn-generate {
+      width: 100%;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #031208;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(34, 197, 94, 0.25);
+      transition: transform 0.14s ease, box-shadow 0.16s ease, filter 0.16s ease;
+    }
+    .btn-generate:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 34px rgba(34, 197, 94, 0.36);
+      filter: brightness(1.05);
+    }
+    .btn-generate:disabled { opacity: 0.48; cursor: not-allowed; box-shadow: none; }
+
+    /* === STICKY RIGHT PREVIEW PANEL (SMARTPHONE 9:16 STAGE) === */
+    .preview-col {
+      position: sticky;
+      top: 78px;
+      min-width: 0;
+    }
+    .preview-stage {
+      background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08), transparent 55%), #070b13;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 14px;
+      text-align: center;
+      gap: 14px;
+    }
+    .empty-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      max-width: 340px;
+    }
+    .phone-frame-ghost {
+      width: 148px;
+      aspect-ratio: 9/16;
+      border-radius: 22px;
+      border: 2px solid #233352;
+      background: linear-gradient(180deg, #0d1629, #080d18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      position: relative;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    }
+    .phone-frame-ghost::before {
+      content: "";
+      position: absolute;
+      top: 9px;
+      width: 36px;
+      height: 4px;
+      border-radius: 99px;
+      background: #243554;
+    }
+    .phone-safe-bar {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      height: 22px;
+      border-radius: 6px;
+      background: rgba(249, 115, 22, 0.16);
+      border: 1px dashed rgba(249, 115, 22, 0.5);
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #fdba74;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .feature-bullets {
+      list-style: none;
+      text-align: left;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--text-soft);
+      background: rgba(15, 23, 39, 0.72);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .feature-bullets li { display: flex; align-items: flex-start; gap: 7px; line-height: 1.4; }
+    .feature-bullets li strong { color: #fff; }
+
+    video.player-916, img.preview-916 {
+      width: 100%;
+      max-width: 295px;
+      aspect-ratio: 9/16;
+      object-fit: cover;
+      border-radius: 18px;
+      background: #000;
+      border: 2px solid #2b3c5c;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55);
+    }
+    img.preview-png {
+      width: 100%;
+      max-width: 310px;
+      max-height: 360px;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid var(--border-strong);
+      padding: 12px;
+    }
     audio.voice-player { width: 100%; max-width: 340px; }
-    .dl-box { width: 100%; background: #0c121e; border: 1px solid #22304a; border-radius: 12px; padding: 12px; text-align: left; }
-    .dl-title { font-size: 11px; font-weight: 800; color: #38bdf8; margin-bottom: 6px; text-transform: uppercase; line-height: 1.4; }
-    .dl-dna { font-size: 11px; color: #86efac; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; margin-bottom: 8px; }
+
+    .dl-box {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 13px;
+      text-align: left;
+    }
+    .dl-title { font-size: 11.5px; font-weight: 800; color: var(--cyan); margin-bottom: 6px; text-transform: uppercase; line-height: 1.4; }
+    .dl-dna { font-size: 11px; color: #86efac; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; margin-bottom: 10px; line-height: 1.45; }
     .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .dl-btn { display: block; text-align: center; background: #182338; color: #f8fafc; border: 1px solid #2d3f63; border-radius: 8px; padding: 9px 10px; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; }
-    .dl-btn.main { background: #22c55e; color: #041208; border: none; grid-column: span 2; font-size: 13px; padding: 11px; }
-    .dl-btn.remix { background: #1e293b; color: #7dd3fc; border: 1px solid #38bdf8; grid-column: span 2; }
-    .timer-badge { background: #132544; border: 1px solid #2563eb; color: #93c5fd; padding: 5px 12px; border-radius: 999px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 800; }
-    .status-msg { font-size: 13px; color: #9fb0cc; line-height: 1.5; max-width: 420px; }
-    .status-log { font-size: 10.8px; color: #7dd3fc; margin-top: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.45; text-align: left; width: 100%; max-width: 420px; max-height: 230px; overflow-y: auto; background: #0a101b; border: 1px solid #1b2840; border-radius: 9px; padding: 8px 10px; }
-    .progress-bar-wrap { width: 100%; max-width: 340px; height: 8px; background: #151e30; border-radius: 999px; overflow: hidden; margin-top: 6px; }
+    .dl-btn {
+      display: block;
+      text-align: center;
+      background: #182338;
+      color: #f8fafc;
+      border: 1px solid #2d3f63;
+      border-radius: 9px;
+      padding: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .dl-btn:hover { filter: brightness(1.08); }
+    .dl-btn.main { background: var(--accent); color: #041208; border: none; grid-column: span 2; font-size: 13.5px; font-weight: 800; padding: 12px; }
+    .dl-btn.remix { background: rgba(56, 189, 248, 0.12); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.5); grid-column: span 2; }
+    .timer-badge {
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid #3b82f6;
+      color: #93c5fd;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+    .status-msg { font-size: 13px; color: var(--text-soft); line-height: 1.5; max-width: 400px; }
+    .status-log {
+      font-size: 11px;
+      color: #7dd3fc;
+      margin-top: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      line-height: 1.5;
+      text-align: left;
+      width: 100%;
+      max-height: 230px;
+      overflow-y: auto;
+      background: #090f1a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .progress-bar-wrap { width: 100%; max-width: 340px; height: 8px; background: #151e30; border-radius: 999px; overflow: hidden; }
     .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #38bdf8); width: 0%; transition: width 0.25s ease; }
-    .err-msg { font-size: 13px; color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); padding: 10px 12px; border-radius: 10px; width: 100%; word-break: break-word; }
-    .warn-note { font-size: 11.5px; color: #fde047; margin-top: 6px; }
-    .clip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; justify-content: center; }
-    .clip-chip { background: #131d30; border: 1px solid #283a5c; color: #cbd5e1; border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 700; text-decoration: none; }
-    .thumb-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(38px, 1fr)); gap: 4px; width: 100%; margin-top: 4px; }
-    .thumb-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 5px; border: 1px solid #26334d; }
+    .action-inline { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 6px; }
+    .btn-cancel { background: rgba(248, 113, 113, 0.14); color: #fca5a5; border: 1px solid rgba(248, 113, 113, 0.35); border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .btn-use-ready { background: rgba(34, 197, 94, 0.16); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.45); border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .err-msg { font-size: 13px; color: #fca5a5; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(248, 113, 113, 0.38); padding: 12px 14px; border-radius: 11px; width: 100%; word-break: break-word; text-align: left; }
+    .warn-note { font-size: 11.5px; color: #fde047; margin-top: 8px; }
+    .clip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; justify-content: center; }
+    .clip-chip { background: #131d30; border: 1px solid #283a5c; color: #cbd5e1; border-radius: 7px; padding: 5px 9px; font-size: 11px; font-weight: 700; text-decoration: none; }
+    .clip-chip:hover { border-color: var(--cyan); color: #fff; }
+    .thumb-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); gap: 5px; width: 100%; margin-top: 4px; }
+    .thumb-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-strong); }
+
+    .site-footer {
+      max-width: 1400px;
+      margin: 28px auto 0;
+      padding: 16px 20px 0;
+      border-top: 1px solid rgba(29, 42, 66, 0.65);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* === TABLET RESPONSIVENESS (<= 1080px) === */
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; }
+      .preview-col { position: static; }
+      .preview-stage { min-height: 440px; }
+      .mode-switch { grid-template-columns: repeat(3, 1fr); }
+      .trust-strip { display: none; }
+    }
+
+    /* === MOBILE RESPONSIVENESS (<= 680px) === */
+    @media (max-width: 680px) {
+      .navbar-inner { padding: 10px 14px; }
+      .brand-name { font-size: 17.5px; }
+      .brand-sub { display: none; }
+      .credits-pill { font-size: 10.5px; padding: 5px 10px; }
+      .shell { padding: 0 12px; margin-top: 12px; }
+      .card { padding: 14px; border-radius: 14px; }
+      .mode-switch {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        gap: 8px;
+        padding-bottom: 4px;
+        margin-bottom: 14px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .mode-switch::-webkit-scrollbar { display: none; }
+      .mode-btn {
+        min-width: 148px;
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        padding: 10px 12px;
+        min-height: 58px;
+      }
+      .row-top, .grid-2, .grid-3, .filter-bar, .preset-grid, .clone-row {
+        grid-template-columns: 1fr;
+      }
+      .upload-area { min-height: 136px; }
+      select, input[type="text"], textarea { font-size: 16px; padding: 11px 12px; }
+      .btn-generate { font-size: 14.5px; padding: 15px 14px; }
+      .btn-rand { width: 100%; min-height: 44px; }
+      .step-title { font-size: 13.5px; }
+    }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="brand">NEXORA.AI <span>HOLLYWOOD v12.7 • ELEVENLABS PERSUASIVAS • SYNC MILIMÉTRICO</span></div>
-    <div class="pill-info">🎬 Hollywood Universal v12.7 • 105 Modelos 3D • 10 Vozes Persuasivas ElevenLabs (Zero Distorção) • Sync Exato por Clock de Áudio • Produto Obrigatório</div>
-  </div>
-
-  <div class="layout">
-    <div class="panel">
-      <div class="step-label">1. Ferramentas do Estúdio</div>
-      <div class="mode-switch">
-        <button type="button" class="mode-btn active" data-mode="video">
-          <strong>🎬 Superprodução</strong>
-          <small>105 universos 3D + Voz + Legenda</small>
-        </button>
-        <button type="button" class="mode-btn" data-mode="videolab">
-          <strong>🧪 Importar Vídeo</strong>
-          <small>Testar Voz + Legenda (Zero custo GPU)</small>
-        </button>
-        <button type="button" class="mode-btn" data-mode="image">
-          <strong>🖼️ Imagens 9:16</strong>
-          <small>105 fotos ARRI 65 / Macro / UGC</small>
-        </button>
-        <button type="button" class="mode-btn" data-mode="voice">
-          <strong>🎙️ Narração PT-BR</strong>
-          <small>10 Vozes ElevenLabs Persuasivas</small>
-        </button>
-        <button type="button" class="mode-btn" data-mode="removebg">
-          <strong>✂️ Remover Fundo</strong>
-          <small>PNG transparente HD p/ anúncios</small>
-        </button>
+  <!-- STICKY BRAND NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <div class="brand-wrap">
+        <svg class="brand-logo" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="NEXORA.AI Logo">
+          <defs>
+            <linearGradient id="nexoraGrad" x1="4" y1="4" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#22C55E" />
+              <stop offset="55%" stop-color="#10B981" />
+              <stop offset="100%" stop-color="#38BDF8" />
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="40" height="40" rx="12" fill="#0B1324" stroke="url(#nexoraGrad)" stroke-width="2.2" />
+          <path d="M13 30V14L23.5 26.5V14" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M27.5 16.5L34.5 22L27.5 27.5V16.5Z" fill="url(#nexoraGrad)" />
+        </svg>
+        <div class="brand-text">
+          <div class="brand-name">NEXORA<span class="dot-ai">.AI</span> <span class="brand-tag">PRO v12.8</span></div>
+          <div class="brand-sub">Estúdio Cinema IA para E-commerce &amp; TikTok Shop</div>
+        </div>
       </div>
 
-      <div id="productSection">
-        <div class="step-label">2. Produto • Direção Cinematográfica Universal &amp; Trava Rígida 0°</div>
-        <div class="row-top">
-          <div class="upload-col">
-            <label class="upload-area" for="productImg">
-              <strong style="font-size:13px;">Foto do Produto</strong>
-              <span style="font-size:11px;color:#94a3b8;margin-top:3px;">Qualquer produto</span>
-              <input type="file" id="productImg" accept="image/*" />
-              <img id="thumbPreview" alt="Produto" />
-            </label>
-            <button type="button" class="btn-quick-bg" id="btnQuickRemoveBg" disabled>✂️ Remover Fundo (PNG)</button>
+      <div class="nav-right">
+        <div class="trust-strip">
+          <span class="trust-chip live">● 105 Universos 3D</span>
+          <span class="trust-chip">🎙️ 60 Vozes PT-BR</span>
+          <span class="trust-chip">🛡️ Blindado TikTok Shop</span>
+        </div>
+        <div class="credits-pill" title="Sistema de créditos será ativado na próxima etapa">⚡ Estúdio Pro Ativo</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <!-- 5 MAIN STUDIO TOOLS -->
+    <nav class="mode-switch" aria-label="Ferramentas do Estúdio">
+      <button type="button" class="mode-btn active" data-mode="video">
+        <strong>🎬 Superprodução</strong>
+        <small>Vídeo 9:16 Cinema + Voz + Legenda</small>
+      </button>
+      <button type="button" class="mode-btn" data-mode="videolab">
+        <strong>🧪 Importar Vídeo</strong>
+        <small>Adicionar Voz &amp; Legenda (Zero GPU)</small>
+      </button>
+      <button type="button" class="mode-btn" data-mode="image">
+        <strong>🖼️ Imagens 9:16</strong>
+        <small>105 fotos ARRI 65 • Macro • UGC</small>
+      </button>
+      <button type="button" class="mode-btn" data-mode="voice">
+        <strong>🎙️ Narração PT-BR</strong>
+        <small>60 Vozes (30 Masc + 30 Fem)</small>
+      </button>
+      <button type="button" class="mode-btn" data-mode="removebg">
+        <strong>✂️ Remover Fundo</strong>
+        <small>Recorte HD em PNG Transparente</small>
+      </button>
+    </nav>
+
+    <div class="layout">
+      <!-- LEFT STUDIO WORKBENCH -->
+      <div class="studio-col">
+
+        <!-- CARD 1: PRODUCT UPLOAD & PHYSICAL LOCK -->
+        <section class="card" id="productSection">
+          <div class="step-header">
+            <div class="step-title"><span class="step-num">01</span> Foto do Produto &amp; Direção Visual</div>
+            <span class="step-meta">Qualquer produto • <strong>Zona Segura TikTok Shop</strong></span>
+          </div>
+          <div class="row-top">
+            <div class="upload-col">
+              <label class="upload-area" for="productImg">
+                <div class="upload-icon">📸</div>
+                <strong style="font-size:13px;color:#fff;">Enviar Foto do Produto</strong>
+                <span style="font-size:11px;color:#94a3b8;margin-top:3px;">JPG, PNG ou WebP</span>
+                <input type="file" id="productImg" accept="image/*" />
+                <img id="thumbPreview" alt="Produto" />
+              </label>
+              <button type="button" class="btn-quick-bg" id="btnQuickRemoveBg" disabled>✂️ Remover Fundo (PNG)</button>
+            </div>
+
+            <div class="box-group" id="productFieldsBox">
+              <div class="grid-2" id="directorRowWrap">
+                <div id="durFieldWrap">
+                  <label for="minDuration">Duração do Comercial</label>
+                  <select id="minDuration">
+                    <option value="10" selected>⚡ 10s — 7 Cortes Cinema (Padrão Viral)</option>
+                    <option value="15">🔥 15s — 10 Cortes Cinema (Alta Retenção)</option>
+                    <option value="20">💎 20s — 15 Cortes Cinema (Superprodução)</option>
+                    <option value="30">🎬 30s — 20 Cortes Cinema (Completo)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="productOrientation">Posição Física do Produto</label>
+                  <select id="productOrientation">
+                    <option value="auto" selected>🤖 Auto-Universal (Qualquer Produto)</option>
+                    <option value="upright">Em pé na base (Perfume, Relógio, Pote)</option>
+                    <option value="flat">Deitado horizontal (Tênis, Óculos, Mouse)</option>
+                    <option value="flat_lay">Em bandeja / maleta aberta (Kit, Joia)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div>
+                  <label for="directorProfile">Estilo de Direção</label>
+                  <select id="directorProfile">
+                    <option value="cinema_universal" selected>🎬 Blockbuster Hollywood Universal (Padrão)</option>
+                    <option value="handheld_tech">🖱️ Uso Real nas Mãos/Mesa (Tech / Gadget)</option>
+                    <option value="beauty_spray">🧴 Uso Real Aplicação (Perfume / Cosmético)</option>
+                    <option value="wearable_wrist">⌚ Uso Real no Pulso (Relógio / Pulseira)</option>
+                    <option value="wearable_face">🕶️ Uso Real no Rosto/Corpo (Óculos / Joia)</option>
+                  </select>
+                </div>
+                <div id="macroFieldWrap">
+                  <label for="macroTarget">Detalhe p/ Super Macro 100mm (Opcional)</label>
+                  <input type="text" id="macroTarget" placeholder="Ex: textura, lentes, vidro, costura, acabamento" />
+                </div>
+              </div>
+
+              <div>
+                <label for="productDetailHint">Descrição Visual do Produto (Opcional • Reforça Fidelidade 100%)</label>
+                <input type="text" id="productDetailHint" placeholder="Ex: óculos de sol armação preta lente azul / tênis esportivo branco e verde" />
+              </div>
+            </div>
           </div>
 
-          <div class="box-group" id="productFieldsBox">
-            <div class="grid-2" id="directorRowWrap">
-              <div>
-                <label for="directorProfile">Modo de Direção (Universal p/ Qualquer Produto)</label>
-                <select id="directorProfile">
-                  <option value="cinema_universal" selected>🎬 Blockbuster Nível 10 — Universal (Qualquer Produto • Padrão 4 Vídeos)</option>
-                  <option value="handheld_tech">🖱️ Uso Real nas Mãos/Mesa (Mouse, Eletrônico, Gadget, Ferramenta)</option>
-                  <option value="beauty_spray">🧴 Uso Real Aplicação (Perfume, Body Splash, Cosmético, Suplemento)</option>
-                  <option value="wearable_wrist">⌚ Uso Real no Pulso (Relógio, Smartwatch, Pulseira)</option>
-                  <option value="wearable_face">🕶️ Uso Real no Rosto/Corpo (Óculos, Joia, Colar, Tênis/Boné)</option>
-                </select>
-              </div>
-              <div id="durFieldWrap">
-                <label for="minDuration">Duração &amp; Ritmo de Cortes (~1.4s/corte • Zero Repetição)</label>
-                <select id="minDuration">
-                  <option value="10" selected>10s — 7 Cortes Cinema (~1.4s/corte • Padrão Viral 10/10)</option>
-                  <option value="15">15s — 10 Cortes Cinema (~1.5s/corte • Alta Retenção)</option>
-                  <option value="20">20s — 15 Cortes Cinema (~1.3s/corte • Superprodução)</option>
-                  <option value="30">30s — 20 Cortes Cinema (~1.5s/corte • Comercial Completo)</option>
-                </select>
-              </div>
+          <div class="director-banner" id="directorBannerWrap" style="margin-top:12px;">
+            <div class="director-banner-head">
+              <span>🎬 Coreografia 3D v12.8 (7 Ângulos Únicos + Panorâmica + Zero Equipamento):</span>
+              <small style="color:#86efac;">100% universal nos 105 universos</small>
             </div>
-
-            <div class="grid-2">
-              <div>
-                <label for="productOrientation">Posição Física Travada 0° (Zona Segura Superior)</label>
-                <select id="productOrientation">
-                  <option value="auto" selected>🤖 Auto-Universal — Posição Natural Real do Produto (Qualquer Produto)</option>
-                  <option value="upright">Em pé no pedestal/base (Perfume, Garrafa, Relógio, Suplemento)</option>
-                  <option value="flat">Deitado horizontal na base (Mouse, Tênis, Óculos, Controle, Carteira)</option>
-                  <option value="flat_lay">Em bandeja / maleta aberta (Kit, Joia, Eletrônico)</option>
-                </select>
-              </div>
-              <div id="macroFieldWrap">
-                <label for="macroTarget">Alvo do Super Macro 100mm (85–95% da Tela)</label>
-                <input type="text" id="macroTarget" placeholder="Ex: textura do material, relevos, vidro/metal, botões ou acabamento real" />
-              </div>
-            </div>
-
-            <div>
-              <label for="productDetailHint">Descrição Exata do Produto (Opcional • Reforça Fidelidade 100%)</label>
-              <input type="text" id="productDetailHint" placeholder="Ex: perfume vidro âmbar tampa preta / tênis branco detalhes cinza / mouse ergonômico preto fosco" />
-            </div>
+            <div class="director-acts-preview" id="directorActsPreview"></div>
           </div>
-        </div>
-      </div>
 
-      <div class="director-banner" id="directorBannerWrap">
-        <div class="director-banner-head">
-          <span>🎬 Coreografia v12.3 (Crash-Zoom • Macro Esq→Dir • 3D Esquerda • Vista Panorâmica 3D • Macro Dir→Esq • 3D Direita • Hero Final • Áudio &amp; Legenda TikTok Shop):</span>
-          <small style="color:#86efac;">100% universal nos 105 universos • Zona Segura TikTok Shop</small>
-        </div>
-        <div class="director-acts-preview" id="directorActsPreview"></div>
-      </div>
+          <details class="adv-panel" id="slaBarWrap" style="margin-top:10px;">
+            <summary>⚙️ Configurações Avançadas de Motor 3D, Edição &amp; Limite de Tempo (Padrão 10/10 já ativo)</summary>
+            <div class="adv-body">
+              <div class="grid-3">
+                <div>
+                  <label for="videoEngine">Motor de Vídeo 3D</label>
+                  <select id="videoEngine">
+                    <option value="kling" selected>Kling v2.6 Pro (Ultra-Fiel • Padrão)</option>
+                    <option value="veo">Veo 3.1 Fast (Fallback Kling)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="editStyle">Acabamento da Montagem</label>
+                  <select id="editStyle">
+                    <option value="cinema_blockbuster" selected>Blockbuster 10/10 (Speed-Ramp + Flash)</option>
+                    <option value="cinema_clean">Cinema Limpo (Cortes Secos Suaves)</option>
+                    <option value="hyper_viral">Hyper-Viral (Whip-Pan Agressivo)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="maxWaitLimit">Limite Máximo de Geração</label>
+                  <select id="maxWaitLimit">
+                    <option value="270" selected>⚡ 4m30s (Recomendado)</option>
+                    <option value="240">⚡ 4m00s</option>
+                    <option value="195">🚀 Rápido 3m15s</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </details>
+        </section>
 
-      <div class="sla-bar" id="slaBarWrap">
-        <span>⏱️ <strong>Motor Híbrido &lt; 5 min (Até 8 Clipes 3D • Pool 4x GPU):</strong></span>
-        <div class="sla-controls">
-          <select id="videoEngine" title="Motor de Vídeo 3D">
-            <option value="kling" selected>Motor: Kling v2.6 Pro (Ultra-Fiel + Beat-by-Beat)</option>
-            <option value="veo">Motor: Veo 3.1 Fast (Ultra-Real + Fallback Kling)</option>
-          </select>
-          <select id="editStyle" title="Acabamento do Montador Canvas Pro">
-            <option value="cinema_blockbuster" selected>Edição: Blockbuster 10/10 (Mirror Punch-In + Speed-Ramp + Flash Radial)</option>
-            <option value="cinema_clean">Edição: Cinema Limpo (Cortes Secos + Light Sweep Suave)</option>
-            <option value="hyper_viral">Edição: Hyper-Viral (Whip-Pan + Crash-Zoom Agressivo)</option>
-          </select>
-          <select id="maxWaitLimit" title="Limite máximo de espera">
-            <option value="270" selected>⚡ Limite 4m30s</option>
-            <option value="240">⚡ Limite 4m00s</option>
-            <option value="195">🚀 Rápido 3m15s</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="imgCatalogSection" class="hidden">
-        <div class="step-label">
-          <span>3. Escolha 1 das 105 Imagens 9:16 (Ótica ARRI 65 • Macro 100mm • UGC • POV)</span>
-          <small id="selectedImgLabel">Selecionado: #101 Eclipse Vulcânico &amp; Faíscas Ouro (Ref. Vídeo 1)</small>
-        </div>
-        <div class="catalog-box">
+        <!-- CARD 2A: 105 IMAGE CATALOG -->
+        <section class="card hidden" id="imgCatalogSection">
+          <div class="step-header">
+            <div class="step-title"><span class="step-num">02</span> Escolha 1 dos 105 Cenários de Imagem 9:16</div>
+            <span class="step-meta" id="selectedImgLabel">Selecionado: #101 Eclipse Vulcânico &amp; Faíscas Ouro</span>
+          </div>
           <div class="filter-bar">
-            <input type="text" id="imgSearch" placeholder="Buscar entre os 105 cenários (eclipse, reator, fumaça, monolito, UGC, POV)..." />
+            <input type="text" id="imgSearch" placeholder="Buscar cenário (eclipse, água, estúdio branco, UGC, POV, garagem)..." />
             <select id="imgCatFilter">
               <option value="TODOS">Todas Categorias (105)</option>
               <option value="Master10">⭐ Master 10/10 Cinema (5)</option>
@@ -270,79 +1090,165 @@
             <button type="button" class="btn-rand" id="btnRandImg">🎲 Sortear</button>
           </div>
           <div class="preset-grid" id="imgPresetGrid"></div>
-        </div>
-      </div>
+        </section>
 
-      <div id="vidCatalogSection">
-        <div class="step-label">
-          <span>3. Escolha 1 dos 105 Universos Cinema (100% Universal p/ Qualquer Produto)</span>
-          <small id="selectedVidLabel">Selecionado: #101 Eclipse Vulcânico &amp; Faíscas Ouro (Ref. Vídeo 1)</small>
-        </div>
-        <div class="catalog-box">
-          <div class="filter-bar">
-            <input type="text" id="vidSearch" placeholder="Buscar por eclipse, reator, fumaça, monolito, garagem, UGC, POV..." />
-            <select id="vidCatFilter">
-              <option value="TODOS">Todos os 105 Universos</option>
-              <option value="Master10">⭐ Master 10/10 Cinema (5)</option>
-              <option value="Acao">Ação, Eclipse &amp; Reator (10)</option>
-              <option value="VFX">VFX 1000fps &amp; Impacto (10)</option>
-              <option value="Luxo">Luxo Noir &amp; Joalheria (10)</option>
-              <option value="Viral">TikTok Shop Hard-Sell (10)</option>
-              <option value="Personagem">Personagens &amp; Cinema (10)</option>
-              <option value="UGC">UGC Criador Real (15)</option>
-              <option value="POV">POV Primeira Pessoa (15)</option>
-              <option value="EstudioPro">Estúdio Pro Macro (10)</option>
-              <option value="Lifestyle">Lifestyle &amp; Ambientes (10)</option>
-            </select>
-            <button type="button" class="btn-rand" id="btnRandVid">🎲 Sortear</button>
-          </div>
-          <div class="preset-grid" id="vidPresetGrid"></div>
-        </div>
-
-        <div class="step-label">4. Trilha Sonora Calibrada p/ Narração (Volume Baixo) + Whoosh Sutil + Narração PT-BR</div>
-        <div class="audio-panel">
-          <div class="grid-2">
-            <div>
-              <label for="musicPreset">Trilha Dinâmica &amp; Empolgante (Lyria 2 → CassetteAI → Stable Audio)</label>
-              <select id="musicPreset">
-                <option value="hollywood_luxury" selected>🔥 Hollywood Flagship Bass &amp; Pulse (124 BPM • Padrão Nike / Rolex / Apple)</option>
-                <option value="action_trailer">🎬 Blockbuster High-Octane Percussion (128 BPM • Ação &amp; Cortes Rápidos)</option>
-                <option value="luxury_trap">💎 Luxury Dark-Trap &amp; 808 Limpo (130 BPM • Sofisticação &amp; Impacto)</option>
-                <option value="slap_viral">⚡ Sleek Dark Slap-House &amp; Tech Bass (126 BPM • Retenção TikTok Shop)</option>
-                <option value="funk_phonk">🇧🇷 Dark Brazilian Phonk-House (130 BPM • Energia Viral Máxima)</option>
-                <option value="afro_summer">☀️ Modern Luxury Afro-Tech Groove (122 BPM • Sofisticado &amp; Envolvente)</option>
-                <option value="viral_euphoria">✨ Modern Electro-Pop Editorial (125 BPM • Dinâmico Sem Clichê)</option>
-                <option value="custom">🎵 Minha Trilha MP3/WAV (Começa direto no Drop)</option>
-                <option value="mute">🔇 Mudo (Somente Whoosh/Impacto ou Só Narração)</option>
+        <!-- CARD 2B & 3: 105 VIDEO CATALOG + AUDIO / VOICE / CAPTIONS -->
+        <div id="vidCatalogSection" style="display:flex;flex-direction:column;gap:14px;">
+          <section class="card">
+            <div class="step-header">
+              <div class="step-title"><span class="step-num">02</span> Escolha 1 dos 105 Universos Cinema 9:16</div>
+              <span class="step-meta" id="selectedVidLabel">Selecionado: #101 Eclipse Vulcânico &amp; Faíscas Ouro</span>
+            </div>
+            <div class="filter-bar">
+              <input type="text" id="vidSearch" placeholder="Buscar universo (off-white, água negra, espelhos, janela UGC, garagem)..." />
+              <select id="vidCatFilter">
+                <option value="TODOS">Todos os 105 Universos</option>
+                <option value="Master10">⭐ Master 10/10 Cinema (5)</option>
+                <option value="Acao">Ação, Eclipse &amp; Reator (10)</option>
+                <option value="VFX">VFX 1000fps &amp; Impacto (10)</option>
+                <option value="Luxo">Luxo Noir &amp; Joalheria (10)</option>
+                <option value="Viral">TikTok Shop Hard-Sell (10)</option>
+                <option value="Personagem">Personagens &amp; Cinema (10)</option>
+                <option value="UGC">UGC Criador Real (15)</option>
+                <option value="POV">POV Primeira Pessoa (15)</option>
+                <option value="EstudioPro">Estúdio Pro Macro (10)</option>
+                <option value="Lifestyle">Lifestyle &amp; Ambientes (10)</option>
               </select>
+              <button type="button" class="btn-rand" id="btnRandVid">🎲 Sortear</button>
             </div>
-            <div>
-              <label for="customAudioFile">Ou Subir Seu MP3/WAV Em Alta (1 Faixa Contínua)</label>
-              <input type="file" id="customAudioFile" class="inline-file" accept="audio/*" />
+            <div class="preset-grid" id="vidPresetGrid"></div>
+          </section>
+
+          <section class="card">
+            <div class="step-header">
+              <div class="step-title"><span class="step-num">03</span> Trilha Sonora + Narração PT-BR (60 Vozes) + Legendas</div>
+              <span class="step-meta">Volume calibrado p/ voz • <strong>Grafia 100% travada</strong></span>
             </div>
-          </div>
+            <div class="audio-panel">
+              <div class="grid-2">
+                <div>
+                  <label for="musicPreset">Trilha Sonora de Agência (Volume Baixo p/ Voz)</label>
+                  <select id="musicPreset">
+                    <option value="hollywood_luxury" selected>🔥 Hollywood Flagship Bass &amp; Pulse (124 BPM • Nike / Rolex)</option>
+                    <option value="action_trailer">🎬 Blockbuster High-Octane Percussion (128 BPM • Ação)</option>
+                    <option value="luxury_trap">💎 Luxury Dark-Trap &amp; 808 Limpo (130 BPM • Sofisticação)</option>
+                    <option value="slap_viral">⚡ Sleek Dark Slap-House &amp; Tech Bass (126 BPM • Retenção)</option>
+                    <option value="funk_phonk">🇧🇷 Dark Brazilian Phonk-House (130 BPM • Energia Viral)</option>
+                    <option value="afro_summer">☀️ Modern Luxury Afro-Tech Groove (122 BPM • Envolvente)</option>
+                    <option value="viral_euphoria">✨ Modern Electro-Pop Editorial (125 BPM • Dinâmico)</option>
+                    <option value="custom">🎵 Minha Trilha MP3/WAV (Começa direto no Drop)</option>
+                    <option value="mute">🔇 Mudo (Somente SFX Sutil ou Só Narração)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="customAudioFile">Ou Enviar Sua Trilha MP3/WAV</label>
+                  <input type="file" id="customAudioFile" class="inline-file" accept="audio/*" />
+                </div>
+              </div>
 
-          <div class="options-row">
-            <label class="toggle-row"><input type="checkbox" id="enableSfxHits" checked /><span><strong>Whoosh Sutil Alternado</strong> (1 corte sim, 1 não • 3 timbres suaves)</span></label>
-            <label class="toggle-row"><input type="checkbox" id="enableVideoVoiceover" /><span><strong>🎙️ Narração PT-BR + Legendas TikTok Shop</strong> (Digite ou Gere Roteiro Único)</span></label>
-          </div>
+              <div class="options-row">
+                <label class="toggle-row"><input type="checkbox" id="enableSfxHits" checked /><span><strong>Whoosh Sutil Alternado</strong> (Efeitos sonoros baixos)</span></label>
+                <label class="toggle-row"><input type="checkbox" id="enableVideoVoiceover" /><span><strong>🎙️ Ativar Narração PT-BR + Legendas TikTok Shop</strong></span></label>
+              </div>
 
-          <div id="inlineVoiceBox" style="border-top:1px solid #1d283d;padding-top:9px;display:flex;flex-direction:column;gap:8px;">
+              <div id="inlineVoiceBox" style="border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:11px;">
+                <div class="grid-3">
+                  <div>
+                    <label for="inlineVoiceGender">Gênero (30 Masc / 30 Fem)</label>
+                    <select id="inlineVoiceGender">
+                      <option value="male" selected>👨 Masculinas (30 Vozes)</option>
+                      <option value="female">👩 Femininas (30 Vozes)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="inlineVoiceStyle">Escolha o Locutor</label>
+                    <select id="inlineVoiceStyle"></select>
+                  </div>
+                  <div>
+                    <label for="inlineVoiceSpeed">Ritmo da Fala</label>
+                    <select id="inlineVoiceSpeed">
+                      <option value="1.05">Comercial Natural (1.05x)</option>
+                      <option value="1.14" selected>⚡ Dinâmico TikTok (1.14x • Padrão)</option>
+                      <option value="1.18">🔥 Rápido Viral (1.18x)</option>
+                      <option value="1.20">🚀 Máximo ElevenLabs (1.20x)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="grid-3">
+                  <div>
+                    <label for="inlineSubtitleStyle">Estilo da Legenda</label>
+                    <select id="inlineSubtitleStyle">
+                      <option value="viral_yellow" selected>🔥 Viral (Branco + Amarelo)</option>
+                      <option value="tiktok_native">📱 Nativo TikTok (Caixa Branca)</option>
+                      <option value="capcut_pill">⚡ Karaokê Pílula (CapCut)</option>
+                      <option value="none">🚫 Sem Legenda (Limpo)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="inlineSubtitleSize">Tamanho da Letra</label>
+                    <select id="inlineSubtitleSize">
+                      <option value="small">🔹 Extra Compacta (19px)</option>
+                      <option value="normal" selected>✅ Padrão TikTok Shop (23px)</option>
+                      <option value="medium">🔸 Média (28px)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="inlineSubtitlePos">Posição Segura</label>
+                    <select id="inlineSubtitlePos">
+                      <option value="safe_tiktok" selected>🛡️ Zona Segura (72.5%)</option>
+                      <option value="center">🎯 Centro (52%)</option>
+                      <option value="top">⬆️ Topo (22%)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="req-box" id="inlineProdReqBox">
+                  <label for="inlineProductName" style="color:#fde047;">Qual é o produto? <span class="req-tag">OBRIGATÓRIO P/ GERAR NARRAÇÃO</span></label>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <input type="text" id="inlineProductName" style="flex:1;min-width:190px;" placeholder="Ex: Óculos de Sol / Tênis Esportivo / Perfume Árabe / Relógio" />
+                    <button type="button" class="btn-rand" id="btnAutoInlineScript">✨ Gerar Narração Persuasiva</button>
+                  </div>
+                  <div class="req-err-txt" id="inlineProdErr">⚠️ Obrigatório digitar o nome do produto acima (ex: Óculos de Sol) antes de gerar a narração!</div>
+                </div>
+                <div>
+                  <label for="inlineVoiceScript">Roteiro da Narração PT-BR (Sempre Único • Super Gancho + CTA • Edite se quiser)</label>
+                  <textarea id="inlineVoiceScript" placeholder="1º escreva o produto acima e clique em '✨ Gerar Narração Persuasiva', ou digite sua narração aqui..."></textarea>
+                  <div class="char-meta"><span id="inlineCharCount">0 caracteres</span><span id="inlineVoiceReadyTag" style="color:#86efac;"></span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- TAB 2: IMPORT VIDEO LAB (ZERO GPU COST) -->
+        <section class="card hidden" id="videoLabSection">
+          <div class="step-header">
+            <div class="step-title"><span class="step-num">🧪</span> Importar Vídeo Pronto • Narração &amp; Legendas</div>
+            <span class="step-meta"><strong>Zero custo de vídeo GPU</strong> • Mantém trilha original</span>
+          </div>
+          <div class="sub-panel">
+            <label class="video-drop-box" for="labVideoFile">
+              <div class="upload-icon">📂</div>
+              <strong style="font-size:14px;color:#86efac;">Clique para Importar seu Vídeo Pronto (.MP4 ou .WEBM)</strong>
+              <span id="labVideoInfo" style="font-size:12px;color:#94a3b8;max-width:460px;">Reaproveite qualquer vídeo 9:16 já gerado para aplicar qualquer uma das 60 vozes e legendas TikTok Shop sem gastar créditos de vídeo.</span>
+              <input type="file" id="labVideoFile" accept="video/mp4,video/webm,video/*" />
+              <video id="labVideoPreview" class="lab-mini-video" muted playsinline controls></video>
+            </label>
+
             <div class="grid-3">
               <div>
-                <label for="inlineVoiceGender">Gênero da Voz (PT-BR)</label>
-                <select id="inlineVoiceGender">
-                  <option value="male" selected>👨 Masculina (ElevenLabs)</option>
-                  <option value="female">👩 Feminina (ElevenLabs)</option>
+                <label for="labVoiceGender">1. Gênero (60 Vozes)</label>
+                <select id="labVoiceGender">
+                  <option value="male" selected>👨 Masculinas (30 Vozes)</option>
+                  <option value="female">👩 Femininas (30 Vozes)</option>
                 </select>
               </div>
               <div>
-                <label for="inlineVoiceStyle">Voz / Locutor</label>
-                <select id="inlineVoiceStyle"></select>
+                <label for="labVoiceStyle">2. Locutor Persuasivo PT-BR</label>
+                <select id="labVoiceStyle"></select>
               </div>
               <div>
-                <label for="inlineVoiceSpeed">Ritmo / Dinamismo</label>
-                <select id="inlineVoiceSpeed">
+                <label for="labVoiceSpeed">3. Ritmo da Fala</label>
+                <select id="labVoiceSpeed">
                   <option value="1.05">Comercial Natural (1.05x)</option>
                   <option value="1.14" selected>⚡ Dinâmico TikTok (1.14x • Padrão)</option>
                   <option value="1.18">🔥 Rápido Viral (1.18x)</option>
@@ -350,282 +1256,232 @@
                 </select>
               </div>
             </div>
+
             <div class="grid-3">
               <div>
-                <label for="inlineSubtitleStyle">Legenda TikTok Shop</label>
-                <select id="inlineSubtitleStyle">
-                  <option value="viral_yellow" selected>🔥 Viral (Branco + Amarelo)</option>
+                <label for="labSubtitleStyle">4. Estilo da Legenda</label>
+                <select id="labSubtitleStyle">
+                  <option value="viral_yellow" selected>🔥 Viral TikTok Shop (Amarelo Ouro)</option>
                   <option value="tiktok_native">📱 Nativo TikTok (Caixa Branca)</option>
-                  <option value="capcut_pill">⚡ Karaokê Pílula (CapCut)</option>
-                  <option value="none">🚫 Sem Legenda (Limpo)</option>
+                  <option value="capcut_pill">⚡ Karaokê Pílula (CapCut Pro)</option>
+                  <option value="none">🚫 Sem Legenda (Só Narração)</option>
                 </select>
               </div>
               <div>
-                <label for="inlineSubtitleSize">Tamanho da Letra</label>
-                <select id="inlineSubtitleSize">
+                <label for="labSubtitleSize">5. Tamanho da Letra</label>
+                <select id="labSubtitleSize">
                   <option value="small">🔹 Extra Compacta (19px)</option>
                   <option value="normal" selected>✅ Padrão TikTok Shop (23px)</option>
                   <option value="medium">🔸 Média (28px)</option>
                 </select>
               </div>
               <div>
-                <label for="inlineSubtitlePos">Posição Segura</label>
-                <select id="inlineSubtitlePos">
+                <label for="labSubtitlePos">6. Posição Segura</label>
+                <select id="labSubtitlePos">
                   <option value="safe_tiktok" selected>🛡️ Zona Segura (72.5%)</option>
                   <option value="center">🎯 Centro (52%)</option>
                   <option value="top">⬆️ Topo (22%)</option>
                 </select>
               </div>
             </div>
-            <div class="req-box" id="inlineProdReqBox">
-              <label for="inlineProductName" style="color:#fde047;">Qual é o produto? <span class="req-tag">OBRIGATÓRIO P/ GERAR NARRAÇÃO</span></label>
+
+            <div class="grid-2">
+              <div>
+                <label for="labOrigVol">7. Volume da Trilha do Vídeo Original</label>
+                <select id="labOrigVol">
+                  <option value="0.75" selected>🔊 Trilha Original Baixa (75% • Ideal p/ Voz)</option>
+                  <option value="1.0">🔊 Trilha Original Normal (100%)</option>
+                  <option value="0.45">🔉 Bem Baixinha (45%)</option>
+                  <option value="0">🔇 Silenciar Original (0%)</option>
+                </select>
+              </div>
+              <div>
+                <label for="labScriptDuration">8. Calibração de Duração</label>
+                <select id="labScriptDuration">
+                  <option value="auto" selected>🤖 Automático (Duração exata do vídeo)</option>
+                  <option value="10">⚡ Vídeo 10s (~135–155 chars)</option>
+                  <option value="15">🔥 Vídeo 15s (~210–245 chars)</option>
+                  <option value="20">💎 Vídeo 20s (~285–330 chars)</option>
+                  <option value="30">🎬 Vídeo 30s (~430–485 chars)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="req-box" id="labProdReqBox">
+              <label for="labProductName" style="color:#fde047;">9. Escreva o Produto <span class="req-tag">OBRIGATÓRIO ANTES DE GERAR A NARRAÇÃO</span></label>
               <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <input type="text" id="inlineProductName" style="flex:1;min-width:190px;" placeholder="Ex: Óculos de Sol / Tênis Esportivo / Perfume Árabe / Relógio" />
-                <button type="button" class="btn-rand" id="btnAutoInlineScript">✨ Gerar Narração Persuasiva</button>
+                <input type="text" id="labProductName" style="flex:1;min-width:200px;" placeholder="Ex: Óculos de Sol / Tênis Esportivo / Perfume Árabe / Relógio / Whey Protein" />
+                <button type="button" class="btn-rand" id="btnLabAutoScript">✨ Gerar Narração Persuasiva (Nova)</button>
               </div>
-              <div class="req-err-txt" id="inlineProdErr">⚠️ Obrigatório digitar o nome do produto acima (ex: Óculos de Sol) antes de gerar a narração!</div>
+              <div class="req-err-txt" id="labProdErr">⚠️ Obrigatório digitar o produto acima (ex: Óculos de Sol) para a narração falar exatamente sobre ele!</div>
             </div>
-            <div>
-              <label for="inlineVoiceScript" style="margin-bottom:4px;">Roteiro da Narração PT-BR (Roteiro de 13–14s dinâmico p/ vídeo de 10s • Edite se quiser)</label>
-              <textarea id="inlineVoiceScript" placeholder="Escreva o produto acima e clique em '✨ Gerar Narração Persuasiva', ou digite sua narração aqui..."></textarea>
-              <div class="char-meta"><span id="inlineCharCount">0 caracteres</span><span id="inlineVoiceReadyTag" style="color:#86efac;"></span></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div id="videoLabSection" class="hidden">
-        <div class="step-label">
-          <span>🧪 Importar Vídeo Pronto • Vozes ElevenLabs + Legendas Sincronizadas</span>
-          <small style="color:#86efac;">Zero custo de vídeo GPU • Mantém a trilha do vídeo original</small>
-        </div>
-        <div class="sub-panel">
-          <label class="video-drop-box" for="labVideoFile">
-            <strong style="font-size:13.5px;color:#86efac;">📂 Clique para Importar seu Vídeo Pronto (.MP4 ou .WEBM)</strong>
-            <span id="labVideoInfo" style="font-size:11.5px;color:#94a3b8;">Envie qualquer vídeo 9:16 já gerado (Tênis, Perfume, Relógio, Óculos, Whey...) — a trilha sonora original é preservada automaticamente.</span>
-            <input type="file" id="labVideoFile" accept="video/mp4,video/webm,video/*" />
-            <video id="labVideoPreview" class="lab-mini-video" muted playsinline controls></video>
-          </label>
-
-          <div class="grid-3">
             <div>
-              <label for="labVoiceGender">1. Gênero (ElevenLabs)</label>
-              <select id="labVoiceGender">
-                <option value="male" selected>👨 Masculina (ElevenLabs)</option>
-                <option value="female">👩 Feminina (ElevenLabs)</option>
-              </select>
+              <label for="labVoiceScript">Roteiro da Narração &amp; Legenda (Grafia 100% Travada + Sync Whisper)</label>
+              <textarea id="labVoiceScript" rows="4" placeholder="1º escreva o produto acima e clique em '✨ Gerar Narração Persuasiva', ou digite o seu próprio roteiro aqui..."></textarea>
+              <div class="char-meta">
+                <span id="labCharInfo">0 caracteres • Calibrado p/ voz natural 1.14x</span>
+                <span id="labSyncNote" style="color:#7dd3fc;">Sync por Clock de Áudio Real + Grafia Original Travada</span>
+              </div>
             </div>
-            <div>
-              <label for="labVoiceStyle">2. Locutor Persuasivo PT-BR</label>
-              <select id="labVoiceStyle"></select>
-            </div>
-            <div>
-              <label for="labVoiceSpeed">3. Ritmo da Fala (Zero Distorção)</label>
-              <select id="labVoiceSpeed">
-                <option value="1.05">Comercial Natural (1.05x)</option>
-                <option value="1.14" selected>⚡ Dinâmico TikTok (1.14x • Padrão)</option>
-                <option value="1.18">🔥 Rápido Viral (1.18x)</option>
-                <option value="1.20">🚀 Máximo ElevenLabs (1.20x)</option>
-              </select>
-            </div>
-          </div>
 
-          <div class="grid-2">
-            <div>
-              <label for="labSubtitleStyle">4. Estilo de Legenda TikTok</label>
-              <select id="labSubtitleStyle">
-                <option value="viral_yellow" selected>🔥 Viral TikTok Shop (Branco + Amarelo Ouro)</option>
-                <option value="tiktok_native">📱 Nativo TikTok (Caixinha Branca Orgânica)</option>
-                <option value="capcut_pill">⚡ Karaokê Pílula (CapCut Pro Destaque)</option>
-                <option value="none">🚫 Sem Legenda (Só Narração)</option>
-              </select>
-            </div>
-            <div>
-              <label for="labSubtitleSize">5. Tamanho da Letra</label>
-              <select id="labSubtitleSize">
-                <option value="small">🔹 Extra Compacta (19px)</option>
-                <option value="normal" selected>✅ Padrão TikTok Shop (23px • Compacta)</option>
-                <option value="medium">🔸 Média (28px)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid-2">
-            <div>
-              <label for="labSubtitlePos">6. Posição Segura da Legenda</label>
-              <select id="labSubtitlePos">
-                <option value="safe_tiktok" selected>🛡️ Zona Segura TikTok (72.5% • Abaixo do Produto)</option>
-                <option value="center">🎯 Centro da Tela (52%)</option>
-                <option value="top">⬆️ Topo Seguro (22%)</option>
-              </select>
-            </div>
-            <div>
-              <label for="labOrigVol">7. Volume da Trilha do Vídeo Original</label>
-              <select id="labOrigVol">
-                <option value="0.75" selected>🔊 Trilha Original Baixa (75% • Ideal p/ Voz)</option>
-                <option value="1.0">🔊 Trilha Original Normal (100%)</option>
-                <option value="0.45">🔉 Bem Baixinha (45%)</option>
-                <option value="0">🔇 Silenciar Original (0%)</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label for="labScriptDuration">8. Duração do Vídeo (Calibração Exata p/ ElevenLabs 1.14x • Sem Distorcer a Voz)</label>
-            <select id="labScriptDuration">
-              <option value="auto" selected>🤖 Automático (Duração exata do vídeo importado)</option>
-              <option value="10">⚡ Vídeo 10s (~135–155 chars • Encaixe exato sem acelerar pitch)</option>
-              <option value="15">🔥 Vídeo 15s (~210–245 chars • Gancho + Benefício + CTA)</option>
-              <option value="20">💎 Vídeo 20s (~285–330 chars • Gancho + Prova + CTA)</option>
-              <option value="30">🎬 Vídeo 30s (~430–485 chars • Comercial Completo)</option>
-            </select>
-          </div>
-
-          <div class="req-box" id="labProdReqBox">
-            <label for="labProductName" style="color:#fde047;">9. Escreva o Produto <span class="req-tag">OBRIGATÓRIO ANTES DE GERAR A NARRAÇÃO</span></label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <input type="text" id="labProductName" style="flex:1;min-width:200px;" placeholder="Ex: Óculos de Sol / Tênis Esportivo / Perfume Árabe / Relógio / Whey Protein" />
-              <button type="button" class="btn-rand" id="btnLabAutoScript">✨ Gerar Narração Persuasiva (Nova)</button>
-            </div>
-            <div class="req-err-txt" id="labProdErr">⚠️ Obrigatório digitar o produto acima (ex: Óculos de Sol) para a narração falar exatamente sobre ele!</div>
-          </div>
-
-          <div>
-            <label for="labVoiceScript" style="margin-bottom:4px;">Roteiro da Narração &amp; Legenda (Personalizado p/ o Produto • Super Gancho + CTA • Nunca Repete)</label>
-            <textarea id="labVoiceScript" rows="4" placeholder="1º escreva o produto acima (ex: Óculos de Sol) e clique em '✨ Gerar Narração Persuasiva', ou digite o seu próprio roteiro aqui..."></textarea>
-            <div class="char-meta">
-              <span id="labCharInfo">0 caracteres • Calibrado p/ ElevenLabs 1.14x com voz 100% natural</span>
-              <span id="labSyncNote" style="color:#7dd3fc;">Sync por Clock de Áudio Real + Whisper PT-BR</span>
-            </div>
-          </div>
-
-          <details class="clone-card" id="cloneCardLab">
-            <summary style="cursor:pointer;font-size:11.5px;font-weight:800;color:#7dd3fc;">🧬 Opcional: Clonar Voz Própria (MiniMax) — as vozes acima já são 100% ElevenLabs</summary>
-            <div class="clone-row" style="margin-top:8px;">
-              <div class="clone-slot">
-                <strong>🧬 Clone Masculino (Opcional)</strong>
-                <span class="clone-badge" id="adamCloneBadgeLab">Não configurado (usando vozes ElevenLabs)</span>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
-                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Enviar Áudio Masc<input type="file" id="cloneFileAdamLab" accept="audio/*,video/mp4" style="display:none;" /></label>
-                  <button type="button" class="btn-mini hidden" id="btnClearCloneAdamLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
+            <details class="adv-panel" id="cloneCardLab">
+              <summary>🧬 Opcional: Clonar Voz Própria (MiniMax) — você já tem 60 vozes prontas acima</summary>
+              <div class="clone-row">
+                <div class="clone-slot">
+                  <strong>🧬 Clone Masculino (Opcional)</strong>
+                  <span class="clone-badge" id="adamCloneBadgeLab">Opcional (60 vozes já ativas)</span>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+                    <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Enviar Áudio Masc<input type="file" id="cloneFileAdamLab" accept="audio/*,video/mp4" style="display:none;" /></label>
+                    <button type="button" class="btn-mini hidden" id="btnClearCloneAdamLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
+                  </div>
+                </div>
+                <div class="clone-slot">
+                  <strong>🧬 Clone Feminino (Opcional)</strong>
+                  <span class="clone-badge" id="natashaCloneBadgeLab">Opcional (60 vozes já ativas)</span>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+                    <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Enviar Áudio Fem<input type="file" id="cloneFileNatashaLab" accept="audio/*,video/mp4" style="display:none;" /></label>
+                    <button type="button" class="btn-mini hidden" id="btnClearCloneNatashaLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
+                  </div>
                 </div>
               </div>
-              <div class="clone-slot">
-                <strong>🧬 Clone Feminino (Opcional)</strong>
-                <span class="clone-badge" id="natashaCloneBadgeLab">Não configurado (usando vozes ElevenLabs)</span>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
-                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Enviar Áudio Fem<input type="file" id="cloneFileNatashaLab" accept="audio/*,video/mp4" style="display:none;" /></label>
-                  <button type="button" class="btn-mini hidden" id="btnClearCloneNatashaLab" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
-                </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- TAB 4: STANDALONE VOICE STUDIO -->
+        <section class="card hidden" id="voiceStudioSection">
+          <div class="step-header">
+            <div class="step-title"><span class="step-num">🎙️</span> Estúdio de Narração Comercial PT-BR (60 Vozes)</div>
+            <span class="step-meta">30 Masculinas + 30 Femininas • <strong>10s a 30s</strong></span>
+          </div>
+          <div class="sub-panel">
+            <div>
+              <label>1. Escolha o Gênero da Voz</label>
+              <div class="voice-split">
+                <button type="button" class="gender-btn active" id="btnGenderMale">👨 Vozes Masculinas (30)</button>
+                <button type="button" class="gender-btn" id="btnGenderFemale">👩 Vozes Femininas (30)</button>
               </div>
             </div>
-          </details>
-        </div>
-      </div>
-
-      <div id="voiceStudioSection" class="hidden">
-        <div class="step-label">Estúdio de Narração Comercial PT-BR (Adam &amp; Natasha + Outras Vozes • 10s a 30s)</div>
-        <div class="sub-panel">
-          <label>1. Escolha o Gênero da Voz</label>
-          <div class="voice-split">
-            <button type="button" class="gender-btn active" id="btnGenderMale">👨 Voz Masculina (ElevenLabs)</button>
-            <button type="button" class="gender-btn" id="btnGenderFemale">👩 Voz Feminina (ElevenLabs)</button>
-          </div>
-          <div class="grid-3">
-            <div>
-              <label for="studioVoiceDuration">2. Duração do Vídeo Alvo</label>
-              <select id="studioVoiceDuration">
-                <option value="10" selected>Vídeo 10s (~135–155 chars • ElevenLabs 1.14x)</option>
-                <option value="15">Vídeo 15s (~210–245 chars • ElevenLabs 1.14x)</option>
-                <option value="20">Vídeo 20s (~285–330 chars • ElevenLabs 1.14x)</option>
-                <option value="30">Vídeo 30s (~430–485 chars • ElevenLabs 1.14x)</option>
-              </select>
-            </div>
-            <div>
-              <label for="studioVoiceStyle">3. Locutor / Timbre</label>
-              <select id="studioVoiceStyle"></select>
-            </div>
-            <div>
-              <label for="studioVoiceSpeed">4. Ritmo / Dinamismo</label>
-              <select id="studioVoiceSpeed">
-                <option value="1.05">Comercial Natural (1.05x)</option>
-                <option value="1.14" selected>⚡ Dinâmico TikTok (1.14x • Padrão)</option>
-                <option value="1.18">🔥 Rápido Viral (1.18x)</option>
-                <option value="1.20">🚀 Máximo ElevenLabs (1.20x)</option>
-              </select>
-            </div>
-          </div>
-          <div class="req-box" id="studioProdReqBox">
-            <label for="studioProductName" style="color:#fde047;">Escreva o Produto <span class="req-tag">OBRIGATÓRIO ANTES DE GERAR A NARRAÇÃO</span></label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <input type="text" id="studioProductName" style="flex:1;min-width:200px;" placeholder="Ex: Óculos de Sol / Perfume Importado / Tênis Esportivo / Relógio" />
-              <button type="button" class="btn-rand" id="btnGenerateAidaScript">✨ Gerar Persuasiva (Nova)</button>
-            </div>
-            <div class="req-err-txt" id="studioProdErr">⚠️ Obrigatório digitar o nome do produto acima (ex: Óculos de Sol) antes de gerar a narração!</div>
-          </div>
-          <div>
-            <label for="studioVoiceScript">Roteiro em Português (PT-BR)</label>
-            <textarea id="studioVoiceScript" rows="4" placeholder="Digite o texto da sua narração aqui ou clique em Montar Roteiro..."></textarea>
-            <div class="char-meta">
-              <span id="studioCharInfo">0 caracteres • Ideal para 10s: 120 a 170 caracteres</span>
-              <span style="color:#7dd3fc;">Fallback: Clone Exato → ElevenLabs → MiniMax → Kokoro PT-BR</span>
-            </div>
-          </div>
-          <div class="clone-card">
-            <strong style="font-size:11.5px;color:#7dd3fc;">🧬 Calibrar Clone Exato de Adam &amp; Natasha (Envie AUDIO ADAM.mp4 / AUDIO NATASHA.mp4 1 vez)</strong>
-            <div class="clone-row">
-              <div class="clone-slot">
-                <strong>⭐ Adam (Principal Masculina)</strong>
-                <span class="clone-badge" id="adamCloneBadgeStudio">Padrão: ElevenLabs Adam</span>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
-                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Clonar Áudio Adam<input type="file" id="cloneFileAdamStudio" accept="audio/*,video/mp4" style="display:none;" /></label>
-                  <button type="button" class="btn-mini hidden" id="btnClearCloneAdamStudio" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
-                </div>
+            <div class="grid-3">
+              <div>
+                <label for="studioVoiceDuration">2. Duração do Vídeo Alvo</label>
+                <select id="studioVoiceDuration">
+                  <option value="10" selected>Vídeo 10s (~135–155 chars)</option>
+                  <option value="15">Vídeo 15s (~210–245 chars)</option>
+                  <option value="20">Vídeo 20s (~285–330 chars)</option>
+                  <option value="30">Vídeo 30s (~430–485 chars)</option>
+                </select>
               </div>
-              <div class="clone-slot">
-                <strong>⭐ Natasha (Principal Feminina)</strong>
-                <span class="clone-badge" id="natashaCloneBadgeStudio">Padrão: ElevenLabs Sarah</span>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
-                  <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Clonar Áudio Natasha<input type="file" id="cloneFileNatashaStudio" accept="audio/*,video/mp4" style="display:none;" /></label>
-                  <button type="button" class="btn-mini hidden" id="btnClearCloneNatashaStudio" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
-                </div>
+              <div>
+                <label for="studioVoiceStyle">3. Locutor / Timbre</label>
+                <select id="studioVoiceStyle"></select>
+              </div>
+              <div>
+                <label for="studioVoiceSpeed">4. Ritmo / Dinamismo</label>
+                <select id="studioVoiceSpeed">
+                  <option value="1.05">Comercial Natural (1.05x)</option>
+                  <option value="1.14" selected>⚡ Dinâmico TikTok (1.14x • Padrão)</option>
+                  <option value="1.18">🔥 Rápido Viral (1.18x)</option>
+                  <option value="1.20">🚀 Máximo ElevenLabs (1.20x)</option>
+                </select>
               </div>
             </div>
+            <div class="req-box" id="studioProdReqBox">
+              <label for="studioProductName" style="color:#fde047;">Escreva o Produto <span class="req-tag">OBRIGATÓRIO ANTES DE GERAR A NARRAÇÃO</span></label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <input type="text" id="studioProductName" style="flex:1;min-width:200px;" placeholder="Ex: Óculos de Sol / Perfume Importado / Tênis Esportivo / Relógio" />
+                <button type="button" class="btn-rand" id="btnGenerateAidaScript">✨ Gerar Persuasiva (Nova)</button>
+              </div>
+              <div class="req-err-txt" id="studioProdErr">⚠️ Obrigatório digitar o nome do produto acima (ex: Óculos de Sol) antes de gerar a narração!</div>
+            </div>
+            <div>
+              <label for="studioVoiceScript">Roteiro em Português (PT-BR)</label>
+              <textarea id="studioVoiceScript" rows="4" placeholder="Digite o texto da sua narração aqui ou gere uma persuasiva acima..."></textarea>
+              <div class="char-meta">
+                <span id="studioCharInfo">0 caracteres • Ideal para 10s: 128 a 158 caracteres</span>
+                <span style="color:#7dd3fc;">ElevenLabs Multilingual v2 + MiniMax Speech-02 HD</span>
+              </div>
+            </div>
+            <details class="adv-panel">
+              <summary>🧬 Opcional: Clonar Voz Própria (MiniMax)</summary>
+              <div class="clone-row">
+                <div class="clone-slot">
+                  <strong>🧬 Clone Masculino</strong>
+                  <span class="clone-badge" id="adamCloneBadgeStudio">Opcional (30 vozes prontas)</span>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+                    <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Enviar Áudio Masc<input type="file" id="cloneFileAdamStudio" accept="audio/*,video/mp4" style="display:none;" /></label>
+                    <button type="button" class="btn-mini hidden" id="btnClearCloneAdamStudio" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
+                  </div>
+                </div>
+                <div class="clone-slot">
+                  <strong>🧬 Clone Feminino</strong>
+                  <span class="clone-badge" id="natashaCloneBadgeStudio">Opcional (30 vozes prontas)</span>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+                    <label class="btn-mini" style="cursor:pointer;margin:0;text-transform:none;">🎙️ Enviar Áudio Fem<input type="file" id="cloneFileNatashaStudio" accept="audio/*,video/mp4" style="display:none;" /></label>
+                    <button type="button" class="btn-mini hidden" id="btnClearCloneNatashaStudio" style="color:#fca5a5;border-color:#7f1d1d;">✕ Limpar</button>
+                  </div>
+                </div>
+              </div>
+            </details>
           </div>
-        </div>
+        </section>
+
+        <!-- TAB 5: REMOVE BACKGROUND -->
+        <section class="card hidden" id="removeBgSection">
+          <div class="step-header">
+            <div class="step-title"><span class="step-num">✂️</span> Removedor de Fundo Inteligente (PNG HD)</div>
+            <span class="step-meta">BiRefNet v2 HD • Bria • Rembg</span>
+          </div>
+          <div class="sub-panel">
+            <div style="font-size:13px;color:var(--text-soft);line-height:1.6;">
+              Envie qualquer foto do seu produto no card acima. A IA recorta as bordas com precisão cirúrgica de estúdio e devolve um <strong>PNG 100% transparente</strong> pronto para baixar ou aplicar imediatamente nos seus vídeos e imagens 9:16.
+            </div>
+          </div>
+        </section>
+
+        <!-- PRIMARY ACTION BUTTONS -->
+        <button type="button" class="btn-generate" id="btnBuild">🎬 Gerar Superprodução Nível 10 (10s • 7 Cortes Cinema)</button>
+        <button type="button" class="btn-generate hidden" id="btnRunVideoLab">🧪 Aplicar Narração + Legendas no Vídeo Importado (Zero Custo Vídeo)</button>
+        <button type="button" class="btn-generate hidden" id="btnOnlyImg">🖼️ Gerar Imagem 9:16 Cinema (Nano Banana)</button>
+        <button type="button" class="btn-generate hidden" id="btnGenVoice">🎙️ Gerar Narração PT-BR (10s • Voz Masculina)</button>
+        <button type="button" class="btn-generate hidden" id="btnRunRemoveBg">✂️ Remover Fundo e Gerar PNG Transparente</button>
       </div>
 
-      <div id="removeBgSection" class="hidden">
-        <div class="step-label">Removedor de Fundo Inteligente (PNG Transparente HD)</div>
-        <div class="sub-panel">
-          <div style="font-size:12.5px;color:#cbd5e1;line-height:1.5;">
-            Envie qualquer foto do seu produto acima. A IA recorta as bordas com precisão de estúdio e devolve um <strong>PNG com fundo 100% transparente</strong> pronto para baixar ou aplicar direto nos vídeos e imagens.
+      <!-- RIGHT STICKY PREVIEW STAGE -->
+      <aside class="preview-col">
+        <div class="card">
+          <div class="step-header">
+            <div class="step-title" id="previewTitle">Preview 9:16 &amp; Download MP4</div>
+            <span class="step-meta" style="color:#86efac;">● 720×1280 HD</span>
           </div>
-          <div style="font-size:11.5px;color:#7dd3fc;">
-            Motores com fallback automático: <strong>BiRefNet v2 HD → Bria Remove BG → Rembg Fast</strong>
+          <div class="preview-stage" id="stage">
+            <div class="empty-hero">
+              <div class="phone-frame-ghost">
+                <svg width="36" height="36" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+                  <circle cx="22" cy="22" r="20" fill="rgba(34,197,94,0.14)" stroke="#22C55E" stroke-width="1.6" />
+                  <path d="M18.5 15.5L28.5 22L18.5 28.5V15.5Z" fill="#22C55E" />
+                </svg>
+                <span style="font-size:10px;font-weight:800;color:#cbd5e1;letter-spacing:0.04em;">PREVIEW 9:16</span>
+                <div class="phone-safe-bar">ZONA CARRINHO LIVRE</div>
+              </div>
+              <ul class="feature-bullets">
+                <li><span>🎬</span><span><strong>105 Universos Cinema + 105 Imagens</strong> universais p/ qualquer produto físico.</span></li>
+                <li><span>🎙️</span><span><strong>60 Vozes PT-BR (30 Masc + 30 Fem)</strong> com roteiros persuasivos inéditos.</span></li>
+                <li><span>📝</span><span><strong>Legendas TikTok Shop 23px</strong> com sincronia por relógio de áudio e grafia travada.</span></li>
+                <li><span>🛡️</span><span><strong>100% Blindado:</strong> zero preço na fala, produto na zona segura superior.</span></li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-
-      <button type="button" class="btn-generate" id="btnBuild">🎬 Gerar Superprodução Nível 10 (10s • 7 Cortes Cinema)</button>
-      <button type="button" class="btn-generate hidden" id="btnRunVideoLab">🧪 Aplicar Narração + Legendas no Vídeo Importado (Zero Custo Vídeo)</button>
-      <button type="button" class="btn-generate hidden" id="btnOnlyImg">🖼️ Gerar Imagem 9:16 Cinema (Nano Banana)</button>
-      <button type="button" class="btn-generate hidden" id="btnGenVoice">🎙️ Gerar Narração PT-BR (10s • Voz Masculina)</button>
-      <button type="button" class="btn-generate hidden" id="btnRunRemoveBg">✂️ Remover Fundo e Gerar PNG Transparente</button>
+      </aside>
     </div>
+  </main>
 
-    <div class="panel">
-      <div class="step-label" id="previewTitle">Preview 9:16 &amp; Download MP4</div>
-      <div class="preview-stage" id="stage">
-        <div class="status-msg">
-          <strong>NEXORA.AI — Nível 10 Absoluto pronto:</strong><br/>
-          • <strong>105 Universos Cinema + 105 Imagens 9:16</strong> universais p/ qualquer produto<br/>
-          • <strong>Fórmula dos 4 Vídeos Campeões:</strong> Palco Limpo + 1 Fenômeno Vivo Atrás + Super Macro 100mm (85–95%) + Light Sweep<br/>
-          • <strong>Canvas Pro Blockbuster + Fallback de Áudio Blindado:</strong> Mirror Punch-In, Speed-Ramp real e Flash Radial limpo (ZERO seta • Zona Segura TikTok Shop)
-        </div>
-      </div>
-    </div>
-  </div>
+  <footer class="site-footer">
+    <div><strong>NEXORA.AI</strong> — Plataforma Comercial de Criação Audiovisual IA para E-commerce &amp; TikTok Shop</div>
+    <div>Motor Hollywood v12.8 • 105 Universos 3D • 60 Vozes PT-BR • Render 9:16 HD</div>
+  </footer>
 
   <canvas id="renderCanvas" width="720" height="1280" style="display:none;"></canvas>
 
@@ -1104,18 +1960,76 @@
 
     const VOICE_STYLES = {
       male: [
-        { id: "male_brian", label: "⭐ Brian (ElevenLabs • Grave Forte & Persuasivo)" },
-        { id: "male_roger", label: "🔥 Roger (ElevenLabs • Comercial Dinâmico & Viral)" },
-        { id: "male_daniel", label: "💎 Daniel (ElevenLabs • Luxo Executivo & Autoridade)" },
-        { id: "male_charlie", label: "📱 Charlie (ElevenLabs • Jovem TikTok / UGC)" },
-        { id: "male_george", label: "🎬 George (ElevenLabs • Narrador Marcante)" }
+        // ⭐ Top Conversão TikTok Shop (ElevenLabs)
+        { id: "m01_roger_viral",      group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "⭐ #01 Roger • Vendedor Viral Dinâmico (Campeã)" },
+        { id: "m02_brian_impacto",    group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🔥 #02 Brian • Grave Forte & Persuasivo" },
+        { id: "m03_charlie_tiktok",   group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "⚡ #03 Charlie • Jovem TikTok Direto" },
+        { id: "m04_liam_dinamico",    group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "⚡ #04 Liam • Energia Alta & Retenção" },
+        { id: "m05_will_confianca",   group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🎯 #05 Will • Confiança & Conversão" },
+        { id: "m06_eric_varejo",      group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🛒 #06 Eric • Varejo Dinâmico & Oferta" },
+        { id: "m07_chris_oferta",     group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🔥 #07 Chris • Chamada Rápida & Gancho" },
+        { id: "m08_callum_energia",   group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "⚡ #08 Callum • Ritmo Acelerado Vendas" },
+        { id: "m09_roger_hardsell",   group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🚀 #09 Roger Hard-Sell • Máxima Urgência" },
+        { id: "m10_brian_urgencia",   group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🚀 #10 Brian Impacto • Gancho Explosivo" },
+        // 🎬 Luxo, Cinema & Autoridade (ElevenLabs)
+        { id: "m11_daniel_luxo",      group: "🎬 Luxo, Cinema & Autoridade (ElevenLabs)", label: "💎 #11 Daniel • Luxo Executivo & Relógios" },
+        { id: "m12_george_cinema",    group: "🎬 Luxo, Cinema & Autoridade (ElevenLabs)", label: "🎬 #12 George • Narrador Cinema & Perfumes" },
+        { id: "m13_bill_autoridade",  group: "🎬 Luxo, Cinema & Autoridade (ElevenLabs)", label: "🏆 #13 Bill • Autoridade Sênior & Peso" },
+        { id: "m14_daniel_executivo", group: "🎬 Luxo, Cinema & Autoridade (ElevenLabs)", label: "👔 #14 Daniel Prime • Corporativo Firme" },
+        { id: "m15_brian_trailer",    group: "🎬 Luxo, Cinema & Autoridade (ElevenLabs)", label: "🎥 #15 Brian Trailer • Voz Profunda HD" },
+        { id: "m16_george_joalheria", group: "🎬 Luxo, Cinema & Autoridade (ElevenLabs)", label: "✨ #16 George Boutique • Alta Joalheria" },
+        { id: "m17_will_flagship",    group: "🎬 Luxo, Cinema & Autoridade (ElevenLabs)", label: "💎 #17 Will Flagship • Editorial Limpo" },
+        { id: "m18_eric_instituc",    group: "🎬 Luxo, Cinema & Autoridade (ElevenLabs)", label: "🎙️ #18 Eric Estúdio • Institucional Pro" },
+        // 📱 UGC, Reviews & Nichos (ElevenLabs)
+        { id: "m19_charlie_ugc",      group: "📱 UGC, Reviews & Nichos (ElevenLabs)",     label: "📱 #19 Charlie UGC • Review Espontâneo" },
+        { id: "m20_liam_review",      group: "📱 UGC, Reviews & Nichos (ElevenLabs)",     label: "📦 #20 Liam Unboxing • Afiliado Real" },
+        { id: "m21_chris_amigo",      group: "📱 UGC, Reviews & Nichos (ElevenLabs)",     label: "💬 #21 Chris Conversa • Indicação Amiga" },
+        { id: "m22_callum_fitness",   group: "📱 UGC, Reviews & Nichos (ElevenLabs)",     label: "💪 #22 Callum Fitness • Treino & Esporte" },
+        { id: "m23_will_tech",        group: "📱 UGC, Reviews & Nichos (ElevenLabs)",     label: "🖥️ #23 Will Tech • Gadgets & Eletrônicos" },
+        { id: "m24_roger_story",      group: "📱 UGC, Reviews & Nichos (ElevenLabs)",     label: "📖 #24 Roger Storytelling • Envolvente" },
+        // 🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)
+        { id: "m25_mm_grave",         group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",     label: "🇧🇷 #25 Bruno HD • Grave Profundo PT-BR" },
+        { id: "m26_mm_casual",        group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",     label: "🇧🇷 #26 Lucas HD • Casual TikTok PT-BR" },
+        { id: "m27_mm_determinado",   group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",     label: "🇧🇷 #27 Rafael HD • Firme & Decisivo" },
+        { id: "m28_mm_elegante",      group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",     label: "🇧🇷 #28 Eduardo HD • Elegante & Luxo" },
+        { id: "m29_mm_imponente",     group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",     label: "🇧🇷 #29 Gustavo HD • Imponente Comercial" },
+        { id: "m30_mm_jovem",         group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",     label: "🇧🇷 #30 Matheus HD • Jovem Dinâmico" }
       ],
       female: [
-        { id: "female_jessica", label: "⭐ Jessica (ElevenLabs • Viral TikTok Energética)" },
-        { id: "female_aria", label: "🔥 Aria (ElevenLabs • Persuasiva Moderna & Dinâmica)" },
-        { id: "female_sarah", label: "💎 Sarah (ElevenLabs • Clara & Confiante Comercial)" },
-        { id: "female_laura", label: "📱 Laura (ElevenLabs • Jovem UGC Espontânea)" },
-        { id: "female_charlotte", label: "✨ Charlotte (ElevenLabs • Luxo & Beleza)" }
+        // ⭐ Top Conversão TikTok Shop (ElevenLabs)
+        { id: "f01_aria_viral",       group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "⭐ #01 Aria • Persuasiva Moderna (Campeã)" },
+        { id: "f02_jessica_energia",  group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🔥 #02 Jessica • Viral TikTok Energética" },
+        { id: "f03_sarah_comercial",  group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "💎 #03 Sarah • Clara & Confiante Vendas" },
+        { id: "f04_laura_tiktok",     group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "⚡ #04 Laura • Ritmo Rápido & Carisma" },
+        { id: "f05_alice_impacto",    group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🎯 #05 Alice • Gancho Forte & Direta" },
+        { id: "f06_matilda_vendas",   group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🛒 #06 Matilda • Oferta & Conversão" },
+        { id: "f07_lily_moderna",     group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "✨ #07 Lily • Moderna & Envolvente" },
+        { id: "f08_rachel_clara",     group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🎙️ #08 Rachel • Dicção Cirúrgica" },
+        { id: "f09_aria_hardsell",    group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🚀 #09 Aria Hard-Sell • Máxima Urgência" },
+        { id: "f10_laura_urgencia",   group: "⭐ Top Conversão TikTok Shop (ElevenLabs)", label: "🚀 #10 Laura Viral • Energia Explosiva" },
+        // 🎬 Luxo, Beleza & Sofisticação (ElevenLabs)
+        { id: "f11_charlotte_luxo",   group: "🎬 Luxo, Beleza & Sofisticação (ElevenLabs)", label: "💎 #11 Charlotte • Luxo & Alta Perfumaria" },
+        { id: "f12_sarah_perfume",    group: "🎬 Luxo, Beleza & Sofisticação (ElevenLabs)", label: "🌸 #12 Sarah Boutique • Elegância Suave" },
+        { id: "f13_lily_boutique",    group: "🎬 Luxo, Beleza & Sofisticação (ElevenLabs)", label: "✨ #13 Lily Couture • Moda & Estilo" },
+        { id: "f14_charlotte_joia",   group: "🎬 Luxo, Beleza & Sofisticação (ElevenLabs)", label: "💍 #14 Charlotte Joias • Sofisticada" },
+        { id: "f15_alice_editorial",  group: "🎬 Luxo, Beleza & Sofisticação (ElevenLabs)", label: "📸 #15 Alice Editorial • Marca Premium" },
+        { id: "f16_matilda_beauty",   group: "🎬 Luxo, Beleza & Sofisticação (ElevenLabs)", label: "💄 #16 Matilda Beauty • Skincare & Make" },
+        { id: "f17_rachel_premium",   group: "🎬 Luxo, Beleza & Sofisticação (ElevenLabs)", label: "🏆 #17 Rachel Prime • Autoridade Feminina" },
+        { id: "f18_aria_sofisticada", group: "🎬 Luxo, Beleza & Sofisticação (ElevenLabs)", label: "🥂 #18 Aria Gala • Apresentação Luxo" },
+        // 📱 UGC, Reviews & Espontâneas (ElevenLabs)
+        { id: "f19_jessica_ugc",      group: "📱 UGC, Reviews & Espontâneas (ElevenLabs)",  label: "📱 #19 Jessica UGC • Review Natural" },
+        { id: "f20_laura_review",     group: "📱 UGC, Reviews & Espontâneas (ElevenLabs)",  label: "💬 #20 Laura Amiga • Indicação Real" },
+        { id: "f21_matilda_amiga",    group: "📱 UGC, Reviews & Espontâneas (ElevenLabs)",  label: "🛍️ #21 Matilda Achadinho • TikTok Shop" },
+        { id: "f22_alice_dica",       group: "📱 UGC, Reviews & Espontâneas (ElevenLabs)",  label: "💡 #22 Alice Dica • Criadora Dinâmica" },
+        { id: "f23_lily_unboxing",    group: "📱 UGC, Reviews & Espontâneas (ElevenLabs)",  label: "📦 #23 Lily Unboxing • Primeira Impressão" },
+        { id: "f24_sarah_story",      group: "📱 UGC, Reviews & Espontâneas (ElevenLabs)",  label: "📖 #24 Sarah Storytelling • Convincente" },
+        // 🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)
+        { id: "f25_mm_vibrante",      group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",      label: "🇧🇷 #25 Camila HD • Vibrante TikTok PT-BR" },
+        { id: "f26_mm_confiante",     group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",      label: "🇧🇷 #26 Juliana HD • Confiante Comercial" },
+        { id: "f27_mm_elegante",      group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",      label: "🇧🇷 #27 Helena HD • Elegante & Serena" },
+        { id: "f28_mm_inspiradora",   group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",      label: "🇧🇷 #28 Amanda HD • Inspiradora & Clara" },
+        { id: "f29_mm_exuberante",    group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",      label: "🇧🇷 #29 Beatriz HD • Exuberante Vendas" },
+        { id: "f30_mm_doce",          group: "🇧🇷 Timbres Estúdio HD (MiniMax PT-BR)",      label: "🇧🇷 #30 Larissa HD • Doce & Espontânea" }
       ]
     };
 
@@ -1609,10 +2523,19 @@
       const cloneKey = gender === "female" ? "female_clone" : "male_clone";
       const cloned = getSavedCloneVoiceId(cloneKey);
       const list = cloned
-        ? [...baseList, { id: cloneKey, label: gender === "female" ? "🧬 Minha Voz Clonada (Feminina)" : "🧬 Minha Voz Clonada (Masculina)" }]
+        ? [...baseList, { id: cloneKey, group: "🧬 Voz Clonada Própria", label: gender === "female" ? "🧬 Minha Voz Clonada (Feminina)" : "🧬 Minha Voz Clonada (Masculina)" }]
         : baseList;
       const cur = selectEl.value;
-      selectEl.innerHTML = list.map((v) => `<option value="${v.id}">${v.label}</option>`).join("");
+      const groups = [];
+      const groupMap = new Map();
+      for (const v of list) {
+        const g = v.group || "Vozes";
+        if (!groupMap.has(g)) { const arr = []; groupMap.set(g, arr); groups.push([g, arr]); }
+        groupMap.get(g).push(v);
+      }
+      selectEl.innerHTML = groups
+        .map(([gName, items]) => `<optgroup label="${gName}">${items.map((v) => `<option value="${v.id}">${v.label}</option>`).join("")}</optgroup>`)
+        .join("");
       if (cur && list.some((x) => x.id === cur)) selectEl.value = cur;
     }
     populateVoiceSelectWithCloneLabel(inlineVoiceStyle, "male");
@@ -2825,11 +3748,26 @@
       }
     }
 
+    function tokensRoughlyMatch(aNorm, bNorm) {
+      if (!aNorm || !bNorm) return false;
+      if (aNorm === bNorm) return true;
+      if (aNorm.length >= 3 && bNorm.length >= 3 && (aNorm.startsWith(bNorm.slice(0, 3)) || bNorm.startsWith(aNorm.slice(0, 3)))) return true;
+      if (aNorm.length >= 4 && bNorm.length >= 4 && (aNorm.includes(bNorm.slice(0, 4)) || bNorm.includes(aNorm.slice(0, 4)))) return true;
+      return false;
+    }
+
     function buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, audioBuffer, playbackRate = 1.0, offsetSec = 0.0, trimStartSec = 0) {
       const rate = Math.max(0.7, Number(playbackRate) || 1.0);
-      const rawScriptWords = String(scriptText || "").replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
+      // Clean standalone dashes (e.g., "—") and strip hanging dashes from script tokens so captions never show "NÃO PERCA —"
+      const rawScriptWords = String(scriptText || "")
+        .replace(/[—–]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split(" ")
+        .map((w) => w.replace(/^[-—–]+|[-—–]+$/g, "").trim())
+        .filter((w) => w && /[A-Za-zÀ-ÿ0-9]/.test(w));
 
-      // Clean Whisper word chunks safely (fix null end timestamps & enforce strict monotonic timeline)
+      // Clean Whisper word chunks safely (fix null end timestamps)
       const validWhisper = [];
       if (Array.isArray(whisperChunks)) {
         for (let i = 0; i < whisperChunks.length; i++) {
@@ -2844,24 +3782,81 @@
             const nextS = Array.isArray(nextTs) && typeof nextTs[0] === "number" ? nextTs[0] : null;
             e = nextS && nextS > s ? nextS : s + 0.24;
           }
-          validWhisper.push({ text: txt, start: s, end: Math.max(s + 0.06, e) });
+          validWhisper.push({
+            text: txt,
+            norm: stripAccentsUpper(txt),
+            start: offsetSec + Math.max(0, s - trimStartSec) / rate,
+            end: offsetSec + Math.max(0.06, e - trimStartSec) / rate
+          });
         }
       }
 
       let words = [];
-      if (validWhisper.length >= 2) {
-        // Use Whisper's ACTUAL timestamps so every word locks 100% to the audio!
-        // Only copy script spelling when exact 1:1 token match (never merge two words onto the same timestamp!)
-        const exactCountMatch = rawScriptWords.length === validWhisper.length;
-        words = validWhisper.map((w, idx) => {
-          const displayTxt = exactCountMatch ? rawScriptWords[idx] : w.text;
-          return {
-            text: displayTxt,
-            start: offsetSec + Math.max(0, w.start - trimStartSec) / rate,
-            end: offsetSec + Math.max(0.06, w.end - trimStartSec) / rate,
-            isCta: TIKTOK_CTA_WORDS.has(stripAccentsUpper(displayTxt))
-          };
-        });
+      if (rawScriptWords.length > 0 && validWhisper.length >= 2) {
+        // EXACT SCRIPT SPELLING LOCK: always display exact scriptText words, anchored to Whisper's real audio timestamps!
+        const sNorms = rawScriptWords.map((w) => stripAccentsUpper(w));
+        const assigned = new Array(rawScriptWords.length).fill(null);
+
+        if (rawScriptWords.length === validWhisper.length) {
+          for (let i = 0; i < rawScriptWords.length; i++) {
+            assigned[i] = { start: validWhisper[i].start, end: validWhisper[i].end };
+          }
+        } else {
+          // Monotonic lookahead alignment (handles Whisper splits like "entressola" -> "entra"+"sola" and mishearings like "sacolinha ana")
+          let wPtr = 0;
+          for (let sIdx = 0; sIdx < rawScriptWords.length && wPtr < validWhisper.length; sIdx++) {
+            const sn = sNorms[sIdx];
+            // Case 1: Whisper split 1 script word into 2 consecutive chunks (e.g. "ENTRA" + "SOLA" === "ENTRESSOLA")
+            if (wPtr + 1 < validWhisper.length && sn.length >= 6) {
+              const merged2 = validWhisper[wPtr].norm + validWhisper[wPtr + 1].norm;
+              if (merged2 === sn || (merged2.length >= 5 && sn.startsWith(merged2.slice(0, 4)) && sn.endsWith(merged2.slice(-3)))) {
+                assigned[sIdx] = { start: validWhisper[wPtr].start, end: validWhisper[wPtr + 1].end };
+                wPtr += 2;
+                continue;
+              }
+            }
+            // Case 2: Direct / lookahead match within next 3 Whisper words
+            let foundW = -1;
+            const maxLook = Math.min(validWhisper.length - 1, wPtr + 3);
+            for (let k = wPtr; k <= maxLook; k++) {
+              if (tokensRoughlyMatch(sn, validWhisper[k].norm)) { foundW = k; break; }
+            }
+            if (foundW !== -1) {
+              assigned[sIdx] = { start: validWhisper[foundW].start, end: validWhisper[foundW].end };
+              wPtr = foundW + 1;
+            }
+          }
+
+          // Interpolate any unanchored words cleanly between surrounding Whisper anchors (using exact audio span!)
+          const firstStart = validWhisper[0].start;
+          const lastEnd = validWhisper[validWhisper.length - 1].end;
+          let i = 0;
+          while (i < rawScriptWords.length) {
+            if (assigned[i]) { i++; continue; }
+            let j = i;
+            while (j < rawScriptWords.length && !assigned[j]) j++;
+            const spanStart = i > 0 ? assigned[i - 1].end : firstStart;
+            const spanEnd = j < rawScriptWords.length ? assigned[j].start : lastEnd;
+            const safeSpan = Math.max(0.12 * (j - i), spanEnd - spanStart);
+            const wts = [];
+            for (let k = i; k < j; k++) wts.push(Math.max(2, sNorms[k].length));
+            const sumW = wts.reduce((a, b) => a + b, 0);
+            let cur = spanStart;
+            for (let k = i; k < j; k++) {
+              const d = (wts[k - i] / sumW) * safeSpan;
+              assigned[k] = { start: cur, end: cur + d };
+              cur += d;
+            }
+            i = j;
+          }
+        }
+
+        words = rawScriptWords.map((sw, idx) => ({
+          text: sw,
+          start: assigned[idx].start,
+          end: Math.max(assigned[idx].start + 0.06, assigned[idx].end),
+          isCta: TIKTOK_CTA_WORDS.has(stripAccentsUpper(sw))
+        }));
       } else if (rawScriptWords.length > 0) {
         const bounds = detectSpeechBounds(audioBuffer);
         const startT = offsetSec + Math.max(0, bounds.start - trimStartSec) / rate;
@@ -2869,7 +3864,7 @@
         const span = Math.max(0.8, endT - startT);
         const weights = rawScriptWords.map((w) => {
           const cleanLen = Math.max(2, w.replace(/[^A-Za-zÀ-ÿ0-9]/g, "").length);
-          const pauseBonus = /[.!?]$/.test(w) ? 2.6 : /[,;:—-]$/.test(w) ? 1.4 : 0;
+          const pauseBonus = /[.!?]$/.test(w) ? 2.6 : /[,;:]$/.test(w) ? 1.4 : 0;
           return cleanLen + pauseBonus;
         });
         const totalW = weights.reduce((a, b) => a + b, 0);
@@ -2952,7 +3947,7 @@
       const isUpper = style !== "tiktok_native";
       const displayWords = activeBlock.words
         .map((w) => {
-          const cleaned = String(w.text || "").replace(/[.,;:]+$/g, "").trim() || w.text;
+          const cleaned = String(w.text || "").replace(/[.,;:—–\-]+$/g, "").replace(/^[—–\-]+/g, "").trim();
           return {
             ...w,
             label: isUpper ? cleaned.toUpperCase() : cleaned
