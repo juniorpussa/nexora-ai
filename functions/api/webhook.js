@@ -42,36 +42,48 @@ export async function onRequestPost(context) {
       return jsonResponse({ error: "Supabase não configurado no servidor." }, 500);
     }
 
-    const body = await request.json().catch(() => ({}));
+    const rawBody = await request.text();
+    const params = new URLSearchParams(rawBody);
+    const notificationCode = String(params.get("notificationCode") || "").trim();
+    const notificationType = String(params.get("notificationType") || "").trim().toLowerCase();
 
-    // Extrai reference_id ("userId|packageId") e status de pagamento do evento PagBank
-    const extRef = String(body?.reference_id || "").trim();
-    const charges = Array.isArray(body?.charges) ? body.charges : [];
-    const paidCharge = charges.find((c) => String(c?.status || "").toUpperCase() === "PAID");
-
-    // Suporta também notificação direta de charge
-    const singleChargeStatus = String(body?.status || "").toUpperCase();
-    const isPaid = Boolean(paidCharge) || singleChargeStatus === "PAID";
-
-    if (!isPaid) {
-      return jsonResponse({ ok: true, status: singleChargeStatus || "WAITING", credited: false }, 200);
+    if (!notificationCode || notificationType !== "transaction") {
+      return jsonResponse({ ok: true, ignored: true }, 200);
     }
 
-    const orderOrChargeId = String(paidCharge?.id || body?.id || "").trim();
+    const pagbankEmail = env.PAGBANK_EMAIL || "comercial@jcaatacadista.com.br";
+    const consultUrl = `https://ws.pagseguro.uol.com.br/v3/transactions/notifications/${encodeURIComponent(notificationCode)}?email=${encodeURIComponent(pagbankEmail)}&token=${encodeURIComponent(env.PAGBANK_TOKEN)}`;
+
+    const pbRes = await fetch(consultUrl, { method: "GET" });
+    const xmlText = await pbRes.text();
+
+    if (!pbRes.ok) {
+      return jsonResponse({ error: "Falha ao consultar transação no PagBank." }, 502);
+    }
+
+    const statusMatch = xmlText.match(/<status>(\d+)<\/status>/i);
+    const statusCode = statusMatch ? statusMatch[1].trim() : "";
+
+    // Status 3 = Paga | Status 4 = Disponível
+    if (statusCode !== "3" && statusCode !== "4") {
+      return jsonResponse({ ok: true, statusCode, credited: false }, 200);
+    }
+
+    const codeMatch = xmlText.match(/<code>([^<]+)<\/code>/i);
+    const refMatch = xmlText.match(/<reference>([^<]+)<\/reference>/i);
+
+    const transactionCode = codeMatch ? codeMatch[1].trim() : "";
+    const extRef = refMatch ? refMatch[1].trim() : "";
     const [refUserId, refPackageId] = extRef.includes("|") ? extRef.split("|") : ["", ""];
     const plan = resolvePlanByCode(refPackageId);
 
-    if (!refUserId || !plan || !orderOrChargeId) {
-      return jsonResponse({
-        error: "Pagamento pago, mas referência do usuário ou plano não identificada.",
-        extRef,
-        orderOrChargeId,
-      }, 400);
+    if (!refUserId || !plan || !transactionCode) {
+      return jsonResponse({ error: "Referência inválida na transação PagBank.", extRef }, 400);
     }
 
-    const referenceId = `pb_${orderOrChargeId}`;
+    const referenceId = `pb_${transactionCode}`;
 
-    // Proteção anti-duplicidade no credit_ledger
+    // Proteção anti-duplicidade
     const checkUrl = `${env.SUPABASE_URL}/rest/v1/credit_ledger?reference_id=eq.${encodeURIComponent(referenceId)}&select=id&limit=1`;
     const checkRes = await fetch(checkUrl, {
       method: "GET",
@@ -81,23 +93,18 @@ export async function onRequestPost(context) {
     if (checkRes.ok) {
       const existing = await checkRes.json().catch(() => []);
       if (Array.isArray(existing) && existing.length > 0) {
-        return jsonResponse({ ok: true, orderOrChargeId, alreadyCredited: true, creditsAdded: plan.credits }, 200);
+        return jsonResponse({ ok: true, transactionCode, alreadyCredited: true }, 200);
       }
     }
 
-    // Busca saldo atual na tabela profiles
+    // Busca saldo atual em profiles
     const profileGetUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(refUserId)}&select=id,credits&limit=1`;
     const profileGetRes = await fetch(profileGetUrl, {
       method: "GET",
       headers: supabaseHeaders(supaKey),
     });
 
-    if (!profileGetRes.ok) {
-      const errTxt = await profileGetRes.text();
-      return jsonResponse({ error: "Erro GET profiles: " + errTxt }, 500);
-    }
-
-    const profiles = await profileGetRes.json().catch(() => []);
+    const profiles = profileGetRes.ok ? await profileGetRes.json().catch(() => []) : [];
     if (!Array.isArray(profiles) || profiles.length === 0) {
       return jsonResponse({ error: "Perfil não encontrado", userId: refUserId }, 404);
     }
@@ -120,7 +127,7 @@ export async function onRequestPost(context) {
       return jsonResponse({ error: "Erro PATCH profiles: " + errTxt }, 500);
     }
 
-    // Registra histórico no credit_ledger
+    // Grava histórico
     await fetch(`${env.SUPABASE_URL}/rest/v1/credit_ledger`, {
       method: "POST",
       headers: supabaseHeaders(supaKey, { Prefer: "return=minimal" }),
@@ -128,14 +135,14 @@ export async function onRequestPost(context) {
         user_id: refUserId,
         amount: plan.credits,
         task: "pagbank_purchase",
-        description: `Compra PagBank (${plan.name} #${orderOrChargeId})`,
+        description: `Compra PagBank (${plan.name} #${transactionCode})`,
         reference_id: referenceId,
       }),
     }).catch(() => {});
 
     return jsonResponse({
       ok: true,
-      orderOrChargeId,
+      transactionCode,
       credited: true,
       plan: plan.name,
       previousBalance: currentCredits,
