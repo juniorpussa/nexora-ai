@@ -16,145 +16,99 @@ function resolvePlanByCode(rawCode) {
 function jsonResponse(payload, status = 200) {
   return new Response(JSON.stringify(payload), {
     status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-    },
+    headers: { "Content-Type": "application/json; charset=utf-8" },
   });
 }
 
-function supabaseServiceHeaders(env, extra = {}) {
+function supabaseHeaders(key, extra = {}) {
   return {
     "Content-Type": "application/json",
-    apikey: env.SUPABASE_SERVICE_ROLE_KEY,
-    Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+    apikey: key,
+    Authorization: `Bearer ${key}`,
     ...extra,
   };
 }
 
 export async function onRequestGet() {
-  return jsonResponse({ ok: true, service: "nexora-mercadopago-webhook" }, 200);
+  return jsonResponse({ ok: true, service: "nexora-pagbank-webhook" }, 200);
 }
 
 export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    if (!env.MP_ACCESS_TOKEN) {
-      return jsonResponse({ error: "MP_ACCESS_TOKEN não configurado." }, 500);
-    }
-    if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
+    const supaKey = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY;
+    if (!env.SUPABASE_URL || !supaKey) {
       return jsonResponse({ error: "Supabase não configurado no servidor." }, 500);
     }
 
-    const url = new URL(request.url);
-    let body = {};
-    try {
-      body = await request.json();
-    } catch (_) {
-      body = {};
+    const body = await request.json().catch(() => ({}));
+
+    // Extrai reference_id ("userId|packageId") e status de pagamento do evento PagBank
+    const extRef = String(body?.reference_id || "").trim();
+    const charges = Array.isArray(body?.charges) ? body.charges : [];
+    const paidCharge = charges.find((c) => String(c?.status || "").toUpperCase() === "PAID");
+
+    // Suporta também notificação direta de charge
+    const singleChargeStatus = String(body?.status || "").toUpperCase();
+    const isPaid = Boolean(paidCharge) || singleChargeStatus === "PAID";
+
+    if (!isPaid) {
+      return jsonResponse({ ok: true, status: singleChargeStatus || "WAITING", credited: false }, 200);
     }
 
-    const topic = String(
-      body.type || body.topic || url.searchParams.get("type") || url.searchParams.get("topic") || ""
-    )
-      .trim()
-      .toLowerCase();
-
-    const paymentId = String(
-      body?.data?.id ||
-        body?.id ||
-        url.searchParams.get("data.id") ||
-        url.searchParams.get("id") ||
-        ""
-    ).trim();
-
-    if (!paymentId) {
-      return jsonResponse({ ok: true, ignored: "Sem paymentId na notificação" }, 200);
-    }
-
-    if (topic && topic !== "payment") {
-      return jsonResponse({ ok: true, ignored: `Evento ${topic}` }, 200);
-    }
-
-    // 1. Consulta o pagamento oficial direto na API do Mercado Pago
-    const mpResp = await fetch(`https://api.mercadopago.com/v1/payments/${encodeURIComponent(paymentId)}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${env.MP_ACCESS_TOKEN}`,
-      },
-    });
-
-    if (!mpResp.ok) {
-      return jsonResponse({ error: "Falha ao consultar pagamento no Mercado Pago." }, 502);
-    }
-
-    const payment = await mpResp.json();
-    const status = String(payment?.status || "").toLowerCase();
-
-    if (status !== "approved") {
-      return jsonResponse({ ok: true, paymentId, status, credited: false }, 200);
-    }
-
-    // 2. Identifica o usuário e o plano comprado
-    const extRef = String(payment?.external_reference || "").trim();
+    const orderOrChargeId = String(paidCharge?.id || body?.id || "").trim();
     const [refUserId, refPackageId] = extRef.includes("|") ? extRef.split("|") : ["", ""];
+    const plan = resolvePlanByCode(refPackageId);
 
-    const userId = String(payment?.metadata?.user_id || refUserId || "").trim();
-    const rawPackageId = String(payment?.metadata?.package_id || refPackageId || "").trim();
-    const plan = resolvePlanByCode(rawPackageId);
-
-    if (!userId || !plan) {
+    if (!refUserId || !plan || !orderOrChargeId) {
       return jsonResponse({
-        error: "Pagamento aprovado, mas userId ou plano não identificado na referência.",
-        paymentId,
+        error: "Pagamento pago, mas referência do usuário ou plano não identificada.",
+        extRef,
+        orderOrChargeId,
       }, 400);
     }
 
-    const referenceId = `mp_${paymentId}`;
+    const referenceId = `pb_${orderOrChargeId}`;
 
-    // 3. Proteção anti-duplicidade no credit_ledger
+    // Proteção anti-duplicidade no credit_ledger
     const checkUrl = `${env.SUPABASE_URL}/rest/v1/credit_ledger?reference_id=eq.${encodeURIComponent(referenceId)}&select=id&limit=1`;
     const checkRes = await fetch(checkUrl, {
       method: "GET",
-      headers: supabaseServiceHeaders(env),
+      headers: supabaseHeaders(supaKey),
     });
 
     if (checkRes.ok) {
       const existing = await checkRes.json().catch(() => []);
       if (Array.isArray(existing) && existing.length > 0) {
-        return jsonResponse({
-          ok: true,
-          paymentId,
-          alreadyCredited: true,
-          creditsAdded: plan.credits,
-        }, 200);
+        return jsonResponse({ ok: true, orderOrChargeId, alreadyCredited: true, creditsAdded: plan.credits }, 200);
       }
     }
 
-    // 4. Busca o saldo atual do usuário na tabela profiles
-    const profileGetUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=id,credits&limit=1`;
+    // Busca saldo atual na tabela profiles
+    const profileGetUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(refUserId)}&select=id,credits&limit=1`;
     const profileGetRes = await fetch(profileGetUrl, {
       method: "GET",
-      headers: supabaseServiceHeaders(env),
+      headers: supabaseHeaders(supaKey),
     });
 
     if (!profileGetRes.ok) {
       const errTxt = await profileGetRes.text();
-      return jsonResponse({ error: "Erro ao buscar perfil no Supabase: " + errTxt }, 500);
+      return jsonResponse({ error: "Erro GET profiles: " + errTxt }, 500);
     }
 
     const profiles = await profileGetRes.json().catch(() => []);
     if (!Array.isArray(profiles) || profiles.length === 0) {
-      return jsonResponse({ error: "Perfil do usuário não encontrado no Supabase.", userId }, 404);
+      return jsonResponse({ error: "Perfil não encontrado", userId: refUserId }, 404);
     }
 
     const currentCredits = Number(profiles[0]?.credits ?? 0);
     const newBalance = currentCredits + plan.credits;
 
-    // 5. Atualiza diretamente os créditos e o nome do plano na tabela profiles
-    const patchRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`, {
+    // Atualiza credits e plan_name em profiles
+    const patchRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(refUserId)}`, {
       method: "PATCH",
-      headers: supabaseServiceHeaders(env, { Prefer: "return=representation" }),
+      headers: supabaseHeaders(supaKey, { Prefer: "return=representation" }),
       body: JSON.stringify({
         credits: newBalance,
         plan_name: plan.name,
@@ -163,25 +117,25 @@ export async function onRequestPost(context) {
 
     if (!patchRes.ok) {
       const errTxt = await patchRes.text();
-      return jsonResponse({ error: "Erro ao atualizar créditos em profiles: " + errTxt }, 500);
+      return jsonResponse({ error: "Erro PATCH profiles: " + errTxt }, 500);
     }
 
-    // 6. Registra no histórico credit_ledger (opcional, não bloqueia se alguma coluna diferir)
+    // Registra histórico no credit_ledger
     await fetch(`${env.SUPABASE_URL}/rest/v1/credit_ledger`, {
       method: "POST",
-      headers: supabaseServiceHeaders(env, { Prefer: "return=minimal" }),
+      headers: supabaseHeaders(supaKey, { Prefer: "return=minimal" }),
       body: JSON.stringify({
-        user_id: userId,
+        user_id: refUserId,
         amount: plan.credits,
-        task: "mercadopago_purchase",
-        description: `Compra Mercado Pago (${plan.name} #${paymentId})`,
+        task: "pagbank_purchase",
+        description: `Compra PagBank (${plan.name} #${orderOrChargeId})`,
         reference_id: referenceId,
       }),
     }).catch(() => {});
 
     return jsonResponse({
       ok: true,
-      paymentId,
+      orderOrChargeId,
       credited: true,
       plan: plan.name,
       previousBalance: currentCredits,
@@ -189,6 +143,6 @@ export async function onRequestPost(context) {
       newBalance,
     }, 200);
   } catch (err) {
-    return jsonResponse({ error: "Erro no webhook do Mercado Pago: " + (err?.message || "erro interno") }, 500);
+    return jsonResponse({ error: "Erro no webhook PagBank: " + (err?.message || "erro interno") }, 500);
   }
 }
