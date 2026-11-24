@@ -167,11 +167,16 @@
         transition: all 0.18s ease !important;
       }
 
-      .nx-nav-btn:hover {
+      .nx-nav-btn:hover:not(:disabled) {
         background: rgba(30, 41, 59, 0.96) !important;
         border-color: rgba(56, 189, 248, 0.5) !important;
         color: #ffffff !important;
         transform: translateY(-1px) !important;
+      }
+
+      .nx-nav-btn:disabled {
+        opacity: 0.6 !important;
+        cursor: wait !important;
       }
 
       .nx-nav-btn-primary {
@@ -218,7 +223,7 @@
 
       .nx-modal-card {
         width: 100%;
-        max-width: 520px;
+        max-width: 540px;
         max-height: 88vh;
         overflow-y: auto;
         background: linear-gradient(180deg, rgba(16, 23, 39, 0.97) 0%, rgba(9, 13, 23, 0.99) 100%);
@@ -277,6 +282,40 @@
       .nx-plan-option.featured {
         border-color: rgba(251, 191, 36, 0.45);
         background: linear-gradient(135deg, rgba(30, 41, 59, 0.88), rgba(245, 158, 11, 0.1));
+      }
+
+      .nx-plan-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .nx-buy-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 800;
+        color: #05070c;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        border: 1px solid rgba(254, 240, 138, 0.5);
+        cursor: pointer;
+        transition: all 0.18s ease;
+        white-space: nowrap;
+      }
+
+      .nx-buy-btn:hover:not(:disabled) {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
+      }
+
+      .nx-buy-btn:disabled {
+        opacity: 0.6;
+        cursor: wait;
       }
 
       .nx-alert-err {
@@ -454,6 +493,105 @@
     return data;
   }
 
+  async function startCheckout(packageId, triggerBtn) {
+    if (!state.session?.access_token) {
+      closeModal();
+      openAuthModal("login");
+      return;
+    }
+
+    const fb = document.getElementById("nxExecCheckoutFb");
+    const buttons = Array.from(document.querySelectorAll(".nx-buy-btn"));
+    buttons.forEach((b) => { b.disabled = true; });
+    const oldText = triggerBtn ? triggerBtn.textContent : "";
+    if (triggerBtn) triggerBtn.textContent = "Gerando link...";
+    if (fb) fb.innerHTML = `<div class="nx-alert-ok">Conectando ao Mercado Pago com segurança...</div>`;
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.session.access_token}`,
+        },
+        body: JSON.stringify({ packageId }),
+      });
+      const data = await res.json().catch(() => ({}));
+      const payUrl = data?.checkoutUrl || data?.init_point || data?.url;
+
+      if (!res.ok || !payUrl) {
+        if (fb) {
+          fb.innerHTML = `<div class="nx-alert-err">${data?.error || "Não foi possível abrir o checkout do Mercado Pago."}</div>`;
+        }
+        buttons.forEach((b) => { b.disabled = false; });
+        if (triggerBtn) triggerBtn.textContent = oldText;
+        return;
+      }
+
+      if (fb) {
+        fb.innerHTML = `<div class="nx-alert-ok">Redirecionando para o pagamento seguro do Mercado Pago...</div>`;
+      }
+      window.location.href = payUrl;
+    } catch (err) {
+      if (fb) {
+        fb.innerHTML = `<div class="nx-alert-err">${err?.message || "Erro de rede ao iniciar pagamento."}</div>`;
+      }
+      buttons.forEach((b) => { b.disabled = false; });
+      if (triggerBtn) triggerBtn.textContent = oldText;
+    }
+  }
+
+  function handlePaymentReturnBanner() {
+    try {
+      const params = new URLSearchParams(window.location.search || "");
+      const status = params.get("pagamento");
+      if (!status) return;
+
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      if (status === "aprovado") {
+        setTimeout(async () => {
+          await refreshProfileFromServer();
+          openModal(`
+            <div class="nx-modal-header">
+              <h3 class="nx-modal-title">Pagamento Aprovado!</h3>
+              <button type="button" class="nx-nav-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
+            </div>
+            <div class="nx-alert-ok">
+              Seu pagamento foi confirmado! Seus créditos já foram liberados ou estão sendo atualizados no seu saldo.
+            </div>
+            <p class="nx-modal-subtitle">
+              Saldo atual: <strong style="color:#fde68a;">${state.credits ?? "--"} créditos</strong>
+            </p>
+            <button type="button" class="nx-nav-btn nx-nav-btn-primary" style="width:100%;padding:12px;" onclick="window.NexoraSaas.closeModal()">
+              Voltar ao Estúdio
+            </button>
+          `);
+        }, 1200);
+      } else if (status === "pendente") {
+        openModal(`
+          <div class="nx-modal-header">
+            <h3 class="nx-modal-title">Pagamento em Análise</h3>
+            <button type="button" class="nx-nav-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
+          </div>
+          <div class="nx-alert-ok">
+            Assim que o Mercado Pago confirmar o pagamento, seus créditos serão adicionados automaticamente à sua conta.
+          </div>
+        `);
+      } else if (status === "cancelado") {
+        openModal(`
+          <div class="nx-modal-header">
+            <h3 class="nx-modal-title">Pagamento Não Concluído</h3>
+            <button type="button" class="nx-nav-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
+          </div>
+          <div class="nx-alert-err">
+            O pagamento foi cancelado ou não finalizado. Você pode tentar novamente quando quiser.
+          </div>
+        `);
+      }
+    } catch (_) {}
+  }
+
   function openAuthModal(mode = "login") {
     state.authMode = mode;
     const isRegister = mode === "register";
@@ -535,29 +673,46 @@
         <h3 class="nx-modal-title">Planos e Recarga de Créditos</h3>
         <button type="button" class="nx-nav-btn" onclick="window.NexoraSaas.closeModal()">Fechar</button>
       </div>
-      <p class="nx-modal-subtitle">Escolha o pacote ideal para escalar seus vídeos e fotos de alta conversão.</p>
+      <p class="nx-modal-subtitle">Escolha o pacote ideal para escalar seus vídeos e fotos de alta conversão via Pix ou Cartão.</p>
+      <div id="nxExecCheckoutFb"></div>
+
       <div class="nx-plan-option">
         <div>
           <strong style="font-size:14px;color:#fff;">Pacote Inicial — 60 Créditos</strong><br/>
           <span style="font-size:12px;color:#94a3b8;">Ideal para validar produtos e primeiras campanhas</span>
         </div>
-        <strong style="font-size:15px;color:#fde68a;">R$ 40,00</strong>
+        <div class="nx-plan-right">
+          <strong style="font-size:15px;color:#fde68a;">R$ 40,00</strong>
+          <button type="button" class="nx-buy-btn" data-pkg="inicial_60">Comprar Agora</button>
+        </div>
       </div>
+
       <div class="nx-plan-option featured">
         <div>
           <strong style="font-size:14px;color:#fff;">Plano Criador Pro — 180 Créditos</strong><br/>
           <span style="font-size:12px;color:#cbd5e1;">Mais escolhido • Rotina diária de vídeos 9:16</span>
         </div>
-        <strong style="font-size:15px;color:#fde68a;">R$ 97,00</strong>
+        <div class="nx-plan-right">
+          <strong style="font-size:15px;color:#fde68a;">R$ 97,00</strong>
+          <button type="button" class="nx-buy-btn" data-pkg="criador_180">Comprar Agora</button>
+        </div>
       </div>
+
       <div class="nx-plan-option">
         <div>
           <strong style="font-size:14px;color:#fff;">Plano Escala — 450 Créditos</strong><br/>
           <span style="font-size:12px;color:#94a3b8;">Alta produção para lojas e múltiplas contas</span>
         </div>
-        <strong style="font-size:15px;color:#fde68a;">R$ 197,00</strong>
+        <div class="nx-plan-right">
+          <strong style="font-size:15px;color:#fde68a;">R$ 197,00</strong>
+          <button type="button" class="nx-buy-btn" data-pkg="escala_450">Comprar Agora</button>
+        </div>
       </div>
     `);
+
+    document.querySelectorAll(".nx-buy-btn").forEach((btn) => {
+      btn.onclick = () => startCheckout(btn.getAttribute("data-pkg"), btn);
+    });
   }
 
   async function openLedgerModal() {
@@ -656,8 +811,9 @@
       const urlStr = typeof input === "string" ? input : input?.url || "";
       const isGen = urlStr.includes("/api/generate");
       const isMe = urlStr.includes("/api/me");
+      const isCheckout = urlStr.includes("/api/checkout");
 
-      if ((isGen || isMe) && state.session?.access_token) {
+      if ((isGen || isMe || isCheckout) && state.session?.access_token) {
         const headers = new Headers(init.headers || {});
         if (!headers.has("Authorization")) {
           headers.set("Authorization", `Bearer ${state.session.access_token}`);
@@ -704,6 +860,7 @@
         });
       }
     } catch (_) {}
+    handlePaymentReturnBanner();
     state.ready = true;
   }
 
