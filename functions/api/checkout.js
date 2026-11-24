@@ -4,24 +4,21 @@ const PLANS = {
     name: "Pacote Inicial",
     title: "NEXORA.AI - Pacote Inicial (60 Creditos)",
     credits: 60,
-    price: 40.0,
-    amountCents: 4000,
+    price: "40.00",
   },
   criador_180: {
     id: "criador_180",
     name: "Plano Criador Pro",
     title: "NEXORA.AI - Plano Criador Pro (180 Creditos)",
     credits: 180,
-    price: 97.0,
-    amountCents: 9700,
+    price: "97.00",
   },
   escala_450: {
     id: "escala_450",
     name: "Plano Escala",
     title: "NEXORA.AI - Plano Escala (450 Creditos)",
     credits: 450,
-    price: 197.0,
-    amountCents: 19700,
+    price: "197.00",
   },
 };
 
@@ -103,57 +100,44 @@ export async function onRequestPost(context) {
 
     const origin = new URL(request.url).origin;
     const referenceId = `${user.id}|${plan.id}`;
+    const pagbankEmail = env.PAGBANK_EMAIL || "comercial@jcaatacadista.com.br";
 
-    const checkoutPayload = {
-      reference_id: referenceId,
-      customer: {
-        email: user.email,
-      },
-      customer_modifiable: true,
-      items: [
-        {
-          reference_id: plan.id,
-          name: plan.title,
-          quantity: 1,
-          unit_amount: plan.amountCents,
-        },
-      ],
-      payment_methods: [
-        { type: "PIX" },
-        { type: "CREDIT_CARD" },
-        { type: "DEBIT_CARD" },
-        { type: "BOLETO" },
-      ],
-      redirect_url: `${origin}/?pagamento=aprovado`,
-      notification_urls: [`${origin}/api/webhook`],
-      payment_notification_urls: [`${origin}/api/webhook`],
-    };
+    const formParams = new URLSearchParams();
+    formParams.append("email", pagbankEmail);
+    formParams.append("token", env.PAGBANK_TOKEN);
+    formParams.append("currency", "BRL");
+    formParams.append("itemId1", plan.id);
+    formParams.append("itemDescription1", plan.title);
+    formParams.append("itemAmount1", plan.price);
+    formParams.append("itemQuantity1", "1");
+    formParams.append("reference", referenceId);
+    formParams.append("senderEmail", user.email);
+    formParams.append("redirectURL", `${origin}/?pagamento=aprovado`);
+    formParams.append("notificationURL", `${origin}/api/webhook`);
 
-    const pbRes = await fetch("https://api.pagseguro.com/checkouts", {
+    const pbRes = await fetch("https://ws.pagseguro.uol.com.br/v2/checkout", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${env.PAGBANK_TOKEN}`,
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
       },
-      body: JSON.stringify(checkoutPayload),
+      body: formParams.toString(),
     });
 
-    const pbData = await pbRes.json().catch(() => ({}));
-    const payLink = Array.isArray(pbData?.links)
-      ? pbData.links.find((l) => l.rel === "PAY")?.href
-      : null;
+    const xmlText = await pbRes.text();
+    const codeMatch = xmlText.match(/<code>([^<]+)<\/code>/i);
+    const checkoutCode = codeMatch ? codeMatch[1].trim() : "";
 
-    if (!pbRes.ok || !payLink) {
-      const detail =
-        pbData?.error_messages?.[0]?.description ||
-        pbData?.message ||
-        "Não foi possível gerar o link de pagamento no PagBank.";
+    if (!pbRes.ok || !checkoutCode) {
+      const msgMatch = xmlText.match(/<message>([^<]+)<\/message>/i);
+      const detail = msgMatch ? msgMatch[1] : "Verifique se o e-mail e o token do PagBank pertencem à mesma conta.";
       return jsonResponse({ error: `Erro no PagBank: ${detail}` }, 502);
     }
 
+    const payLink = `https://pagseguro.uol.com.br/v2/checkout/payment.html?code=${encodeURIComponent(checkoutCode)}`;
+
     return jsonResponse({
       ok: true,
-      checkoutId: pbData.id,
+      checkoutId: checkoutCode,
       checkoutUrl: payLink,
       init_point: payLink,
       url: payLink,
@@ -161,7 +145,7 @@ export async function onRequestPost(context) {
         id: plan.id,
         name: plan.name,
         credits: plan.credits,
-        price: plan.price,
+        price: Number(plan.price),
       },
     });
   } catch (err) {
