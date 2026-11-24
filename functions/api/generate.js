@@ -21,13 +21,13 @@ const TTS_VOICE_MAP = {
   "bf_isabella": { voice: "bf_isabella", label: "Isabella (UK Expressive Female)", gender: "female" },
 };
 
-// Custos de créditos por operação no servidor (blindado contra burla)
+// Custos de créditos por operação no servidor (calibrado e blindado contra prejuízo)
 const ACTION_CREDIT_COSTS = {
-  submit_scene: 1,
-  submit_clip: 2,
-  submit_music: 1,
-  clone_voice: 1,
-  submit_tts: 1,
+  submit_scene: 2,
+  submit_clip: 12,      // Base para clipe de 5s (clipe de 10s cobra 24 créditos automaticamente)
+  submit_music: 3,
+  clone_voice: 3,
+  submit_tts: 2,
   transcribe_words: 1,
   remove_bg: 1,
 };
@@ -67,6 +67,14 @@ function getBearerToken(request) {
   const authHeader = request.headers.get("Authorization") || "";
   if (!authHeader.toLowerCase().startsWith("bearer ")) return "";
   return authHeader.slice(7).trim();
+}
+
+function sanitizeFalEndpoint(rawModel, fallback) {
+  const cleaned = String(rawModel || "").trim().replace(/^\/+/, "");
+  if (cleaned.startsWith("fal-ai/") && /^[a-zA-Z0-9._\/-]+$/.test(cleaned)) {
+    return cleaned;
+  }
+  return fallback;
 }
 
 async function getAuthenticatedUser(env, accessToken) {
@@ -222,8 +230,19 @@ export async function onRequestPost(context) {
       });
     }
 
-    const creditCost = ACTION_CREDIT_COSTS[action] || 1;
-    const actionDesc = ACTION_DESCRIPTIONS[action] || "Geração no estúdio";
+    // Validação proporcional de duração para vídeo (evita pagar 10s cobrando 5s)
+    const requestedClipSeconds = Number(body.duration || 5);
+    const clipDuration = requestedClipSeconds > 5 ? "10" : "5";
+
+    let creditCost = ACTION_CREDIT_COSTS[action] || 2;
+    let actionDesc = ACTION_DESCRIPTIONS[action] || "Geração no estúdio";
+
+    if (action === "submit_clip") {
+      creditCost = clipDuration === "10"
+        ? ACTION_CREDIT_COSTS.submit_clip * 2
+        : ACTION_CREDIT_COSTS.submit_clip;
+      actionDesc = `${ACTION_DESCRIPTIONS.submit_clip} (${clipDuration}s)`;
+    }
 
     // Trava de segurança de 600 caracteres para TTS
     if (action === "submit_tts") {
@@ -251,7 +270,7 @@ export async function onRequestPost(context) {
     let upstream = null;
 
     if (action === "submit_scene") {
-      const modelEndpoint = String(body.model || "fal-ai/flux-pro/v1.1").trim();
+      const modelEndpoint = sanitizeFalEndpoint(body.model, "fal-ai/flux-pro/v1.1");
       const inputPayload = {
         prompt: String(body.prompt || "").trim(),
         image_size: "portrait_16_9",
@@ -261,11 +280,11 @@ export async function onRequestPost(context) {
       };
       upstream = await falFetch(modelEndpoint, falKey, "POST", inputPayload);
     } else if (action === "submit_clip") {
-      const modelEndpoint = String(body.model || "fal-ai/kling-video/v2.6/pro/image-to-video").trim();
+      const modelEndpoint = sanitizeFalEndpoint(body.model, "fal-ai/kling-video/v2.6/pro/image-to-video");
       const inputPayload = {
         prompt: String(body.prompt || "").trim(),
         image_url: String(body.image_url || "").trim(),
-        duration: String(body.duration || "5"),
+        duration: clipDuration,
         aspect_ratio: "9:16",
         cfg_scale: 0.5,
       };
