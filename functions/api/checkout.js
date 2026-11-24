@@ -4,21 +4,24 @@ const PLANS = {
     name: "Pacote Inicial",
     title: "NEXORA.AI - Pacote Inicial (60 Creditos)",
     credits: 60,
-    price: "40.00",
+    price: 40.0,
+    amountCents: 4000,
   },
   criador_180: {
     id: "criador_180",
     name: "Plano Criador Pro",
     title: "NEXORA.AI - Plano Criador Pro (180 Creditos)",
     credits: 180,
-    price: "97.00",
+    price: 97.0,
+    amountCents: 9700,
   },
   escala_450: {
     id: "escala_450",
     name: "Plano Escala",
     title: "NEXORA.AI - Plano Escala (450 Creditos)",
     credits: 450,
-    price: "197.00",
+    price: 197.0,
+    amountCents: 19700,
   },
 };
 
@@ -77,8 +80,6 @@ export async function onRequestPost(context) {
 
   try {
     const pagbankToken = String(env.PAGBANK_TOKEN || "").trim();
-    const pagbankEmail = String(env.PAGBANK_EMAIL || "comercial@jcaatacadista.com.br").trim();
-
     if (!pagbankToken) {
       return jsonResponse({ error: "Token do PagBank (PAGBANK_TOKEN) não configurado no servidor." }, 500);
     }
@@ -103,55 +104,75 @@ export async function onRequestPost(context) {
 
     const origin = new URL(request.url).origin;
     const referenceId = `${user.id}|${plan.id}`;
+    const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toISOString();
 
-    const formParams = new URLSearchParams();
-    formParams.append("email", pagbankEmail);
-    formParams.append("token", pagbankToken);
-    formParams.append("currency", "BRL");
-    formParams.append("itemId1", plan.id);
-    formParams.append("itemDescription1", plan.title);
-    formParams.append("itemAmount1", plan.price);
-    formParams.append("itemQuantity1", "1");
-    formParams.append("reference", referenceId);
-    formParams.append("redirectURL", `${origin}/?pagamento=aprovado`);
-    formParams.append("notificationURL", `${origin}/api/webhook`);
+    const orderPayload = {
+      reference_id: referenceId,
+      customer: {
+        name: user.user_metadata?.full_name || "Cliente Nexora",
+        email: user.email,
+        tax_id: "12345678909",
+      },
+      items: [
+        {
+          reference_id: plan.id,
+          name: plan.title,
+          quantity: 1,
+          unit_amount: plan.amountCents,
+        },
+      ],
+      qr_codes: [
+        {
+          amount: {
+            value: plan.amountCents,
+          },
+          expiration_date: expirationDate,
+        },
+      ],
+      notification_urls: [`${origin}/api/webhook`],
+    };
 
-    const pbRes = await fetch("https://ws.pagseguro.uol.com.br/v2/checkout", {
+    const pbRes = await fetch("https://api.pagseguro.com/orders", {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${pagbankToken}`,
       },
-      body: formParams.toString(),
+      body: JSON.stringify(orderPayload),
     });
 
-    const xmlText = await pbRes.text();
-    const codeMatch = xmlText.match(/<code>([^<]+)<\/code>/i);
-    const checkoutCode = codeMatch ? codeMatch[1].trim() : "";
+    const pbData = await pbRes.json().catch(() => ({}));
+    const qrCodeObj = Array.isArray(pbData?.qr_codes) ? pbData.qr_codes[0] : null;
+    const qrPngLink = Array.isArray(qrCodeObj?.links)
+      ? qrCodeObj.links.find((l) => l.rel === "QRCODE.PNG")?.href
+      : null;
 
-    if (!pbRes.ok || !checkoutCode) {
-      const msgMatch = xmlText.match(/<message>([^<]+)<\/message>/i);
-      const detail = msgMatch
-        ? `${msgMatch[1]} (Status ${pbRes.status})`
-        : `HTTP ${pbRes.status}: ${xmlText.slice(0, 120) || "Unauthorized - confira PAGBANK_EMAIL e PAGBANK_TOKEN"}`;
+    if (!pbRes.ok || !qrCodeObj?.text) {
+      const detail =
+        pbData?.error_messages?.[0]?.description ||
+        pbData?.message ||
+        `HTTP ${pbRes.status}: ${JSON.stringify(pbData).slice(0, 150)}`;
       return jsonResponse({ error: `PagBank: ${detail}` }, 502);
     }
 
-    const payLink = `https://pagseguro.uol.com.br/v2/checkout/payment.html?code=${encodeURIComponent(checkoutCode)}`;
+    const payUrl = qrPngLink || `${origin}/?pix_code=${encodeURIComponent(qrCodeObj.text)}`;
 
     return jsonResponse({
       ok: true,
-      checkoutId: checkoutCode,
-      checkoutUrl: payLink,
-      init_point: payLink,
-      url: payLink,
+      orderId: pbData.id,
+      pixText: qrCodeObj.text,
+      qrCodeUrl: qrPngLink,
+      checkoutUrl: payUrl,
+      init_point: payUrl,
+      url: payUrl,
       plan: {
         id: plan.id,
         name: plan.name,
         credits: plan.credits,
-        price: Number(plan.price),
+        price: plan.price,
       },
     });
   } catch (err) {
-    return jsonResponse({ error: "Erro ao criar checkout PagBank: " + (err?.message || "erro interno") }, 500);
+    return jsonResponse({ error: "Erro ao criar pedido Pix PagBank: " + (err?.message || "erro interno") }, 500);
   }
 }
