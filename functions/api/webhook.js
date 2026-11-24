@@ -72,12 +72,11 @@ export async function onRequestPost(context) {
       return jsonResponse({ ok: true, ignored: "Sem paymentId na notificação" }, 200);
     }
 
-    // Se for merchant_order, ignora ou aguarda notificação de payment
     if (topic && topic !== "payment") {
       return jsonResponse({ ok: true, ignored: `Evento ${topic}` }, 200);
     }
 
-    // Consulta o pagamento direto na API oficial do Mercado Pago (fonte de verdade)
+    // 1. Consulta o pagamento oficial direto na API do Mercado Pago
     const mpResp = await fetch(`https://api.mercadopago.com/v1/payments/${encodeURIComponent(paymentId)}`, {
       method: "GET",
       headers: {
@@ -96,7 +95,7 @@ export async function onRequestPost(context) {
       return jsonResponse({ ok: true, paymentId, status, credited: false }, 200);
     }
 
-    // Extrai userId e packageId de external_reference ("userId|packageId") ou metadata
+    // 2. Identifica o usuário e o plano comprado
     const extRef = String(payment?.external_reference || "").trim();
     const [refUserId, refPackageId] = extRef.includes("|") ? extRef.split("|") : ["", ""];
 
@@ -113,7 +112,7 @@ export async function onRequestPost(context) {
 
     const referenceId = `mp_${paymentId}`;
 
-    // Proteção anti-duplicidade: verifica se este pagamento já foi lançado no credit_ledger
+    // 3. Proteção anti-duplicidade no credit_ledger
     const checkUrl = `${env.SUPABASE_URL}/rest/v1/credit_ledger?reference_id=eq.${encodeURIComponent(referenceId)}&select=id&limit=1`;
     const checkRes = await fetch(checkUrl, {
       method: "GET",
@@ -132,41 +131,62 @@ export async function onRequestPost(context) {
       }
     }
 
-    // Credita atomicamente via RPC add_credits no Supabase
-    const rpcRes = await fetch(`${env.SUPABASE_URL}/rest/v1/rpc/add_credits`, {
-      method: "POST",
+    // 4. Busca o saldo atual do usuário na tabela profiles
+    const profileGetUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=id,credits&limit=1`;
+    const profileGetRes = await fetch(profileGetUrl, {
+      method: "GET",
       headers: supabaseServiceHeaders(env),
+    });
+
+    if (!profileGetRes.ok) {
+      const errTxt = await profileGetRes.text();
+      return jsonResponse({ error: "Erro ao buscar perfil no Supabase: " + errTxt }, 500);
+    }
+
+    const profiles = await profileGetRes.json().catch(() => []);
+    if (!Array.isArray(profiles) || profiles.length === 0) {
+      return jsonResponse({ error: "Perfil do usuário não encontrado no Supabase.", userId }, 404);
+    }
+
+    const currentCredits = Number(profiles[0]?.credits ?? 0);
+    const newBalance = currentCredits + plan.credits;
+
+    // 5. Atualiza diretamente os créditos e o nome do plano na tabela profiles
+    const patchRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`, {
+      method: "PATCH",
+      headers: supabaseServiceHeaders(env, { Prefer: "return=representation" }),
       body: JSON.stringify({
-        p_user_id: userId,
-        p_amount: plan.credits,
-        p_task: "mercadopago_purchase",
-        p_description: `Compra Mercado Pago (${plan.name} #${paymentId})`,
-        p_reference_id: referenceId,
+        credits: newBalance,
+        plan_name: plan.name,
       }),
     });
 
-    if (!rpcRes.ok) {
-      const errTxt = await rpcRes.text();
-      return jsonResponse({ error: "Erro ao creditar saldo no Supabase: " + errTxt }, 500);
+    if (!patchRes.ok) {
+      const errTxt = await patchRes.text();
+      return jsonResponse({ error: "Erro ao atualizar créditos em profiles: " + errTxt }, 500);
     }
 
-    // Atualiza plan_name no perfil do usuário
-    await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`, {
-      method: "PATCH",
-      headers: supabaseServiceHeaders(env),
-      body: JSON.stringify({ plan_name: plan.name }),
+    // 6. Registra no histórico credit_ledger (opcional, não bloqueia se alguma coluna diferir)
+    await fetch(`${env.SUPABASE_URL}/rest/v1/credit_ledger`, {
+      method: "POST",
+      headers: supabaseServiceHeaders(env, { Prefer: "return=minimal" }),
+      body: JSON.stringify({
+        user_id: userId,
+        amount: plan.credits,
+        task: "mercadopago_purchase",
+        description: `Compra Mercado Pago (${plan.name} #${paymentId})`,
+        reference_id: referenceId,
+      }),
     }).catch(() => {});
-
-    const rpcData = await rpcRes.json().catch(() => null);
-    const row = Array.isArray(rpcData) ? rpcData[0] : rpcData;
 
     return jsonResponse({
       ok: true,
       paymentId,
       credited: true,
       plan: plan.name,
+      previousBalance: currentCredits,
       creditsAdded: plan.credits,
-      newBalance: Number(row?.new_balance ?? 0),
+      newBalance,
     }, 200);
   } catch (err) {
     return jsonResponse({ error: "Erro no webhook do Mercado Pago: " + (err?.message || "erro interno") }, 500);
