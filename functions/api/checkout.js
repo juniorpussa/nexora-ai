@@ -2,7 +2,7 @@ const PLANS = {
   inicial_60: {
     id: "inicial_60",
     name: "Pacote Inicial",
-    title: "NEXORA.AI - Pacote Inicial (60 Creditos)",
+    title: "NEXORA.AI - Pacote Inicial (60 Créditos)",
     credits: 60,
     price: 40.0,
     amountCents: 4000,
@@ -10,7 +10,7 @@ const PLANS = {
   criador_180: {
     id: "criador_180",
     name: "Plano Criador Pro",
-    title: "NEXORA.AI - Plano Criador Pro (180 Creditos)",
+    title: "NEXORA.AI - Plano Criador Pro (180 Créditos)",
     credits: 180,
     price: 97.0,
     amountCents: 9700,
@@ -18,7 +18,7 @@ const PLANS = {
   escala_450: {
     id: "escala_450",
     name: "Plano Escala",
-    title: "NEXORA.AI - Plano Escala (450 Creditos)",
+    title: "NEXORA.AI - Plano Escala (450 Créditos)",
     credits: 450,
     price: 197.0,
     amountCents: 19700,
@@ -79,9 +79,9 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    const pagbankToken = String(env.PAGBANK_TOKEN || "").trim();
-    if (!pagbankToken) {
-      return jsonResponse({ error: "Token do PagBank (PAGBANK_TOKEN) não configurado no servidor." }, 500);
+    const stripeKey = String(env.STRIPE_SECRET_KEY || "").trim();
+    if (!stripeKey) {
+      return jsonResponse({ error: "Chave da Stripe (STRIPE_SECRET_KEY) não configurada no servidor." }, 500);
     }
 
     if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY) {
@@ -104,67 +104,52 @@ export async function onRequestPost(context) {
 
     const origin = new URL(request.url).origin;
     const referenceId = `${user.id}|${plan.id}`;
-    const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toISOString();
 
-    const orderPayload = {
-      reference_id: referenceId,
-      customer: {
-        name: user.user_metadata?.full_name || "Cliente Nexora",
-        email: user.email,
-        tax_id: "12345678909",
-      },
-      items: [
-        {
-          reference_id: plan.id,
-          name: plan.title,
-          quantity: 1,
-          unit_amount: plan.amountCents,
-        },
-      ],
-      qr_codes: [
-        {
-          amount: {
-            value: plan.amountCents,
-          },
-          expiration_date: expirationDate,
-        },
-      ],
-      notification_urls: [`${origin}/api/webhook`],
-    };
+    const form = new URLSearchParams();
+    form.set("mode", "payment");
+    form.set("success_url", `${origin}/?payment=success&session_id={CHECKOUT_SESSION_ID}`);
+    form.set("cancel_url", `${origin}/?payment=cancelled`);
+    form.set("client_reference_id", referenceId);
+    if (user.email) {
+      form.set("customer_email", user.email);
+    }
+    form.set("metadata[user_id]", user.id);
+    form.set("metadata[plan_id]", plan.id);
+    form.set("metadata[credits]", String(plan.credits));
 
-    const pbRes = await fetch("https://api.pagseguro.com/orders", {
+    form.set("line_items[0][price_data][currency]", "brl");
+    form.set("line_items[0][price_data][product_data][name]", plan.title);
+    form.set(
+      "line_items[0][price_data][product_data][description]",
+      `Recarga instantânea de ${plan.credits} créditos na plataforma NEXORA.AI`
+    );
+    form.set("line_items[0][price_data][unit_amount]", String(plan.amountCents));
+    form.set("line_items[0][quantity]", "1");
+
+    const stripeRes = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${pagbankToken}`,
+        Authorization: `Bearer ${stripeKey}`,
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify(orderPayload),
+      body: form.toString(),
     });
 
-    const pbData = await pbRes.json().catch(() => ({}));
-    const qrCodeObj = Array.isArray(pbData?.qr_codes) ? pbData.qr_codes[0] : null;
-    const qrPngLink = Array.isArray(qrCodeObj?.links)
-      ? qrCodeObj.links.find((l) => l.rel === "QRCODE.PNG")?.href
-      : null;
+    const stripeData = await stripeRes.json().catch(() => ({}));
 
-    if (!pbRes.ok || !qrCodeObj?.text) {
+    if (!stripeRes.ok || !stripeData?.url) {
       const detail =
-        pbData?.error_messages?.[0]?.description ||
-        pbData?.message ||
-        `HTTP ${pbRes.status}: ${JSON.stringify(pbData).slice(0, 150)}`;
-      return jsonResponse({ error: `PagBank: ${detail}` }, 502);
+        stripeData?.error?.message ||
+        `HTTP ${stripeRes.status}: ${JSON.stringify(stripeData).slice(0, 150)}`;
+      return jsonResponse({ error: `Stripe: ${detail}` }, 502);
     }
-
-    const payUrl = qrPngLink || `${origin}/?pix_code=${encodeURIComponent(qrCodeObj.text)}`;
 
     return jsonResponse({
       ok: true,
-      orderId: pbData.id,
-      pixText: qrCodeObj.text,
-      qrCodeUrl: qrPngLink,
-      checkoutUrl: payUrl,
-      init_point: payUrl,
-      url: payUrl,
+      sessionId: stripeData.id,
+      checkoutUrl: stripeData.url,
+      init_point: stripeData.url,
+      url: stripeData.url,
       plan: {
         id: plan.id,
         name: plan.name,
@@ -173,6 +158,6 @@ export async function onRequestPost(context) {
       },
     });
   } catch (err) {
-    return jsonResponse({ error: "Erro ao criar pedido Pix PagBank: " + (err?.message || "erro interno") }, 500);
+    return jsonResponse({ error: "Erro ao criar checkout Stripe: " + (err?.message || "erro interno") }, 500);
   }
 }
