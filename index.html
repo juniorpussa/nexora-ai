@@ -5078,7 +5078,7 @@
                     break;
                   }
                 } catch (eTry) {
-                  if (eTry.message === "ABORTED_RUN" || eTry.status === 403) throw eTry;
+                  if (eTry.message === "ABORTED_RUN" || eTry.status === 402 || eTry.status === 403) throw eTry;
                   imgErr = eTry;
                   if (pIdx === 0) await sleep(600);
                 }
@@ -5099,7 +5099,7 @@
             if (err.message === "ABORTED_RUN") return;
             lastClipErrorMsg = err.message || "erro na imagem base";
             pipeStates[i].status = `erro foto: ${lastClipErrorMsg.slice(0, 32)}`;
-            if (err.status === 403) { fatalErrorMsg = err.message; activeRunController?.abort(); }
+            if (err.status === 402 || err.status === 403) { fatalErrorMsg = err.message; activeRunController?.abort(); }
             renderPipelineUI();
             return;
           }
@@ -5131,7 +5131,7 @@
                 } catch (err) {
                   if (err.message === "ABORTED_RUN") return;
                   lastClipErrorMsg = err.message || "Erro no motor 3D";
-                  if (err.status === 403) { fatalErrorMsg = err.message; pipeStates[i].status = "saldo esgotado (403)"; activeRunController?.abort(); return; }
+                  if (err.status === 402 || err.status === 403) { fatalErrorMsg = err.message; pipeStates[i].status = "saldo esgotado"; activeRunController?.abort(); return; }
                   if (err.status === 400 || err.status === 422) { pipeStates[i].status = `erro ${err.status} (resgate 4K)`; renderPipelineUI(); return; }
                   if (att === 3) { pipeStates[i].status = `fallback 4K óptico`; renderPipelineUI(); return; }
                   pipeStates[i].status = `aguardando vaga (${att}/3)...`;
