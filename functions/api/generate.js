@@ -40,7 +40,8 @@ const CLIP_MODEL_TIERS = {
   "fal-ai/wan-2.2/image-to-video": 6,
 };
 
-const DEFAULT_SCENE_MODEL = "fal-ai/flux-pro/v1.1";
+const DEFAULT_SCENE_MODEL_EDIT = "fal-ai/nano-banana/edit";
+const DEFAULT_SCENE_MODEL_T2I = "fal-ai/flux-pro/v1.1";
 const DEFAULT_CLIP_MODEL = "fal-ai/kling-video/v2.6/pro/image-to-video";
 
 const ACTION_CREDIT_COSTS = {
@@ -92,6 +93,11 @@ const ACTION_ALIASES = {
 
 function extractImageInput(body) {
   if (!body || typeof body !== "object") return "";
+  const mime =
+    typeof body.mimeType === "string" && body.mimeType.startsWith("image/")
+      ? body.mimeType
+      : "image/jpeg";
+
   const candidates = [
     body.image_url,
     body.imageUrl,
@@ -114,14 +120,15 @@ function extractImageInput(body) {
       ) {
         return trimmed;
       }
-      if (/^[A-Za-z0-9+/=]{100,}$/.test(trimmed.replace(/\s+/g, ""))) {
-        return `data:image/png;base64,${trimmed.replace(/\s+/g, "")}`;
+      const cleanB64 = trimmed.replace(/\s+/g, "");
+      if (/^[A-Za-z0-9+/=]{100,}$/.test(cleanB64)) {
+        return `data:${mime};base64,${cleanB64}`;
       }
     } else if (typeof item === "object") {
       const nested =
         item.url || item.image_url || item.imageUrl || item.dataUrl || item.base64 || "";
       if (typeof nested === "string" && nested.trim()) {
-        return extractImageInput({ image_url: nested.trim() });
+        return extractImageInput({ image_url: nested.trim(), mimeType: mime });
       }
     }
   }
@@ -203,6 +210,22 @@ function buildQueueUrlFromRequestId(endpoint, requestId) {
   return `${FAL_QUEUE_BASE}/${cleanEp}/requests/${cleanId}/status`;
 }
 
+function formatFalError(json, fallback = "Falha na geração fal.ai.") {
+  if (!json || typeof json !== "object") return fallback;
+  if (typeof json.error === "string" && json.error.trim()) return json.error.trim();
+  if (typeof json.detail === "string" && json.detail.trim()) return json.detail.trim();
+  if (Array.isArray(json.detail) && json.detail.length > 0) {
+    return json.detail
+      .map((d) => {
+        const loc = Array.isArray(d?.loc) ? d.loc.join(".") : "";
+        const msg = d?.msg || JSON.stringify(d);
+        return loc ? `${loc}: ${msg}` : msg;
+      })
+      .join(" | ");
+  }
+  return fallback;
+}
+
 export async function onRequestOptions() {
   return new Response(null, {
     status: 204,
@@ -224,6 +247,36 @@ function jsonResponse(payload, status = 200) {
   });
 }
 
+// Proxy GET para download seguro de mídia da fal.ai sem erro de CORS no Canvas
+export async function onRequestGet(context) {
+  const urlObj = new URL(context.request.url);
+  const proxyUrl = urlObj.searchParams.get("proxyUrl");
+  if (!proxyUrl) {
+    return jsonResponse({ error: "Parâmetro proxyUrl ausente." }, 400);
+  }
+  try {
+    const parsed = new URL(proxyUrl);
+    const allowedHosts = ["fal.media", "storage.googleapis.com", "queue.fal.run", "fal.run"];
+    const okHost = allowedHosts.some(
+      (h) => parsed.hostname === h || parsed.hostname.endsWith(`.${h}`)
+    );
+    if (!okHost) {
+      return jsonResponse({ error: "Host não permitido no proxy." }, 403);
+    }
+    const resp = await fetch(proxyUrl);
+    return new Response(resp.body, {
+      status: resp.status,
+      headers: {
+        "Content-Type": resp.headers.get("Content-Type") || "application/octet-stream",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=3600",
+      },
+    });
+  } catch (err) {
+    return jsonResponse({ error: "Erro no proxy de mídia: " + (err?.message || "falha") }, 502);
+  }
+}
+
 function getBearerToken(request) {
   const authHeader = request.headers.get("Authorization") || "";
   if (!authHeader.toLowerCase().startsWith("bearer ")) return "";
@@ -240,16 +293,26 @@ function resolveModelCandidate(body) {
 }
 
 function resolvePromptCandidate(body) {
-  return String(body?.prompt ?? body?.motionPrompt ?? body?.text ?? "").trim();
+  return String(
+    body?.prompt ??
+      body?.imagePrompt ??
+      body?.motionPrompt ??
+      body?.musicPrompt ??
+      body?.text ??
+      ""
+  ).trim();
 }
 
-function resolveAllowedSceneModel(body) {
+function resolveAllowedSceneModel(body, hasInputImage) {
   const cleaned = resolveModelCandidate(body);
-  return ALLOWED_SCENE_MODELS.has(cleaned) ? cleaned : DEFAULT_SCENE_MODEL;
+  if (ALLOWED_SCENE_MODELS.has(cleaned)) return cleaned;
+  return hasInputImage ? DEFAULT_SCENE_MODEL_EDIT : DEFAULT_SCENE_MODEL_T2I;
 }
 
 function resolveAllowedClipModel(body) {
-  const cleaned = resolveModelCandidate(body);
+  const cleaned = resolveModelCandidate(body).toLowerCase();
+  if (cleaned === "veo") return "fal-ai/veo3.1/fast/image-to-video";
+  if (cleaned === "kling") return "fal-ai/kling-video/v2.6/pro/image-to-video";
   return Object.prototype.hasOwnProperty.call(CLIP_MODEL_TIERS, cleaned)
     ? cleaned
     : DEFAULT_CLIP_MODEL;
@@ -409,6 +472,7 @@ export async function onRequestPost(context) {
           video_url: media.videoUrl,
           audioUrl: media.audioUrl,
           audio_url: media.audioUrl,
+          chunks: body.result?.chunks || null,
           url: media.url,
         });
       }
@@ -464,9 +528,7 @@ export async function onRequestPost(context) {
       }
 
       if (!statusUrl) {
-        return jsonResponse({
-          error: "URL de consulta inválida.",
-        }, 400);
+        return jsonResponse({ error: "URL de consulta inválida." }, 400);
       }
 
       const stResp = await fetch(statusUrl, {
@@ -478,10 +540,10 @@ export async function onRequestPost(context) {
       if (!stResp.ok && stResp.status >= 400 && stResp.status < 500) {
         const refundAmt = Number(body.charged ?? body.creditCost ?? 0);
         if (refundAmt > 0) {
-          await refundUserCredits(env, user.id, refundAmt, "poll_error", stJson?.error || stJson?.detail || "Falha ao consultar fila");
+          await refundUserCredits(env, user.id, refundAmt, "poll_error", formatFalError(stJson, "Falha ao consultar fila"));
         }
         return jsonResponse({
-          error: stJson?.error || stJson?.detail || "Falha ao consultar fila na IA.",
+          error: formatFalError(stJson, "Falha ao consultar fila na IA."),
           refunded: refundAmt > 0,
         }, 400);
       }
@@ -489,11 +551,11 @@ export async function onRequestPost(context) {
       if (stJson?.status === "FAILED") {
         const refundAmt = Number(body.charged ?? body.creditCost ?? 0);
         if (refundAmt > 0) {
-          await refundUserCredits(env, user.id, refundAmt, "job_failed", stJson?.error || "Falha no processamento da mídia");
+          await refundUserCredits(env, user.id, refundAmt, "job_failed", formatFalError(stJson, "Falha no processamento"));
         }
         return jsonResponse({
           status: "FAILED",
-          error: stJson?.error || "Falha no processamento da mídia.",
+          error: formatFalError(stJson, "Falha no processamento da mídia."),
           refunded: refundAmt > 0,
         });
       }
@@ -505,6 +567,21 @@ export async function onRequestPost(context) {
           headers: { Authorization: `Key ${falKey}` },
         });
         const resJson = await resResp.json().catch(() => ({}));
+
+        // IMPORTANTE: se a fal.ai retornou erro dentro do resultado (ex.: HTTP 422), reportar como FAILED!
+        if (!resResp.ok) {
+          const errDetail = formatFalError(resJson, `Erro no resultado da IA (HTTP ${resResp.status})`);
+          const refundAmt = Number(body.charged ?? body.creditCost ?? 0);
+          if (refundAmt > 0) {
+            await refundUserCredits(env, user.id, refundAmt, "job_result_error", errDetail);
+          }
+          return jsonResponse({
+            status: "FAILED",
+            error: errDetail,
+            refunded: refundAmt > 0,
+          });
+        }
+
         const media = extractMediaUrls(resJson);
         return jsonResponse({
           status: "COMPLETED",
@@ -515,6 +592,8 @@ export async function onRequestPost(context) {
           video_url: media.videoUrl,
           audioUrl: media.audioUrl,
           audio_url: media.audioUrl,
+          chunks: resJson?.chunks || null,
+          customVoiceId: resJson?.custom_voice_id || resJson?.voice_id || null,
           url: media.url,
         });
       }
@@ -522,13 +601,12 @@ export async function onRequestPost(context) {
       return jsonResponse({
         status: stJson?.status || "IN_QUEUE",
         queue_position: stJson?.queue_position ?? 0,
+        queuePosition: stJson?.queue_position ?? 0,
       });
     }
 
     if (action === "remove_bg" && !resolvedImageUrl) {
-      return jsonResponse({
-        error: "Envie a imagem do produto para remover o fundo.",
-      }, 400);
+      return jsonResponse({ error: "Envie a imagem do produto para remover o fundo." }, 400);
     }
 
     if (action === "submit_tts") {
@@ -543,7 +621,7 @@ export async function onRequestPost(context) {
       }
     }
 
-    const resolvedSceneModel = resolveAllowedSceneModel(body);
+    const resolvedSceneModel = resolveAllowedSceneModel(body, Boolean(resolvedImageUrl));
     const resolvedClipModel = resolveAllowedClipModel(body);
     const promptText = resolvePromptCandidate(body);
     const requestedClipSeconds = Number(body.duration || 5);
@@ -569,77 +647,117 @@ export async function onRequestPost(context) {
     }
 
     let upstream = null;
+    let usedEndpoint = "";
 
     if (action === "submit_scene") {
-      const inputPayload = {
-        prompt: promptText,
-        image_size: "portrait_16_9",
-        num_images: 1,
-        enable_safety_checker: false,
-        ...(resolvedImageUrl ? { image_url: resolvedImageUrl } : {}),
-      };
-      upstream = await falFetch(resolvedSceneModel, falKey, "POST", inputPayload);
+      usedEndpoint = resolvedSceneModel;
+      let inputPayload;
+
+      if (resolvedSceneModel === "fal-ai/nano-banana/edit" && resolvedImageUrl) {
+        inputPayload = {
+          prompt: promptText || "Ultra-realistic 9:16 commercial product photo",
+          image_urls: [resolvedImageUrl],
+          aspect_ratio: "9:16",
+          num_images: 1,
+          output_format: "jpeg",
+        };
+      } else if (resolvedSceneModel === "fal-ai/flux-pro/kontext" && resolvedImageUrl) {
+        inputPayload = {
+          prompt: promptText || "Ultra-realistic 9:16 commercial product photo",
+          image_url: resolvedImageUrl,
+          aspect_ratio: "9:16",
+          num_images: 1,
+        };
+      } else {
+        inputPayload = {
+          prompt: promptText || "Ultra-realistic 9:16 commercial product photo",
+          image_size: "portrait_16_9",
+          num_images: 1,
+          enable_safety_checker: false,
+          ...(resolvedImageUrl ? { image_url: resolvedImageUrl } : {}),
+        };
+      }
+      upstream = await falFetch(usedEndpoint, falKey, "POST", inputPayload);
     } else if (action === "submit_clip") {
-      const inputPayload = {
-        prompt: promptText,
-        image_url: resolvedImageUrl,
-        duration: clipDuration,
-        aspect_ratio: "9:16",
-        cfg_scale: 0.5,
-        generate_audio: false,
-      };
-      upstream = await falFetch(resolvedClipModel, falKey, "POST", inputPayload);
+      usedEndpoint = resolvedClipModel;
+      const isVeo = resolvedClipModel.includes("veo");
+      const inputPayload = isVeo
+        ? {
+            prompt: promptText,
+            image_url: resolvedImageUrl,
+            aspect_ratio: "9:16",
+            duration: "6s",
+            generate_audio: false,
+          }
+        : {
+            prompt: promptText,
+            image_url: resolvedImageUrl,
+            duration: clipDuration,
+            aspect_ratio: "9:16",
+            cfg_scale: 0.5,
+            generate_audio: false,
+            ...(body.negativePrompt ? { negative_prompt: String(body.negativePrompt).slice(0, 520) } : {}),
+          };
+      upstream = await falFetch(usedEndpoint, falKey, "POST", inputPayload);
     } else if (action === "submit_music") {
+      usedEndpoint = "fal-ai/stable-audio";
       const prompt = promptText || "upbeat energetic commercial background track";
       const duration = Math.min(45, Math.max(8, Number(body.duration || 15)));
-      upstream = await falFetch("fal-ai/stable-audio", falKey, "POST", {
+      upstream = await falFetch(usedEndpoint, falKey, "POST", {
         prompt,
         seconds_total: duration,
       });
     } else if (action === "clone_voice") {
-      const audioUrl = String(body.audio_url || "").trim();
+      usedEndpoint = "fal-ai/f5-tts";
+      const audioUrl = String(body.audio_url || body.audioUrl || "").trim();
       if (!audioUrl) {
         await refundUserCredits(env, user.id, creditCost, action, "Áudio de referência ausente");
         return jsonResponse({ error: "Envie um áudio de referência para clonar a voz." }, 400);
       }
-      upstream = await falFetch("fal-ai/f5-tts", falKey, "POST", {
+      upstream = await falFetch(usedEndpoint, falKey, "POST", {
         ref_audio_url: audioUrl,
         ref_text: String(body.ref_text || "Olá, confira este lançamento exclusivo com entrega rápida.").trim(),
         gen_text: String(body.gen_text || body.text || "Confira este lançamento agora mesmo.").slice(0, 600),
       });
     } else if (action === "submit_tts") {
-      const voiceKey = String(body.voice || "pf_dylan").trim();
-      const voiceObj = TTS_VOICE_MAP[voiceKey] || TTS_VOICE_MAP["pf_dylan"];
+      usedEndpoint = "fal-ai/kokoro/pt-br";
+      const voiceKey = String(body.voice || body.voiceId || "").trim();
+      const gender = String(body.gender || "").toLowerCase();
+      const fallbackVoice = gender === "female" ? "pf_ora" : "pm_alex";
+      const voiceObj = TTS_VOICE_MAP[voiceKey] || TTS_VOICE_MAP[fallbackVoice] || TTS_VOICE_MAP["pf_dylan"];
       const speed = Math.min(1.35, Math.max(0.75, Number(body.speed || 1.05)));
       const textClean = String(body.text || "").trim().slice(0, 600);
 
-      upstream = await falFetch("fal-ai/kokoro/pt-br", falKey, "POST", {
+      upstream = await falFetch(usedEndpoint, falKey, "POST", {
         prompt: textClean,
         voice: voiceObj.voice,
         speed,
       });
 
       if (!upstream.ok) {
-        upstream = await falFetch("fal-ai/kokoro/american-english", falKey, "POST", {
+        usedEndpoint = "fal-ai/kokoro/american-english";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
           prompt: textClean,
           voice: voiceObj.voice,
           speed,
         });
       }
     } else if (action === "transcribe_words") {
-      const audioUrl = String(body.audio_url || "").trim();
+      usedEndpoint = "fal-ai/whisper";
+      const audioUrl = String(body.audio_url || body.audioUrl || "").trim();
       if (!audioUrl) {
         await refundUserCredits(env, user.id, creditCost, action, "Áudio ausente para legendas");
         return jsonResponse({ error: "Áudio não encontrado para gerar legendas." }, 400);
       }
-      upstream = await falFetch("fal-ai/whisper", falKey, "POST", {
+      upstream = await falFetch(usedEndpoint, falKey, "POST", {
         audio_url: audioUrl,
         task: "transcribe",
-        chunk_level: "segment",
+        chunk_level: "word",
         version: "3",
       });
     } else if (action === "remove_bg") {
-      upstream = await falFetch("fal-ai/birefnet", falKey, "POST", {
+      usedEndpoint = "fal-ai/birefnet";
+      upstream = await falFetch(usedEndpoint, falKey, "POST", {
         image_url: resolvedImageUrl,
         output_format: "png",
       });
@@ -649,7 +767,7 @@ export async function onRequestPost(context) {
     }
 
     if (!upstream || !upstream.ok) {
-      const errMsg = upstream?.data?.error || upstream?.data?.detail || "Falha ao iniciar geração na IA.";
+      const errMsg = formatFalError(upstream?.data, "Falha ao iniciar geração na IA.");
       await refundUserCredits(env, user.id, creditCost, action, errMsg);
       return jsonResponse({
         error: errMsg,
@@ -661,16 +779,7 @@ export async function onRequestPost(context) {
     const upData = upstream.data || {};
     const statusUrl =
       normalizeFalQueueUrl(upData.status_url || upData.statusUrl) ||
-      buildQueueUrlFromRequestId(
-        action === "remove_bg"
-          ? "fal-ai/birefnet"
-          : action === "submit_scene"
-          ? resolvedSceneModel
-          : action === "submit_clip"
-          ? resolvedClipModel
-          : "",
-        upData.request_id || upData.requestId
-      );
+      buildQueueUrlFromRequestId(usedEndpoint, upData.request_id || upData.requestId);
 
     const responseUrl =
       normalizeFalQueueUrl(upData.response_url || upData.responseUrl) ||
@@ -680,7 +789,7 @@ export async function onRequestPost(context) {
 
     return jsonResponse({
       ...upData,
-      engine: action === "submit_clip" ? resolvedClipModel : resolvedSceneModel,
+      engine: usedEndpoint,
       statusUrl,
       responseUrl,
       ...(directMedia.imageUrl ? { imageUrl: directMedia.imageUrl, image_url: directMedia.imageUrl } : {}),
