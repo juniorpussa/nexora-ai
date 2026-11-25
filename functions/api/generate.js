@@ -72,6 +72,31 @@ const ACTION_DESCRIPTIONS = {
   remove_bg: "Remoção de fundo de imagem",
 };
 
+const ACTION_ALIASES = {
+  remove_bg: "remove_bg",
+  removebg: "remove_bg",
+  remove_background: "remove_bg",
+  bg_remove: "remove_bg",
+  submit_scene: "submit_scene",
+  generate_image: "submit_scene",
+  image: "submit_scene",
+  scene: "submit_scene",
+  submit_clip: "submit_clip",
+  generate_video: "submit_clip",
+  video: "submit_clip",
+  clip: "submit_clip",
+  submit_tts: "submit_tts",
+  tts: "submit_tts",
+  voice: "submit_tts",
+  transcribe_words: "transcribe_words",
+  transcribe: "transcribe_words",
+  subtitles: "transcribe_words",
+  submit_music: "submit_music",
+  music: "submit_music",
+  clone_voice: "clone_voice",
+  poll: "poll",
+};
+
 export async function onRequestOptions() {
   return new Response(null, {
     status: 204,
@@ -149,9 +174,10 @@ async function deductUserCredits(env, userId, amount, task, description) {
 
   const data = await res.json();
   const row = Array.isArray(data) ? data[0] : data;
+  const rawBalance = row?.new_balance ?? row?.remaining_credits ?? 0;
   return {
     ok: Boolean(row?.ok),
-    newBalance: Number(row?.new_balance ?? 0),
+    newBalance: Number(rawBalance),
   };
 }
 
@@ -222,7 +248,8 @@ export async function onRequestPost(context) {
     }
 
     const body = await request.json();
-    const action = String(body.action || "").trim();
+    const rawAction = String(body.action || body.mode || body.task || "").trim().toLowerCase();
+    const action = ACTION_ALIASES[rawAction] || rawAction;
 
     // Consulta de status de fila (poll) não consome créditos extras
     if (action === "poll") {
