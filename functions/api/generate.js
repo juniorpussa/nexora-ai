@@ -129,13 +129,22 @@ function extractImageInput(body) {
 }
 
 function normalizeFalQueueUrl(rawUrl) {
-  const s = String(rawUrl || "").trim();
+  if (!rawUrl || typeof rawUrl !== "string") return "";
+  const s = rawUrl.trim();
   if (!s) return "";
   if (s.startsWith("https://queue.fal.run/")) return s;
   if (s.startsWith("http://queue.fal.run/")) return s.replace("http://", "https://");
   if (s.startsWith("https://fal.run/")) return s.replace("https://fal.run/", "https://queue.fal.run/");
+  if (s.startsWith("http://fal.run/")) return s.replace("http://fal.run/", "https://queue.fal.run/");
   if (s.startsWith("/")) return `${FAL_QUEUE_BASE}${s}`;
   return "";
+}
+
+function buildQueueUrlFromRequestId(endpoint, requestId) {
+  const cleanEp = String(endpoint || "").trim().replace(/^\/+/, "");
+  const cleanId = String(requestId || "").trim().replace(/^\/+/, "");
+  if (!cleanEp || !cleanId) return "";
+  return `${FAL_QUEUE_BASE}/${cleanEp}/requests/${cleanId}/status`;
 }
 
 export async function onRequestOptions() {
@@ -319,16 +328,71 @@ export async function onRequestPost(context) {
     const action = ACTION_ALIASES[rawAction] || rawAction;
     const resolvedImageUrl = extractImageInput(body);
 
+    // Consulta de status de fila (poll)
     if (action === "poll") {
-      const statusUrl = normalizeFalQueueUrl(
-        body.statusUrl || body.status_url || body.pollUrl || body.poll_url || body.url
-      );
-      const responseUrl = normalizeFalQueueUrl(
-        body.responseUrl || body.response_url || body.resultUrl || body.result_url
-      );
+      // Se já veio resultado direto no corpo, devolve COMPLETED imediatamente
+      if (body.result && typeof body.result === "object") {
+        return jsonResponse({
+          status: "COMPLETED",
+          result: body.result,
+        });
+      }
+
+      const rawStatusCandidates = [
+        body.statusUrl,
+        body.status_url,
+        body.pollUrl,
+        body.poll_url,
+        body.url,
+        body.queued?.statusUrl,
+        body.queued?.status_url,
+      ];
+
+      let statusUrl = "";
+      for (const cand of rawStatusCandidates) {
+        const norm = normalizeFalQueueUrl(cand);
+        if (norm) {
+          statusUrl = norm;
+          break;
+        }
+      }
 
       if (!statusUrl) {
-        return jsonResponse({ error: "URL de consulta inválida." }, 400);
+        const reqId =
+          body.requestId ||
+          body.request_id ||
+          body.queued?.requestId ||
+          body.queued?.request_id ||
+          "";
+        const ep =
+          body.endpoint ||
+          body.model ||
+          body.queued?.endpoint ||
+          "fal-ai/birefnet";
+        statusUrl = buildQueueUrlFromRequestId(ep, reqId);
+      }
+
+      const rawResponseCandidates = [
+        body.responseUrl,
+        body.response_url,
+        body.resultUrl,
+        body.result_url,
+        body.queued?.responseUrl,
+        body.queued?.response_url,
+      ];
+      let responseUrl = "";
+      for (const cand of rawResponseCandidates) {
+        const norm = normalizeFalQueueUrl(cand);
+        if (norm) {
+          responseUrl = norm;
+          break;
+        }
+      }
+
+      if (!statusUrl) {
+        return jsonResponse({
+          error: "URL de consulta inválida (sem statusUrl ou requestId válido).",
+        }, 400);
       }
 
       const stResp = await fetch(statusUrl, {
@@ -336,6 +400,12 @@ export async function onRequestPost(context) {
         headers: { Authorization: `Key ${falKey}` },
       });
       const stJson = await stResp.json().catch(() => ({}));
+
+      if (!stResp.ok && stResp.status >= 400 && stResp.status < 500) {
+        return jsonResponse({
+          error: stJson?.error || stJson?.detail || "URL de consulta inválida na fila.",
+        }, 400);
+      }
 
       if (stJson?.status === "FAILED") {
         return jsonResponse({
@@ -365,7 +435,7 @@ export async function onRequestPost(context) {
 
     if (action === "remove_bg" && !resolvedImageUrl) {
       return jsonResponse({
-        error: "Envie a imagem do produto para remover o fundo (nenhuma imagem recebida pelo servidor).",
+        error: "Envie a imagem do produto para remover o fundo.",
       }, 400);
     }
 
@@ -497,8 +567,29 @@ export async function onRequestPost(context) {
       }, 502);
     }
 
+    // Normaliza campos da fila para que o frontend sempre encontre statusUrl e responseUrl
+    const upData = upstream.data || {};
+    const statusUrl =
+      normalizeFalQueueUrl(upData.status_url || upData.statusUrl) ||
+      buildQueueUrlFromRequestId(
+        action === "remove_bg"
+          ? "fal-ai/birefnet"
+          : action === "submit_scene"
+          ? resolvedSceneModel
+          : action === "submit_clip"
+          ? resolvedClipModel
+          : "",
+        upData.request_id || upData.requestId
+      );
+
+    const responseUrl =
+      normalizeFalQueueUrl(upData.response_url || upData.responseUrl) ||
+      (statusUrl ? statusUrl.replace(/\/status\/?$/, "") : "");
+
     return jsonResponse({
-      ...upstream.data,
+      ...upData,
+      statusUrl,
+      responseUrl,
       credits: debit.newBalance,
       charged: creditCost,
     });
