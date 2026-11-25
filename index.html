@@ -5034,7 +5034,7 @@
         uiClock = setInterval(renderPipelineUI, 1000);
 
         const imgSem = createSemaphore(4);
-        const vidSem = createSemaphore(4);
+        const vidSem = createSemaphore(2);
 
         const runSingleCut = async (i) => {
           if (runSignal.aborted) return;
