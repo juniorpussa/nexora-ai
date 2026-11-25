@@ -55,7 +55,6 @@ async function verifyStripeSignature(rawBody, signatureHeader, webhookSecret) {
 
   if (!timestamp || signatures.length === 0) return false;
 
-  // Tolera até 5 minutos de diferença de relógio
   const nowSeconds = Math.floor(Date.now() / 1000);
   if (Math.abs(nowSeconds - Number(timestamp)) > 300) {
     return false;
@@ -87,7 +86,10 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    const supaKey = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY;
+    const serviceKey = String(env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+    const anonKey = String(env.SUPABASE_ANON_KEY || "").trim();
+    const supaKey = serviceKey || anonKey;
+
     if (!env.SUPABASE_URL || !supaKey) {
       return jsonResponse({ error: "Supabase não configurado no servidor." }, 500);
     }
@@ -122,11 +124,12 @@ export async function onRequestPost(context) {
 
     const userId = String(session.metadata?.user_id || refUserIdFromRef || "").trim();
     const planId = String(session.metadata?.plan_id || refPlanIdFromRef || "").trim();
+    const customerEmail = String(session.customer_details?.email || session.customer_email || "").trim().toLowerCase();
     const plan = resolvePlanByCode(planId);
     const sessionId = String(session.id || "").trim();
 
-    if (!userId || !plan || !sessionId) {
-      return jsonResponse({ error: "Dados incompletos na sessão Stripe.", extRef }, 400);
+    if ((!userId && !customerEmail) || !plan || !sessionId) {
+      return jsonResponse({ error: "Dados incompletos na sessão Stripe.", extRef, customerEmail }, 400);
     }
 
     const referenceId = `stripe_${sessionId}`;
@@ -145,23 +148,47 @@ export async function onRequestPost(context) {
       }
     }
 
-    // Busca saldo atual em profiles
-    const profileGetUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=id,credits&limit=1`;
-    const profileGetRes = await fetch(profileGetUrl, {
-      method: "GET",
-      headers: supabaseHeaders(supaKey),
-    });
-
-    const profiles = profileGetRes.ok ? await profileGetRes.json().catch(() => []) : [];
-    if (!Array.isArray(profiles) || profiles.length === 0) {
-      return jsonResponse({ error: "Perfil não encontrado", userId }, 404);
+    // 1) Tenta buscar o perfil pelo ID
+    let profiles = [];
+    if (userId) {
+      const byIdUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=id,credits,email&limit=1`;
+      const byIdRes = await fetch(byIdUrl, {
+        method: "GET",
+        headers: supabaseHeaders(supaKey),
+      });
+      if (byIdRes.ok) {
+        profiles = await byIdRes.json().catch(() => []);
+      }
     }
 
-    const currentCredits = Number(profiles[0]?.credits ?? 0);
+    // 2) Se não achou pelo ID, tenta buscar pelo e-mail
+    if ((!Array.isArray(profiles) || profiles.length === 0) && customerEmail) {
+      const byEmailUrl = `${env.SUPABASE_URL}/rest/v1/profiles?email=ilike.${encodeURIComponent(customerEmail)}&select=id,credits,email&limit=1`;
+      const byEmailRes = await fetch(byEmailUrl, {
+        method: "GET",
+        headers: supabaseHeaders(supaKey),
+      });
+      if (byEmailRes.ok) {
+        profiles = await byEmailRes.json().catch(() => []);
+      }
+    }
+
+    if (!Array.isArray(profiles) || profiles.length === 0) {
+      return jsonResponse({
+        error: "Perfil não encontrado no Supabase (verifique se SUPABASE_SERVICE_ROLE_KEY na Cloudflare está com a chave service_role correta).",
+        hasServiceRoleKey: Boolean(serviceKey),
+        userId,
+        customerEmail,
+      }, 422);
+    }
+
+    const targetProfile = profiles[0];
+    const targetUserId = targetProfile.id;
+    const currentCredits = Number(targetProfile?.credits ?? 0);
     const newBalance = currentCredits + plan.credits;
 
     // Atualiza credits e plan_name em profiles
-    const patchRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`, {
+    const patchRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(targetUserId)}`, {
       method: "PATCH",
       headers: supabaseHeaders(supaKey, { Prefer: "return=representation" }),
       body: JSON.stringify({
@@ -180,7 +207,7 @@ export async function onRequestPost(context) {
       method: "POST",
       headers: supabaseHeaders(supaKey, { Prefer: "return=minimal" }),
       body: JSON.stringify({
-        user_id: userId,
+        user_id: targetUserId,
         amount: plan.credits,
         task: "stripe_purchase",
         description: `Compra Stripe (${plan.name} #${sessionId})`,
