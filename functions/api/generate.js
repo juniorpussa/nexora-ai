@@ -128,6 +128,31 @@ function extractImageInput(body) {
   return "";
 }
 
+function extractOutputImageUrl(obj) {
+  if (!obj || typeof obj !== "object") return "";
+  if (obj.image && typeof obj.image === "object" && typeof obj.image.url === "string") {
+    return obj.image.url.trim();
+  }
+  if (typeof obj.image === "string" && obj.image.trim()) {
+    return obj.image.trim();
+  }
+  if (Array.isArray(obj.images) && obj.images.length > 0) {
+    const first = obj.images[0];
+    if (typeof first === "string" && first.trim()) return first.trim();
+    if (first && typeof first.url === "string" && first.url.trim()) return first.url.trim();
+  }
+  if (typeof obj.imageUrl === "string" && obj.imageUrl.trim()) return obj.imageUrl.trim();
+  if (typeof obj.image_url === "string" && obj.image_url.trim()) return obj.image_url.trim();
+  if (typeof obj.url === "string" && obj.url.trim()) return obj.url.trim();
+  if (obj.result && typeof obj.result === "object") {
+    return extractOutputImageUrl(obj.result);
+  }
+  if (obj.data && typeof obj.data === "object") {
+    return extractOutputImageUrl(obj.data);
+  }
+  return "";
+}
+
 function normalizeFalQueueUrl(rawUrl) {
   if (!rawUrl || typeof rawUrl !== "string") return "";
   const s = rawUrl.trim();
@@ -330,9 +355,13 @@ export async function onRequestPost(context) {
 
     if (action === "poll") {
       if (body.result && typeof body.result === "object") {
+        const imgUrl = extractOutputImageUrl(body.result);
         return jsonResponse({
           status: "COMPLETED",
           result: body.result,
+          imageUrl: imgUrl,
+          image_url: imgUrl,
+          url: imgUrl,
         });
       }
 
@@ -419,9 +448,13 @@ export async function onRequestPost(context) {
           headers: { Authorization: `Key ${falKey}` },
         });
         const resJson = await resResp.json().catch(() => ({}));
+        const imgUrl = extractOutputImageUrl(resJson);
         return jsonResponse({
           status: "COMPLETED",
           result: resJson,
+          imageUrl: imgUrl,
+          image_url: imgUrl,
+          url: imgUrl,
         });
       }
 
@@ -581,10 +614,13 @@ export async function onRequestPost(context) {
       normalizeFalQueueUrl(upData.response_url || upData.responseUrl) ||
       (statusUrl ? statusUrl.replace(/\/status\/?$/, "") : "");
 
+    const directImgUrl = extractOutputImageUrl(upData);
+
     return jsonResponse({
       ...upData,
       statusUrl,
       responseUrl,
+      ...(directImgUrl ? { imageUrl: directImgUrl, image_url: directImgUrl, url: directImgUrl } : {}),
       credits: debit.newBalance,
       charged: creditCost,
     });
