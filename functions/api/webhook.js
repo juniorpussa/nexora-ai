@@ -21,12 +21,18 @@ function jsonResponse(payload, status = 200) {
 }
 
 function supabaseHeaders(key, extra = {}) {
-  return {
+  const cleanKey = String(key || "").trim();
+  const headers = {
     "Content-Type": "application/json",
-    apikey: key,
-    Authorization: `Bearer ${key}`,
+    apikey: cleanKey,
     ...extra,
   };
+  // Chaves antigas JWT começam com "eyJ" e usam Authorization Bearer.
+  // Chaves novas "sb_secret_..." / "sb_publishable_..." usam APENAS "apikey".
+  if (cleanKey.startsWith("eyJ")) {
+    headers.Authorization = `Bearer ${cleanKey}`;
+  }
+  return headers;
 }
 
 function timingSafeEqualHex(a, b) {
@@ -148,35 +154,81 @@ export async function onRequestPost(context) {
       }
     }
 
-    // 1) Tenta buscar o perfil pelo ID
+    // 1) Busca o perfil pelo ID
     let profiles = [];
+    let lastDbError = "";
+
     if (userId) {
-      const byIdUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=id,credits,email&limit=1`;
+      const byIdUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=*&limit=1`;
       const byIdRes = await fetch(byIdUrl, {
         method: "GET",
         headers: supabaseHeaders(supaKey),
       });
       if (byIdRes.ok) {
         profiles = await byIdRes.json().catch(() => []);
+      } else {
+        lastDbError = await byIdRes.text();
       }
     }
 
     // 2) Se não achou pelo ID, tenta buscar pelo e-mail
     if ((!Array.isArray(profiles) || profiles.length === 0) && customerEmail) {
-      const byEmailUrl = `${env.SUPABASE_URL}/rest/v1/profiles?email=ilike.${encodeURIComponent(customerEmail)}&select=id,credits,email&limit=1`;
+      const byEmailUrl = `${env.SUPABASE_URL}/rest/v1/profiles?email=ilike.${encodeURIComponent(customerEmail)}&select=*&limit=1`;
       const byEmailRes = await fetch(byEmailUrl, {
         method: "GET",
         headers: supabaseHeaders(supaKey),
       });
       if (byEmailRes.ok) {
         profiles = await byEmailRes.json().catch(() => []);
+      } else if (!lastDbError) {
+        lastDbError = await byEmailRes.text();
+      }
+    }
+
+    // 3) Se o usuário ainda não tem linha em profiles mas temos o userId, cria automaticamente!
+    if ((!Array.isArray(profiles) || profiles.length === 0) && userId && !lastDbError) {
+      const insertRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles`, {
+        method: "POST",
+        headers: supabaseHeaders(supaKey, { Prefer: "return=representation" }),
+        body: JSON.stringify({
+          id: userId,
+          email: customerEmail || null,
+          credits: plan.credits,
+          plan_name: plan.name,
+        }),
+      });
+
+      if (insertRes.ok) {
+        await fetch(`${env.SUPABASE_URL}/rest/v1/credit_ledger`, {
+          method: "POST",
+          headers: supabaseHeaders(supaKey, { Prefer: "return=minimal" }),
+          body: JSON.stringify({
+            user_id: userId,
+            amount: plan.credits,
+            task: "stripe_purchase",
+            description: `Compra Stripe (${plan.name} #${sessionId})`,
+            reference_id: referenceId,
+          }),
+        }).catch(() => {});
+
+        return jsonResponse({
+          ok: true,
+          sessionId,
+          credited: true,
+          createdProfile: true,
+          plan: plan.name,
+          newBalance: plan.credits,
+        }, 200);
+      } else {
+        lastDbError = await insertRes.text();
       }
     }
 
     if (!Array.isArray(profiles) || profiles.length === 0) {
       return jsonResponse({
-        error: "Perfil não encontrado no Supabase (verifique se SUPABASE_SERVICE_ROLE_KEY na Cloudflare está com a chave service_role correta).",
-        hasServiceRoleKey: Boolean(serviceKey),
+        error: "Falha ao localizar/criar perfil no Supabase",
+        dbError: lastDbError,
+        keyPrefix: supaKey.slice(0, 12),
         userId,
         customerEmail,
       }, 422);
