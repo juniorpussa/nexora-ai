@@ -3069,7 +3069,7 @@
 
     async function pollFalJob(queued, onStateUpdate, outerSignal) {
   let errs = 0;
-  const maxPolls = 28;
+  const maxPolls = 90;
   for (let i = 0; i < maxPolls; i++) {
     if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
     try {
