@@ -5033,7 +5033,7 @@
         renderPipelineUI();
         uiClock = setInterval(renderPipelineUI, 1000);
 
-        const imgSem = createSemaphore(4);
+       const imgSem = createSemaphore(4);
         const vidSem = createSemaphore(2);
 
         const runSingleCut = async (i) => {
@@ -5058,40 +5058,31 @@
                     task: "submit_scene",
                     imageBase64: uploadedBase64,
                     mimeType: uploadedMime,
-                    imagePrompt: promptsToTry[pIdx].prompt
-                  }, 28000, runSignal);
-                  pipeStates[i].status = `${promptsToTry[pIdx].label}: GPU...`;
-                  const rImg = await pollFalJob(qImg, (st) => { pipeStates[i].status = `${promptsToTry[pIdx].label}: ${st}`; }, runSignal);
-                  if (rImg && rImg.imageUrl) {
-                    kfUrl = rImg.imageUrl;
+                    imagePrompt: promptsToTry[pIdx].prompt,
+                    prompt: promptsToTry[pIdx].prompt
+                  }, 25000, runSignal);
+                  const resolvedImg = qImg?.imageUrl || qImg?.image_url || qImg?.url || qImg;
+                  if (resolvedImg) {
+                    kfUrl = resolvedImg;
+                    keyframeUrls[i] = kfUrl;
+                    pipeStates[i].status = "cena 4K pronta";
+                    renderPipelineUI();
                     imgErr = null;
                     break;
                   }
-                } catch (eTry) {
-                  if (eTry.message === "ABORTED_RUN" || eTry.status === 403) throw eTry;
-                  imgErr = eTry;
-                  if (pIdx === 0) await sleep(600);
+                } catch (e) {
+                  imgErr = e;
                 }
               }
               if (!kfUrl && imgErr) throw imgErr;
-              keyframeUrls[i] = kfUrl;
-              if (!wantsGpu) {
-                pipeStates[i].done = true;
-                renderPipelineUI();
-                return;
-              }
-              pipeStates[i].status = "3D GPU: fila local...";
-              renderPipelineUI();
             } finally {
               imgSem.release();
             }
-          } catch (err) {
-            if (err.message === "ABORTED_RUN") return;
-            lastClipErrorMsg = err.message || "erro na imagem base";
-            pipeStates[i].status = `erro foto: ${lastClipErrorMsg.slice(0, 32)}`;
-            if (err.status === 403) { fatalErrorMsg = err.message; activeRunController?.abort(); }
+          } catch (imgCatchErr) {
+            if (imgCatchErr.message === "ABORTED_RUN") return;
+            lastClipErrorMsg = imgCatchErr.message || "Falha na cena 4K";
+            pipeStates[i].status = "resgate 4K óptico";
             renderPipelineUI();
-            return;
           }
 
           if (!kfUrl || !wantsGpu || runSignal.aborted) return;
@@ -5101,7 +5092,6 @@
             try {
               pipeStates[i].status = "3D GPU: enviando...";
               renderPipelineUI();
-
               let qVid = null;
               for (let att = 1; att <= 3; att++) {
                 try {
@@ -5114,20 +5104,16 @@
                     motionPrompt: buildActMotionPrompt(selectedVidModel, act, dna),
                     negativePrompt: buildNegative(act.isHuman, isBox, isBrightOrDaytimeModel(selectedVidModel), NEON_CYAN_MODEL_IDS.has(selectedVidModel.id), hasModelSmoke(selectedVidModel))
                   }, 26000, runSignal);
-                  if (qVid.engine) engineUsed = qVid.engine;
+                  if (qVid?.engine) engineUsed = qVid.engine;
                   break;
-                } catch (err) {
-                  if (err.message === "ABORTED_RUN") return;
-                  lastClipErrorMsg = err.message || "Erro no motor 3D";
-                  if (err.status === 403) { fatalErrorMsg = err.message; pipeStates[i].status = "saldo esgotado (403)"; activeRunController?.abort(); return; }
-                  if (err.status === 400 || err.status === 422) { pipeStates[i].status = `erro ${err.status} (resgate 4K)`; renderPipelineUI(); return; }
-                  if (att === 3) { pipeStates[i].status = `fallback 4K óptico`; renderPipelineUI(); return; }
+                } catch (subErr) {
+                  if (subErr.message === "ABORTED_RUN") return;
+                  if (att === 3) throw subErr;
                   pipeStates[i].status = `aguardando vaga (${att}/3)...`;
                   renderPipelineUI();
                   await sleep(2200 * att);
                 }
               }
-
               if (!qVid || runSignal.aborted) return;
               pipeStates[i].status = "3D GPU";
               const rVid = await pollFalJob(qVid, (st) => { pipeStates[i].status = `3D: ${st}`; }, runSignal);
@@ -5140,7 +5126,7 @@
           } catch (pollErr) {
             if (pollErr.message === "ABORTED_RUN") return;
             lastClipErrorMsg = pollErr.message || "Falha na GPU";
-            pipeStates[i].status = `resgate 4K óptico`;
+            pipeStates[i].status = "resgate 4K óptico";
             renderPipelineUI();
           }
         };
@@ -5159,7 +5145,7 @@
         }
 
         const readyGpuTotal = assembledPlan.filter((x) => x.type === "video").length;
-        if (!assembledPlan.length || (readyGpuTotal === 0 && lastClipErrorMsg)) {
+        if (!assembledPlan.length) {
           throw new Error(lastClipErrorMsg ? `Falha na geração fal.ai: ${lastClipErrorMsg}` : "Nenhum corte finalizou dentro do limite de tempo.");
         }
         if (deadlineReached) {
