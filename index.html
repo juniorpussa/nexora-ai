@@ -5013,7 +5013,7 @@
 
           const kfDoneCount = keyframeUrls.filter(Boolean).length;
           const gpuDoneCount = readyClipUrls.filter(Boolean).length;
-          const pct = 8 + Math.round((kfDoneCount / totalUnique) * 28 + (gpuDoneCount / Math.max(1, gpuPriorityList.length)) * 52);
+          const pct = 8 + Math.round((kfDoneCount / Math.max(1, totalUnique)) * 28 + (gpuDoneCount / Math.max(1, gpuPriorityList.length)) * 52);
           if (barEl) barEl.style.width = `${Math.min(88, pct)}%`;
 
           if (linksEl) {
@@ -5037,7 +5037,7 @@
         const vidSem = createSemaphore(2);
 
         const runSingleCut = async (i) => {
-          if (runSignal.aborted) return;
+          if (runSignal.aborted || deadlineReached) return;
           const act = actPlan[i];
           const wantsGpu = gpuSet.has(i);
 
@@ -5051,6 +5051,7 @@
               ];
               let imgErr = null;
               for (let pIdx = 0; pIdx < promptsToTry.length; pIdx++) {
+                if (runSignal.aborted || deadlineReached) return;
                 try {
                   pipeStates[i].status = `${promptsToTry[pIdx].label}: enviando...`;
                   renderPipelineUI();
@@ -5094,16 +5095,18 @@
             return;
           }
 
-          if (!kfUrl || !wantsGpu || runSignal.aborted) return;
+          if (!kfUrl || !wantsGpu || runSignal.aborted || deadlineReached) return;
 
           try {
             await vidSem.acquire(runSignal);
             try {
+              if (runSignal.aborted || deadlineReached) return;
               pipeStates[i].status = "3D GPU: enviando...";
               renderPipelineUI();
 
               let qVid = null;
               for (let att = 1; att <= 3; att++) {
+                if (runSignal.aborted || deadlineReached) return;
                 try {
                   qVid = await callApi({
                     task: "submit_clip",
@@ -5128,11 +5131,15 @@
                 }
               }
 
-              if (!qVid || runSignal.aborted) return;
+              if (!qVid || runSignal.aborted || deadlineReached) return;
               pipeStates[i].status = "3D GPU";
               const rVid = await pollFalJob(qVid, (st) => { pipeStates[i].status = `3D: ${st}`; }, runSignal);
-              readyClipUrls[i] = rVid.videoUrl;
-              pipeStates[i].done = true;
+              if (rVid && rVid.videoUrl) {
+                readyClipUrls[i] = rVid.videoUrl;
+                pipeStates[i].done = true;
+              } else {
+                pipeStates[i].status = "resgate 4K óptico";
+              }
               renderPipelineUI();
             } finally {
               vidSem.release();
@@ -5159,10 +5166,16 @@
         }
 
         const readyGpuTotal = assembledPlan.filter((x) => x.type === "video").length;
-        if (!assembledPlan.length || (readyGpuTotal === 0 && lastClipErrorMsg)) {
-          throw new Error(lastClipErrorMsg ? `Falha na geração fal.ai: ${lastClipErrorMsg}` : "Nenhum corte finalizou dentro do limite de tempo.");
+        if (!assembledPlan.length) {
+          throw new Error(
+            lastClipErrorMsg
+              ? `Falha na geração fal.ai: ${lastClipErrorMsg}`
+              : "Nenhum corte finalizou dentro do limite de tempo. Tente novamente ou reduza a quantidade de cortes 3D."
+          );
         }
-        if (deadlineReached) {
+        if (readyGpuTotal === 0 && lastClipErrorMsg) {
+          noteMsg = `⚠️ Clipes 3D indisponíveis no momento (${lastClipErrorMsg}). Montagem concluída com ${assembledPlan.length} cortes 4K prontos.`;
+        } else if (deadlineReached) {
           noteMsg = `⚡ Limite de tempo (${fmtClock(limitSec)}) atingido: ${readyGpuTotal} cortes 3D + ${assembledPlan.length - readyGpuTotal} cortes 4K.`;
         }
 
@@ -5233,6 +5246,7 @@
         if (audioCtx) { try { await audioCtx.close(); } catch {} }
         setAllButtonsDisabled(false);
       }
+    });
     });
 
     // === CLONE VOICE LISTENERS (ADAM & NATASHA) ===
