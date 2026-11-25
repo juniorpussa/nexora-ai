@@ -32,7 +32,6 @@ const ALLOWED_SCENE_MODELS = new Set([
 ]);
 
 // Lista fechada de modelos de vídeo autorizados e seu custo base (5s) em créditos
-// Modo Híbrido: Econômico (6 cr/5s) e Cinema Pro (12 cr/5s) — 10s dobra automaticamente
 const CLIP_MODEL_TIERS = {
   // Faixa Cinema Pro (12 créditos / 5s)
   "fal-ai/kling-video/v2.6/pro/image-to-video": 12,
@@ -51,7 +50,7 @@ const CLIP_MODEL_TIERS = {
 const DEFAULT_SCENE_MODEL = "fal-ai/flux-pro/v1.1";
 const DEFAULT_CLIP_MODEL = "fal-ai/kling-video/v2.6/pro/image-to-video";
 
-// Custos de créditos por operação no servidor (blindado contra prejuízo)
+// Custos de créditos por operação no servidor
 const ACTION_CREDIT_COSTS = {
   submit_scene: 2,
   submit_clip: 12,
@@ -96,6 +95,45 @@ const ACTION_ALIASES = {
   clone_voice: "clone_voice",
   poll: "poll",
 };
+
+function extractImageInput(body) {
+  if (!body || typeof body !== "object") return "";
+  const candidates = [
+    body.image_url,
+    body.imageUrl,
+    body.image,
+    body.file,
+    body.imageBase64,
+    body.image_base64,
+    body.dataUrl,
+    body.data_url,
+  ];
+  for (const item of candidates) {
+    if (!item) continue;
+    if (typeof item === "string") {
+      const trimmed = item.trim();
+      if (!trimmed) continue;
+      if (
+        trimmed.startsWith("http://") ||
+        trimmed.startsWith("https://") ||
+        trimmed.startsWith("data:image/")
+      ) {
+        return trimmed;
+      }
+      // Se for base64 puro sem prefixo data:image
+      if (/^[A-Za-z0-9+/=]{100,}$/.test(trimmed.replace(/\s+/g, ""))) {
+        return `data:image/png;base64,${trimmed.replace(/\s+/g, "")}`;
+      }
+    } else if (typeof item === "object") {
+      const nested =
+        item.url || item.image_url || item.imageUrl || item.dataUrl || item.base64 || "";
+      if (typeof nested === "string" && nested.trim()) {
+        return extractImageInput({ image_url: nested.trim() });
+      }
+    }
+  }
+  return "";
+}
 
 export async function onRequestOptions() {
   return new Response(null, {
@@ -250,6 +288,7 @@ export async function onRequestPost(context) {
     const body = await request.json();
     const rawAction = String(body.action || body.mode || body.task || "").trim().toLowerCase();
     const action = ACTION_ALIASES[rawAction] || rawAction;
+    const resolvedImageUrl = extractImageInput(body);
 
     // Consulta de status de fila (poll) não consome créditos extras
     if (action === "poll") {
@@ -291,6 +330,25 @@ export async function onRequestPost(context) {
       });
     }
 
+    // Validações prévias antes de descontar créditos
+    if (action === "remove_bg" && !resolvedImageUrl) {
+      return jsonResponse({
+        error: "Envie a imagem do produto para remover o fundo (nenhuma imagem recebida pelo servidor).",
+      }, 400);
+    }
+
+    if (action === "submit_tts") {
+      const rawText = String(body.text || "");
+      if (!rawText.trim()) {
+        return jsonResponse({ error: "Digite o texto da narração antes de gerar." }, 400);
+      }
+      if (rawText.length > 600) {
+        return jsonResponse({
+          error: `O texto excede o limite de 600 caracteres (${rawText.length}/600). Reduza o roteiro para gerar a voz.`,
+        }, 400);
+      }
+    }
+
     // Validação do modelo e duração proporcional (5s vs 10s)
     const resolvedSceneModel = resolveAllowedSceneModel(body.model);
     const resolvedClipModel = resolveAllowedClipModel(body.model);
@@ -305,19 +363,6 @@ export async function onRequestPost(context) {
       creditCost = clipDuration === "10" ? baseClipCost * 2 : baseClipCost;
       const tierLabel = baseClipCost <= 6 ? "Econômico" : "Cinema Pro";
       actionDesc = `${ACTION_DESCRIPTIONS.submit_clip} (${tierLabel} ${clipDuration}s)`;
-    }
-
-    // Trava de segurança de 600 caracteres para TTS
-    if (action === "submit_tts") {
-      const rawText = String(body.text || "");
-      if (!rawText.trim()) {
-        return jsonResponse({ error: "Digite o texto da narração antes de gerar." }, 400);
-      }
-      if (rawText.length > 600) {
-        return jsonResponse({
-          error: `O texto excede o limite de 600 caracteres (${rawText.length}/600). Reduza o roteiro para gerar a voz.`,
-        }, 400);
-      }
     }
 
     // Desconta créditos atomicamente ANTES de enviar para o fal.ai
@@ -338,13 +383,13 @@ export async function onRequestPost(context) {
         image_size: "portrait_16_9",
         num_images: 1,
         enable_safety_checker: false,
-        ...(body.image_url ? { image_url: body.image_url } : {}),
+        ...(resolvedImageUrl ? { image_url: resolvedImageUrl } : {}),
       };
       upstream = await falFetch(resolvedSceneModel, falKey, "POST", inputPayload);
     } else if (action === "submit_clip") {
       const inputPayload = {
         prompt: String(body.prompt || "").trim(),
-        image_url: String(body.image_url || "").trim(),
+        image_url: resolvedImageUrl,
         duration: clipDuration,
         aspect_ratio: "9:16",
         cfg_scale: 0.5,
@@ -401,13 +446,8 @@ export async function onRequestPost(context) {
         version: "3",
       });
     } else if (action === "remove_bg") {
-      const imageUrl = String(body.image_url || "").trim();
-      if (!imageUrl) {
-        await refundUserCredits(env, user.id, creditCost, action, "Imagem ausente para remover fundo");
-        return jsonResponse({ error: "Envie a imagem do produto para remover o fundo." }, 400);
-      }
       upstream = await falFetch("fal-ai/birefnet", falKey, "POST", {
-        image_url: imageUrl,
+        image_url: resolvedImageUrl,
         model: "General Use (Light)",
         operating_resolution: "1024x1024",
         output_format: "png",
