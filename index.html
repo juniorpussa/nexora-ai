@@ -3096,7 +3096,7 @@
       if (errs >= 6) throw new Error(`Instabilidade na fila fal.ai: ${err.message}`);
     }
     if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
-    await sleep(1500);
+    await sleep(2000);
   }
   throw new Error("Fila da IA demorou além do limite rápido");
 }
