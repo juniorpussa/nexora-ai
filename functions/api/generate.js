@@ -476,15 +476,25 @@ export async function onRequestPost(context) {
       const stJson = await stResp.json().catch(() => ({}));
 
       if (!stResp.ok && stResp.status >= 400 && stResp.status < 500) {
+        const refundAmt = Number(body.charged ?? body.creditCost ?? 0);
+        if (refundAmt > 0) {
+          await refundUserCredits(env, user.id, refundAmt, "poll_error", stJson?.error || stJson?.detail || "Falha ao consultar fila");
+        }
         return jsonResponse({
           error: stJson?.error || stJson?.detail || "Falha ao consultar fila na IA.",
+          refunded: refundAmt > 0,
         }, 400);
       }
 
       if (stJson?.status === "FAILED") {
+        const refundAmt = Number(body.charged ?? body.creditCost ?? 0);
+        if (refundAmt > 0) {
+          await refundUserCredits(env, user.id, refundAmt, "job_failed", stJson?.error || "Falha no processamento da mídia");
+        }
         return jsonResponse({
           status: "FAILED",
           error: stJson?.error || "Falha no processamento da mídia.",
+          refunded: refundAmt > 0,
         });
       }
 
@@ -511,7 +521,7 @@ export async function onRequestPost(context) {
 
       return jsonResponse({
         status: stJson?.status || "IN_QUEUE",
-        queue_position: stJson?.queue_position,
+        queue_position: stJson?.queue_position ?? 0,
       });
     }
 
