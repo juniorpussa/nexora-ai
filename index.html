@@ -5144,7 +5144,47 @@
           else if (keyframeUrls[i]) assembledPlan.push({ type: "image", url: keyframeUrls[i], act: actPlan[i] });
         }
 
+        const isValidMediaUrl = (u) => typeof u === "string" && /^(https?:\/\/|data:|blob:)/i.test(u.trim());
+        const cleanedPlan = assembledPlan.filter((item) => item && isValidMediaUrl(item.url));
+        assembledPlan.length = 0;
+        assembledPlan.push(...cleanedPlan);
+
         const readyGpuTotal = assembledPlan.filter((x) => x.type === "video").length;
+        if (!assembledPlan.length) {
+          throw new Error(lastClipErrorMsg ? `Falha na geração fal.ai: ${lastClipErrorMsg}` : "Nenhum corte finalizou dentro do limite de tempo.");
+        }
+        if (deadlineReached) {
+          noteMsg = `⚡ Limite de tempo (${fmtClock(limitSec)}) atingido: ${readyGpuTotal} cortes 3D + ${assembledPlan.length - readyGpuTotal} cortes 4K.`;
+        }
+
+        stage.innerHTML = `
+          <div class="status-msg">
+            <strong>Finalizando Superprodução Blockbuster (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
+            Montando ${assembledPlan.length} cortes + Speed-Ramp + Mirror Punch-In + áudio...
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:10%"></div></div>
+        `;
+
+        const rawMediaItems = await Promise.all(assembledPlan.map(async (item) => {
+          try {
+            const blob = await fetchMediaBlob(item.url);
+            return blob ? { ...item, blob } : null;
+          } catch {
+            return null;
+          }
+        }));
+        const mediaItems = rawMediaItems.filter(Boolean);
+        if (!mediaItems.length) {
+          throw new Error("Erro ao decodificar imagem 4K.");
+        }
+        const cleanedPlan = assembledPlan.filter((item) => item && isValidMediaUrl(item.url));
+        assembledPlan.length = 0;
+        assembledPlan.push(...cleanedPlan);
+
+        const readyGpuTotal = assembledPlan.filter((x) => x.type === "video").length;
+        if (!assembledPlan.length) {
+          throw new Error(lastClipErrorMsg ? `Falha na geração fal.ai: ${lastClipErrorMsg}` : "Nenhum corte finalizou dentro do limite de tempo.");
+        }
         if (!assembledPlan.length) {
           throw new Error(lastClipErrorMsg ? `Falha na geração fal.ai: ${lastClipErrorMsg}` : "Nenhum corte finalizou dentro do limite de tempo.");
         }
