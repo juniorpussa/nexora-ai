@@ -328,9 +328,7 @@ export async function onRequestPost(context) {
     const action = ACTION_ALIASES[rawAction] || rawAction;
     const resolvedImageUrl = extractImageInput(body);
 
-    // Consulta de status de fila (poll)
     if (action === "poll") {
-      // Se já veio resultado direto no corpo, devolve COMPLETED imediatamente
       if (body.result && typeof body.result === "object") {
         return jsonResponse({
           status: "COMPLETED",
@@ -391,7 +389,7 @@ export async function onRequestPost(context) {
 
       if (!statusUrl) {
         return jsonResponse({
-          error: "URL de consulta inválida (sem statusUrl ou requestId válido).",
+          error: "URL de consulta inválida.",
         }, 400);
       }
 
@@ -403,7 +401,7 @@ export async function onRequestPost(context) {
 
       if (!stResp.ok && stResp.status >= 400 && stResp.status < 500) {
         return jsonResponse({
-          error: stJson?.error || stJson?.detail || "URL de consulta inválida na fila.",
+          error: stJson?.error || stJson?.detail || "Falha ao consultar fila na IA.",
         }, 400);
       }
 
@@ -548,8 +546,6 @@ export async function onRequestPost(context) {
     } else if (action === "remove_bg") {
       upstream = await falFetch("fal-ai/birefnet", falKey, "POST", {
         image_url: resolvedImageUrl,
-        model: "General Use (Light)",
-        operating_resolution: "1024x1024",
         output_format: "png",
       });
     } else {
@@ -567,7 +563,6 @@ export async function onRequestPost(context) {
       }, 502);
     }
 
-    // Normaliza campos da fila para que o frontend sempre encontre statusUrl e responseUrl
     const upData = upstream.data || {};
     const statusUrl =
       normalizeFalQueueUrl(upData.status_url || upData.statusUrl) ||
