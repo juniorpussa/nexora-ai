@@ -215,7 +215,7 @@ async function deductUserCredits(env, userId, amount, task, description) {
 
   const data = await res.json();
   const row = Array.isArray(data) ? data[0] : data;
-  const rawBalance = row?.new_balance ?? row?.remaining_credits ?? 0;
+  const rawBalance = row?.new_balance ?? row?.remaining_credits ?? row?.credits ?? 0;
   return {
     ok: Boolean(row?.ok),
     newBalance: Number(rawBalance),
@@ -225,7 +225,7 @@ async function deductUserCredits(env, userId, amount, task, description) {
 async function refundUserCredits(env, userId, amount, task, reason) {
   if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY || !userId || amount <= 0) return;
   try {
-    await fetch(`${env.SUPABASE_URL}/rest/v1/rpc/add_credits`, {
+    const rpcRes = await fetch(`${env.SUPABASE_URL}/rest/v1/rpc/add_credits`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -240,6 +240,34 @@ async function refundUserCredits(env, userId, amount, task, reason) {
         p_reference_id: `ref_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
       }),
     });
+
+    if (!rpcRes.ok) {
+      const getRes = await fetch(
+        `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=credits`,
+        {
+          headers: {
+            apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+            Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+          },
+        }
+      );
+      if (getRes.ok) {
+        const rows = await getRes.json();
+        const cur = Number(rows?.[0]?.credits ?? 0);
+        await fetch(
+          `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+              Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+            },
+            body: JSON.stringify({ credits: cur + amount }),
+          }
+        );
+      }
+    }
   } catch (_) {}
 }
 
@@ -300,11 +328,7 @@ export async function onRequestPost(context) {
       );
 
       if (!statusUrl) {
-        return jsonResponse({
-          status: "IN_QUEUE",
-          queue_position: 0,
-          note: "Aguardando URL de fila da fal.ai",
-        });
+        return jsonResponse({ error: "URL de consulta inválida." }, 400);
       }
 
       const stResp = await fetch(statusUrl, {
