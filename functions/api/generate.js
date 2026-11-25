@@ -94,6 +94,8 @@ const ACTION_ALIASES = {
   music: "submit_music",
   clone_voice: "clone_voice",
   poll: "poll",
+  status: "poll",
+  check_status: "poll",
 };
 
 function extractImageInput(body) {
@@ -120,7 +122,6 @@ function extractImageInput(body) {
       ) {
         return trimmed;
       }
-      // Se for base64 puro sem prefixo data:image
       if (/^[A-Za-z0-9+/=]{100,}$/.test(trimmed.replace(/\s+/g, ""))) {
         return `data:image/png;base64,${trimmed.replace(/\s+/g, "")}`;
       }
@@ -132,6 +133,15 @@ function extractImageInput(body) {
       }
     }
   }
+  return "";
+}
+
+function normalizeFalQueueUrl(rawUrl) {
+  const s = String(rawUrl || "").trim();
+  if (!s) return "";
+  if (s.startsWith("https://queue.fal.run/")) return s;
+  if (s.startsWith("http://queue.fal.run/")) return s.replace("http://", "https://");
+  if (s.startsWith("/")) return `${FAL_QUEUE_BASE}${s}`;
   return "";
 }
 
@@ -292,9 +302,14 @@ export async function onRequestPost(context) {
 
     // Consulta de status de fila (poll) não consome créditos extras
     if (action === "poll") {
-      const statusUrl = String(body.statusUrl || "").trim();
-      const responseUrl = String(body.responseUrl || "").trim();
-      if (!statusUrl || !statusUrl.startsWith("https://queue.fal.run/")) {
+      const statusUrl = normalizeFalQueueUrl(
+        body.statusUrl || body.status_url || body.pollUrl || body.poll_url || body.url
+      );
+      const responseUrl = normalizeFalQueueUrl(
+        body.responseUrl || body.response_url || body.resultUrl || body.result_url
+      );
+
+      if (!statusUrl) {
         return jsonResponse({ error: "URL de consulta inválida." }, 400);
       }
 
