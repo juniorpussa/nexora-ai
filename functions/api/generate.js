@@ -128,29 +128,60 @@ function extractImageInput(body) {
   return "";
 }
 
-function extractOutputImageUrl(obj) {
-  if (!obj || typeof obj !== "object") return "";
+function extractMediaUrls(obj) {
+  const empty = { imageUrl: "", videoUrl: "", audioUrl: "", url: "" };
+  if (!obj || typeof obj !== "object") return empty;
+
+  let imageUrl = "";
+  let videoUrl = "";
+  let audioUrl = "";
+
   if (obj.image && typeof obj.image === "object" && typeof obj.image.url === "string") {
-    return obj.image.url.trim();
-  }
-  if (typeof obj.image === "string" && obj.image.trim()) {
-    return obj.image.trim();
-  }
-  if (Array.isArray(obj.images) && obj.images.length > 0) {
+    imageUrl = obj.image.url.trim();
+  } else if (typeof obj.image === "string" && obj.image.trim()) {
+    imageUrl = obj.image.trim();
+  } else if (Array.isArray(obj.images) && obj.images.length > 0) {
     const first = obj.images[0];
-    if (typeof first === "string" && first.trim()) return first.trim();
-    if (first && typeof first.url === "string" && first.url.trim()) return first.url.trim();
+    if (typeof first === "string" && first.trim()) imageUrl = first.trim();
+    else if (first && typeof first.url === "string" && first.url.trim()) imageUrl = first.url.trim();
   }
-  if (typeof obj.imageUrl === "string" && obj.imageUrl.trim()) return obj.imageUrl.trim();
-  if (typeof obj.image_url === "string" && obj.image_url.trim()) return obj.image_url.trim();
-  if (typeof obj.url === "string" && obj.url.trim()) return obj.url.trim();
-  if (obj.result && typeof obj.result === "object") {
-    return extractOutputImageUrl(obj.result);
+  if (!imageUrl && typeof obj.imageUrl === "string" && obj.imageUrl.trim()) imageUrl = obj.imageUrl.trim();
+  if (!imageUrl && typeof obj.image_url === "string" && obj.image_url.trim()) imageUrl = obj.image_url.trim();
+
+  if (obj.video && typeof obj.video === "object" && typeof obj.video.url === "string") {
+    videoUrl = obj.video.url.trim();
+  } else if (typeof obj.video === "string" && obj.video.trim()) {
+    videoUrl = obj.video.trim();
+  } else if (Array.isArray(obj.videos) && obj.videos.length > 0) {
+    const firstV = obj.videos[0];
+    if (typeof firstV === "string" && firstV.trim()) videoUrl = firstV.trim();
+    else if (firstV && typeof firstV.url === "string" && firstV.url.trim()) videoUrl = firstV.url.trim();
   }
-  if (obj.data && typeof obj.data === "object") {
-    return extractOutputImageUrl(obj.data);
+  if (!videoUrl && typeof obj.videoUrl === "string" && obj.videoUrl.trim()) videoUrl = obj.videoUrl.trim();
+  if (!videoUrl && typeof obj.video_url === "string" && obj.video_url.trim()) videoUrl = obj.video_url.trim();
+
+  if (obj.audio_file && typeof obj.audio_file === "object" && typeof obj.audio_file.url === "string") {
+    audioUrl = obj.audio_file.url.trim();
+  } else if (obj.audio && typeof obj.audio === "object" && typeof obj.audio.url === "string") {
+    audioUrl = obj.audio.url.trim();
+  } else if (typeof obj.audio === "string" && obj.audio.trim()) {
+    audioUrl = obj.audio.trim();
   }
-  return "";
+  if (!audioUrl && typeof obj.audioUrl === "string" && obj.audioUrl.trim()) audioUrl = obj.audioUrl.trim();
+  if (!audioUrl && typeof obj.audio_url === "string" && obj.audio_url.trim()) audioUrl = obj.audio_url.trim();
+
+  if (!imageUrl && !videoUrl && !audioUrl) {
+    if (obj.result && typeof obj.result === "object") return extractMediaUrls(obj.result);
+    if (obj.data && typeof obj.data === "object") return extractMediaUrls(obj.data);
+  }
+
+  const fallbackUrl =
+    videoUrl ||
+    imageUrl ||
+    audioUrl ||
+    (typeof obj.url === "string" ? obj.url.trim() : "");
+
+  return { imageUrl, videoUrl, audioUrl, url: fallbackUrl };
 }
 
 function normalizeFalQueueUrl(rawUrl) {
@@ -355,13 +386,17 @@ export async function onRequestPost(context) {
 
     if (action === "poll") {
       if (body.result && typeof body.result === "object") {
-        const imgUrl = extractOutputImageUrl(body.result);
+        const media = extractMediaUrls(body.result);
         return jsonResponse({
           status: "COMPLETED",
           result: body.result,
-          imageUrl: imgUrl,
-          image_url: imgUrl,
-          url: imgUrl,
+          imageUrl: media.imageUrl,
+          image_url: media.imageUrl,
+          videoUrl: media.videoUrl,
+          video_url: media.videoUrl,
+          audioUrl: media.audioUrl,
+          audio_url: media.audioUrl,
+          url: media.url,
         });
       }
 
@@ -448,13 +483,17 @@ export async function onRequestPost(context) {
           headers: { Authorization: `Key ${falKey}` },
         });
         const resJson = await resResp.json().catch(() => ({}));
-        const imgUrl = extractOutputImageUrl(resJson);
+        const media = extractMediaUrls(resJson);
         return jsonResponse({
           status: "COMPLETED",
           result: resJson,
-          imageUrl: imgUrl,
-          image_url: imgUrl,
-          url: imgUrl,
+          imageUrl: media.imageUrl,
+          image_url: media.imageUrl,
+          videoUrl: media.videoUrl,
+          video_url: media.videoUrl,
+          audioUrl: media.audioUrl,
+          audio_url: media.audioUrl,
+          url: media.url,
         });
       }
 
@@ -614,13 +653,16 @@ export async function onRequestPost(context) {
       normalizeFalQueueUrl(upData.response_url || upData.responseUrl) ||
       (statusUrl ? statusUrl.replace(/\/status\/?$/, "") : "");
 
-    const directImgUrl = extractOutputImageUrl(upData);
+    const directMedia = extractMediaUrls(upData);
 
     return jsonResponse({
       ...upData,
       statusUrl,
       responseUrl,
-      ...(directImgUrl ? { imageUrl: directImgUrl, image_url: directImgUrl, url: directImgUrl } : {}),
+      ...(directMedia.imageUrl ? { imageUrl: directMedia.imageUrl, image_url: directMedia.imageUrl } : {}),
+      ...(directMedia.videoUrl ? { videoUrl: directMedia.videoUrl, video_url: directMedia.videoUrl } : {}),
+      ...(directMedia.audioUrl ? { audioUrl: directMedia.audioUrl, audio_url: directMedia.audioUrl } : {}),
+      ...(directMedia.url ? { url: directMedia.url } : {}),
       credits: debit.newBalance,
       charged: creditCost,
     });
