@@ -29,8 +29,58 @@ function supabaseHeaders(key, extra = {}) {
   };
 }
 
+function timingSafeEqualHex(a, b) {
+  if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) {
+    return false;
+  }
+  let mismatch = 0;
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
+async function verifyStripeSignature(rawBody, signatureHeader, webhookSecret) {
+  if (!signatureHeader || !webhookSecret) return false;
+
+  const parts = signatureHeader.split(",").map((part) => part.trim());
+  let timestamp = "";
+  const signatures = [];
+
+  for (const part of parts) {
+    const [k, v] = part.split("=");
+    if (k === "t" && v) timestamp = v;
+    if (k === "v1" && v) signatures.push(v);
+  }
+
+  if (!timestamp || signatures.length === 0) return false;
+
+  // Tolera até 5 minutos de diferença de relógio
+  const nowSeconds = Math.floor(Date.now() / 1000);
+  if (Math.abs(nowSeconds - Number(timestamp)) > 300) {
+    return false;
+  }
+
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(webhookSecret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+
+  const signedPayload = `${timestamp}.${rawBody}`;
+  const signatureBuffer = await crypto.subtle.sign("HMAC", key, encoder.encode(signedPayload));
+  const expectedHex = Array.from(new Uint8Array(signatureBuffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return signatures.some((sig) => timingSafeEqualHex(sig.toLowerCase(), expectedHex));
+}
+
 export async function onRequestGet() {
-  return jsonResponse({ ok: true, service: "nexora-pagbank-webhook" }, 200);
+  return jsonResponse({ ok: true, service: "nexora-stripe-webhook" }, 200);
 }
 
 export async function onRequestPost(context) {
@@ -42,46 +92,44 @@ export async function onRequestPost(context) {
       return jsonResponse({ error: "Supabase não configurado no servidor." }, 500);
     }
 
+    const webhookSecret = String(env.STRIPE_WEBHOOK_SECRET || "").trim();
+    if (!webhookSecret) {
+      return jsonResponse({ error: "STRIPE_WEBHOOK_SECRET não configurado no servidor." }, 500);
+    }
+
     const rawBody = await request.text();
-    const params = new URLSearchParams(rawBody);
-    const notificationCode = String(params.get("notificationCode") || "").trim();
-    const notificationType = String(params.get("notificationType") || "").trim().toLowerCase();
+    const signatureHeader = request.headers.get("Stripe-Signature") || "";
 
-    if (!notificationCode || notificationType !== "transaction") {
-      return jsonResponse({ ok: true, ignored: true }, 200);
+    const isValid = await verifyStripeSignature(rawBody, signatureHeader, webhookSecret);
+    if (!isValid) {
+      return jsonResponse({ error: "Assinatura Stripe inválida." }, 400);
     }
 
-    const pagbankEmail = env.PAGBANK_EMAIL || "comercial@jcaatacadista.com.br";
-    const consultUrl = `https://ws.pagseguro.uol.com.br/v3/transactions/notifications/${encodeURIComponent(notificationCode)}?email=${encodeURIComponent(pagbankEmail)}&token=${encodeURIComponent(env.PAGBANK_TOKEN)}`;
+    const event = JSON.parse(rawBody);
 
-    const pbRes = await fetch(consultUrl, { method: "GET" });
-    const xmlText = await pbRes.text();
-
-    if (!pbRes.ok) {
-      return jsonResponse({ error: "Falha ao consultar transação no PagBank." }, 502);
+    if (event.type !== "checkout.session.completed") {
+      return jsonResponse({ ok: true, ignored: true, type: event.type }, 200);
     }
 
-    const statusMatch = xmlText.match(/<status>(\d+)<\/status>/i);
-    const statusCode = statusMatch ? statusMatch[1].trim() : "";
+    const session = event.data?.object || {};
 
-    // Status 3 = Paga | Status 4 = Disponível
-    if (statusCode !== "3" && statusCode !== "4") {
-      return jsonResponse({ ok: true, statusCode, credited: false }, 200);
+    if (session.payment_status !== "paid") {
+      return jsonResponse({ ok: true, paymentStatus: session.payment_status, credited: false }, 200);
     }
 
-    const codeMatch = xmlText.match(/<code>([^<]+)<\/code>/i);
-    const refMatch = xmlText.match(/<reference>([^<]+)<\/reference>/i);
+    const extRef = String(session.client_reference_id || "").trim();
+    const [refUserIdFromRef, refPlanIdFromRef] = extRef.includes("|") ? extRef.split("|") : ["", ""];
 
-    const transactionCode = codeMatch ? codeMatch[1].trim() : "";
-    const extRef = refMatch ? refMatch[1].trim() : "";
-    const [refUserId, refPackageId] = extRef.includes("|") ? extRef.split("|") : ["", ""];
-    const plan = resolvePlanByCode(refPackageId);
+    const userId = String(session.metadata?.user_id || refUserIdFromRef || "").trim();
+    const planId = String(session.metadata?.plan_id || refPlanIdFromRef || "").trim();
+    const plan = resolvePlanByCode(planId);
+    const sessionId = String(session.id || "").trim();
 
-    if (!refUserId || !plan || !transactionCode) {
-      return jsonResponse({ error: "Referência inválida na transação PagBank.", extRef }, 400);
+    if (!userId || !plan || !sessionId) {
+      return jsonResponse({ error: "Dados incompletos na sessão Stripe.", extRef }, 400);
     }
 
-    const referenceId = `pb_${transactionCode}`;
+    const referenceId = `stripe_${sessionId}`;
 
     // Proteção anti-duplicidade
     const checkUrl = `${env.SUPABASE_URL}/rest/v1/credit_ledger?reference_id=eq.${encodeURIComponent(referenceId)}&select=id&limit=1`;
@@ -93,12 +141,12 @@ export async function onRequestPost(context) {
     if (checkRes.ok) {
       const existing = await checkRes.json().catch(() => []);
       if (Array.isArray(existing) && existing.length > 0) {
-        return jsonResponse({ ok: true, transactionCode, alreadyCredited: true }, 200);
+        return jsonResponse({ ok: true, sessionId, alreadyCredited: true }, 200);
       }
     }
 
     // Busca saldo atual em profiles
-    const profileGetUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(refUserId)}&select=id,credits&limit=1`;
+    const profileGetUrl = `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=id,credits&limit=1`;
     const profileGetRes = await fetch(profileGetUrl, {
       method: "GET",
       headers: supabaseHeaders(supaKey),
@@ -106,14 +154,14 @@ export async function onRequestPost(context) {
 
     const profiles = profileGetRes.ok ? await profileGetRes.json().catch(() => []) : [];
     if (!Array.isArray(profiles) || profiles.length === 0) {
-      return jsonResponse({ error: "Perfil não encontrado", userId: refUserId }, 404);
+      return jsonResponse({ error: "Perfil não encontrado", userId }, 404);
     }
 
     const currentCredits = Number(profiles[0]?.credits ?? 0);
     const newBalance = currentCredits + plan.credits;
 
     // Atualiza credits e plan_name em profiles
-    const patchRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(refUserId)}`, {
+    const patchRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`, {
       method: "PATCH",
       headers: supabaseHeaders(supaKey, { Prefer: "return=representation" }),
       body: JSON.stringify({
@@ -132,17 +180,17 @@ export async function onRequestPost(context) {
       method: "POST",
       headers: supabaseHeaders(supaKey, { Prefer: "return=minimal" }),
       body: JSON.stringify({
-        user_id: refUserId,
+        user_id: userId,
         amount: plan.credits,
-        task: "pagbank_purchase",
-        description: `Compra PagBank (${plan.name} #${transactionCode})`,
+        task: "stripe_purchase",
+        description: `Compra Stripe (${plan.name} #${sessionId})`,
         reference_id: referenceId,
       }),
     }).catch(() => {});
 
     return jsonResponse({
       ok: true,
-      transactionCode,
+      sessionId,
       credited: true,
       plan: plan.name,
       previousBalance: currentCredits,
@@ -150,6 +198,6 @@ export async function onRequestPost(context) {
       newBalance,
     }, 200);
   } catch (err) {
-    return jsonResponse({ error: "Erro no webhook PagBank: " + (err?.message || "erro interno") }, 500);
+    return jsonResponse({ error: "Erro no webhook Stripe: " + (err?.message || "erro interno") }, 500);
   }
 }
