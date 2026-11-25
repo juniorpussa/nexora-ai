@@ -107,6 +107,7 @@ export async function onRequestPost(context) {
 
     const form = new URLSearchParams();
     form.set("mode", "payment");
+    form.set("payment_method_options[card][installments][enabled]", "true");
     form.set("success_url", `${origin}/?payment=success&session_id={CHECKOUT_SESSION_ID}`);
     form.set("cancel_url", `${origin}/?payment=cancelled`);
     form.set("client_reference_id", referenceId);
