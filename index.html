@@ -3068,29 +3068,38 @@
     }
 
     async function pollFalJob(queued, onStateUpdate, outerSignal) {
-      let errs = 0;
-      for (let i = 0; i < 150; i++) {
-        if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
-        try {
-          const res = await callApi({ task: "poll", statusUrl: queued.statusUrl, responseUrl: queued.responseUrl }, 16000, outerSignal);
-          errs = 0;
-          if (res.status === "COMPLETED") return res;
-          if (onStateUpdate) {
-            const pos = typeof res.queuePosition === "number" ? ` (#${res.queuePosition + 1})` : "";
-            onStateUpdate(res.status === "IN_QUEUE" ? `fila${pos}` : "GPU");
-          }
-        } catch (err) {
-          if (err.message === "ABORTED_RUN") throw err;
-          if (err.status && err.status >= 400 && err.status < 500 && !err.transient) throw err;
-          if (String(err.message || "").toLowerCase().includes("falha na geração")) throw err;
-          errs++;
-          if (onStateUpdate) onStateUpdate(`retry ${errs}/8`);
-          if (errs >= 8) throw new Error(`Instabilidade na fila fal.ai: ${err.message}`);
-        }
-        await sleep(2500);
+  let errs = 0;
+  const maxPolls = 28;
+  for (let i = 0; i < maxPolls; i++) {
+    if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
+    try {
+      const res = await callApi(
+        { task: "poll", statusUrl: queued.statusUrl, responseUrl: queued.responseUrl },
+        10000,
+        outerSignal
+      );
+      errs = 0;
+      if (res.status === "COMPLETED") return res;
+      if (res.status === "FAILED") {
+        throw new Error(res.error || "Falha na geração fal.ai");
       }
-      throw new Error("Tempo limite excedido na fila da fal.ai.");
+      if (onStateUpdate) {
+        const pos = typeof res.queuePosition === "number" ? ` (#${res.queuePosition + 1})` : "";
+        onStateUpdate(res.status === "IN_QUEUE" ? `fila${pos}` : "GPU");
+      }
+    } catch (err) {
+      if (err.message === "ABORTED_RUN") throw err;
+      if (err.status && err.status >= 400 && err.status < 500 && !err.transient) throw err;
+      if (String(err.message || "").toLowerCase().includes("falha na geração")) throw err;
+      errs++;
+      if (onStateUpdate) onStateUpdate(`retry ${errs}/6`);
+      if (errs >= 6) throw new Error(`Instabilidade na fila fal.ai: ${err.message}`);
     }
+    if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
+    await sleep(1500);
+  }
+  throw new Error("Fila da IA demorou além do limite rápido");
+}
 
     async function generateMusicWithTripleFallback(mKey, dna, durationSec, onStatus, signal) {
       const prompt = buildUniqueMusicPrompt(mKey, dna);
