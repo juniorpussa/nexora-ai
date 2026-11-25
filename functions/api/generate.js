@@ -230,13 +230,26 @@ function getBearerToken(request) {
   return authHeader.slice(7).trim();
 }
 
-function resolveAllowedSceneModel(rawModel) {
-  const cleaned = String(rawModel || "").trim().replace(/^\/+/, "");
+function resolveModelCandidate(body) {
+  const raw = body?.model ?? body?.engine ?? body?.endpoint ?? "";
+  if (typeof raw === "string") return raw.trim().replace(/^\/+/, "");
+  if (raw && typeof raw === "object") {
+    return String(raw.id || raw.model || raw.endpoint || raw.slug || "").trim().replace(/^\/+/, "");
+  }
+  return "";
+}
+
+function resolvePromptCandidate(body) {
+  return String(body?.prompt ?? body?.motionPrompt ?? body?.text ?? "").trim();
+}
+
+function resolveAllowedSceneModel(body) {
+  const cleaned = resolveModelCandidate(body);
   return ALLOWED_SCENE_MODELS.has(cleaned) ? cleaned : DEFAULT_SCENE_MODEL;
 }
 
-function resolveAllowedClipModel(rawModel) {
-  const cleaned = String(rawModel || "").trim().replace(/^\/+/, "");
+function resolveAllowedClipModel(body) {
+  const cleaned = resolveModelCandidate(body);
   return Object.prototype.hasOwnProperty.call(CLIP_MODEL_TIERS, cleaned)
     ? cleaned
     : DEFAULT_CLIP_MODEL;
@@ -427,8 +440,7 @@ export async function onRequestPost(context) {
           body.queued?.request_id ||
           "";
         const ep =
-          body.endpoint ||
-          body.model ||
+          resolveModelCandidate(body) ||
           body.queued?.endpoint ||
           "fal-ai/birefnet";
         statusUrl = buildQueueUrlFromRequestId(ep, reqId);
@@ -521,8 +533,9 @@ export async function onRequestPost(context) {
       }
     }
 
-    const resolvedSceneModel = resolveAllowedSceneModel(body.model);
-    const resolvedClipModel = resolveAllowedClipModel(body.model);
+    const resolvedSceneModel = resolveAllowedSceneModel(body);
+    const resolvedClipModel = resolveAllowedClipModel(body);
+    const promptText = resolvePromptCandidate(body);
     const requestedClipSeconds = Number(body.duration || 5);
     const clipDuration = requestedClipSeconds > 5 ? "10" : "5";
 
@@ -549,7 +562,7 @@ export async function onRequestPost(context) {
 
     if (action === "submit_scene") {
       const inputPayload = {
-        prompt: String(body.prompt || "").trim(),
+        prompt: promptText,
         image_size: "portrait_16_9",
         num_images: 1,
         enable_safety_checker: false,
@@ -558,7 +571,7 @@ export async function onRequestPost(context) {
       upstream = await falFetch(resolvedSceneModel, falKey, "POST", inputPayload);
     } else if (action === "submit_clip") {
       const inputPayload = {
-        prompt: String(body.prompt || "").trim(),
+        prompt: promptText,
         image_url: resolvedImageUrl,
         duration: clipDuration,
         aspect_ratio: "9:16",
@@ -567,7 +580,7 @@ export async function onRequestPost(context) {
       };
       upstream = await falFetch(resolvedClipModel, falKey, "POST", inputPayload);
     } else if (action === "submit_music") {
-      const prompt = String(body.prompt || "upbeat energetic commercial background track").trim();
+      const prompt = promptText || "upbeat energetic commercial background track";
       const duration = Math.min(45, Math.max(8, Number(body.duration || 15)));
       upstream = await falFetch("fal-ai/stable-audio", falKey, "POST", {
         prompt,
@@ -657,6 +670,7 @@ export async function onRequestPost(context) {
 
     return jsonResponse({
       ...upData,
+      engine: action === "submit_clip" ? resolvedClipModel : resolvedSceneModel,
       statusUrl,
       responseUrl,
       ...(directMedia.imageUrl ? { imageUrl: directMedia.imageUrl, image_url: directMedia.imageUrl } : {}),
