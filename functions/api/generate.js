@@ -1,8 +1,6 @@
 const FAL_QUEUE_BASE = "https://queue.fal.run";
 
-// Mapa oficial de vozes PT-BR / EN (Kokoro + ElevenLabs)
 const TTS_VOICE_MAP = {
-  // Masculinas
   "pf_dylan": { voice: "pf_dylan", label: "Dylan (PT-BR Masculino)", gender: "male" },
   "pm_alex": { voice: "pm_alex", label: "Alex (PT-BR Masculino)", gender: "male" },
   "pm_santa": { voice: "pm_santa", label: "Santa (PT-BR Masculino)", gender: "male" },
@@ -11,7 +9,6 @@ const TTS_VOICE_MAP = {
   "am_eric": { voice: "am_eric", label: "Eric (EN Energetic Male)", gender: "male" },
   "bm_george": { voice: "bm_george", label: "George (UK Male)", gender: "male" },
   "bm_lewis": { voice: "bm_lewis", label: "Lewis (UK Narrator Male)", gender: "male" },
-  // Femininas
   "pf_ora": { voice: "pf_ora", label: "Ora (PT-BR Feminino)", gender: "female" },
   "af_bella": { voice: "af_bella", label: "Bella (EN Commercial Female)", gender: "female" },
   "af_sarah": { voice: "af_sarah", label: "Sarah (EN Bright Female)", gender: "female" },
@@ -21,7 +18,6 @@ const TTS_VOICE_MAP = {
   "bf_isabella": { voice: "bf_isabella", label: "Isabella (UK Expressive Female)", gender: "female" },
 };
 
-// Lista fechada de modelos de imagem autorizados (bloqueia burla de custo)
 const ALLOWED_SCENE_MODELS = new Set([
   "fal-ai/nano-banana/edit",
   "fal-ai/nano-banana",
@@ -31,14 +27,11 @@ const ALLOWED_SCENE_MODELS = new Set([
   "fal-ai/flux/schnell",
 ]);
 
-// Lista fechada de modelos de vídeo autorizados e seu custo base (5s) em créditos
 const CLIP_MODEL_TIERS = {
-  // Faixa Cinema Pro (12 créditos / 5s)
   "fal-ai/kling-video/v2.6/pro/image-to-video": 12,
   "fal-ai/veo3.1/fast/image-to-video": 12,
   "fal-ai/kling-video/v2.1/pro/image-to-video": 12,
   "fal-ai/kling-video/v1.6/pro/image-to-video": 12,
-  // Faixa Econômica (6 créditos / 5s)
   "fal-ai/kling-video/v2.1/standard/image-to-video": 6,
   "fal-ai/kling-video/v1.6/standard/image-to-video": 6,
   "fal-ai/wan-i2v": 6,
@@ -50,7 +43,6 @@ const CLIP_MODEL_TIERS = {
 const DEFAULT_SCENE_MODEL = "fal-ai/flux-pro/v1.1";
 const DEFAULT_CLIP_MODEL = "fal-ai/kling-video/v2.6/pro/image-to-video";
 
-// Custos de créditos por operação no servidor
 const ACTION_CREDIT_COSTS = {
   submit_scene: 2,
   submit_clip: 12,
@@ -141,6 +133,7 @@ function normalizeFalQueueUrl(rawUrl) {
   if (!s) return "";
   if (s.startsWith("https://queue.fal.run/")) return s;
   if (s.startsWith("http://queue.fal.run/")) return s.replace("http://", "https://");
+  if (s.startsWith("https://fal.run/")) return s.replace("https://fal.run/", "https://queue.fal.run/");
   if (s.startsWith("/")) return `${FAL_QUEUE_BASE}${s}`;
   return "";
 }
@@ -247,9 +240,7 @@ async function refundUserCredits(env, userId, amount, task, reason) {
         p_reference_id: `ref_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
       }),
     });
-  } catch (_) {
-    // Evita mascarar erro original
-  }
+  } catch (_) {}
 }
 
 async function falFetch(endpointPath, falKey, method = "POST", bodyObj = null) {
@@ -300,7 +291,6 @@ export async function onRequestPost(context) {
     const action = ACTION_ALIASES[rawAction] || rawAction;
     const resolvedImageUrl = extractImageInput(body);
 
-    // Consulta de status de fila (poll) não consome créditos extras
     if (action === "poll") {
       const statusUrl = normalizeFalQueueUrl(
         body.statusUrl || body.status_url || body.pollUrl || body.poll_url || body.url
@@ -310,7 +300,11 @@ export async function onRequestPost(context) {
       );
 
       if (!statusUrl) {
-        return jsonResponse({ error: "URL de consulta inválida." }, 400);
+        return jsonResponse({
+          status: "IN_QUEUE",
+          queue_position: 0,
+          note: "Aguardando URL de fila da fal.ai",
+        });
       }
 
       const stResp = await fetch(statusUrl, {
@@ -345,7 +339,6 @@ export async function onRequestPost(context) {
       });
     }
 
-    // Validações prévias antes de descontar créditos
     if (action === "remove_bg" && !resolvedImageUrl) {
       return jsonResponse({
         error: "Envie a imagem do produto para remover o fundo (nenhuma imagem recebida pelo servidor).",
@@ -364,7 +357,6 @@ export async function onRequestPost(context) {
       }
     }
 
-    // Validação do modelo e duração proporcional (5s vs 10s)
     const resolvedSceneModel = resolveAllowedSceneModel(body.model);
     const resolvedClipModel = resolveAllowedClipModel(body.model);
     const requestedClipSeconds = Number(body.duration || 5);
@@ -380,7 +372,6 @@ export async function onRequestPost(context) {
       actionDesc = `${ACTION_DESCRIPTIONS.submit_clip} (${tierLabel} ${clipDuration}s)`;
     }
 
-    // Desconta créditos atomicamente ANTES de enviar para o fal.ai
     const debit = await deductUserCredits(env, user.id, creditCost, action, actionDesc);
     if (!debit.ok) {
       return jsonResponse({
