@@ -4284,18 +4284,9 @@
             vid.play().catch(() => {});
           }
 
-          // Anti-congelamento: se o MP4 travar no mesmo quadro, força o avanço do tempo
-          if (elapsed > 0.35 && Math.abs((vid.currentTime || 0) - lastVidTime) < 0.001) {
-            stallCount++;
-            if (stallCount >= 6) {
-              stallCount = 0;
-              const targetT = elapsed % Math.max(1, baseVidSec - 0.15);
-              try { vid.currentTime = targetT; } catch {}
-            }
-          } else {
-            stallCount = 0;
-            lastVidTime = vid.currentTime || 0;
-          }
+          if (vid.ended) {
+         try { vid.currentTime = 0; vid.play().catch(() => {}); } catch {}
+       }
 
           if (vid.readyState >= 2) {
             drawCroppedCover(ctx, vid, crop, 1.0, 0, 0, 0, 1, "none");
