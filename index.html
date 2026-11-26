@@ -5716,15 +5716,34 @@
 
         if (angles3Status) angles3Status.textContent = "Passo 2/2: Criando Ângulos 2 e 3 + Descrição Automática...";
 
+        // Coloca o produto num estúdio branco com margem para liberar a rotação 3D real
+        const whiteStudioBase = await new Promise((resolve) => {
+          const im = new Image();
+          im.onload = () => {
+            const c = document.createElement("canvas");
+            c.width = 1024; c.height = 1024;
+            const g = c.getContext("2d");
+            g.fillStyle = "#FFFFFF";
+            g.fillRect(0, 0, 1024, 1024);
+            const sc = Math.min(680 / (im.naturalWidth || 1024), 680 / (im.naturalHeight || 1024));
+            const dw = Math.round((im.naturalWidth || 1024) * sc);
+            const dh = Math.round((im.naturalHeight || 1024) * sc);
+            g.drawImage(im, Math.round((1024 - dw) / 2), Math.round((1024 - dh) / 2), dw, dh);
+            resolve(c.toDataURL("image/jpeg", 0.92));
+          };
+          im.onerror = () => resolve(angle1Url);
+          im.src = dataUrl1;
+        });
+
         const promptAngle2 =
-          `Ultra-realistic commercial studio 3D product turnaround photograph of the EXACT same product from the reference image, ${orientShort}, rotated sharply to a dramatic 60-degree LEFT SIDE three-quarter profile view clearly exposing the left lateral thickness, side silhouette, contoured side geometry and full 3D depth. Completely different camera angle from the straight front view. Preserve 100% identical design, exact colors, authentic materials, proportions and original markings with zero invented logos or altered parts. Isolated completely alone centered on a spotless pure solid white #FFFFFF studio background, clean even commercial softbox lighting, razor-sharp focus, zero hands, zero props, zero text, zero watermarks.`;
+          `CHANGE THE CAMERA ANGLE COMPLETELY — DO NOT KEEP THE ORIGINAL FRONT POSE FROM THE INPUT IMAGE. Move the camera 90 degrees around to the side to shoot a dramatic TRUE SIDE PROFILE view of the exact same product from the reference photo (${orientShort}), rotated sharply sideways so the product faces toward the RIGHT side of the frame. Clearly expose the full lateral thickness, side silhouette, depth and side details that were hidden in the front view. Keep the exact same product model, colors, materials and proportions, zero invented logos, zero hands, zero text, centered alone on a pure solid white #FFFFFF studio background with clean softbox lighting.`;
 
         const promptAngle3 =
-          `Ultra-realistic commercial studio 3D product turnaround photograph of the EXACT same product from the reference image, ${orientShort}, captured from the OPPOSITE RIGHT side at an elevated 45-degree high-angle diagonal three-quarter perspective clearly revealing the top surface, right side thickness, upper contours and opposite diagonal 3D depth. Completely different angle from both the front view and the left profile. Preserve 100% identical design, exact colors, authentic materials, proportions and original markings with zero invented logos or altered parts. Isolated completely alone centered on a spotless pure solid white #FFFFFF studio background, clean even commercial softbox lighting, razor-sharp focus, zero hands, zero props, zero text, zero watermarks.`;
+          `CHANGE THE CAMERA ANGLE COMPLETELY — DO NOT KEEP THE ORIGINAL FRONT POSE FROM THE INPUT IMAGE. Move the camera high above and to the OPPOSITE side to shoot a dramatic 60-DEGREE ELEVATED TOP-DOWN DIAGONAL view looking steeply down at the exact same product from the reference photo (${orientShort}), rotated in the opposite direction facing toward the BOTTOM-LEFT of the frame. Clearly reveal the top surface, upper contours, back-diagonal depth and opposite flank from above. Keep the exact same product model, colors, materials and proportions, zero invented logos, zero hands, zero text, centered alone on a pure solid white #FFFFFF studio background with clean softbox lighting.`;
 
         const [res2, res3, descRes] = await Promise.allSettled([
-          generateAngleCutout(angle1Url, promptAngle2, 1, sig),
-          generateAngleCutout(angle1Url, promptAngle3, 2, sig),
+          generateAngleCutout(whiteStudioBase, promptAngle2, 1, sig),
+          generateAngleCutout(whiteStudioBase, promptAngle3, 2, sig),
           describeProductAuto(angle1Url, sig)
         ]);
 
