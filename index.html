@@ -10197,6 +10197,347 @@
         return resp;
       };
     })();
+  // === BLOCO NOTA 1000: ÁUDIO/SFX DESTRAVADO + PUNCH/FLASH NOS CORTES + TELA DIVIDIDA 3 FAIXAS + SELETOR DE CTA ===
+    (function initNexoraNota1000Finish() {
+      if (window.__nexoraNota1000Finish) return;
+      window.__nexoraNota1000Finish = true;
+
+      // 1) PAINEL DE CONTROLE NOTA 1000 (EFEITOS VISUAIS + SELETOR DE CTA POR PLATAFORMA)
+      function mountNota1000Panel() {
+        const anchor =
+          document.getElementById("nxAbsolute100Bar") ||
+          document.getElementById("nxCinemaPolish4Bar") ||
+          document.getElementById("nexoraMusicProPanel");
+        if (!anchor || document.getElementById("nxNota1000Bar")) return;
+
+        const box = document.createElement("div");
+        box.id = "nxNota1000Bar";
+        box.style.cssText =
+          "margin-top:8px;padding:10px 12px;border-radius:10px;background:linear-gradient(135deg,rgba(139,92,246,0.20),rgba(236,72,153,0.18));" +
+          "border:1px solid rgba(192,132,252,0.55);font-size:11.5px;font-weight:700;color:#faf5ff;" +
+          "display:flex;flex-direction:column;gap:8px;";
+        box.innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">' +
+          '  <label style="display:flex;align-items:center;gap:7px;cursor:pointer;margin:0;">' +
+          '    <input type="checkbox" id="chkNota1000Fx" checked style="width:15px;height:15px;accent-color:#c084fc;cursor:pointer;">' +
+          '    <span>🎬 Edição Nota 1000: Punch + Flash nos Cortes + Tela Dividida 3 Faixas + Áudio/SFX Turbo</span>' +
+          '  </label>' +
+          '  <span style="color:#f5d0fe;font-weight:800;">Agência Pro</span>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">' +
+          '  <label for="selNota1000Cta" style="margin:0;color:#e9d5ff;">🎯 CTA Animado nos últimos 2s (por plataforma):</label>' +
+          '  <select id="selNota1000Cta" style="background:#1e1b4b;color:#fff;border:1px solid rgba(192,132,252,0.6);border-radius:7px;padding:4px 8px;font-size:11.5px;font-weight:700;cursor:pointer;">' +
+          '    <option value="tiktok" selected>🛒 TikTok Shop (Seta p/ Carrinho ↙️)</option>' +
+          '    <option value="none">✨ Sem CTA Visual (Vídeo Limpo)</option>' +
+          '    <option value="ig_fb">📲 Instagram / Facebook (Saiba Mais)</option>' +
+          '    <option value="whatsapp">💬 WhatsApp / Direto (Chame Agora)</option>' +
+          '  </select>' +
+          '</div>';
+        anchor.insertAdjacentElement("afterend", box);
+      }
+      setTimeout(mountNota1000Panel, 2100);
+      setTimeout(mountNota1000Panel, 3800);
+
+      // 2) DESTRAVA VOLUME DA TRILHA (0.12 -> 0.25) E DOS SFX (0.18 -> 0.36) QUANDO HÁ NARRAÇÃO
+      try {
+        const origLinearRamp = AudioParam.prototype.linearRampToValueAtTime;
+        AudioParam.prototype.linearRampToValueAtTime = function (value, endTime) {
+          const fxOn = !document.getElementById("chkNota1000Fx") || document.getElementById("chkNota1000Fx").checked;
+          if (fxOn && typeof value === "number" && value >= 0.095 && value <= 0.145) {
+            // Eleva o piso de 12% da trilha com voz para ~25% com presença real
+            value = Number((value * 2.1).toFixed(4));
+          }
+          return origLinearRamp.call(this, value, endTime);
+        };
+
+        const origSetVal = AudioParam.prototype.setValueAtTime;
+        AudioParam.prototype.setValueAtTime = function (value, startTime) {
+          const fxOn = !document.getElementById("chkNota1000Fx") || document.getElementById("chkNota1000Fx").checked;
+          if (fxOn && typeof value === "number" && value >= 0.095 && value <= 0.145) {
+            value = Number((value * 2.1).toFixed(4));
+          }
+          return origSetVal.call(this, value, startTime);
+        };
+      } catch (_) {}
+
+      // Dobra o ganho dos impactos sonoros (whoosh, sub-hit e riser) quando cortados pela metade com voz
+      try {
+        if (typeof scheduleSoftSubHit === "function") {
+          const __origSub = scheduleSoftSubHit;
+          scheduleSoftSubHit = function (ctx, dest, when, gain) {
+            const fxOn = !document.getElementById("chkNota1000Fx") || document.getElementById("chkNota1000Fx").checked;
+            const g = fxOn && typeof gain === "number" && gain < 0.22 ? Math.min(0.45, gain * 1.95) : gain;
+            return __origSub.call(this, ctx, dest, when, g);
+          };
+        }
+        if (typeof scheduleSubtleWhoosh === "function") {
+          const __origWhoosh = scheduleSubtleWhoosh;
+          scheduleSubtleWhoosh = function (ctx, dest, nBuf, when, variant, gain) {
+            const fxOn = !document.getElementById("chkNota1000Fx") || document.getElementById("chkNota1000Fx").checked;
+            const g = fxOn && typeof gain === "number" && gain < 0.24 ? Math.min(0.48, gain * 1.95) : gain;
+            return __origWhoosh.call(this, ctx, dest, nBuf, when, variant, g);
+          };
+        }
+        if (typeof scheduleCinemaRiser === "function") {
+          const __origRiser = scheduleCinemaRiser;
+          scheduleCinemaRiser = function (ctx, dest, nBuf, when, dur, gain) {
+            const fxOn = !document.getElementById("chkNota1000Fx") || document.getElementById("chkNota1000Fx").checked;
+            const g = fxOn && typeof gain === "number" && gain < 0.24 ? Math.min(0.48, gain * 1.9) : gain;
+            return __origRiser.call(this, ctx, dest, nBuf, when, dur, g);
+          };
+        }
+      } catch (_) {}
+
+      // 3) AUXILIARES DE DESENHO (PUNCH/FLASH, TELA DIVIDIDA 3 FAIXAS E CTA POR PLATAFORMA)
+      function getRenderClock() {
+        const el = document.getElementById("renderProgressSec");
+        if (el && el.textContent) {
+          const m = el.textContent.match(/([\d.]+)\s*s\s*\/\s*([\d.]+)\s*s/i);
+          if (m) {
+            return { elapsed: parseFloat(m[1]) || 0, total: parseFloat(m[2]) || 10 };
+          }
+        }
+        return null;
+      }
+
+      function drawRoundRect(c2d, x, y, w, h, r) {
+        const rad = Math.min(r, w / 2, h / 2);
+        c2d.beginPath();
+        c2d.moveTo(x + rad, y);
+        c2d.arcTo(x + w, y, x + w, y + h, rad);
+        c2d.arcTo(x + w, y + h, x, y + h, rad);
+        c2d.arcTo(x, y + h, x, y, rad);
+        c2d.arcTo(x, y, x + w, y, rad);
+        c2d.closePath();
+      }
+
+      function drawPlatformCtaOverlay(c2d, cw, ch, elapsed, totalSec) {
+        const mode = document.getElementById("selNota1000Cta")?.value || "tiktok";
+        if (mode === "none") return;
+
+        const ctaWindow = 2.25;
+        const startAt = Math.max(0.5, totalSec - ctaWindow);
+        if (elapsed < startAt || elapsed > totalSec + 0.1) return;
+
+        const localT = elapsed - startAt;
+        const fadeIn = Math.min(1, localT / 0.22);
+        const pulse = 1 + 0.055 * Math.sin(localT * Math.PI * 5.2);
+        const bounce = Math.sin(localT * Math.PI * 6.0) * (ch * 0.008);
+
+        c2d.save();
+        c2d.globalAlpha = fadeIn;
+
+        if (mode === "tiktok") {
+          // Selo + seta pulsante apontando para o canto inferior esquerdo (carrinho TikTok Shop)
+          const boxW = cw * 0.56;
+          const boxH = ch * 0.068;
+          const cx = cw * 0.34;
+          const cy = ch * 0.825;
+
+          c2d.translate(cx, cy);
+          c2d.scale(pulse, pulse);
+
+          const grad = c2d.createLinearGradient(-boxW / 2, 0, boxW / 2, 0);
+          grad.addColorStop(0, "#ff2a5f");
+          grad.addColorStop(1, "#ff7a00");
+          c2d.shadowColor = "rgba(255,42,95,0.65)";
+          c2d.shadowBlur = 22;
+          drawRoundRect(c2d, -boxW / 2, -boxH / 2, boxW, boxH, boxH / 2);
+          c2d.fillStyle = grad;
+          c2d.fill();
+
+          c2d.lineWidth = Math.max(2, cw * 0.004);
+          c2d.strokeStyle = "rgba(255,255,255,0.92)";
+          c2d.stroke();
+
+          c2d.shadowBlur = 0;
+          c2d.fillStyle = "#ffffff";
+          c2d.font = `900 ${Math.round(cw * 0.041)}px "Plus Jakarta Sans", Arial, sans-serif`;
+          c2d.textAlign = "center";
+          c2d.textBaseline = "middle";
+          c2d.fillText("TOQUE NO CARRINHO", 0, 1);
+
+          // Seta animada apontando para baixo-esquerda
+          c2d.restore();
+          c2d.save();
+          c2d.globalAlpha = fadeIn;
+          const ax = cw * 0.14 - bounce * 0.6;
+          const ay = ch * 0.885 + bounce;
+          c2d.font = `900 ${Math.round(cw * 0.085)}px Arial, sans-serif`;
+          c2d.textAlign = "center";
+          c2d.textBaseline = "middle";
+          c2d.shadowColor = "rgba(0,0,0,0.8)";
+          c2d.shadowBlur = 12;
+          c2d.fillStyle = "#ffe600";
+          c2d.fillText("↙", ax, ay);
+        } else if (mode === "ig_fb") {
+          // Selo centralizado inferior para Reels / Feed / Stories
+          const boxW = cw * 0.68;
+          const boxH = ch * 0.068;
+          const cx = cw * 0.5;
+          const cy = ch * 0.84;
+
+          c2d.translate(cx, cy);
+          c2d.scale(pulse, pulse);
+
+          const grad = c2d.createLinearGradient(-boxW / 2, 0, boxW / 2, 0);
+          grad.addColorStop(0, "#6366f1");
+          grad.addColorStop(1, "#ec4899");
+          c2d.shadowColor = "rgba(236,72,153,0.6)";
+          c2d.shadowBlur = 22;
+          drawRoundRect(c2d, -boxW / 2, -boxH / 2, boxW, boxH, boxH / 2);
+          c2d.fillStyle = grad;
+          c2d.fill();
+
+          c2d.lineWidth = Math.max(2, cw * 0.004);
+          c2d.strokeStyle = "rgba(255,255,255,0.92)";
+          c2d.stroke();
+
+          c2d.shadowBlur = 0;
+          c2d.fillStyle = "#ffffff";
+          c2d.font = `900 ${Math.round(cw * 0.041)}px "Plus Jakarta Sans", Arial, sans-serif`;
+          c2d.textAlign = "center";
+          c2d.textBaseline = "middle";
+          c2d.fillText("TOQUE EM SAIBA MAIS ➔", 0, 1);
+        } else if (mode === "whatsapp") {
+          // Selo verde pulsante para WhatsApp / Direto
+          const boxW = cw * 0.68;
+          const boxH = ch * 0.068;
+          const cx = cw * 0.5;
+          const cy = ch * 0.84;
+
+          c2d.translate(cx, cy);
+          c2d.scale(pulse, pulse);
+
+          const grad = c2d.createLinearGradient(-boxW / 2, 0, boxW / 2, 0);
+          grad.addColorStop(0, "#16a34a");
+          grad.addColorStop(1, "#22c55e");
+          c2d.shadowColor = "rgba(34,197,94,0.65)";
+          c2d.shadowBlur = 22;
+          drawRoundRect(c2d, -boxW / 2, -boxH / 2, boxW, boxH, boxH / 2);
+          c2d.fillStyle = grad;
+          c2d.fill();
+
+          c2d.lineWidth = Math.max(2, cw * 0.004);
+          c2d.strokeStyle = "rgba(255,255,255,0.95)";
+          c2d.stroke();
+
+          c2d.shadowBlur = 0;
+          c2d.fillStyle = "#ffffff";
+          c2d.font = `900 ${Math.round(cw * 0.041)}px "Plus Jakarta Sans", Arial, sans-serif`;
+          c2d.textAlign = "center";
+          c2d.textBaseline = "middle";
+          c2d.fillText("CHAME NO WHATSAPP AGORA", 0, 1);
+        }
+
+        c2d.restore();
+      }
+
+      // 4) INTERCEPTA drawCroppedCover PARA PUNCH/FLASH NOS CORTES + TELA DIVIDIDA 3 FAIXAS + CTA
+      try {
+        if (typeof drawCroppedCover === "function") {
+          const __origDrawCover = drawCroppedCover;
+          let lastMediaEl = null;
+          let lastCallMs = 0;
+          let cutStartMs = 0;
+          let cutCounter = 0;
+          let seenClips = [];
+
+          drawCroppedCover = function (c2d, mediaEl, crop, scale = 1.0, panX = 0, panY = 0, angleRad = 0, alpha = 1, filterStr = "none") {
+            const fxOn = !document.getElementById("chkNota1000Fx") || document.getElementById("chkNota1000Fx").checked;
+            const now = performance.now();
+
+            // Reinicia estado quando começa uma nova renderização de vídeo
+            if (now - lastCallMs > 2200) {
+              lastMediaEl = null;
+              cutCounter = 0;
+              seenClips = [];
+            }
+            lastCallMs = now;
+
+            if (mediaEl && mediaEl !== lastMediaEl) {
+              lastMediaEl = mediaEl;
+              cutStartMs = now;
+              cutCounter++;
+              if (!seenClips.some((x) => x.el === mediaEl)) {
+                seenClips.push({ el: mediaEl, crop });
+                if (seenClips.length > 6) seenClips.shift();
+              }
+            }
+
+            const cw = c2d?.canvas?.width || 0;
+            const ch = c2d?.canvas?.height || 0;
+            const sinceCutSec = (now - cutStartMs) / 1000;
+            const clock = getRenderClock();
+
+            // A) TELA DIVIDIDA EM 3 FAIXAS NO MEIO DO VÍDEO (quando já existem >= 3 cenas vistas)
+            const inSplitWindow =
+              fxOn &&
+              cw > 0 &&
+              ch > 0 &&
+              seenClips.length >= 3 &&
+              clock &&
+              clock.total >= 8 &&
+              clock.elapsed >= clock.total * 0.44 &&
+              clock.elapsed <= clock.total * 0.56;
+
+            if (inSplitWindow) {
+              const bandH = ch / 3;
+              const tSplit = (clock.elapsed - clock.total * 0.44) / Math.max(0.2, clock.total * 0.12);
+              const s0 = seenClips[seenClips.length - 3];
+              const s1 = { el: mediaEl, crop }; // faixa central sempre com o clipe ativo em movimento
+              const s2 = seenClips[seenClips.length - 2];
+              const bands = [s0, s1, s2];
+
+              for (let b = 0; b < 3; b++) {
+                c2d.save();
+                c2d.beginPath();
+                c2d.rect(0, b * bandH, cw, bandH);
+                c2d.clip();
+                const dir = b === 1 ? 1 : (b === 0 ? -1 : 1);
+                const bPanX = dir * (tSplit - 0.5) * 44;
+                const bScale = (b === 1 ? 1.12 : 1.08) + tSplit * 0.08;
+                __origDrawCover.call(this, c2d, bands[b].el, bands[b].crop, bScale, bPanX, 0, 0, 1, filterStr);
+                c2d.restore();
+              }
+
+              // Divisórias luminosas cinematográficas entre as 3 faixas
+              c2d.save();
+              c2d.fillStyle = "rgba(255,255,255,0.92)";
+              c2d.shadowColor = "rgba(255,255,255,0.85)";
+              c2d.shadowBlur = 10;
+              c2d.fillRect(0, bandH - 2, cw, 4);
+              c2d.fillRect(0, bandH * 2 - 2, cw, 4);
+              c2d.restore();
+            } else {
+              // B) PUNCH DE CÂMERA NO CORTE (micro-zoom de impacto 1.085x -> 1.00x em 0.22s)
+              let finalScale = scale;
+              if (fxOn && cutCounter > 1 && sinceCutSec >= 0 && sinceCutSec < 0.22) {
+                const p = sinceCutSec / 0.22;
+                const punch = (1 - p) * (1 - p) * 0.085;
+                finalScale = scale * (1 + punch);
+              }
+              __origDrawCover.call(this, c2d, mediaEl, crop, finalScale, panX, panY, angleRad, alpha, filterStr);
+
+              // Flash cinematográfico limpo sincronizado na troca de cena
+              if (fxOn && cutCounter > 1 && sinceCutSec >= 0 && sinceCutSec < 0.14 && cw > 0 && ch > 0) {
+                const fp = 1 - sinceCutSec / 0.14;
+                c2d.save();
+                c2d.globalCompositeOperation = "screen";
+                c2d.fillStyle = `rgba(255, 250, 240, ${(fp * fp * 0.28).toFixed(3)})`;
+                c2d.fillRect(0, 0, cw, ch);
+                c2d.restore();
+              }
+            }
+
+            // C) CTA ANIMADO POR PLATAFORMA NOS ÚLTIMOS 2.25 SEGUNDOS
+            if (clock && cw > 0 && ch > 0) {
+              drawPlatformCtaOverlay(c2d, cw, ch, clock.elapsed, clock.total);
+            }
+          };
+        }
+      } catch (_) {}
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
