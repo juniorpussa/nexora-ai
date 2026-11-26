@@ -9544,6 +9544,659 @@
         return prevFetch(input, init);
       };
     })();
+  // === BLOCO FINAL 100/100: 100% CENAS 3D PADRÃO 00:01 + ROTEIRO DENSO/ACELERADO + ZERO DUPLICAÇÃO + LEGENDA 0.0S + PUNCH TRILHA/SFX ===
+    (function initNexoraAbsolute100Engine() {
+      if (window.__nexoraAbsolute100Engine) return;
+      window.__nexoraAbsolute100Engine = true;
+
+      // 1) LIBERA 100% DAS CENAS PARA 3D GPU REAL (ACABA COM "4K ÓPTICO" PARADO) + FOLGA NO TEMPO LIMITE
+      try {
+        if (typeof selectGpuCutIndices === "function") {
+          const __origSelectGpu = selectGpuCutIndices;
+          selectGpuCutIndices = function (totalUnique) {
+            const all3dOn = !document.getElementById("chkAll3DGpu100") || document.getElementById("chkAll3DGpu100").checked;
+            if (!all3dOn) return __origSelectGpu(totalUnique);
+            const count = Math.max(1, Number(totalUnique) || 1);
+            return Array.from({ length: count }, (_, idx) => idx);
+          };
+        }
+      } catch (_) {}
+
+      function ensureSafeWaitLimit() {
+        const sel = document.getElementById("maxWaitLimit");
+        if (!sel) return;
+        let opt600 = Array.from(sel.options || []).find((o) => Number(o.value) >= 540);
+        if (!opt600) {
+          opt600 = document.createElement("option");
+          opt600.value = "600";
+          opt600.textContent = "10 min (100% Cenas 3D Cinema)";
+          sel.appendChild(opt600);
+        }
+        if (Number(sel.value) < 540) {
+          sel.value = opt600.value;
+          sel.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      }
+      setTimeout(ensureSafeWaitLimit, 1200);
+      setTimeout(ensureSafeWaitLimit, 2800);
+
+      // 2) ROTEIRO COMERCIAL DENSO (210–245 CARACTERES EM 10S, ESCALANDO P/ 15S/20S/30S)
+      function buildDenseCommercialScript(productRaw, detailRaw, vidSec) {
+        const prodClean = String(productRaw || "esse lançamento").trim().replace(/\s+/g, " ");
+        const detClean = String(detailRaw || "").toLowerCase();
+        const isFem = /^(bolsa|mochila|carteira|jaqueta|camiseta|blusa|calça|saia|bota|sandália|lâmpada|luminária|cafeteira|garrafa|escova|prancha|máquina|maquina|caixa|câmera|camera|pulseira|corrente|argola|base|máscara|mascara|pomada|fragrância|fragrancia)\b/i.test(prodClean);
+        const esse = isFem ? "essa" : "esse";
+        const oProd = isFem ? `essa ${prodClean}` : `esse ${prodClean}`;
+
+        let benefitHook = "acabamento premium, design moderno e performance absurda logo no primeiro segundo";
+        if (/(headset|\bvr\b|realidade virtual|metaverso|quest)/.test(`${prodClean} ${detClean}`.toLowerCase())) {
+          benefitHook = "imersão total em alta definição, encaixe ultra confortável e resposta instantânea em cada movimento";
+        } else if (/(relógio|relogio|smartwatch|watch)/.test(`${prodClean} ${detClean}`.toLowerCase())) {
+          benefitHook = "presença marcante no pulso, precisão impecável e visual de luxo que chama atenção de longe";
+        } else if (/(óculos|oculos|lente|solar)/.test(`${prodClean} ${detClean}`.toLowerCase())) {
+          benefitHook = "proteção completa, armação leve de alto padrão e estilo cinematográfico em qualquer ambiente";
+        } else if (/(fone|earbud|airpod|headphone|microfone|lapela|speaker|som)/.test(`${prodClean} ${detClean}`.toLowerCase())) {
+          benefitHook = "áudio cristalino sem ruído, conexão instantânea e bateria feita pra acompanhar o seu ritmo o dia inteiro";
+        } else if (/(tênis|tenis|sapato|bota|sandália|sandalia|sneaker)/.test(`${prodClean} ${detClean}`.toLowerCase())) {
+          benefitHook = "conforto absurdo em cada pisada, leveza extrema e visual marcante que eleva qualquer look na hora";
+        } else if (/(perfume|sérum|serum|creme|maquiagem|batom|skincare)/.test(`${prodClean} ${detClean}`.toLowerCase())) {
+          benefitHook = "resultado visível desde a primeira aplicação, toque sofisticado e fixação prolongada que impressiona";
+        } else if (/(mouse|teclado|console|portátil|portatil|gamer|celular|drone)/.test(`${prodClean} ${detClean}`.toLowerCase())) {
+          benefitHook = "velocidade extrema, resposta imediata sem travar e construção robusta feita pra máxima performance";
+        }
+
+        if (vidSec <= 12) {
+          // ~215 a 242 caracteres — ritmo rápido de comercial de TV em 10s
+          return `Para tudo e olha ${oProd}! Com ${benefitHook}, ${esse} modelo entrega padrão de estúdio na sua rotina. Estoque voando — toque no carrinho aqui embaixo agora e garanta o seu!`;
+        }
+        if (vidSec <= 17) {
+          // ~325 a 360 caracteres — ritmo de varejo em 15s
+          return `Esquece o básico e olha ${oProd} de perto! Ele entrega ${benefitHook}. Cada detalhe foi projetado pra unir durabilidade real, praticidade imediata e visual que chama atenção onde você chegar. As unidades promocionais estão acabando rápido — toque no carrinho aqui embaixo agora e garanta o seu hoje!`;
+        }
+        if (vidSec <= 24) {
+          // ~430 a 475 caracteres — ritmo completo AIDA em 20s
+          return `Para tudo agora e olha o nível d${oProd}! Enquanto os modelos comuns decepcionam no primeiro uso, aqui você tem ${benefitHook}. É o tipo de upgrade que transforma sua experiência desde o primeiro segundo, combinando resistência de verdade com design de alto impacto. Quem vê quer na hora e o lote especial já está no final — toque no carrinho laranja aqui embaixo agora mesmo e garanta o seu antes que esgote!`;
+        }
+        // ~620 a 680 caracteres — 30s
+        return `Se você procura algo realmente fora da curva, para tudo e presta atenção n${oProd}! Ele foi criado pra quem não aceita mais produto mediano: traz ${benefitHook}. No detalhe de perto você já percebe o acabamento superior, e no uso real a diferença é imediata, entregando praticidade, estilo e desempenho consistente todos os dias. É o favorito de quem exige qualidade de verdade sem pagar uma fortuna. Mas atenção: essa condição promocional é por tempo limitado e o estoque está saindo rápido — toque no carrinho aqui embaixo agora mesmo e garanta o seu hoje!`;
+      }
+
+      function syncCharCounter(ta) {
+        const cnt = document.getElementById("inlineCharCount");
+        if (cnt && ta) cnt.textContent = `${ta.value.length} caracteres`;
+      }
+
+      function attachDenseScriptUpgrader() {
+        const btn = document.getElementById("btnAutoInlineScript");
+        if (!btn || btn.dataset.nxDenseHooked) return;
+        btn.dataset.nxDenseHooked = "1";
+
+        btn.addEventListener("click", () => {
+          const denseOn = !document.getElementById("chkDenseVoice100") || document.getElementById("chkDenseVoice100").checked;
+          if (!denseOn) return;
+
+          const runUpgrade = () => {
+            const ta = document.getElementById("inlineVoiceScript");
+            const prodEl = document.getElementById("inlineProductName");
+            const detEl = document.getElementById("productDetailHint");
+            if (!ta) return;
+            const prodName = String(prodEl?.value || "").trim();
+            if (!prodName) return;
+
+            const vidSec = Number(document.getElementById("minDuration")?.value || 10) || 10;
+            const minChars = vidSec <= 12 ? 205 : (vidSec <= 17 ? 305 : (vidSec <= 24 ? 410 : 580));
+            const current = String(ta.value || "").trim();
+
+            if (current.length < minChars) {
+              ta.value = buildDenseCommercialScript(prodName, detEl?.value || "", vidSec);
+              syncCharCounter(ta);
+              ta.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+          };
+
+          setTimeout(runUpgrade, 220);
+          setTimeout(runUpgrade, 900);
+        });
+      }
+      setTimeout(attachDenseScriptUpgrader, 1300);
+      setTimeout(attachDenseScriptUpgrader, 2800);
+
+      // 3) COREOGRAFIA AGRESSIVA PADRÃO 00:01 EM 100% DAS CENAS (ZERO FOTO PARADA)
+      let absClipIdx = 0;
+      let lastAbsClipTs = 0;
+
+      const HIGH_OCTANE_0001_CHOREO = [
+        "CUT 1 — EXPLOSIVE 00:01 CRASH-ZOOM + BOLD 3D ROTATION: Rapid high-energy crash-zoom push-in curving into a 3D orbit while the product rotates boldly 30 degrees on its axis, as glowing sparks, fiery embers and volumetric energy blast rapidly toward the camera lens.",
+        "CUT 2 — HIGH-SPEED 100MM MACRO GLIDE + 3D TILT: Fast energetic macro tracking sweep skimming across the product's crisp authentic textures while the product tilts and rotates 25 degrees in 3D, with bright light streaks and luminous particles flying continuously across the foreground.",
+        "CUT 3 — KINETIC REAL-LIFE ACTION + MOVING CAMERA: Dynamic real-time human action actively wearing/using and moving with the product, fast handheld cinema camera curving around the subject while vibrant neon reflections, sparks and vivid bokeh stream rapidly across the entire scene.",
+        "CUT 4 — AGGRESSIVE WHIP-ARC + 35-DEGREE 3D SPIN: Energetic curved cinema whip-arc sweeping dynamically around the product's side profile while the product performs a continuous smooth 35-degree 3D rotation, surrounded by surging luminous light waves, swirling mist and rushing sparks.",
+        "CUT 5 — BOLD CRANE DIVE + ACTIVE 3D COUNTER-SPIN: Sweeping diagonal crane dive descending fast toward the product while the product actively counter-rotates 30 degrees in 3D beneath sweeping volumetric spotlight beams and fast-moving golden embers.",
+        "CUT 6 — SPEED-RAMP 3D ORBITAL SHOWCASE: Electrifying speed-ramp orbital camera circling rapidly around the product with strong multi-layer 3D parallax, continuous 30-degree product rotation, and intense living background physics (flowing energy, swirling smoke and rushing sparks) across 100% of the frame.",
+        "CUT 7 — BLOCKBUSTER HERO PUSH-IN + 3D FINALE TURN: Commanding commercial crash-push curving into hero-front while the product completes a confident 25-degree 3D turn in the upper safe zone, framed by sweeping cinema flares, pulsing ambient lights and particles surging forward."
+      ];
+
+      const ANTI_STATIC_NEGATIVE =
+        "static frame, frozen image, slideshow, ken burns slow zoom, motionless product, motionless background, frozen sparks, still smoke, black and white, monochrome, desaturated, greyscale, washed out colors, blurry, pixelation, color change, black glass visor replacement, morphing product, distorted geometry, garbled text, watermark";
+
+      function getStrictFidelityClause() {
+        const desc = String(document.getElementById("productDetailHint")?.value || "").trim();
+        const macro = String(document.getElementById("macroTarget")?.value || "").trim();
+        const lock = desc
+          ? `100% STRICT PRODUCT FIDELITY: The product is strictly "${desc}". Keep its EXACT original colors, solid finish, shape and markings. NEVER recolor, NEVER turn white/solid surfaces into black glass or mirrors, zero morphing.`
+          : `100% STRICT PRODUCT FIDELITY: Preserve exact original colors, materials, silhouette and markings from the reference cutouts. Zero color shift, zero morphing.`;
+        return `${lock}${macro ? ` Highlight authentic detail: ${macro}.` : ""}`;
+      }
+
+      function stripPassiveWords(text) {
+        return String(text || "")
+          .replace(/\b(static background|frozen background|still background|locked[- ]off camera|still camera|stationary product|no rotation|no orbiting|minimal motion|subtle turn|micro-tilt|gentle push|slow zoom|keep background still|keep product still)\b/gi, "")
+          .replace(/\s{2,}/g, " ")
+          .trim();
+      }
+
+      // 4) MOTOR DE ÁUDIO: ACELERAÇÃO NATURAL DE VOZ (WSOLA SEM AFINAR) + MAXIMIZADOR DE TRILHA/SFX
+      let lastTtsUrl = "";
+      let lastMusicUrl = "";
+      const finalVoicePromiseMap = new Map(); // origTtsUrl -> Promise<{ blobUrl, duration }>
+      const punchedMusicMap = new Map();      // origMusicKey -> blobUrl
+
+      function encodeMonoWav16(samples, sr) {
+        const len = samples.length;
+        const ab = new ArrayBuffer(44 + len * 2);
+        const view = new DataView(ab);
+        const w = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+        w(0, "RIFF");
+        view.setUint32(4, 36 + len * 2, true);
+        w(8, "WAVE");
+        w(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, 1, true);
+        view.setUint32(24, sr, true);
+        view.setUint32(28, sr * 2, true);
+        view.setUint16(32, 2, true);
+        view.setUint16(34, 16, true);
+        w(36, "data");
+        view.setUint32(40, len * 2, true);
+        let off = 44;
+        for (let i = 0; i < len; i++) {
+          const s = Math.max(-1, Math.min(1, samples[i]));
+          view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+          off += 2;
+        }
+        return new Blob([ab], { type: "audio/wav" });
+      }
+
+      function encodeStereoWav16(buffer) {
+        const numCh = Math.min(2, buffer.numberOfChannels || 1);
+        const sr = buffer.sampleRate;
+        const len = buffer.length;
+        const blockAlign = numCh * 2;
+        const dataSize = len * blockAlign;
+        const ab = new ArrayBuffer(44 + dataSize);
+        const view = new DataView(ab);
+        const w = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+        w(0, "RIFF");
+        view.setUint32(4, 36 + dataSize, true);
+        w(8, "WAVE");
+        w(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, numCh, true);
+        view.setUint32(24, sr, true);
+        view.setUint32(28, sr * blockAlign, true);
+        view.setUint16(32, blockAlign, true);
+        view.setUint16(34, 16, true);
+        w(36, "data");
+        view.setUint32(40, dataSize, true);
+        const chs = [];
+        for (let c = 0; c < numCh; c++) chs.push(buffer.getChannelData(c));
+        let off = 44;
+        for (let i = 0; i < len; i++) {
+          for (let c = 0; c < numCh; c++) {
+            const s = Math.max(-1, Math.min(1, chs[c][i] || 0));
+            view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+            off += 2;
+          }
+        }
+        return new Blob([ab], { type: "audio/wav" });
+      }
+
+      // WSOLA (Time-Stretch de voz com preservação de timbre — acelera sem afinar!)
+      function wsolaTimeStretchMono(input, sr, speedRate) {
+        if (!input || input.length < sr * 0.3 || speedRate <= 1.015) return new Float32Array(input);
+        const winLen = Math.max(256, (Math.round(sr * 0.030) & ~1)); // 30ms par
+        const hopOut = winLen >> 1; // 50% overlap (soma da janela Hann = 1.0 exato)
+        const searchMax = Math.round(sr * 0.005); // busca de fase +/- 5ms
+
+        const hann = new Float32Array(winLen);
+        for (let i = 0; i < winLen; i++) {
+          hann[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / winLen));
+        }
+
+        const outLen = Math.max(winLen, Math.floor(input.length / speedRate) + winLen);
+        const out = new Float32Array(outLen);
+        let prevBestIn = 0;
+        let outPos = 0;
+
+        while (outPos + winLen <= outLen) {
+          const nomIn = Math.round(outPos * speedRate);
+          if (nomIn + winLen >= input.length) break;
+
+          let bestIn = nomIn;
+          if (outPos > 0) {
+            const refStart = prevBestIn + hopOut;
+            if (refStart + hopOut < input.length) {
+              const sMin = Math.max(0, nomIn - searchMax);
+              const sMax = Math.min(input.length - winLen, nomIn + searchMax);
+              let bestCorr = -Infinity;
+              for (let cand = sMin; cand <= sMax; cand += 4) {
+                let corr = 0;
+                for (let k = 0; k < hopOut; k += 4) {
+                  corr += input[refStart + k] * input[cand + k];
+                }
+                if (corr > bestCorr) {
+                  bestCorr = corr;
+                  bestIn = cand;
+                }
+              }
+            }
+          }
+
+          for (let k = 0; k < winLen; k++) {
+            out[outPos + k] += input[bestIn + k] * hann[k];
+          }
+          prevBestIn = bestIn;
+          outPos += hopOut;
+        }
+
+        const trimmed = out.subarray(0, Math.min(outLen, outPos + hopOut));
+        // Normalização limpa para manter pressão comercial de TV
+        let peak = 0;
+        for (let i = 0; i < trimmed.length; i++) {
+          const a = Math.abs(trimmed[i]);
+          if (a > peak) peak = a;
+        }
+        const finalOut = new Float32Array(trimmed.length);
+        const norm = peak > 0.001 ? Math.min(1.15, 0.94 / peak) : 1;
+        for (let i = 0; i < trimmed.length; i++) {
+          finalOut[i] = Math.max(-0.98, Math.min(0.98, trimmed[i] * norm));
+        }
+        return finalOut;
+      }
+
+      // Espera o Upgrade 1 entregar a voz sem silêncios e aplica aceleração comercial limpa (encaixando no tempo do vídeo)
+      function ensureFinalVoiceReady(ttsUrl, prevFetchFn) {
+        if (!ttsUrl) return Promise.resolve(null);
+        if (finalVoicePromiseMap.has(ttsUrl)) return finalVoicePromiseMap.get(ttsUrl);
+
+        const job = (async () => {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return null;
+
+          let audioBuf = null;
+          for (let attempt = 0; attempt < 12; attempt++) {
+            try {
+              const r = await prevFetchFn(`/api/generate?proxyUrl=${encodeURIComponent(ttsUrl)}`);
+              if (r && r.ok) {
+                const ct = String(r.headers.get("content-type") || "").toLowerCase();
+                // Upgrade 1 devolve audio/wav assim que conclui o corte de silêncios
+                if (ct.includes("wav") || attempt >= 7) {
+                  const ab = await r.arrayBuffer();
+                  const dec = new AudioCtx();
+                  audioBuf = await dec.decodeAudioData(ab.slice(0));
+                  try { await dec.close(); } catch (_) {}
+                  break;
+                }
+              }
+            } catch (_) {}
+            await new Promise((res) => setTimeout(res, 280));
+          }
+
+          if (!audioBuf) return null;
+
+          const sr = audioBuf.sampleRate;
+          const rawMono = audioBuf.getChannelData(0);
+          const origDur = audioBuf.duration || (rawMono.length / sr);
+          const vidSec = Number(document.getElementById("minDuration")?.value || 10) || 10;
+          const targetMaxDur = Math.max(3.0, vidSec - 0.35);
+
+          // Calcula aceleração natural: mínimo 1.10x (ritmo de varejo) e encaixa se passar da duração do vídeo (teto 1.24x)
+          const accelOn = !document.getElementById("chkDenseVoice100") || document.getElementById("chkDenseVoice100").checked;
+          let speedRate = 1.0;
+          if (accelOn) {
+            const fitRate = origDur > targetMaxDur ? (origDur / targetMaxDur) : 1.10;
+            speedRate = Math.max(1.10, Math.min(1.24, fitRate));
+          }
+
+          const finalSamples = speedRate > 1.015 ? wsolaTimeStretchMono(rawMono, sr, speedRate) : new Float32Array(rawMono);
+          const wavBlob = encodeMonoWav16(finalSamples, sr);
+          const blobUrl = URL.createObjectURL(wavBlob);
+          return { blobUrl, duration: finalSamples.length / sr };
+        })();
+
+        finalVoicePromiseMap.set(ttsUrl, job);
+        return job;
+      }
+
+      // Trava 100% os timestamps do Whisper à duração exata da voz final (0.0s de atraso do início ao fim)
+      function lockSubtitlesToExactVoice(chunks, finalDur) {
+        if (!Array.isArray(chunks) || chunks.length === 0 || !finalDur || finalDur < 1) return chunks;
+
+        let minS = Infinity;
+        let maxE = 0;
+        for (const ch of chunks) {
+          if (ch && Array.isArray(ch.timestamp)) {
+            const s = Number(ch.timestamp[0]);
+            const e = Number(ch.timestamp[1]);
+            if (Number.isFinite(s) && s < minS) minS = s;
+            if (Number.isFinite(e) && e > maxE) maxE = e;
+          }
+        }
+        if (!Number.isFinite(minS)) minS = 0;
+        const origSpan = maxE - minS;
+        if (origSpan <= 0.3) return chunks;
+
+        const targetStart = 0.02;
+        const targetEnd = Math.max(1.0, finalDur - 0.12);
+        const targetSpan = Math.max(0.5, targetEnd - targetStart);
+        const ratio = targetSpan / origSpan;
+        const VISUAL_LEAD = 0.035;
+        let prevEnd = 0;
+
+        return chunks.map((ch) => {
+          if (!ch || !Array.isArray(ch.timestamp)) return ch;
+          const os = Number(ch.timestamp[0]);
+          const oe = Number(ch.timestamp[1]);
+          if (!Number.isFinite(os) || !Number.isFinite(oe)) return ch;
+
+          let ns = targetStart + (os - minS) * ratio - VISUAL_LEAD;
+          let ne = targetStart + (oe - minS) * ratio - VISUAL_LEAD * 0.4;
+          ns = Math.max(0, Number(ns.toFixed(3)));
+          ne = Math.max(ns + 0.07, Number(ne.toFixed(3)));
+          if (ns < prevEnd) ns = Number(Math.max(0, prevEnd - 0.01).toFixed(3));
+          if (ne <= ns) ne = Number((ns + 0.08).toFixed(3));
+          prevEnd = ne;
+          return { ...ch, timestamp: [ns, ne] };
+        });
+      }
+
+      // Maximiza o peso comercial (loudness + sub-bass limpo) da trilha sonora + SFX
+      async function maximizeCommercialMusicPunch(rawBlob) {
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+          if (!AudioCtx || !OfflineCtx) return null;
+
+          const ab = await rawBlob.arrayBuffer();
+          const dec = new AudioCtx();
+          const decoded = await dec.decodeAudioData(ab.slice(0));
+          try { await dec.close(); } catch (_) {}
+
+          const sr = decoded.sampleRate;
+          const numCh = Math.min(2, decoded.numberOfChannels || 1);
+          const offCtx = new OfflineCtx(numCh, decoded.length, sr);
+
+          const src = offCtx.createBufferSource();
+          src.buffer = decoded;
+
+          const subPunch = offCtx.createBiquadFilter();
+          subPunch.type = "lowshelf";
+          subPunch.frequency.value = 85;
+          subPunch.gain.value = 3.5;
+
+          const drive = offCtx.createGain();
+          drive.gain.value = 1.85;
+
+          const limiter = offCtx.createDynamicsCompressor();
+          limiter.threshold.value = -8;
+          limiter.knee.value = 5;
+          limiter.ratio.value = 12;
+          limiter.attack.value = 0.002;
+          limiter.release.value = 0.07;
+
+          src.connect(subPunch);
+          subPunch.connect(drive);
+          drive.connect(limiter);
+          limiter.connect(offCtx.destination);
+          src.start(0);
+
+          const rendered = await offCtx.startRendering();
+
+          let peak = 0;
+          for (let c = 0; c < numCh; c++) {
+            const d = rendered.getChannelData(c);
+            for (let i = 0; i < d.length; i++) {
+              const a = Math.abs(d[i]);
+              if (a > peak) peak = a;
+            }
+          }
+          if (peak > 0.001) {
+            const norm = 0.97 / peak;
+            for (let c = 0; c < numCh; c++) {
+              const d = rendered.getChannelData(c);
+              for (let i = 0; i < d.length; i++) {
+                d[i] = Math.max(-0.98, Math.min(0.98, d[i] * norm));
+              }
+            }
+          }
+
+          const wavBlob = encodeStereoWav16(rendered);
+          return URL.createObjectURL(wavBlob);
+        } catch (_) {
+          return null;
+        }
+      }
+
+      // 5) HIGIENIZAÇÃO DO TEXTO DE NARRAÇÃO (ZERO DUPLICAÇÃO APÓS O CTA + TERMOS CORRETOS)
+      function cleanFinalTtsText(rawText, vidSec) {
+        let txt = String(rawText || "")
+          .replace(/\bheadset de realidade(?!\s+virtual)\b/gi, "headset de realidade virtual")
+          .replace(/\bóculos de realidade(?!\s+virtual)\b/gi, "óculos de realidade virtual")
+          .replace(/\.{2,}/g, ",")
+          .replace(/\s*[\r\n]+\s*/g, " ")
+          .replace(/\s{2,}/g, " ")
+          .trim();
+
+        // Permite roteiro rico/acelerado (~3.9 palavras/seg) sem cortar frase no meio
+        const maxWords = Math.round(vidSec * 4.0);
+        const words = txt.split(/\s+/).filter(Boolean);
+        if (words.length > maxWords) {
+          const sentences = txt.split(/(?<=[.!?])\s+/).filter(Boolean);
+          if (sentences.length >= 2) {
+            const cta = sentences[sentences.length - 1];
+            let kept = sentences[0];
+            for (let i = 1; i < sentences.length - 1; i++) {
+              const candidate = `${kept} ${sentences[i]} ${cta}`;
+              if (candidate.split(/\s+/).length <= maxWords) kept = `${kept} ${sentences[i]}`;
+            }
+            txt = `${kept} ${cta}`.trim();
+          }
+        }
+        return txt;
+      }
+
+      // 6) PAINEL DE CONTROLE DO PADRÃO 100/100 NA INTERFACE
+      function mountAbsolute100Panel() {
+        const anchor = document.getElementById("nxCinemaPolish4Bar") || document.getElementById("nxDirectorMultiSceneBar") || document.getElementById("nexoraMusicProPanel");
+        if (!anchor || document.getElementById("nxAbsolute100Bar")) return;
+
+        const box = document.createElement("div");
+        box.id = "nxAbsolute100Bar";
+        box.style.cssText =
+          "margin-top:8px;padding:10px 12px;border-radius:10px;background:linear-gradient(135deg,rgba(16,185,129,0.18),rgba(245,158,11,0.18));" +
+          "border:1px solid rgba(52,211,153,0.55);font-size:11.5px;font-weight:700;color:#ecfdf5;" +
+          "display:flex;flex-direction:column;gap:6px;";
+        box.innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">' +
+          '  <label style="display:flex;align-items:center;gap:7px;cursor:pointer;margin:0;">' +
+          '    <input type="checkbox" id="chkAll3DGpu100" checked style="width:15px;height:15px;accent-color:#10b981;cursor:pointer;">' +
+          '    <span>🚀 100% Cenas 3D GPU Padrão 00:01 (Produto + Cenário Vivos em Todos os Cortes)</span>' +
+          '  </label>' +
+          '  <span style="color:#6ee7b7;font-weight:800;">Padrão 100/100</span>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">' +
+          '  <label style="display:flex;align-items:center;gap:7px;cursor:pointer;margin:0;">' +
+          '    <input type="checkbox" id="chkDenseVoice100" checked style="width:15px;height:15px;accent-color:#f59e0b;cursor:pointer;">' +
+          '    <span>⚡ Locução Comercial Acelerada + Roteiro Denso + Legenda 0.0s + Trilha/SFX Turbo</span>' +
+          '  </label>' +
+          '  <span style="color:#fde68a;font-weight:800;">Zero Duplicação</span>' +
+          '</div>';
+        anchor.insertAdjacentElement("afterend", box);
+      }
+      setTimeout(mountAbsolute100Panel, 1900);
+      setTimeout(mountAbsolute100Panel, 3500);
+
+      // 7) INTERCEPTAÇÃO UNIFICADA (CLIPES 00:01 + TTS SEM DUPLICAÇÃO + VOZ ACELERADA + LEGENDA 0.0S + TRILHA TURBO)
+      const prevFetch = window.fetch.bind(window);
+      window.fetch = async function (input, init) {
+        const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+        const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+
+        // A) POST para /api/generate (Clipes 3D agressivos padrão 00:01 + TTS limpo sem duplicação)
+        if (reqUrl.includes("/api/generate") && method === "POST" && init && typeof init.body === "string") {
+          try {
+            const payload = JSON.parse(init.body);
+            const act = String(payload.action || payload.task || payload.mode || "").trim().toLowerCase();
+
+            // Clipe de vídeo 3D -> força padrão 00:01 em 100% dos cortes
+            const all3dOn = !document.getElementById("chkAll3DGpu100") || document.getElementById("chkAll3DGpu100").checked;
+            if (all3dOn && (act === "submit_clip" || act === "generate_video" || act === "clip")) {
+              const now = Date.now();
+              if (now - lastAbsClipTs > 240000) absClipIdx = 0;
+              lastAbsClipTs = now;
+              const idx = absClipIdx++;
+
+              const promptKey = typeof payload.prompt === "string" && payload.prompt.trim()
+                ? "prompt"
+                : (typeof payload.motionPrompt === "string" ? "motionPrompt" : "prompt");
+              const baseMotion = stripPassiveWords(payload[promptKey] || "");
+              const choreo = HIGH_OCTANE_0001_CHOREO[idx % HIGH_OCTANE_0001_CHOREO.length];
+              const fidelity = getStrictFidelityClause();
+
+              payload[promptKey] =
+                `${choreo} ${fidelity} RICH VIBRANT CINEMA COLORS: Deep saturated highlights and high contrast across 100% of the frame, NEVER grey or desaturated. ${baseMotion.slice(0, 420)} Ultra-crisp 4K blockbuster commercial motion, relentless kinetic energy from frame 1 to the final frame.`
+                  .replace(/\s{2,}/g, " ")
+                  .trim()
+                  .slice(0, 2250);
+
+              payload.negativePrompt = ANTI_STATIC_NEGATIVE;
+              payload.action = "video";
+              delete payload.task;
+              delete payload.mode;
+              init = { ...init, body: JSON.stringify(payload) };
+            }
+
+            // TTS -> impede duplicação pós-CTA, corrige termos e força velocidade máxima na ElevenLabs
+            if ((act === "submit_tts" || act === "tts" || act === "voice") && !payload.__isVoicePreview) {
+              const vidSec = Number(document.getElementById("minDuration")?.value || 10) || 10;
+              const rawTxt = String(payload.text || "").trim();
+              if (rawTxt) {
+                payload.text = cleanFinalTtsText(rawTxt, vidSec);
+                payload.speed = 1.2;
+                // Evita que o bloco antigo anexe frases extras após a chamada para ação
+                payload.__isVoicePreview = true;
+                init = { ...init, body: JSON.stringify(payload) };
+              }
+            }
+          } catch (_) {}
+        }
+
+        // B) GET proxyUrl -> entrega voz acelerada WSOLA (se for voz) ou trilha/SFX turbinada (se for música)
+        if (method === "GET" && reqUrl.includes("/api/generate") && reqUrl.includes("proxyUrl=")) {
+          try {
+            const u = new URL(reqUrl, window.location.origin);
+            const px = u.searchParams.get("proxyUrl") || "";
+            const isNonAudioMedia = /\.(mp4|webm|mov|jpg|jpeg|png|webp|gif)(\?|$)/i.test(px);
+
+            if (px && !isNonAudioMedia) {
+              // Voz final acelerada (WSOLA sem afinar)
+              if (lastTtsUrl && px === lastTtsUrl) {
+                const voiceEntry = await ensureFinalVoiceReady(lastTtsUrl, prevFetch);
+                if (voiceEntry && voiceEntry.blobUrl) {
+                  return prevFetch(voiceEntry.blobUrl);
+                }
+              }
+
+              // Trilha sonora + SFX com loudness maximizado
+              const isMusicReq =
+                (lastMusicUrl && px === lastMusicUrl) ||
+                px.includes("lyria") ||
+                px.includes("music") ||
+                px.startsWith("blob:");
+
+              if (isMusicReq && (!lastTtsUrl || px !== lastTtsUrl)) {
+                if (punchedMusicMap.has(px)) {
+                  return prevFetch(punchedMusicMap.get(px));
+                }
+                const musicResp = await prevFetch(input, init);
+                if (musicResp && musicResp.ok) {
+                  const ct = String(musicResp.headers.get("content-type") || "").toLowerCase();
+                  if (ct.includes("audio")) {
+                    const rawBlob = await musicResp.blob();
+                    const boostedUrl = await maximizeCommercialMusicPunch(rawBlob);
+                    if (boostedUrl) {
+                      punchedMusicMap.set(px, boostedUrl);
+                      return prevFetch(boostedUrl);
+                    }
+                    return prevFetch(URL.createObjectURL(rawBlob));
+                  }
+                }
+                return musicResp;
+              }
+            }
+          } catch (_) {}
+        }
+
+        const resp = await prevFetch(input, init);
+
+        // C) Registra URLs de voz/música e crava 100% as legendas do Whisper na duração exata da voz final
+        if (reqUrl.includes("/api/generate") && method === "POST" && resp && resp.ok) {
+          const ct = String(resp.headers.get("content-type") || "").toLowerCase();
+          if (ct.includes("application/json")) {
+            try {
+              const cloned = resp.clone();
+              const data = await cloned.json();
+
+              const audioUrl = data?.audioUrl || data?.audio_url || data?.result?.audio?.url || "";
+              const eng = String(data?.engine || "").toLowerCase();
+              const isMusic = eng.includes("lyria") || eng.includes("music") || String(audioUrl).includes("lyria");
+              const isVideoOrImg = /\.(mp4|webm|mov|jpg|jpeg|png|webp|gif)(\?|$)/i.test(String(audioUrl));
+              const hasTopChunks = Array.isArray(data?.chunks) && data.chunks.length > 0;
+              const hasResChunks = Array.isArray(data?.result?.chunks) && data.result.chunks.length > 0;
+              const isCompleted = !data?.status || data?.status === "COMPLETED";
+
+              if (audioUrl && isCompleted && !isVideoOrImg && !hasTopChunks && !hasResChunks) {
+                if (isMusic) {
+                  lastMusicUrl = audioUrl;
+                } else if (!String(audioUrl).startsWith("blob:")) {
+                  lastTtsUrl = audioUrl;
+                  // Já dispara em segundo plano o preparo da voz final acelerada
+                  ensureFinalVoiceReady(audioUrl, prevFetch);
+                }
+              }
+
+              if ((hasTopChunks || hasResChunks) && lastTtsUrl) {
+                const voiceEntry = await ensureFinalVoiceReady(lastTtsUrl, prevFetch);
+                if (voiceEntry && voiceEntry.duration > 1) {
+                  if (hasTopChunks) data.chunks = lockSubtitlesToExactVoice(data.chunks, voiceEntry.duration);
+                  if (hasResChunks) data.result.chunks = lockSubtitlesToExactVoice(data.result.chunks, voiceEntry.duration);
+                  const newHeaders = new Headers(resp.headers);
+                  newHeaders.delete("content-length");
+                  return new Response(JSON.stringify(data), {
+                    status: resp.status,
+                    statusText: resp.statusText,
+                    headers: newHeaders
+                  });
+                }
+              }
+            } catch (_) {}
+          }
+        }
+
+        return resp;
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
