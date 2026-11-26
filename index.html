@@ -6592,6 +6592,592 @@
         return prevFetch(input, init);
       };
     })();
+  // === BLOCO 2: PREVIEW DE VOZ ESTILO ELEVENLABS + NARRAÇÃO COMERCIAL 2000% + LEGENDAS CRAVADAS ===
+    (function initNexoraVoicePro2000() {
+      if (window.__nexoraVoicePro2000) return;
+      window.__nexoraVoicePro2000 = true;
+
+      const voicePreviewCache = new Map();
+      let previewAudioEl = null;
+      let isPreviewLoading = false;
+
+      // 1) Localiza automaticamente o seletor de voz e a caixa de texto do roteiro
+      function findVoiceSelect() {
+        const direct = document.querySelector(
+          "#voiceSelect, #ttsVoice, #narratorVoice, #voiceId, #voiceModel, select[id*='voice' i], select[id*='voz' i]"
+        );
+        if (direct) return direct;
+        const allSelects = Array.from(document.querySelectorAll("select"));
+        return allSelects.find((sel) => {
+          const txt = Array.from(sel.options || []).map((o) => `${o.value} ${o.textContent}`).join(" ").toLowerCase();
+          return /(roger|aria|brian|sarah|minimax|masc|fem|locutor|narrador)/.test(txt);
+        }) || null;
+      }
+
+      function findScriptTextarea() {
+        const direct = document.querySelector(
+          "#narrationText, #scriptText, #voiceText, #ttsText, #customScript, #narrationScript, textarea[id*='script' i], textarea[id*='narr' i], textarea[id*='roteiro' i], textarea[id*='voice' i], textarea[id*='tts' i]"
+        );
+        if (direct) return direct;
+        const allAreas = Array.from(document.querySelectorAll("textarea"));
+        return allAreas.find((t) => {
+          const ph = String(t.placeholder || "").toLowerCase();
+          return /(roteiro|narra|fala|texto|comercial|anúncio|anuncio)/.test(ph);
+        }) || allAreas[0] || null;
+      }
+
+      function inferVoiceGender(sel) {
+        if (!sel) return "male";
+        const val = String(sel.value || "").toLowerCase();
+        const opt = sel.options && sel.selectedIndex >= 0 ? sel.options[sel.selectedIndex] : null;
+        const label = String(opt?.textContent || "").toLowerCase();
+        const combined = `${val} ${label}`;
+        if (/^(f\d|_?f_)/.test(val) || /(fem|mulher|garota|aria|jessica|sarah|laura|alice|matilda|lily|rachel|charlotte|dora|doce|vibrante|inspiradora|exuberante|confiante|elegante)/.test(combined)) {
+          return "female";
+        }
+        return "male";
+      }
+
+      // 2) Detecta o produto REAL (acaba de vez com erro de chamar VR de óculos de sol)
+      function detectRealProductCategory(descRaw) {
+        const s = String(descRaw || "").toLowerCase();
+        if (/(headset|\bvr\b|realidade virtual|metaverso|meta quest|quest \d|visor vr|óculos vr|oculos vr|controles.*vr)/.test(s)) {
+          return "vr";
+        }
+        if (/(relógio|relogio|smartwatch|cronógrafo|cronografo|pulseira.*aço|pulseira.*couro|watch)/.test(s)) {
+          return "watch";
+        }
+        if (/(óculos de sol|oculos de sol|armação|armacao|lente uv|lente polarizada|solar|aviador|gatinho)/.test(s)) {
+          return "sunglasses";
+        }
+        if (/(fone|earbud|airpod|headphone|bluetooth|microfone|lapela|caixa de som|speaker)/.test(s)) {
+          return "audio";
+        }
+        if (/(tênis|tenis|sapato|bota|sandália|sandalia|chinelo|calçado|calcado|sneaker)/.test(s)) {
+          return "footwear";
+        }
+        if (/(perfume|colônia|colonia|sérum|serum|creme|hidratante|maquiagem|batom|shampoo|cosmético|cosmetico|skincare)/.test(s)) {
+          return "beauty";
+        }
+        if (/(mouse|teclado|console|portátil|portatil|gamer|celular|smartphone|carregador|powerbank|câmera|camera|drone|eletrônico|eletronico)/.test(s)) {
+          return "tech";
+        }
+        if (/(bolsa|mochila|carteira|colar|anel|brinco|pulseira|joia|jóia|corrente|acessório|acessorio)/.test(s)) {
+          return "fashion";
+        }
+        if (/(café|cafe|moedor|liquidificador|garrafa|copo térmico|copo termico|cozinha|panela|airfryer|casa)/.test(s)) {
+          return "home";
+        }
+        return "universal";
+      }
+
+      // 3) Gerador de roteiro comercial ultra-persuasivo calibrado para 10s, 15s, 20s e 30s
+      function buildCommercialScript2000(vidSec) {
+        const desc = String(document.getElementById("productDetailHint")?.value || "").trim();
+        const macro = String(document.getElementById("macroTarget")?.value || "").trim();
+        const cat = detectRealProductCategory(desc);
+        const macroTxt = macro ? macro.toLowerCase() : "cada detalhe do acabamento";
+
+        const BANK = {
+          vr: {
+            hook: "Esqueça tudo o que você já viu em realidade virtual! Este headset eleva a sua imersão para um nível surreal.",
+            mid1: `Com ${macroTxt}, precisão absurda nos controles e conforto total para horas de jogo, você realmente entra dentro da cena.`,
+            mid2: "Visual futurista, resposta instantânea e imagem cristalina em cada movimento, sem cabos te atrapalhando e pronto para usar em segundos.",
+            extra: "Seja para jogar, explorar novos mundos ou assistir como num cinema particular, a experiência é simplesmente viciante do primeiro ao último minuto.",
+            cta: "Estoque voando agora! Toque no carrinho aqui embaixo e garanta o seu hoje!"
+          },
+          watch: {
+            hook: "Olha a presença desse relógio no pulso! Design marcante que chama atenção antes mesmo de você falar uma palavra.",
+            mid1: `Com ${macroTxt}, construção robusta e acabamento de alto padrão, ele combina luxo, resistência e estilo em qualquer ocasião.`,
+            mid2: "Cada detalhe foi projetado para impressionar de perto, entregando conforto o dia inteiro e um visual imponente no trabalho ou no rolê.",
+            extra: "Quem vê de perto pergunta na hora onde você comprou — é o toque final que transforma completamente o seu visual.",
+            cta: "As unidades estão acabando rápido! Toque no carrinho aqui embaixo e garanta o seu agora!"
+          },
+          sunglasses: {
+            hook: "Quer elevar o seu visual em um segundo? Olha o impacto absurdo desses óculos com acabamento de nível premium!",
+            mid1: `Com ${macroTxt}, encaixe leve que não aperta o rosto e proteção total contra o sol forte, você une estilo e conforto o dia todo.`,
+            mid2: "Lentes de alta nitidez e armação resistente que valorizam qualquer look, da praia ao dia a dia na cidade.",
+            extra: "É aquele acessório impossível de passar despercebido, pensado para durar e destacar a sua personalidade em qualquer ambiente.",
+            cta: "Não deixa acabar! Toque agora no carrinho aqui embaixo e garanta o seu!"
+          },
+          audio: {
+            hook: "Som limpo, grave potente e liberdade total sem fios! Escuta o nível de qualidade que esse lançamento entrega.",
+            mid1: `Com ${macroTxt}, conexão rápida e encaixe super confortável, você aproveita cada batida e cada voz com clareza impressionante.`,
+            mid2: "Perfeito para gravar, treinar, trabalhar ou curtir sua playlist o dia inteiro com autonomia de sobra e design moderno.",
+            extra: "Chega de áudio abafado e fio embolando — é praticidade real no seu bolso pronta para entregar resultado profissional.",
+            cta: "Últimas peças disponíveis! Toque no carrinho aqui embaixo e garanta o seu agora!"
+          },
+          footwear: {
+            hook: "Conforto extremo no primeiro passo e estilo que domina qualquer lugar! Olha os detalhes desse lançamento incrível.",
+            mid1: `Com ${macroTxt}, pisada macia e estrutura leve que abraça o pé, você encara a rotina inteira sem cansar.`,
+            mid2: "Acabamento impecável, visual moderno e versatilidade total para combinar com tudo no seu guarda-roupa.",
+            extra: "Feito para quem não abre mão de presença e bem-estar do começo ao fim do dia, com durabilidade que surpreende.",
+            cta: "Corre antes que a sua numeração acabe! Toque no carrinho aqui embaixo e garanta já!"
+          },
+          beauty: {
+            hook: "Olha o poder desse cuidado diário! Resultado visível, toque sofisticado e uma experiência que transforma a sua rotina.",
+            mid1: `Com ${macroTxt} e fórmula pensada nos mínimos detalhes, ele entrega brilho, suavidade e presença marcante desde a primeira aplicação.`,
+            mid2: "Sensação leve, acabamento impecável e qualidade de alto nível que faz toda a diferença no espelho todos os dias.",
+            extra: "Quem testa não troca mais — é o segredo prático para se sentir mais confiante e receber elogios por onde passar.",
+            cta: "Garanta antes que esgote! Toque no carrinho aqui embaixo e peça o seu agora!"
+          },
+          tech: {
+            hook: "Velocidade, precisão e design de outro nível! Esse lançamento chegou para turbinar a sua rotina sem complicação.",
+            mid1: `Com ${macroTxt}, resposta ultrarrápida e construção moderna, você sente a diferença de desempenho logo no primeiro clique.`,
+            mid2: "Compacto, poderoso e pensado para entregar máxima performance onde você estiver, com acabamento que impressiona de perto.",
+            extra: "Esqueça modelos lentos e ultrapassados — aqui você tem tecnologia atual, visual marcante e praticidade real todo dia.",
+            cta: "Oferta rodando agora! Toque no carrinho aqui embaixo e garanta o seu!"
+          },
+          fashion: {
+            hook: "Um único detalhe capaz de transformar todo o seu visual! Olha o acabamento impecável dessa peça incrível.",
+            mid1: `Com ${macroTxt}, caimento elegante e resistência para o dia a dia, ela une beleza, praticidade e presença marcante.`,
+            mid2: "Perfeita para combinar com looks casuais ou sofisticados, trazendo estilo de alto padrão em cada costura e detalhe.",
+            extra: "É aquela peça coringa que valoriza qualquer produção e chama atenção pelo bom gosto assim que você chega.",
+            cta: "Estoque limitado! Toque no carrinho aqui embaixo e garanta a sua hoje!"
+          },
+          home: {
+            hook: "Praticidade real que economiza o seu tempo todos os dias! Olha como esse produto resolve tudo em segundos.",
+            mid1: `Com ${macroTxt}, material resistente e uso super simples, ele entrega resultado rápido com acabamento impecável.`,
+            mid2: "Design moderno que deixa o seu espaço ainda mais bonito, fácil de limpar e feito para aguentar o ritmo da sua rotina.",
+            extra: "Depois que você usa pela primeira vez, não entende como ficou tanto tempo sem ter um desses por perto.",
+            cta: "Aproveite enquanto tem estoque! Toque no carrinho aqui embaixo e garanta o seu!"
+          },
+          universal: {
+            hook: "Para tudo e olha o nível desse lançamento! Qualidade impressionante que chama atenção logo no primeiro segundo.",
+            mid1: `Com ${macroTxt}, acabamento de alto padrão e design pensado nos mínimos detalhes, ele entrega desempenho real no seu dia a dia.`,
+            mid2: "Visual moderno, praticidade incrível e resistência de verdade para superar qualquer expectativa do começo ao fim.",
+            extra: "Quem recebe se surpreende com a qualidade de perto — é o upgrade inteligente que faz toda a diferença na sua rotina.",
+            cta: "Unidades saindo rápido! Toque no carrinho aqui embaixo e garanta o seu agora!"
+          }
+        };
+
+        const b = BANK[cat] || BANK.universal;
+        if (vidSec <= 12) return `${b.hook} ${b.mid1} ${b.cta}`;
+        if (vidSec <= 17) return `${b.hook} ${b.mid1} ${b.mid2} ${b.cta}`;
+        if (vidSec <= 23) return `${b.hook} ${b.mid1} ${b.mid2} ${b.extra} ${b.cta}`;
+        return `${b.hook} ${b.mid1} ${b.mid2} ${b.extra} Qualidade comprovada que impressiona em cada ângulo. ${b.cta}`;
+      }
+
+      // 4) Corretor de acentos PT-BR (para voz natural e legendas sem "OCULOS" ou "NAO")
+      const PT_ACCENT_FIXES = [
+        [/\boculos\b/gi, "óculos"], [/\bnao\b/gi, "não"], [/\bvoce\b/gi, "você"],
+        [/\bvoces\b/gi, "vocês"], [/\bincrivel\b/gi, "incrível"], [/\bunico\b/gi, "único"],
+        [/\bunica\b/gi, "única"], [/\brapido\b/gi, "rápido"], [/\brapida\b/gi, "rápida"],
+        [/\bpratico\b/gi, "prático"], [/\bpratica\b/gi, "prática"], [/\bmaximo\b/gi, "máximo"],
+        [/\bmaxima\b/gi, "máxima"], [/\botimo\b/gi, "ótimo"], [/\botima\b/gi, "ótima"],
+        [/\bfacil\b/gi, "fácil"], [/\btambem\b/gi, "também"], [/\bate\b/gi, "até"],
+        [/\bso\b/gi, "só"], [/\bja\b/gi, "já"], [/\bprotecao\b/gi, "proteção"],
+        [/\batencao\b/gi, "atenção"], [/\bpromocao\b/gi, "promoção"], [/\bimperdivel\b/gi, "imperdível"],
+        [/\bdisponivel\b/gi, "disponível"], [/\bexperiencia\b/gi, "experiência"], [/\bimersao\b/gi, "imersão"],
+        [/\bprecisao\b/gi, "precisão"], [/\bcamera\b/gi, "câmera"], [/\bcameras\b/gi, "câmeras"],
+        [/\bportatil\b/gi, "portátil"], [/\brelogio\b/gi, "relógio"], [/\btenis\b/gi, "tênis"],
+        [/\barmacao\b/gi, "armação"], [/\binovacao\b/gi, "inovação"], [/\bconfortavel\b/gi, "confortável"],
+        [/\bincrivelmente\b/gi, "incrivelmente"], [/\bsensacao\b/gi, "sensação"], [/\bocasiao\b/gi, "ocasião"],
+        [/\bconstrucao\b/gi, "construção"], [/\bconexao\b/gi, "conexão"], [/\bduracao\b/gi, "duração"]
+      ];
+
+      function preserveCaseReplace(word, replacement) {
+        if (word === word.toUpperCase()) return replacement.toUpperCase();
+        if (word[0] && word[0] === word[0].toUpperCase()) {
+          return replacement[0].toUpperCase() + replacement.slice(1);
+        }
+        return replacement;
+      }
+
+      function fixPortugueseAccents(str) {
+        let out = String(str || "");
+        for (const [rx, rep] of PT_ACCENT_FIXES) {
+          out = out.replace(rx, (m) => preserveCaseReplace(m, rep));
+        }
+        return out;
+      }
+
+      function sanitizeWhisperChunks(chunks) {
+        if (!Array.isArray(chunks) || chunks.length === 0) return chunks;
+        let lastEnd = 0;
+        const VISUAL_LEAD_SEC = 0.06; // Leve avanço padrão de TV p/ legenda bater exata com a voz
+        return chunks.map((ch, idx) => {
+          if (!ch || typeof ch !== "object") return ch;
+          const fixedText = fixPortugueseAccents(ch.text || "");
+          if (!Array.isArray(ch.timestamp)) return { ...ch, text: fixedText };
+
+          let s = Number(ch.timestamp[0]);
+          let e = Number(ch.timestamp[1]);
+          if (!Number.isFinite(s)) s = lastEnd;
+          if (!Number.isFinite(e) || e <= s) {
+            const nextS = chunks[idx + 1] && Array.isArray(chunks[idx + 1].timestamp)
+              ? Number(chunks[idx + 1].timestamp[0])
+              : NaN;
+            e = Number.isFinite(nextS) && nextS > s ? nextS : s + 0.24;
+          }
+
+          s = Math.max(0, Number((s - VISUAL_LEAD_SEC).toFixed(3)));
+          e = Math.max(s + 0.09, Number((e - VISUAL_LEAD_SEC * 0.5).toFixed(3)));
+          if (s < lastEnd) s = Number(Math.max(0, lastEnd - 0.02).toFixed(3));
+          if (e <= s) e = Number((s + 0.12).toFixed(3));
+          lastEnd = e;
+
+          return { ...ch, text: fixedText, timestamp: [s, e] };
+        });
+      }
+
+      // 5) Monta o Player de Preview de Voz estilo ElevenLabs + Botão Roteiro 2000%
+      function injectElevenLabsVoiceUI() {
+        if (!document.getElementById("nexoraVoiceProCss")) {
+          const st = document.createElement("style");
+          st.id = "nexoraVoiceProCss";
+          st.textContent = `
+            .el-preview-bar {
+              margin-top: 8px;
+              padding: 10px 12px;
+              border-radius: 12px;
+              background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,41,59,0.88));
+              border: 1px solid rgba(56,189,248,0.42);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 10px;
+              flex-wrap: wrap;
+            }
+            .el-play-btn {
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              padding: 7px 14px;
+              border-radius: 999px;
+              border: 1px solid rgba(56,189,248,0.65);
+              background: linear-gradient(135deg, #0284c7, #2563eb);
+              color: #ffffff;
+              font-size: 12px;
+              font-weight: 800;
+              cursor: pointer;
+              transition: transform .15s ease, filter .15s ease;
+            }
+            .el-play-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+            .el-play-btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
+            .el-play-btn.playing {
+              background: linear-gradient(135deg, #dc2626, #ea580c);
+              border-color: rgba(251,146,60,0.75);
+            }
+            .el-eq {
+              display: inline-flex;
+              align-items: flex-end;
+              gap: 2.5px;
+              height: 15px;
+              opacity: 0.35;
+            }
+            .el-eq.active { opacity: 1; }
+            .el-eq span {
+              width: 3px;
+              height: 4px;
+              border-radius: 3px;
+              background: #38bdf8;
+              transition: height .15s ease;
+            }
+            .el-eq.active span { animation: nexoraEqPulse 0.65s infinite ease-in-out; }
+            .el-eq.active span:nth-child(2) { animation-delay: 0.12s; }
+            .el-eq.active span:nth-child(3) { animation-delay: 0.24s; }
+            .el-eq.active span:nth-child(4) { animation-delay: 0.36s; }
+            .el-eq.active span:nth-child(5) { animation-delay: 0.48s; }
+            @keyframes nexoraEqPulse {
+              0%, 100% { height: 4px; }
+              50% { height: 15px; }
+            }
+            .el-preview-meta {
+              font-size: 11px;
+              color: #bae6fd;
+              font-weight: 600;
+              flex: 1;
+              min-width: 150px;
+            }
+            .btn-script-2000 {
+              margin-top: 8px;
+              width: 100%;
+              padding: 9px 14px;
+              border-radius: 10px;
+              border: 1px solid rgba(251,191,36,0.52);
+              background: linear-gradient(135deg, rgba(245,158,11,0.20), rgba(234,88,12,0.22));
+              color: #fef3c7;
+              font-size: 12px;
+              font-weight: 800;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 8px;
+            }
+            .btn-script-2000:hover { filter: brightness(1.15); }
+          `;
+          document.head.appendChild(st);
+        }
+
+        const voiceSel = findVoiceSelect();
+        if (voiceSel && !document.getElementById("elVoicePreviewBar")) {
+          const bar = document.createElement("div");
+          bar.id = "elVoicePreviewBar";
+          bar.className = "el-preview-bar";
+          bar.innerHTML =
+            '<button type="button" class="el-play-btn" id="btnPreviewVoiceEL">▶ Ouvir Voz (Preview IA)</button>' +
+            '<div class="el-eq" id="elPreviewEq"><span></span><span></span><span></span><span></span><span></span></div>' +
+            '<span class="el-preview-meta" id="elPreviewMeta">Escute a voz real antes de gerar o vídeo • Cache ativo</span>';
+          voiceSel.insertAdjacentElement("afterend", bar);
+
+          const btnPlay = document.getElementById("btnPreviewVoiceEL");
+          const eqEl = document.getElementById("elPreviewEq");
+          const metaEl = document.getElementById("elPreviewMeta");
+
+          function stopCurrentPreview() {
+            if (previewAudioEl) {
+              try { previewAudioEl.pause(); previewAudioEl.currentTime = 0; } catch (_) {}
+              previewAudioEl = null;
+            }
+            if (btnPlay) {
+              btnPlay.classList.remove("playing");
+              btnPlay.textContent = "▶ Ouvir Voz (Preview IA)";
+            }
+            if (eqEl) eqEl.classList.remove("active");
+          }
+
+          voiceSel.addEventListener("change", () => {
+            stopCurrentPreview();
+            const optTxt = voiceSel.options[voiceSel.selectedIndex]?.textContent?.trim() || "Voz selecionada";
+            if (metaEl) metaEl.textContent = `Pronta para ouvir: ${optTxt.slice(0, 42)}`;
+          });
+
+          btnPlay?.addEventListener("click", async () => {
+            if (previewAudioEl && !previewAudioEl.paused) {
+              stopCurrentPreview();
+              if (metaEl) metaEl.textContent = "Preview pausado.";
+              return;
+            }
+            if (isPreviewLoading) return;
+
+            const voiceId = String(voiceSel.value || "").trim();
+            const gender = inferVoiceGender(voiceSel);
+            const optLabel = voiceSel.options[voiceSel.selectedIndex]?.textContent?.trim() || voiceId || "Voz IA";
+            const cacheKey = `${voiceId}__${gender}`;
+
+            try {
+              isPreviewLoading = true;
+              btnPlay.disabled = true;
+
+              let playableUrl = voicePreviewCache.get(cacheKey);
+              if (!playableUrl) {
+                btnPlay.textContent = "⏳ Gerando amostra...";
+                if (metaEl) metaEl.textContent = `Carregando voz real (${optLabel.slice(0, 32)})...`;
+
+                const sampleText =
+                  "Atenção! Esse lançamento impressiona nos mínimos detalhes. Toque no carrinho agora e garanta o seu!";
+                let audioUrl = "";
+                let lastErr = "Não foi possível gerar o preview desta voz.";
+
+                for (let engIdx = 0; engIdx <= 2; engIdx++) {
+                  try {
+                    const q = await callApi({
+                      task: "submit_tts",
+                      action: "submit_tts",
+                      __isVoicePreview: true,
+                      engineIndex: engIdx,
+                      voiceId,
+                      voice: voiceId,
+                      gender,
+                      speed: 1.20,
+                      text: sampleText
+                    }, 30000);
+                    const r = await pollFalJob(q, (st) => {
+                      if (metaEl) metaEl.textContent = `Voz real: ${st}...`;
+                    });
+                    if (r && (r.audioUrl || r.url)) {
+                      audioUrl = r.audioUrl || r.url;
+                      break;
+                    }
+                  } catch (e) {
+                    if (e && (e.status === 401 || e.status === 402)) throw e;
+                    lastErr = e?.message || lastErr;
+                  }
+                }
+
+                if (!audioUrl) throw new Error(lastErr);
+
+                if (typeof fetchMediaBlob === "function") {
+                  const blob = await fetchMediaBlob(audioUrl);
+                  playableUrl = URL.createObjectURL(blob);
+                } else {
+                  playableUrl = audioUrl;
+                }
+                voicePreviewCache.set(cacheKey, playableUrl);
+              }
+
+              stopCurrentPreview();
+              previewAudioEl = new Audio(playableUrl);
+              previewAudioEl.preservesPitch = true;
+              previewAudioEl.onended = () => {
+                stopCurrentPreview();
+                if (metaEl) metaEl.textContent = `✓ Amostra pronta (${optLabel.slice(0, 34)}) — ouvir de novo é instantâneo`;
+              };
+              previewAudioEl.onerror = () => {
+                stopCurrentPreview();
+                if (metaEl) metaEl.textContent = "Erro ao reproduzir áudio do preview.";
+              };
+
+              await previewAudioEl.play();
+              btnPlay.classList.add("playing");
+              btnPlay.textContent = "⏹ Parar Voz";
+              if (eqEl) eqEl.classList.add("active");
+              if (metaEl) metaEl.textContent = `🔊 Ouvindo: ${optLabel.slice(0, 38)}`;
+            } catch (err) {
+              stopCurrentPreview();
+              if (metaEl) metaEl.textContent = `Aviso: ${err?.message || "faça login ou verifique créditos"}`;
+            } finally {
+              isPreviewLoading = false;
+              btnPlay.disabled = false;
+            }
+          });
+        }
+
+        const scriptArea = findScriptTextarea();
+        if (scriptArea && !document.getElementById("btnGenScript2000")) {
+          const btnScript = document.createElement("button");
+          btnScript.type = "button";
+          btnScript.id = "btnGenScript2000";
+          btnScript.className = "btn-script-2000";
+          btnScript.textContent = "🔥 Gerar Roteiro Comercial 2000% (Fiel ao Produto Real + Duração Exata)";
+          scriptArea.insertAdjacentElement("afterend", btnScript);
+
+          btnScript.addEventListener("click", () => {
+            const vidSec = Number(document.getElementById("minDuration")?.value || 10) || 10;
+            scriptArea.value = buildCommercialScript2000(vidSec);
+            scriptArea.dispatchEvent(new Event("input", { bubbles: true }));
+            scriptArea.dispatchEvent(new Event("change", { bubbles: true }));
+            btnScript.textContent = `✅ Roteiro 2000% gerado para ${vidSec}s (fiel ao produto)! Clique p/ variar`;
+            setTimeout(() => {
+              btnScript.textContent = "🔥 Gerar Roteiro Comercial 2000% (Fiel ao Produto Real + Duração Exata)";
+            }, 3500);
+          });
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", injectElevenLabsVoiceUI);
+      } else {
+        injectElevenLabsVoiceUI();
+      }
+      setTimeout(injectElevenLabsVoiceUI, 900);
+
+      // 6) Interceptador de TTS (Narração 2000% fiel ao produto + tempo cheio) e Transcrição (Legenda cravada)
+      const prevFetch = window.fetch.bind(window);
+      window.fetch = async function (input, init) {
+        const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+        const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+        let isApiGen = reqUrl.includes("/api/generate") && method === "POST";
+        let bypassOldPacing = false;
+
+        if (isApiGen && init && typeof init.body === "string") {
+          try {
+            const payload = JSON.parse(init.body);
+            const act = String(payload.action || payload.task || payload.mode || "").trim().toLowerCase();
+
+            if (act === "submit_tts" || act === "tts" || act === "voice") {
+              bypassOldPacing = true;
+
+              if (payload.__isVoicePreview) {
+                delete payload.__isVoicePreview;
+                payload.text = fixPortugueseAccents(String(payload.text || "").trim());
+                payload.speed = 1.20;
+              } else {
+                const vidSec = Number(document.getElementById("minDuration")?.value || 10) || 10;
+                const desc = String(document.getElementById("productDetailHint")?.value || "").trim();
+                const cat = detectRealProductCategory(desc);
+                let txt = fixPortugueseAccents(String(payload.text || "").trim());
+
+                // Blindagem: se o produto NÃO é óculos de sol mas o roteiro fala de "sol forte / raios UV / rosto", troca pelo roteiro fiel
+                const wrongSunglassesCopy =
+                  cat !== "sunglasses" &&
+                  cat !== "universal" &&
+                  /(sol forte|raios uv|lente polarizada|armação leve|rosto zero|proteção solar)/i.test(txt);
+
+                const wordCount = txt.split(/\s+/).filter(Boolean).length;
+                const minWordsForFullDuration = Math.round(vidSec * 2.85);
+
+                if (!txt || wrongSunglassesCopy) {
+                  txt = buildCommercialScript2000(vidSec);
+                } else if (wordCount < minWordsForFullDuration) {
+                  // Completa com frases do produto real para nunca encerrar o vídeo de 10s em 6,7s
+                  const rich = buildCommercialScript2000(vidSec);
+                  const sentences = rich.split(/(?<=[.!?])\s+/).filter(Boolean);
+                  if (!/[.!?]$/.test(txt)) txt += ".";
+                  for (const s of sentences) {
+                    if (txt.split(/\s+/).filter(Boolean).length >= minWordsForFullDuration + 3) break;
+                    if (!txt.toLowerCase().includes(s.slice(0, 18).toLowerCase())) {
+                      const next = `${txt} ${s}`;
+                      if (next.length <= 685) txt = next;
+                    }
+                  }
+                }
+
+                // Remove pausas mortas para manter ritmo dinâmico de comercial profissional
+                txt = txt
+                  .replace(/\.{2,}/g, ",")
+                  .replace(/\s*[\r\n]+\s*/g, " ")
+                  .replace(/\s{2,}/g, " ")
+                  .trim()
+                  .slice(0, 690);
+
+                payload.text = fixPortugueseAccents(txt);
+                // Ritmo comercial ágil e natural (1.20x ElevenLabs / 1.24x MiniMax, sem afinar nem atropelar)
+                payload.speed = 1.24;
+              }
+
+              init = { ...init, body: JSON.stringify(payload) };
+            }
+          } catch (_) {}
+        }
+
+        // Evita conflito com o ajustador antigo do Passo 4
+        let resp;
+        if (bypassOldPacing) {
+          const oldChk = document.getElementById("chkProPacing3s");
+          const wasChecked = oldChk ? oldChk.checked : false;
+          if (oldChk) oldChk.checked = false;
+          let p;
+          try {
+            p = prevFetch(input, init);
+          } finally {
+            if (oldChk) oldChk.checked = wasChecked;
+          }
+          resp = await p;
+        } else {
+          resp = await prevFetch(input, init);
+        }
+
+        // Corrige acentos e crava o relógio das legendas (chunks do Whisper)
+        if (isApiGen && resp && resp.ok) {
+          const ct = String(resp.headers.get("content-type") || "").toLowerCase();
+          if (ct.includes("application/json")) {
+            try {
+              const cloned = resp.clone();
+              const data = await cloned.json();
+              const hasTopChunks = Array.isArray(data?.chunks) && data.chunks.length > 0;
+              const hasResChunks = Array.isArray(data?.result?.chunks) && data.result.chunks.length > 0;
+              if (hasTopChunks || hasResChunks) {
+                if (hasTopChunks) data.chunks = sanitizeWhisperChunks(data.chunks);
+                if (hasResChunks) data.result.chunks = sanitizeWhisperChunks(data.result.chunks);
+                if (typeof data.textOutput === "string") data.textOutput = fixPortugueseAccents(data.textOutput);
+                const newHeaders = new Headers(resp.headers);
+                newHeaders.delete("content-length");
+                return new Response(JSON.stringify(data), {
+                  status: resp.status,
+                  statusText: resp.statusText,
+                  headers: newHeaders
+                });
+              }
+            } catch (_) {}
+          }
+        }
+
+        return resp;
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
