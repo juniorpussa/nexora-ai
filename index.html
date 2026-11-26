@@ -7178,6 +7178,791 @@
         return resp;
       };
     })();
+  // === BLOCO 3: NOVAS TRILHAS SONORAS DE ALTO IMPACTO (LYRIA 2 PRO + PREVIEW GRÁTIS + MOTOR INSTANTÂNEO) ===
+    (function initNexoraMusicPro2000() {
+      if (window.__nexoraMusicPro2000) return;
+      window.__nexoraMusicPro2000 = true;
+
+      const PRO_TRACKS = [
+        {
+          id: "blockbuster_impact",
+          name: "🔥 Impacto Blockbuster Hollywood (Drop 00:00)",
+          bpm: 128,
+          rootMidi: 48, // C3
+          chords: [[0, 3, 7], [8, 12, 15], [3, 7, 10], [10, 14, 17]],
+          style: "epic",
+          lyriaPrompt:
+            "IMMEDIATE HIGH-IMPACT HOLLYWOOD TRAILER DROP AT 0:00, ZERO SLOW INTRO. Explosive modern cinema commercial soundtrack, massive punchy taiko drums, crisp hybrid trap percussion, deep sub-bass pulse, energetic heroic brass stabs and dramatic rising tension, ultra-dynamic blockbuster ad mix, relentless forward momentum, broadcast commercial mastering, pure instrumental, zero vocals."
+        },
+        {
+          id: "tiktok_viral_drop",
+          name: "⚡ TikTok Viral High-Retention (Ritmo Frenético)",
+          bpm: 134,
+          rootMidi: 50, // D3
+          chords: [[0, 3, 7], [10, 14, 17], [8, 12, 15], [7, 10, 14]],
+          style: "viral",
+          lyriaPrompt:
+            "IMMEDIATE PUNCHY DROP AT 0:00, ZERO SLOW INTRO. Ultra-catchy high-retention TikTok commercial beat, tight snappy drums, booming 808 bassline, crisp fast hi-hat rolls, bright modern synth plucks, addictive high-energy e-commerce ad groove that hooks viewers instantly, super polished loud commercial mix, pure instrumental, zero vocals."
+        },
+        {
+          id: "luxury_trap_gold",
+          name: "💎 Luxo & Ostentação Trap (808 Pesado Premium)",
+          bpm: 122,
+          rootMidi: 45, // A2
+          chords: [[0, 3, 7], [5, 8, 12], [8, 12, 15], [7, 11, 14]],
+          style: "luxury",
+          lyriaPrompt:
+            "IMMEDIATE CONFIDENT DROP AT 0:00, ZERO SLOW INTRO. High-end luxury commercial dark trap soundtrack, deep luxurious 808 sub-bass, razor-sharp crisp hi-hats, sleek cinematic piano stabs and warm string accents, rich expensive VIP brand advertisement vibe, high-impact sleek groove, pure instrumental, zero vocals."
+        },
+        {
+          id: "cyber_tech_pulse",
+          name: "🚀 Tech Futurista & Cyber (Energia Eletrônica)",
+          bpm: 130,
+          rootMidi: 52, // E3
+          chords: [[0, 3, 7], [8, 12, 15], [10, 14, 17], [7, 10, 14]],
+          style: "cyber",
+          lyriaPrompt:
+            "IMMEDIATE HIGH-VOLTAGE DROP AT 0:00, ZERO SLOW INTRO. Futuristic high-tech product commercial soundtrack, driving cyberpunk bass synth, crisp punchy electronic drums, sparkling fast arpeggios, sleek sci-fi energy risers, cutting-edge innovation and speed vibe, ultra-clean modern studio mastering, pure instrumental, zero vocals."
+        },
+        {
+          id: "adrenaline_action",
+          name: "💥 Adrenalina & Ação Máxima (Percussão Pesada)",
+          bpm: 138,
+          rootMidi: 46, // Bb2
+          chords: [[0, 3, 7], [0, 3, 7], [8, 12, 15], [10, 14, 17]],
+          style: "action",
+          lyriaPrompt:
+            "IMMEDIATE EXPLOSIVE IMPACT AT 0:00, ZERO SLOW INTRO. High-octane sports and action commercial music, aggressive stomping drums, driving distorted bass riff, fast cinematic percussion hits, intense adrenaline urgency, nonstop kinetic energy made for fast-cut video ads, pure instrumental, zero vocals."
+        },
+        {
+          id: "fashion_chic_house",
+          name: "✨ Beleza & Fashion Premium (Deep House Chic)",
+          bpm: 124,
+          rootMidi: 53, // F3
+          chords: [[0, 3, 7], [8, 12, 15], [3, 7, 10], [10, 14, 17]],
+          style: "house",
+          lyriaPrompt:
+            "IMMEDIATE GROOVE DROP AT 0:00, ZERO SLOW INTRO. Stylish upscale fashion and beauty commercial deep house track, punchy four-on-the-floor kick, bouncy warm bassline, sparkling glossy chords, glamorous runway energy, upbeat persuasive modern retail vibe, crystal-clear mix, pure instrumental, zero vocals."
+        },
+        {
+          id: "tv_direct_response",
+          name: "🎯 Venda Direta Urgente (Comercial de TV)",
+          bpm: 132,
+          rootMidi: 48, // C3
+          chords: [[0, 4, 7], [7, 11, 14], [9, 12, 16], [5, 9, 12]],
+          style: "tv",
+          lyriaPrompt:
+            "IMMEDIATE UPBEAT IMPACT AT 0:00, ZERO SLOW INTRO. High-converting direct-response TV commercial soundtrack, energetic rhythmic claps, driving bass groove, bright punchy brass and modern pop-electronic stabs, exciting persuasive urgency that keeps viewers watching until the end, pure instrumental, zero vocals."
+        },
+        {
+          id: "cinema_epic_rise",
+          name: "🎬 Cinema Épico Grandioso (Impacto Crescente)",
+          bpm: 126,
+          rootMidi: 47, // B2
+          chords: [[0, 3, 7], [8, 12, 15], [3, 7, 10], [7, 11, 14]],
+          style: "epic",
+          lyriaPrompt:
+            "IMMEDIATE DRAMATIC HIT AT 0:00, ZERO SLOW INTRO. Grand inspirational blockbuster commercial score, powerful modern staccato strings, booming cinematic drums, soaring triumphant synth brass, thrilling emotional momentum and prestige impact from the very first beat, pure instrumental, zero vocals."
+        }
+      ];
+
+      const MUSIC_NEGATIVE_STRICT =
+        "slow intro, quiet start, fade in, ambient, sleepy, boring, calm, meditative, lullaby, elevator music, vocals, singing, voice, speech, choir words, muddy mix, lo-fi, off-beat, acoustic guitar folk";
+
+      const instantTrackCache = new Map();
+      const lyriaTrackCache = new Map();
+      const localVirtualJobs = new Map();
+      let musicPreviewAudio = null;
+      let isLyriaPreviewLoading = false;
+
+      function getSelectedTrack() {
+        const sel = document.getElementById("nexoraTrackSelect2000");
+        const id = sel ? sel.value : PRO_TRACKS[0].id;
+        return PRO_TRACKS.find((t) => t.id === id) || PRO_TRACKS[0];
+      }
+
+      function getSelectedMusicEngine() {
+        const sel = document.getElementById("nexoraMusicEngine2000");
+        return sel ? sel.value : "lyria2";
+      }
+
+      function midiToFreq(m) {
+        return 440 * Math.pow(2, (m - 69) / 12);
+      }
+
+      // Codifica AudioBuffer estéreo em WAV 16-bit PCM de alta qualidade
+      function audioBufferToWavBlob(buffer) {
+        const numCh = Math.min(2, buffer.numberOfChannels || 1);
+        const sampleRate = buffer.sampleRate;
+        const length = buffer.length;
+        const blockAlign = numCh * 2;
+        const dataSize = length * blockAlign;
+        const ab = new ArrayBuffer(44 + dataSize);
+        const view = new DataView(ab);
+
+        const writeStr = (off, s) => {
+          for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i));
+        };
+        writeStr(0, "RIFF");
+        view.setUint32(4, 36 + dataSize, true);
+        writeStr(8, "WAVE");
+        writeStr(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, numCh, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * blockAlign, true);
+        view.setUint16(32, blockAlign, true);
+        view.setUint16(34, 16, true);
+        writeStr(36, "data");
+        view.setUint32(40, dataSize, true);
+
+        const channels = [];
+        for (let ch = 0; ch < numCh; ch++) channels.push(buffer.getChannelData(ch));
+
+        let offset = 44;
+        for (let i = 0; i < length; i++) {
+          for (let ch = 0; ch < numCh; ch++) {
+            const s = Math.max(-1, Math.min(1, channels[ch][i] || 0));
+            view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+            offset += 2;
+          }
+        }
+        return new Blob([ab], { type: "audio/wav" });
+      }
+
+      // Motor de estúdio instantâneo (0 créditos) — impacto no segundo 00:00 + groove comercial moderno
+      async function renderInstantProTrackWav(track, durationSec = 14) {
+        const dur = Math.min(36, Math.max(8, Math.ceil(durationSec)));
+        const cacheKey = `${track.id}_${dur}`;
+        if (instantTrackCache.has(cacheKey)) return instantTrackCache.get(cacheKey);
+
+        const sr = 44100;
+        const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        const ctx = new OfflineCtx(2, sr * dur, sr);
+
+        // Cadeia de masterização comercial (Compressor + Ganho equilibrado)
+        const masterComp = ctx.createDynamicsCompressor();
+        masterComp.threshold.setValueAtTime(-12, 0);
+        masterComp.knee.setValueAtTime(10, 0);
+        masterComp.ratio.setValueAtTime(6, 0);
+        masterComp.attack.setValueAtTime(0.004, 0);
+        masterComp.release.setValueAtTime(0.14, 0);
+
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.82, 0);
+        masterGain.gain.setValueAtTime(0.82, Math.max(0.2, dur - 0.5));
+        masterGain.gain.linearRampToValueAtTime(0.001, dur);
+
+        masterComp.connect(masterGain);
+        masterGain.connect(ctx.destination);
+
+        // Buffer de ruído limpo para pratos, claps e impactos
+        const noiseLen = sr * 2;
+        const noiseBuf = ctx.createBuffer(1, noiseLen, sr);
+        const nd = noiseBuf.getChannelData(0);
+        for (let i = 0; i < noiseLen; i++) nd[i] = Math.random() * 2 - 1;
+
+        function triggerImpactDrop(time, gainAmt = 0.65) {
+          // Sub-drop cinematográfico no segundo 00:00
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(118, time);
+          osc.frequency.exponentialRampToValueAtTime(34, time + 0.55);
+          g.gain.setValueAtTime(gainAmt, time);
+          g.gain.exponentialRampToValueAtTime(0.001, time + 0.72);
+          osc.connect(g);
+          g.connect(masterComp);
+          osc.start(time);
+          osc.stop(time + 0.75);
+
+          // Impacto de prato/ar brilhante
+          const n = ctx.createBufferSource();
+          n.buffer = noiseBuf;
+          const bp = ctx.createBiquadFilter();
+          bp.type = "bandpass";
+          bp.frequency.setValueAtTime(2600, time);
+          bp.frequency.exponentialRampToValueAtTime(600, time + 0.45);
+          bp.Q.setValueAtTime(1.2, time);
+          const ng = ctx.createGain();
+          ng.gain.setValueAtTime(gainAmt * 0.42, time);
+          ng.gain.exponentialRampToValueAtTime(0.001, time + 0.52);
+          n.connect(bp);
+          bp.connect(ng);
+          ng.connect(masterComp);
+          n.start(time);
+          n.stop(time + 0.55);
+        }
+
+        function triggerKick(time, punch = 0.72) {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(155, time);
+          osc.frequency.exponentialRampToValueAtTime(46, time + 0.055);
+          osc.frequency.exponentialRampToValueAtTime(36, time + 0.22);
+          g.gain.setValueAtTime(0.001, time);
+          g.gain.linearRampToValueAtTime(punch, time + 0.004);
+          g.gain.exponentialRampToValueAtTime(0.001, time + 0.26);
+          osc.connect(g);
+          g.connect(masterComp);
+          osc.start(time);
+          osc.stop(time + 0.28);
+        }
+
+        function triggerClap(time, vol = 0.34) {
+          [0, 0.011, 0.022].forEach((delay, idx) => {
+            const n = ctx.createBufferSource();
+            n.buffer = noiseBuf;
+            const hp = ctx.createBiquadFilter();
+            hp.type = "bandpass";
+            hp.frequency.setValueAtTime(1550 + idx * 240, time + delay);
+            hp.Q.setValueAtTime(1.1, time + delay);
+            const g = ctx.createGain();
+            const amp = idx === 2 ? vol : vol * 0.55;
+            g.gain.setValueAtTime(amp, time + delay);
+            g.gain.exponentialRampToValueAtTime(0.001, time + delay + (idx === 2 ? 0.14 : 0.035));
+            n.connect(hp);
+            hp.connect(g);
+            g.connect(masterComp);
+            n.start(time + delay);
+            n.stop(time + delay + 0.16);
+          });
+        }
+
+        function triggerHat(time, vol = 0.11, open = false) {
+          const n = ctx.createBufferSource();
+          n.buffer = noiseBuf;
+          const hp = ctx.createBiquadFilter();
+          hp.type = "highpass";
+          hp.frequency.setValueAtTime(7600, time);
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(vol, time);
+          g.gain.exponentialRampToValueAtTime(0.001, time + (open ? 0.13 : 0.04));
+          n.connect(hp);
+          hp.connect(g);
+          g.connect(masterComp);
+          n.start(time);
+          n.stop(time + (open ? 0.15 : 0.05));
+        }
+
+        function triggerBass(time, midi, lenSec, vol = 0.36) {
+          const osc = ctx.createOscillator();
+          const sub = ctx.createOscillator();
+          const flt = ctx.createBiquadFilter();
+          const g = ctx.createGain();
+
+          osc.type = "sawtooth";
+          sub.type = "triangle";
+          const freq = midiToFreq(midi - 12);
+          osc.frequency.setValueAtTime(freq, time);
+          sub.frequency.setValueAtTime(freq, time);
+
+          flt.type = "lowpass";
+          flt.frequency.setValueAtTime(520, time);
+          flt.frequency.exponentialRampToValueAtTime(175, time + lenSec);
+
+          g.gain.setValueAtTime(0.001, time);
+          g.gain.linearRampToValueAtTime(vol, time + 0.015);
+          g.gain.exponentialRampToValueAtTime(0.001, time + lenSec);
+
+          osc.connect(flt);
+          sub.connect(flt);
+          flt.connect(g);
+          g.connect(masterComp);
+          osc.start(time);
+          sub.start(time);
+          osc.stop(time + lenSec + 0.02);
+          sub.stop(time + lenSec + 0.02);
+        }
+
+        function triggerSynthPluck(time, midi, lenSec, vol = 0.14, panVal = 0) {
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const flt = ctx.createBiquadFilter();
+          const g = ctx.createGain();
+          const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+
+          osc1.type = "sawtooth";
+          osc2.type = "triangle";
+          const f = midiToFreq(midi + 12);
+          osc1.frequency.setValueAtTime(f, time);
+          osc2.frequency.setValueAtTime(f * 1.004, time);
+
+          flt.type = "lowpass";
+          flt.frequency.setValueAtTime(3400, time);
+          flt.frequency.exponentialRampToValueAtTime(580, time + lenSec);
+
+          g.gain.setValueAtTime(0.001, time);
+          g.gain.linearRampToValueAtTime(vol, time + 0.008);
+          g.gain.exponentialRampToValueAtTime(0.001, time + lenSec);
+
+          osc1.connect(flt);
+          osc2.connect(flt);
+          flt.connect(g);
+          if (pan) {
+            pan.pan.setValueAtTime(panVal, time);
+            g.connect(pan);
+            pan.connect(masterComp);
+          } else {
+            g.connect(masterComp);
+          }
+
+          osc1.start(time);
+          osc2.start(time);
+          osc1.stop(time + lenSec + 0.02);
+          osc2.stop(time + lenSec + 0.02);
+        }
+
+        const stepSec = (60 / track.bpm) / 4; // semicolcheia
+        const totalSteps = Math.floor(dur / stepSec);
+
+        // Impacto cinematográfico imediato no 00:00
+        triggerImpactDrop(0.0, 0.70);
+
+        for (let step = 0; step < totalSteps; step++) {
+          const t = step * stepSec;
+          const stepInBar = step % 16;
+          const barIdx = Math.floor(step / 16);
+          const chord = track.chords[barIdx % track.chords.length];
+          const rootNote = track.rootMidi + chord[0];
+
+          // Impacto de transição a cada 4 compassos
+          if (barIdx > 0 && barIdx % 4 === 0 && stepInBar === 0) {
+            triggerImpactDrop(t, 0.45);
+          }
+
+          // Padrão de Kick energético por estilo
+          let hitKick = false;
+          if (track.style === "house") {
+            hitKick = stepInBar % 4 === 0;
+          } else if (track.style === "luxury") {
+            hitKick = stepInBar === 0 || stepInBar === 6 || stepInBar === 10 || (barIdx % 2 === 1 && stepInBar === 14);
+          } else if (track.style === "action" || track.style === "epic") {
+            hitKick = stepInBar === 0 || stepInBar === 3 || stepInBar === 6 || stepInBar === 8 || stepInBar === 11 || stepInBar === 14;
+          } else {
+            hitKick = stepInBar === 0 || stepInBar === 4 || stepInBar === 10 || stepInBar === 12;
+          }
+          if (hitKick) triggerKick(t, 0.68);
+
+          // Clap / Snare marcante
+          if (stepInBar === 4 || stepInBar === 12) {
+            triggerClap(t, 0.34);
+          }
+
+          // Hi-hats ágeis + rolls de retenção no fim do compasso
+          if (stepInBar % 2 === 0) {
+            triggerHat(t, stepInBar % 4 === 2 ? 0.13 : 0.08, stepInBar === 14);
+          } else if (stepInBar >= 13 && barIdx % 2 === 1) {
+            triggerHat(t, 0.11, false);
+            triggerHat(t + stepSec * 0.5, 0.09, false);
+          }
+
+          // Baixo 808 / Synth sincronizado
+          if (stepInBar === 0 || stepInBar === 6 || stepInBar === 10) {
+            triggerBass(t, rootNote, stepSec * 3.4, 0.34);
+          }
+
+          // Acordes pulsantes + Arpejo moderno
+          if (stepInBar === 0 || stepInBar === 6 || stepInBar === 12) {
+            chord.forEach((semi, ci) => {
+              triggerSynthPluck(t, track.rootMidi + semi, stepSec * 2.5, 0.11, (ci - 1) * 0.35);
+            });
+          } else if (stepInBar % 2 === 0) {
+            const arpNote = track.rootMidi + chord[(stepInBar / 2) % chord.length] + 12;
+            triggerSynthPluck(t, arpNote, stepSec * 1.4, 0.075, stepInBar % 4 === 0 ? -0.35 : 0.35);
+          }
+        }
+
+        const rendered = await ctx.startRendering();
+        const wavBlob = audioBufferToWavBlob(rendered);
+        const blobUrl = URL.createObjectURL(wavBlob);
+        instantTrackCache.set(cacheKey, blobUrl);
+        return blobUrl;
+      }
+
+      // Localiza o antigo seletor de trilha ou uma âncora segura na tela
+      function findMusicAnchor() {
+        const direct = document.querySelector(
+          "#musicSelect, #bgmSelect, #musicStyle, #soundtrackSelect, select[id*='music' i], select[id*='trilha' i], select[id*='bgm' i]"
+        );
+        if (direct) return direct;
+        const allSelects = Array.from(document.querySelectorAll("select"));
+        const matchSel = allSelects.find((sel) => {
+          const txt = Array.from(sel.options || []).map((o) => `${o.value} ${o.textContent}`).join(" ").toLowerCase();
+          return /(trilha|música|musica|batida|beat|soundtrack|sem música|sem trilha|trap|epic)/.test(txt);
+        });
+        if (matchSel) return matchSel;
+        return document.getElementById("elVoicePreviewBar") || document.getElementById("nexoraPacingBar") || document.getElementById("angles3Panel");
+      }
+
+      function stopMusicPreview(btnInst, btnReal, eqEl) {
+        if (musicPreviewAudio) {
+          try { musicPreviewAudio.pause(); musicPreviewAudio.currentTime = 0; } catch (_) {}
+          musicPreviewAudio = null;
+        }
+        if (btnInst) {
+          btnInst.classList.remove("playing");
+          btnInst.textContent = "▶ Ouvir Prévia (Grátis)";
+        }
+        if (btnReal) {
+          btnReal.classList.remove("playing");
+          btnReal.textContent = "🏆 Ouvir Trilha Real IA (Lyria 2)";
+        }
+        if (eqEl) eqEl.classList.remove("active");
+      }
+
+      function injectMusicProUI() {
+        if (document.getElementById("nexoraMusicProPanel")) return;
+        const anchor = findMusicAnchor();
+        if (!anchor) return;
+
+        if (!document.getElementById("nexoraMusicProCss")) {
+          const st = document.createElement("style");
+          st.id = "nexoraMusicProCss";
+          st.textContent = `
+            .nx-music-panel {
+              margin-top: 10px;
+              padding: 12px 14px;
+              border-radius: 13px;
+              background: linear-gradient(135deg, rgba(17,24,39,0.96), rgba(30,27,75,0.88));
+              border: 1px solid rgba(168,85,247,0.48);
+              display: flex;
+              flex-direction: column;
+              gap: 9px;
+            }
+            .nx-music-head {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 8px;
+              flex-wrap: wrap;
+              font-size: 12px;
+              font-weight: 800;
+              color: #f3e8ff;
+            }
+            .nx-music-row {
+              display: grid;
+              grid-template-columns: 1.45fr 1fr;
+              gap: 8px;
+            }
+            .nx-music-panel select {
+              width: 100%;
+              padding: 8px 10px;
+              border-radius: 9px;
+              background: rgba(15,23,42,0.92);
+              color: #f8fafc;
+              border: 1px solid rgba(168,85,247,0.42);
+              font-size: 12px;
+              font-weight: 700;
+            }
+            .nx-music-actions {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              flex-wrap: wrap;
+            }
+            .nx-mbtn {
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              padding: 7px 13px;
+              border-radius: 999px;
+              border: 1px solid rgba(192,132,252,0.58);
+              background: linear-gradient(135deg, #7c3aed, #9333ea);
+              color: #ffffff;
+              font-size: 11.5px;
+              font-weight: 800;
+              cursor: pointer;
+              transition: filter .15s ease, transform .15s ease;
+            }
+            .nx-mbtn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+            .nx-mbtn:disabled { opacity: 0.6; cursor: wait; transform: none; }
+            .nx-mbtn.alt {
+              background: linear-gradient(135deg, #059669, #0d9488);
+              border-color: rgba(52,211,153,0.62);
+            }
+            .nx-mbtn.playing {
+              background: linear-gradient(135deg, #dc2626, #ea580c);
+              border-color: rgba(251,146,60,0.75);
+            }
+            .nx-music-status {
+              font-size: 11px;
+              color: #d8b4fe;
+              font-weight: 600;
+              flex: 1;
+              min-width: 150px;
+            }
+            @media (max-width: 680px) {
+              .nx-music-row { grid-template-columns: 1fr; }
+            }
+          `;
+          document.head.appendChild(st);
+        }
+
+        const panel = document.createElement("div");
+        panel.id = "nexoraMusicProPanel";
+        panel.className = "nx-music-panel";
+        const trackOptionsHtml = PRO_TRACKS.map(
+          (t) => `<option value="${t.id}">${t.name}</option>`
+        ).join("");
+
+        panel.innerHTML =
+          '<div class="nx-music-head">' +
+          '  <span>🎵 Trilha Sonora 2000% Alto Impacto (Substitui as Trilhas Antigas)</span>' +
+          '  <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:#e9d5ff;cursor:pointer;margin:0;">' +
+          '    <input type="checkbox" id="chkMusicPro2000" checked style="width:15px;height:15px;accent-color:#a855f7;cursor:pointer;">' +
+          '    <span>Ativo nos vídeos</span>' +
+          '  </label>' +
+          '</div>' +
+          '<div class="nx-music-row">' +
+          `  <select id="nexoraTrackSelect2000">${trackOptionsHtml}</select>` +
+          '  <select id="nexoraMusicEngine2000">' +
+          '    <option value="lyria2" selected>🏆 Motor IA Estúdio (Google Lyria 2 Pro)</option>' +
+          '    <option value="instant">⚡ Motor Instantâneo (0 Créditos • Drop 00:00)</option>' +
+          '  </select>' +
+          '</div>' +
+          '<div class="nx-music-actions">' +
+          '  <button type="button" class="nx-mbtn alt" id="btnPreviewMusicInstant">▶ Ouvir Prévia (Grátis)</button>' +
+          '  <button type="button" class="nx-mbtn" id="btnPreviewMusicLyria">🏆 Ouvir Trilha Real IA (Lyria 2)</button>' +
+          '  <div class="el-eq" id="nxMusicEq"><span></span><span></span><span></span><span></span><span></span></div>' +
+          '  <span class="nx-music-status" id="nxMusicStatus">Escolha a trilha e ouça antes de gerar • Impacto desde 00:00</span>' +
+          '</div>';
+
+        anchor.insertAdjacentElement("afterend", panel);
+
+        const trackSel = document.getElementById("nexoraTrackSelect2000");
+        const btnInst = document.getElementById("btnPreviewMusicInstant");
+        const btnReal = document.getElementById("btnPreviewMusicLyria");
+        const eqEl = document.getElementById("nxMusicEq");
+        const statusEl = document.getElementById("nxMusicStatus");
+
+        trackSel?.addEventListener("change", () => {
+          stopMusicPreview(btnInst, btnReal, eqEl);
+          const tr = getSelectedTrack();
+          const hasCache = lyriaTrackCache.has(tr.id);
+          if (statusEl) {
+            statusEl.textContent = hasCache
+              ? `✓ Trilha Real IA já em cache (${tr.name.slice(0, 34)}) — 0 créditos extras no vídeo!`
+              : `Selecionada: ${tr.name}`;
+          }
+        });
+
+        btnInst?.addEventListener("click", async () => {
+          const wasPlayingInst = btnInst.classList.contains("playing");
+          stopMusicPreview(btnInst, btnReal, eqEl);
+          if (wasPlayingInst) {
+            if (statusEl) statusEl.textContent = "Prévia pausada.";
+            return;
+          }
+          try {
+            const tr = getSelectedTrack();
+            btnInst.disabled = true;
+            btnInst.textContent = "⏳ Montando beat...";
+            if (statusEl) statusEl.textContent = `Sintetizando prévia gratuita (${tr.bpm} BPM)...`;
+            const url = await renderInstantProTrackWav(tr, 10);
+            musicPreviewAudio = new Audio(url);
+            musicPreviewAudio.volume = 0.85;
+            musicPreviewAudio.onended = () => {
+              stopMusicPreview(btnInst, btnReal, eqEl);
+              if (statusEl) statusEl.textContent = `✓ Prévia concluída (${tr.name.slice(0, 34)})`;
+            };
+            await musicPreviewAudio.play();
+            btnInst.classList.add("playing");
+            btnInst.textContent = "⏹ Parar Prévia";
+            if (eqEl) eqEl.classList.add("active");
+            if (statusEl) statusEl.textContent = `🔊 Ouvindo prévia grátis: ${tr.name}`;
+          } catch (e) {
+            stopMusicPreview(btnInst, btnReal, eqEl);
+            if (statusEl) statusEl.textContent = `Erro na prévia: ${e?.message || "tente novamente"}`;
+          } finally {
+            btnInst.disabled = false;
+          }
+        });
+
+        btnReal?.addEventListener("click", async () => {
+          const wasPlayingReal = btnReal.classList.contains("playing");
+          stopMusicPreview(btnInst, btnReal, eqEl);
+          if (wasPlayingReal) {
+            if (statusEl) statusEl.textContent = "Trilha IA pausada.";
+            return;
+          }
+          if (isLyriaPreviewLoading) return;
+
+          const tr = getSelectedTrack();
+          try {
+            isLyriaPreviewLoading = true;
+            btnReal.disabled = true;
+
+            let playable = lyriaTrackCache.get(tr.id);
+            if (!playable) {
+              btnReal.textContent = "⏳ Gerando Lyria 2...";
+              if (statusEl) statusEl.textContent = "Gerando trilha real de estúdio (Google Lyria 2)...";
+
+              const q = await callApi({
+                task: "submit_music",
+                action: "submit_music",
+                __isMusicPreview: true,
+                engineIndex: 1,
+                duration: 20,
+                prompt: tr.lyriaPrompt,
+                musicPrompt: tr.lyriaPrompt,
+                musicNegativePrompt: MUSIC_NEGATIVE_STRICT
+              }, 35000);
+
+              const r = await pollFalJob(q, (st) => {
+                if (statusEl) statusEl.textContent = `Lyria 2 Estúdio: ${st}...`;
+              });
+
+              const rawAudioUrl = r?.audioUrl || r?.audio_url || r?.url || "";
+              if (!rawAudioUrl) throw new Error("Não foi possível carregar o áudio do Lyria 2.");
+
+              if (typeof fetchMediaBlob === "function") {
+                const blob = await fetchMediaBlob(rawAudioUrl);
+                playable = URL.createObjectURL(blob);
+              } else {
+                playable = rawAudioUrl;
+              }
+              lyriaTrackCache.set(tr.id, playable);
+            }
+
+            musicPreviewAudio = new Audio(playable);
+            musicPreviewAudio.volume = 0.85;
+            musicPreviewAudio.onended = () => {
+              stopMusicPreview(btnInst, btnReal, eqEl);
+              if (statusEl) statusEl.textContent = "✓ Trilha Real IA salva em cache (reaproveitada grátis no vídeo!)";
+            };
+            await musicPreviewAudio.play();
+            btnReal.classList.add("playing");
+            btnReal.textContent = "⏹ Parar Trilha IA";
+            if (eqEl) eqEl.classList.add("active");
+            if (statusEl) statusEl.textContent = `🔊 Ouvindo Trilha Real IA (Lyria 2): ${tr.name}`;
+          } catch (err) {
+            stopMusicPreview(btnInst, btnReal, eqEl);
+            if (statusEl) statusEl.textContent = `Aviso: ${err?.message || "verifique saldo/login"}`;
+          } finally {
+            isLyriaPreviewLoading = false;
+            btnReal.disabled = false;
+          }
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", injectMusicProUI);
+      } else {
+        injectMusicProUI();
+      }
+      setTimeout(injectMusicProUI, 1000);
+
+      // Interceptador de música: força Lyria 2 + Prompt Alto Impacto OU entrega Motor Instantâneo / Cache 0 créditos
+      const prevFetch = window.fetch.bind(window);
+      window.fetch = async function (input, init) {
+        const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+        const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+
+        // 1) Se o player tentar buscar um blob: local passando pelo proxyUrl, devolve direto o blob local
+        if (method === "GET" && reqUrl.includes("/api/generate") && reqUrl.includes("proxyUrl=")) {
+          try {
+            const u = new URL(reqUrl, window.location.origin);
+            const px = u.searchParams.get("proxyUrl") || "";
+            if (px.startsWith("blob:")) {
+              return prevFetch(px);
+            }
+          } catch (_) {}
+        }
+
+        // 2) Intercepta chamadas POST para /api/generate
+        if (reqUrl.includes("/api/generate") && method === "POST" && init && typeof init.body === "string") {
+          try {
+            const payload = JSON.parse(init.body);
+            const act = String(payload.action || payload.task || payload.mode || "").trim().toLowerCase();
+
+            // Consulta de status (poll) de trilha instantânea/cache local
+            if (act === "poll" || act === "status" || act === "check_status") {
+              const stUrl = String(payload.statusUrl || payload.status_url || payload.url || "");
+              if (stUrl.includes("nexora-local-music/")) {
+                const jobId = stUrl.split("nexora-local-music/")[1]?.split("/")[0] || "";
+                const localUrl = localVirtualJobs.get(jobId) || "";
+                if (localUrl) {
+                  return new Response(JSON.stringify({
+                    status: "COMPLETED",
+                    audioUrl: localUrl,
+                    audio_url: localUrl,
+                    url: localUrl,
+                    result: { audio: { url: localUrl } }
+                  }), { status: 200, headers: { "Content-Type": "application/json" } });
+                }
+              }
+            }
+
+            // Geração de trilha sonora (submit_music)
+            if (act === "submit_music" || act === "music") {
+              const active = !document.getElementById("chkMusicPro2000") || document.getElementById("chkMusicPro2000").checked;
+              const isPreviewCall = Boolean(payload.__isMusicPreview);
+
+              if (isPreviewCall) {
+                delete payload.__isMusicPreview;
+                init = { ...init, body: JSON.stringify(payload) };
+                return prevFetch(input, init);
+              }
+
+              if (active) {
+                const tr = getSelectedTrack();
+                const engineMode = getSelectedMusicEngine();
+                const vidSec = Number(document.getElementById("minDuration")?.value || payload.duration || 15) || 15;
+
+                // Se já gerou e aprovou a Trilha Real IA no preview, reaproveita SEM gastar créditos de novo!
+                if (engineMode === "lyria2" && lyriaTrackCache.has(tr.id)) {
+                  const cachedUrl = lyriaTrackCache.get(tr.id);
+                  const jobId = `cache_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+                  localVirtualJobs.set(jobId, cachedUrl);
+                  return new Response(JSON.stringify({
+                    status: "COMPLETED",
+                    engine: "lyria2-cache",
+                    request_id: jobId,
+                    statusUrl: `https://queue.fal.run/nexora-local-music/${jobId}/status`,
+                    responseUrl: `https://queue.fal.run/nexora-local-music/${jobId}`,
+                    audioUrl: cachedUrl,
+                    audio_url: cachedUrl,
+                    url: cachedUrl,
+                    charged: 0
+                  }), { status: 200, headers: { "Content-Type": "application/json" } });
+                }
+
+                // Se escolheu Motor Instantâneo (0 créditos)
+                if (engineMode === "instant") {
+                  const wavUrl = await renderInstantProTrackWav(tr, Math.max(12, vidSec + 2));
+                  const jobId = `inst_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+                  localVirtualJobs.set(jobId, wavUrl);
+                  return new Response(JSON.stringify({
+                    status: "COMPLETED",
+                    engine: "nexora-instant-studio",
+                    request_id: jobId,
+                    statusUrl: `https://queue.fal.run/nexora-local-music/${jobId}/status`,
+                    responseUrl: `https://queue.fal.run/nexora-local-music/${jobId}`,
+                    audioUrl: wavUrl,
+                    audio_url: wavUrl,
+                    url: wavUrl,
+                    charged: 0
+                  }), { status: 200, headers: { "Content-Type": "application/json" } });
+                }
+
+                // Modo Padrão: Força Google Lyria 2 Pro (engineIndex: 1) com prompt de impacto imediato em 00:00
+                payload.engineIndex = 1;
+                payload.prompt = tr.lyriaPrompt;
+                payload.musicPrompt = tr.lyriaPrompt;
+                payload.musicNegativePrompt = MUSIC_NEGATIVE_STRICT;
+                payload.duration = Math.min(45, Math.max(12, vidSec + 3));
+                init = { ...init, body: JSON.stringify(payload) };
+              }
+            }
+          } catch (_) {}
+        }
+
+        return prevFetch(input, init);
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
