@@ -1028,6 +1028,97 @@
             </div>
           </div>
 
+          <style>
+            .angles3-panel {
+              margin-top: 12px;
+              background: rgba(11, 17, 30, 0.92);
+              border: 1px solid rgba(34, 197, 94, 0.35);
+              border-radius: 13px;
+              padding: 12px 14px;
+            }
+            .angles3-head {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 8px;
+              flex-wrap: wrap;
+              margin-bottom: 10px;
+              font-size: 12px;
+              font-weight: 800;
+              color: #dcfce7;
+            }
+            .angles3-status {
+              font-size: 11px;
+              font-weight: 700;
+              color: #7dd3fc;
+            }
+            .angles3-grid {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 10px;
+            }
+            .angle3-slot {
+              background: #0c1425;
+              border: 1px dashed #2c3e60;
+              border-radius: 11px;
+              padding: 8px;
+              text-align: center;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 6px;
+            }
+            .angle3-slot.ready {
+              border-style: solid;
+              border-color: rgba(34, 197, 94, 0.65);
+            }
+            .angle3-slot-title {
+              font-size: 10.5px;
+              font-weight: 800;
+              color: #cbd5e1;
+            }
+            .angle3-thumb {
+              width: 100%;
+              aspect-ratio: 1 / 1;
+              max-height: 130px;
+              border-radius: 8px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+              font-size: 11px;
+              color: #64748b;
+              padding: 4px;
+            }
+            .angle3-thumb img {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+            }
+            @media (max-width: 680px) {
+              .angles3-grid { grid-template-columns: 1fr; }
+            }
+          </style>
+          <div class="angles3-panel" id="angles3Panel">
+            <div class="angles3-head">
+              <span>📐 Kit 3 Ângulos 3D Sem Fundo (Enviados Juntos p/ os Vídeos)</span>
+              <span class="angles3-status" id="angles3Status">Envie a foto acima e clique em "Gerar 3 Ângulos 3D"</span>
+            </div>
+            <div class="angles3-grid">
+              <div class="angle3-slot" id="angleSlot0">
+                <div class="angle3-slot-title">1. Frontal Hero (0°)</div>
+                <div class="angle3-thumb checker-bg" id="angleThumb0">Aguardando...</div>
+              </div>
+              <div class="angle3-slot" id="angleSlot1">
+                <div class="angle3-slot-title">2. Perfil 3/4 Esq (60°)</div>
+                <div class="angle3-thumb checker-bg" id="angleThumb1">Aguardando...</div>
+              </div>
+              <div class="angle3-slot" id="angleSlot2">
+                <div class="angle3-slot-title">3. Elevado Dir (45°)</div>
+                <div class="angle3-thumb checker-bg" id="angleThumb2">Aguardando...</div>
+              </div>
+            </div>
+          </div>
           <div class="director-banner" id="directorBannerWrap" style="margin-top:12px;">
             <div class="director-banner-head">
               <span>🎬 Coreografia 3D v12.8 (7 Ângulos Únicos + Panorâmica + Zero Equipamento):</span>
