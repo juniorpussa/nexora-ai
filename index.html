@@ -7963,6 +7963,484 @@
         return prevFetch(input, init);
       };
     })();
+  // === CORREÇÃO DEFINITIVA: PREVIEW REAL DOS 60 LOCUTORES + TRILHAS DE ESTÚDIO LYRIA 2 PRO ===
+    (function initNexoraFixVoiceAndMusicPro() {
+      if (window.__nexoraFixVoiceAndMusicPro) return;
+      window.__nexoraFixVoiceAndMusicPro = true;
+
+      const voiceCachePro = new Map();
+      const studioMusicCache = new Map();
+      const studioVirtualJobs = new Map();
+      let activeVoiceAudio = null;
+      let activeMusicAudio = null;
+      let voiceBusy = false;
+      let musicBusy = false;
+
+      const KNOWN_ELEVEN_VOICES = new Set([
+        "roger", "brian", "charlie", "liam", "will", "eric", "chris", "callum",
+        "daniel", "george", "bill", "river", "adam", "antoni", "arnold", "clyde",
+        "dave", "drew", "ethan", "fin", "giovanni", "harry", "james", "jeremy",
+        "joseph", "josh", "marcus", "michael", "patrick", "paul", "sam", "thomas",
+        "aria", "sarah", "laura", "jessica", "alice", "matilda", "lily", "rachel",
+        "charlotte", "bella", "domi", "dorothy", "elli", "emily", "freya", "gigi",
+        "glinda", "grace", "mimi", "nicole", "serena"
+      ]);
+
+      function extractVoiceName(styleId, labelText) {
+        const fromId = String(styleId || "").match(/^[mf]\d+_([a-z]+)/i);
+        if (fromId && KNOWN_ELEVEN_VOICES.has(fromId[1].toLowerCase())) {
+          const n = fromId[1].toLowerCase();
+          return n.charAt(0).toUpperCase() + n.slice(1);
+        }
+        const words = String(labelText || "").toLowerCase().match(/[a-z]+/g) || [];
+        for (const w of words) {
+          if (KNOWN_ELEVEN_VOICES.has(w)) {
+            return w.charAt(0).toUpperCase() + w.slice(1);
+          }
+        }
+        return "";
+      }
+
+      // 1) CORRIGE O PREVIEW DE VOZ PARA LER #inlineVoiceStyle (OS 60 LOCUTORES REAIS)
+      function mountRealVoicePreview() {
+        const oldBar = document.getElementById("elVoicePreviewBar");
+        if (oldBar) oldBar.remove();
+
+        const voiceBox = document.getElementById("inlineVoiceBox");
+        const genderSel = document.getElementById("inlineVoiceGender");
+        const styleSel = document.getElementById("inlineVoiceStyle");
+        const speedSel = document.getElementById("inlineVoiceSpeed");
+        if (!styleSel || document.getElementById("nxVoicePreviewProBar")) return;
+
+        const bar = document.createElement("div");
+        bar.id = "nxVoicePreviewProBar";
+        bar.className = "el-preview-bar";
+        bar.style.cssText = "margin-top:4px;width:100%;box-sizing:border-box;";
+        bar.innerHTML =
+          '<button type="button" class="el-play-btn" id="btnPreviewVoiceReal60">▶ Ouvir Locutor Selecionado</button>' +
+          '<div class="el-eq" id="nxVoiceEq60"><span></span><span></span><span></span><span></span><span></span></div>' +
+          '<span class="el-preview-meta" id="nxVoiceMeta60">Selecione qualquer um dos 60 locutores e clique para ouvir a voz real</span>';
+
+        const gridRow = voiceBox ? voiceBox.querySelector(".grid-3") : null;
+        if (gridRow) {
+          gridRow.insertAdjacentElement("afterend", bar);
+        } else {
+          styleSel.insertAdjacentElement("afterend", bar);
+        }
+
+        const btn = document.getElementById("btnPreviewVoiceReal60");
+        const eq = document.getElementById("nxVoiceEq60");
+        const meta = document.getElementById("nxVoiceMeta60");
+
+        function stopVoice() {
+          if (activeVoiceAudio) {
+            try { activeVoiceAudio.pause(); activeVoiceAudio.currentTime = 0; } catch (_) {}
+            activeVoiceAudio = null;
+          }
+          if (btn) {
+            btn.classList.remove("playing");
+            btn.textContent = "▶ Ouvir Locutor Selecionado";
+          }
+          if (eq) eq.classList.remove("active");
+        }
+
+        function updateSelectedLabel() {
+          stopVoice();
+          const opt = styleSel.options && styleSel.selectedIndex >= 0 ? styleSel.options[styleSel.selectedIndex] : null;
+          const label = opt ? opt.textContent.trim() : "Locutor selecionado";
+          const styleId = String(styleSel.value || "").trim();
+          const gender = String(genderSel?.value || "male").trim();
+          const speed = Number(speedSel?.value || 1.18) || 1.18;
+          const key = `${styleId}__${gender}__${speed}`;
+          if (meta) {
+            meta.textContent = voiceCachePro.has(key)
+              ? `✓ Em cache (grátis): ${label.slice(0, 48)}`
+              : `Pronto para ouvir: ${label.slice(0, 48)}`;
+          }
+        }
+
+        styleSel.addEventListener("change", updateSelectedLabel);
+        speedSel?.addEventListener("change", updateSelectedLabel);
+        genderSel?.addEventListener("change", () => setTimeout(updateSelectedLabel, 80));
+        setTimeout(updateSelectedLabel, 150);
+
+        btn?.addEventListener("click", async () => {
+          if (activeVoiceAudio && !activeVoiceAudio.paused) {
+            stopVoice();
+            if (meta) meta.textContent = "Preview pausado.";
+            return;
+          }
+          if (voiceBusy) return;
+
+          const styleId = String(styleSel.value || "").trim();
+          const gender = String(genderSel?.value || "male").trim();
+          const speed = Number(speedSel?.value || 1.18) || 1.18;
+          const opt = styleSel.options && styleSel.selectedIndex >= 0 ? styleSel.options[styleSel.selectedIndex] : null;
+          const label = opt ? opt.textContent.trim() : (styleId || "Locutor IA");
+          const cleanName = extractVoiceName(styleId, label);
+          const cacheKey = `${styleId}__${gender}__${speed}`;
+
+          try {
+            voiceBusy = true;
+            btn.disabled = true;
+
+            let playableUrl = voiceCachePro.get(cacheKey);
+            if (!playableUrl) {
+              btn.textContent = "⏳ Gerando voz real...";
+              if (meta) meta.textContent = `Carregando voz real de: ${label.slice(0, 42)}...`;
+
+              const sampleText =
+                "Para tudo e olha esse lançamento incrível! Qualidade absurda em cada detalhe. Toque no carrinho agora e garanta o seu!";
+              let audioUrl = "";
+              let lastErr = "Não foi possível carregar este locutor.";
+
+              for (let engIdx = 0; engIdx <= 2; engIdx++) {
+                try {
+                  const q = await callApi({
+                    task: "submit_tts",
+                    action: "submit_tts",
+                    __isVoicePreview: true,
+                    engineIndex: engIdx,
+                    voiceStyle: styleId,
+                    voiceId: styleId,
+                    voice: cleanName || styleId,
+                    voiceName: cleanName || styleId,
+                    gender,
+                    speed,
+                    text: sampleText
+                  }, 30000);
+
+                  const r = await pollFalJob(q, (st) => {
+                    if (meta) meta.textContent = `${cleanName || "Locutor"}: ${st}...`;
+                  });
+                  if (r && (r.audioUrl || r.url)) {
+                    audioUrl = r.audioUrl || r.url;
+                    break;
+                  }
+                } catch (e) {
+                  if (e && (e.status === 401 || e.status === 402)) throw e;
+                  lastErr = e?.message || lastErr;
+                }
+              }
+
+              if (!audioUrl) throw new Error(lastErr);
+
+              if (typeof fetchMediaBlob === "function") {
+                const blob = await fetchMediaBlob(audioUrl);
+                playableUrl = URL.createObjectURL(blob);
+              } else {
+                playableUrl = audioUrl;
+              }
+              voiceCachePro.set(cacheKey, playableUrl);
+            }
+
+            stopVoice();
+            activeVoiceAudio = new Audio(playableUrl);
+            activeVoiceAudio.preservesPitch = true;
+            activeVoiceAudio.onended = () => {
+              stopVoice();
+              if (meta) meta.textContent = `✓ Ouvido (${label.slice(0, 40)}) — repetir é instantâneo`;
+            };
+            activeVoiceAudio.onerror = () => {
+              stopVoice();
+              if (meta) meta.textContent = "Erro ao reproduzir a amostra desta voz.";
+            };
+
+            await activeVoiceAudio.play();
+            btn.classList.add("playing");
+            btn.textContent = "⏹ Parar Voz";
+            if (eq) eq.classList.add("active");
+            if (meta) meta.textContent = `🔊 Ouvindo: ${label.slice(0, 46)}`;
+          } catch (err) {
+            stopVoice();
+            if (meta) meta.textContent = `Aviso: ${err?.message || "verifique login ou créditos"}`;
+          } finally {
+            voiceBusy = false;
+            btn.disabled = false;
+          }
+        });
+      }
+
+      // 2) TRILHAS DE ESTÚDIO REALMENTE DISTINTAS ENTRE SI (APENAS GOOGLE LYRIA 2 PRO — SEM SINTETIZADOR)
+      const STUDIO_TRACKS_PRO = [
+        {
+          id: "blockbuster_epic",
+          name: "🔥 Blockbuster Hollywood Trailer (Épico Explosivo 00:00)",
+          lyriaPrompt:
+            "IMMEDIATE MASSIVE HOLLYWOOD TRAILER DROP AT 0:00, ZERO SLOW INTRO. Colossal orchestral hybrid action score, thundering Japanese taiko drums, dramatic low brass braams, aggressive fast staccato violin ostinato, metallic cinema percussion hits, blockbuster superhero movie commercial energy, ultra-wide studio mastering, pure instrumental, zero vocals."
+        },
+        {
+          id: "phonk_viral_tiktok",
+          name: "⚡ Phonk & Drift Viral TikTok (Impacto Imediato)",
+          lyriaPrompt:
+            "IMMEDIATE HARD-HITTING DROP AT 0:00, ZERO SLOW INTRO. High-octane modern Brazilian drift phonk and viral TikTok commercial beat, signature hypnotic metallic cowbell melody, distorted punchy 808 bassline, rapid-fire crisp trap hi-hats, relentless high-retention adrenaline groove, loud club-ready commercial mix, pure instrumental, zero vocals."
+        },
+        {
+          id: "luxury_dark_trap",
+          name: "💎 Luxo VIP & Ostentação (Trap Elegante 808)",
+          lyriaPrompt:
+            "IMMEDIATE SLEEK DROP AT 0:00, ZERO SLOW INTRO. Expensive haute-couture luxury brand dark trap instrumental, deep velvet sub-808 bass, sparse razor-sharp rolling hi-hats, moody grand piano chords with dark cinematic cello accents, confident VIP watch and perfume commercial mood, pristine mastering, pure instrumental, zero vocals."
+        },
+        {
+          id: "cyberpunk_synth_tech",
+          name: "🚀 Tech Futurista & Cyber (Synthwave Alta Voltagem)",
+          lyriaPrompt:
+            "IMMEDIATE HIGH-VOLTAGE DROP AT 0:00, ZERO SLOW INTRO. Cutting-edge futuristic cyberpunk electronic commercial soundtrack, roaring analog mid-tempo bassline, shimmering neon synth arpeggios, tight punchy cyber drums, high-tech innovation and speed energy for gadgets and VR commercials, crystal-clear mix, pure instrumental, zero vocals."
+        },
+        {
+          id: "heavy_action_rock",
+          name: "💥 Adrenalina & Rock Industrial (Força Bruta)",
+          lyriaPrompt:
+            "IMMEDIATE EXPLOSIVE RIFF AT 0:00, ZERO SLOW INTRO. Adrenaline-pumping modern sports and automotive commercial anthem, heavy crunchy electric guitar power riff, stomping stadium drums, thunderous bass groove, bold unstoppable energy and attitude built for fast action cuts, broadcast loudness, pure instrumental, zero vocals."
+        },
+        {
+          id: "fashion_deep_house",
+          name: "✨ Fashion & Beleza Premium (Deep House Passarela)",
+          lyriaPrompt:
+            "IMMEDIATE RUNWAY GROOVE AT 0:00, ZERO SLOW INTRO. Glamorous Parisian fashion runway and beauty commercial deep house track, tight four-on-the-floor kick drum, bouncy warm funky bassline, crisp finger snaps, glossy shimmering Rhodes and bright synth stabs, irresistible upscale chic energy, pure instrumental, zero vocals."
+        },
+        {
+          id: "pop_retail_energy",
+          name: "🎯 Venda Direta Comercial TV (Pop Groove Contagiante)",
+          lyriaPrompt:
+            "IMMEDIATE UPBEAT HIT AT 0:00, ZERO SLOW INTRO. Ultra-catchy commercial retail TV advertisement pop-funk track, lively rhythmic handclaps, funky slap bass groove, bright punchy brass horn stabs, sparkling energetic synth leads, joyful persuasive urgency that drives instant shopping excitement, pure instrumental, zero vocals."
+        },
+        {
+          id: "cinema_strings_prestige",
+          name: "🎬 Prestígio Cinematográfico (Cordas & Impacto Moderno)",
+          lyriaPrompt:
+            "IMMEDIATE GRAND IMPACT AT 0:00, ZERO SLOW INTRO. Prestigious modern Apple-style flagship launch commercial soundtrack, soaring contemporary chamber strings, crisp modern electronic sub-pulse, driving percussive rhythm ticks, inspiring emotional momentum and premium perfection, studio mastering, pure instrumental, zero vocals."
+        }
+      ];
+
+      const STUDIO_MUSIC_NEGATIVE =
+        "slow intro, quiet beginning, gradual fade in, ambient pad, sleepy, boring, elevator music, lullaby, acoustic folk, vocals, singing, speech, voice, lyrics, off-beat, low quality";
+
+      function getSelectedStudioTrack() {
+        const sel = document.getElementById("nexoraTrackSelect2000");
+        const id = sel ? sel.value : STUDIO_TRACKS_PRO[0].id;
+        return STUDIO_TRACKS_PRO.find((t) => t.id === id) || STUDIO_TRACKS_PRO[0];
+      }
+
+      function upgradeMusicPanelToLyriaOnly() {
+        const panel = document.getElementById("nexoraMusicProPanel");
+        if (!panel || panel.dataset.lyriaOnlyUpgraded === "1") return;
+        panel.dataset.lyriaOnlyUpgraded = "1";
+
+        // Remove o botão verde de sintetizador artificial
+        const fakeBtn = document.getElementById("btnPreviewMusicInstant");
+        if (fakeBtn) fakeBtn.remove();
+
+        // Trava o motor apenas no estúdio real Google Lyria 2 Pro
+        const engSel = document.getElementById("nexoraMusicEngine2000");
+        if (engSel) {
+          engSel.innerHTML = '<option value="lyria2" selected>🏆 Motor Real de Estúdio (Google Lyria 2 Pro)</option>';
+        }
+
+        // Atualiza as 8 trilhas com estilos totalmente distintos entre si
+        const trackSel = document.getElementById("nexoraTrackSelect2000");
+        if (trackSel) {
+          trackSel.innerHTML = STUDIO_TRACKS_PRO.map(
+            (t) => `<option value="${t.id}">${t.name}</option>`
+          ).join("");
+        }
+
+        const oldBtn = document.getElementById("btnPreviewMusicLyria");
+        const eqEl = document.getElementById("nxMusicEq");
+        const statusEl = document.getElementById("nxMusicStatus");
+        if (!oldBtn) return;
+
+        // Substitui o botão para limpar o evento antigo e usar os novos estilos + cache compartilhada
+        const btnReal = oldBtn.cloneNode(true);
+        btnReal.textContent = "▶ Ouvir Trilha Real IA (Estúdio Lyria 2)";
+        oldBtn.replaceWith(btnReal);
+
+        function stopMusic() {
+          if (activeMusicAudio) {
+            try { activeMusicAudio.pause(); activeMusicAudio.currentTime = 0; } catch (_) {}
+            activeMusicAudio = null;
+          }
+          btnReal.classList.remove("playing");
+          btnReal.textContent = "▶ Ouvir Trilha Real IA (Estúdio Lyria 2)";
+          if (eqEl) eqEl.classList.remove("active");
+        }
+
+        if (statusEl) {
+          statusEl.textContent = "8 estilos reais de estúdio (Lyria 2) • Trilha ouvida fica em cache grátis p/ o vídeo";
+        }
+
+        trackSel?.addEventListener("change", () => {
+          stopMusic();
+          const tr = getSelectedStudioTrack();
+          if (statusEl) {
+            statusEl.textContent = studioMusicCache.has(tr.id)
+              ? `✓ Trilha pronta em cache (${tr.name.slice(0, 36)}) — 0 créditos extras no vídeo!`
+              : `Estilo selecionado: ${tr.name}`;
+          }
+        });
+
+        btnReal.addEventListener("click", async () => {
+          const wasPlaying = btnReal.classList.contains("playing");
+          stopMusic();
+          if (wasPlaying) {
+            if (statusEl) statusEl.textContent = "Trilha pausada.";
+            return;
+          }
+          if (musicBusy) return;
+
+          const tr = getSelectedStudioTrack();
+          try {
+            musicBusy = true;
+            btnReal.disabled = true;
+
+            let playable = studioMusicCache.get(tr.id);
+            if (!playable) {
+              btnReal.textContent = "⏳ Gerando Estúdio Lyria 2...";
+              if (statusEl) statusEl.textContent = `Produzindo trilha real de estúdio: ${tr.name.slice(0, 34)}...`;
+
+              const q = await callApi({
+                task: "submit_music",
+                action: "submit_music",
+                __isMusicPreviewPro: true,
+                engineIndex: 1,
+                duration: 20,
+                prompt: tr.lyriaPrompt,
+                musicPrompt: tr.lyriaPrompt,
+                musicNegativePrompt: STUDIO_MUSIC_NEGATIVE
+              }, 40000);
+
+              const r = await pollFalJob(q, (st) => {
+                if (statusEl) statusEl.textContent = `Estúdio Lyria 2: ${st}...`;
+              });
+
+              const rawUrl = r?.audioUrl || r?.audio_url || r?.url || "";
+              if (!rawUrl) throw new Error("Não foi possível obter o áudio do estúdio Lyria 2.");
+
+              if (typeof fetchMediaBlob === "function") {
+                const blob = await fetchMediaBlob(rawUrl);
+                playable = URL.createObjectURL(blob);
+              } else {
+                playable = rawUrl;
+              }
+              studioMusicCache.set(tr.id, playable);
+            }
+
+            activeMusicAudio = new Audio(playable);
+            activeMusicAudio.volume = 0.85;
+            activeMusicAudio.onended = () => {
+              stopMusic();
+              if (statusEl) statusEl.textContent = "✓ Trilha aprovada em cache — entra no vídeo sem gastar créditos extras!";
+            };
+            await activeMusicAudio.play();
+            btnReal.classList.add("playing");
+            btnReal.textContent = "⏹ Parar Trilha IA";
+            if (eqEl) eqEl.classList.add("active");
+            if (statusEl) statusEl.textContent = `🔊 Ouvindo Estúdio Lyria 2: ${tr.name}`;
+          } catch (err) {
+            stopMusic();
+            if (statusEl) statusEl.textContent = `Aviso: ${err?.message || "verifique login ou saldo na fal.ai"}`;
+          } finally {
+            musicBusy = false;
+            btnReal.disabled = false;
+          }
+        });
+      }
+
+      // Garante a montagem após o carregamento do Bloco 2 e Bloco 3
+      function applyUpgrades() {
+        mountRealVoicePreview();
+        upgradeMusicPanelToLyriaOnly();
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", applyUpgrades);
+      } else {
+        applyUpgrades();
+      }
+      setTimeout(applyUpgrades, 1250);
+      setTimeout(applyUpgrades, 2500);
+
+      // 3) Interceptador de música: entrega cache grátis da trilha aprovada ou envia os novos prompts Lyria 2
+      const prevFetch = window.fetch.bind(window);
+      window.fetch = async function (input, init) {
+        const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+        const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+
+        if (method === "GET" && reqUrl.includes("/api/generate") && reqUrl.includes("proxyUrl=")) {
+          try {
+            const u = new URL(reqUrl, window.location.origin);
+            const px = u.searchParams.get("proxyUrl") || "";
+            if (px.startsWith("blob:")) return prevFetch(px);
+          } catch (_) {}
+        }
+
+        if (reqUrl.includes("/api/generate") && method === "POST" && init && typeof init.body === "string") {
+          try {
+            const payload = JSON.parse(init.body);
+            const act = String(payload.action || payload.task || payload.mode || "").trim().toLowerCase();
+
+            if (act === "poll" || act === "status" || act === "check_status") {
+              const stUrl = String(payload.statusUrl || payload.status_url || payload.url || "");
+              if (stUrl.includes("nexora-pro-music/")) {
+                const jobId = stUrl.split("nexora-pro-music/")[1]?.split("/")[0] || "";
+                const localUrl = studioVirtualJobs.get(jobId) || "";
+                if (localUrl) {
+                  return new Response(JSON.stringify({
+                    status: "COMPLETED",
+                    audioUrl: localUrl,
+                    audio_url: localUrl,
+                    url: localUrl,
+                    result: { audio: { url: localUrl } }
+                  }), { status: 200, headers: { "Content-Type": "application/json" } });
+                }
+              }
+            }
+
+            if (act === "submit_music" || act === "music") {
+              if (payload.__isMusicPreviewPro) {
+                delete payload.__isMusicPreviewPro;
+                payload.__isMusicPreview = true;
+                init = { ...init, body: JSON.stringify(payload) };
+                return prevFetch(input, init);
+              }
+
+              const active = !document.getElementById("chkMusicPro2000") || document.getElementById("chkMusicPro2000").checked;
+              if (active) {
+                const tr = getSelectedStudioTrack();
+                const vidSec = Number(document.getElementById("minDuration")?.value || payload.duration || 15) || 15;
+
+                if (studioMusicCache.has(tr.id)) {
+                  const cachedUrl = studioMusicCache.get(tr.id);
+                  const jobId = `pro_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+                  studioVirtualJobs.set(jobId, cachedUrl);
+                  return new Response(JSON.stringify({
+                    status: "COMPLETED",
+                    engine: "lyria2-studio-cache",
+                    request_id: jobId,
+                    statusUrl: `https://queue.fal.run/nexora-pro-music/${jobId}/status`,
+                    responseUrl: `https://queue.fal.run/nexora-pro-music/${jobId}`,
+                    audioUrl: cachedUrl,
+                    audio_url: cachedUrl,
+                    url: cachedUrl,
+                    charged: 0
+                  }), { status: 200, headers: { "Content-Type": "application/json" } });
+                }
+
+                // Força Lyria 2 com o novo prompt distinto (sinaliza bypass ao Bloco 3 p/ não sobrescrever)
+                payload.__isMusicPreview = true;
+                payload.engineIndex = 1;
+                payload.prompt = tr.lyriaPrompt;
+                payload.musicPrompt = tr.lyriaPrompt;
+                payload.musicNegativePrompt = STUDIO_MUSIC_NEGATIVE;
+                payload.duration = Math.min(45, Math.max(12, vidSec + 3));
+                init = { ...init, body: JSON.stringify(payload) };
+              }
+            }
+          } catch (_) {}
+        }
+
+        return prevFetch(input, init);
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
