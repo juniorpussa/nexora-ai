@@ -8441,6 +8441,348 @@
         return prevFetch(input, init);
       };
     })();
+  // === UPGRADE 1/4: NARRAÇÃO COMERCIAL TV/RÁDIO (CORTE AUTOMÁTICO DE SILÊNCIOS + MASTERIZAÇÃO + LEGENDA CRAVADA) ===
+    (function initNexoraBroadcastVoiceEngine() {
+      if (window.__nexoraBroadcastVoiceEngine) return;
+      window.__nexoraBroadcastVoiceEngine = true;
+
+      const masteredVoiceMap = new Map(); // origUrl -> { blobUrl, timeMap, origDuration, newDuration }
+      let latestVoiceTimeMap = null;
+
+      function encodeMonoWav(float32Data, sampleRate) {
+        const len = float32Data.length;
+        const ab = new ArrayBuffer(44 + len * 2);
+        const view = new DataView(ab);
+        const writeStr = (off, s) => {
+          for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i));
+        };
+        writeStr(0, "RIFF");
+        view.setUint32(4, 36 + len * 2, true);
+        writeStr(8, "WAVE");
+        writeStr(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, 1, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * 2, true);
+        view.setUint16(32, 2, true);
+        view.setUint16(34, 16, true);
+        writeStr(36, "data");
+        view.setUint32(40, len * 2, true);
+
+        let offset = 44;
+        for (let i = 0; i < len; i++) {
+          const s = Math.max(-1, Math.min(1, float32Data[i]));
+          view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+          offset += 2;
+        }
+        return new Blob([ab], { type: "audio/wav" });
+      }
+
+      // Remove silêncios mortos mantendo micro-respiros naturais de comercial (0.05s) + cria mapa de tempo exato
+      function trimDeadSilences(audioBuffer) {
+        const sr = audioBuffer.sampleRate;
+        const raw = audioBuffer.getChannelData(0);
+        const totalSamples = raw.length;
+        const winSize = Math.max(1, Math.floor(sr * 0.01)); // janela de 10ms
+        const totalWins = Math.ceil(totalSamples / winSize);
+
+        // Calcula energia RMS por janela de 10ms
+        const isSpeech = new Uint8Array(totalWins);
+        const THRESHOLD = 0.014;
+        for (let w = 0; w < totalWins; w++) {
+          const start = w * winSize;
+          const end = Math.min(totalSamples, start + winSize);
+          let sumSq = 0;
+          for (let i = start; i < end; i++) sumSq += raw[i] * raw[i];
+          const rms = Math.sqrt(sumSq / Math.max(1, end - start));
+          if (rms >= THRESHOLD) isSpeech[w] = 1;
+        }
+
+        // Expande 40ms antes e 50ms depois de cada fala para nunca cortar consoantes
+        const padBefore = 4;
+        const padAfter = 5;
+        const keep = new Uint8Array(totalWins);
+        for (let w = 0; w < totalWins; w++) {
+          if (isSpeech[w]) {
+            const s = Math.max(0, w - padBefore);
+            const e = Math.min(totalWins - 1, w + padAfter);
+            for (let k = s; k <= e; k++) keep[k] = 1;
+          }
+        }
+
+        // Agrupa blocos contínuos de fala e só corta silêncios maiores que 110ms
+        const MAX_SILENCE_WINS = 11; // 110ms
+        const KEEP_BREATH_WINS = 5;  // 50ms de respiro ágil entre frases
+        const segments = [];
+        let i = 0;
+        while (i < totalWins) {
+          if (keep[i]) {
+            const segStart = i;
+            while (i < totalWins && keep[i]) i++;
+            segments.push({ startWin: segStart, endWin: i, type: "speech" });
+          } else {
+            const silStart = i;
+            while (i < totalWins && !keep[i]) i++;
+            const silLen = i - silStart;
+            if (silStart === 0) {
+              // Remove silêncio inicial (entra falando no 00:00!)
+              if (silLen > 2) segments.push({ startWin: i - 1, endWin: i, type: "breath" });
+              else segments.push({ startWin: silStart, endWin: i, type: "breath" });
+            } else if (i >= totalWins) {
+              // Mantém 180ms limpos no final para a última palavra nunca cortar
+              const tailEnd = Math.min(totalWins, silStart + 18);
+              segments.push({ startWin: silStart, endWin: tailEnd, type: "tail" });
+            } else if (silLen <= MAX_SILENCE_WINS) {
+              segments.push({ startWin: silStart, endWin: i, type: "breath" });
+            } else {
+              segments.push({ startWin: silStart, endWin: silStart + KEEP_BREATH_WINS, type: "breath" });
+            }
+          }
+        }
+
+        if (segments.length === 0) {
+          return {
+            samples: new Float32Array(raw),
+            timeMap: [{ origStart: 0, origEnd: totalSamples / sr, newStart: 0, newEnd: totalSamples / sr }]
+          };
+        }
+
+        // Calcula tamanho final e monta o mapa de conversão de tempo (original -> cortado)
+        let outLen = 0;
+        const timeMap = [];
+        for (const seg of segments) {
+          const sIdx = seg.startWin * winSize;
+          const eIdx = Math.min(totalSamples, seg.endWin * winSize);
+          const count = Math.max(0, eIdx - sIdx);
+          if (count === 0) continue;
+          timeMap.push({
+            origStart: sIdx / sr,
+            origEnd: eIdx / sr,
+            newStart: outLen / sr,
+            newEnd: (outLen + count) / sr
+          });
+          outLen += count;
+        }
+
+        const out = new Float32Array(outLen);
+        const fadeSamples = Math.min(Math.floor(sr * 0.006), 256); // micro-fade de 6ms anti-clique
+        let cursor = 0;
+        for (const seg of segments) {
+          const sIdx = seg.startWin * winSize;
+          const eIdx = Math.min(totalSamples, seg.endWin * winSize);
+          const count = Math.max(0, eIdx - sIdx);
+          if (count === 0) continue;
+          for (let k = 0; k < count; k++) {
+            let sample = raw[sIdx + k];
+            if (k < fadeSamples) sample *= k / fadeSamples;
+            else if (k >= count - fadeSamples) sample *= (count - 1 - k) / fadeSamples;
+            out[cursor + k] = sample;
+          }
+          cursor += count;
+        }
+
+        return { samples: out, timeMap };
+      }
+
+      // Converte qualquer timestamp original do Whisper para o tempo exato no áudio já acelerado/cortado
+      function mapTimeWithVoiceMap(origTime, timeMap) {
+        if (!Array.isArray(timeMap) || timeMap.length === 0 || !Number.isFinite(origTime)) return origTime;
+        for (let i = 0; i < timeMap.length; i++) {
+          const seg = timeMap[i];
+          if (origTime <= seg.origStart) return seg.newStart;
+          if (origTime >= seg.origStart && origTime <= seg.origEnd) {
+            const ratio = (origTime - seg.origStart) / Math.max(0.0001, seg.origEnd - seg.origStart);
+            return seg.newStart + ratio * (seg.newEnd - seg.newStart);
+          }
+        }
+        return timeMap[timeMap.length - 1].newEnd;
+      }
+
+      // Cadeia de Masterização Comercial TV/Rádio (Limpeza + Presença + Compressor + Normalização)
+      async function masterCommercialVoice(rawAudioUrl, origFetchFn) {
+        if (!rawAudioUrl || rawAudioUrl.startsWith("blob:")) return null;
+        if (masteredVoiceMap.has(rawAudioUrl)) return masteredVoiceMap.get(rawAudioUrl);
+
+        try {
+          const proxyReq = `/api/generate?proxyUrl=${encodeURIComponent(rawAudioUrl)}`;
+          const res = await origFetchFn(proxyReq);
+          if (!res || !res.ok) return null;
+          const arrBuf = await res.arrayBuffer();
+
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+          if (!AudioCtx || !OfflineCtx) return null;
+
+          const decodeCtx = new AudioCtx();
+          const decoded = await decodeCtx.decodeAudioData(arrBuf.slice(0));
+          try { await decodeCtx.close(); } catch (_) {}
+
+          const sr = decoded.sampleRate;
+          const { samples, timeMap } = trimDeadSilences(decoded);
+
+          // Renderiza a cadeia de estúdio em OfflineAudioContext
+          const offCtx = new OfflineCtx(1, samples.length, sr);
+          const srcBuf = offCtx.createBuffer(1, samples.length, sr);
+          srcBuf.getChannelData(0).set(samples);
+
+          const src = offCtx.createBufferSource();
+          src.buffer = srcBuf;
+
+          // 1) High-Pass 80Hz: limpa graves embolados
+          const hp = offCtx.createBiquadFilter();
+          hp.type = "highpass";
+          hp.frequency.value = 80;
+
+          // 2) Presença Vocal Comercial (+3.5dB em 3.2kHz — corta a mix igual comercial de TV)
+          const presence = offCtx.createBiquadFilter();
+          presence.type = "peaking";
+          presence.frequency.value = 3200;
+          presence.Q.value = 1.1;
+          presence.gain.value = 3.5;
+
+          // 3) Brilho / Ar (+2.2dB acima de 9.5kHz)
+          const air = offCtx.createBiquadFilter();
+          air.type = "highshelf";
+          air.frequency.value = 9500;
+          air.gain.value = 2.2;
+
+          // 4) Compressor de Rádio/TV (voz firme, alta e constante)
+          const comp = offCtx.createDynamicsCompressor();
+          comp.threshold.value = -18;
+          comp.knee.value = 10;
+          comp.ratio.value = 5.5;
+          comp.attack.value = 0.003;
+          comp.release.value = 0.09;
+
+          src.connect(hp);
+          hp.connect(presence);
+          presence.connect(air);
+          air.connect(comp);
+          comp.connect(offCtx.destination);
+          src.start(0);
+
+          const rendered = await offCtx.startRendering();
+          const outData = rendered.getChannelData(0);
+
+          // Normalização de pico para -0.6 dBFS (volume comercial máximo sem distorcer)
+          let peak = 0;
+          for (let i = 0; i < outData.length; i++) {
+            const a = Math.abs(outData[i]);
+            if (a > peak) peak = a;
+          }
+          if (peak > 0.001) {
+            const gain = 0.93 / peak;
+            for (let i = 0; i < outData.length; i++) {
+              outData[i] = Math.max(-0.98, Math.min(0.98, outData[i] * gain));
+            }
+          }
+
+          const wavBlob = encodeMonoWav(outData, sr);
+          const blobUrl = URL.createObjectURL(wavBlob);
+          const entry = {
+            blobUrl,
+            timeMap,
+            origDuration: decoded.duration,
+            newDuration: outData.length / sr
+          };
+          masteredVoiceMap.set(rawAudioUrl, entry);
+          latestVoiceTimeMap = timeMap;
+          return entry;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      // Badge discreto indicando o motor Broadcast ativo no painel de voz
+      function mountBroadcastBadge() {
+        const bar = document.getElementById("nxVoicePreviewProBar") || document.getElementById("inlineVoiceBox");
+        if (!bar || document.getElementById("nxBroadcastBadge")) return;
+        const badge = document.createElement("div");
+        badge.id = "nxBroadcastBadge";
+        badge.style.cssText =
+          "margin-top:6px;padding:7px 11px;border-radius:9px;background:rgba(16,185,129,0.12);" +
+          "border:1px solid rgba(52,211,153,0.40);font-size:11px;font-weight:700;color:#a7f3d0;" +
+          "display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;";
+        badge.innerHTML =
+          '<span>🎙️ Motor Comercial TV/Rádio ATIVO: Corte automático de silêncios + Masterização de estúdio</span>' +
+          '<span style="color:#6ee7b7;font-weight:800;">Legenda 100% sincronizada</span>';
+        bar.insertAdjacentElement("afterend", badge);
+      }
+      setTimeout(mountBroadcastBadge, 1400);
+      setTimeout(mountBroadcastBadge, 2800);
+
+      // Intercepta: 1) proxyUrl do áudio da voz (entrega WAV masterizado/cortado) | 2) resposta de TTS e Whisper
+      const prevFetch = window.fetch.bind(window);
+      window.fetch = async function (input, init) {
+        const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+        const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+
+        // Quando o montador de vídeo baixa o áudio da voz via proxyUrl, entrega a versão Broadcast sem silêncios
+        if (method === "GET" && reqUrl.includes("/api/generate") && reqUrl.includes("proxyUrl=")) {
+          try {
+            const u = new URL(reqUrl, window.location.origin);
+            const px = u.searchParams.get("proxyUrl") || "";
+            if (px && masteredVoiceMap.has(px)) {
+              const entry = masteredVoiceMap.get(px);
+              if (entry && entry.blobUrl) return prevFetch(entry.blobUrl);
+            }
+          } catch (_) {}
+        }
+
+        const resp = await prevFetch(input, init);
+
+        // Analisa respostas JSON do /api/generate (TTS pronto ou Whisper pronto)
+        if (reqUrl.includes("/api/generate") && method === "POST" && resp && resp.ok) {
+          const ct = String(resp.headers.get("content-type") || "").toLowerCase();
+          if (ct.includes("application/json")) {
+            try {
+              const cloned = resp.clone();
+              const data = await cloned.json();
+
+              // A) Se retornou áudio de TTS concluído (status COMPLETED com audioUrl e sem ser música/vídeo)
+              const audioUrl = data?.audioUrl || data?.result?.audio?.url || "";
+              const isMusic = String(data?.engine || "").toLowerCase().includes("lyria") ||
+                              String(data?.engine || "").toLowerCase().includes("music") ||
+                              String(audioUrl).includes("lyria");
+              const hasChunks = (Array.isArray(data?.chunks) && data.chunks.length > 0) ||
+                                (Array.isArray(data?.result?.chunks) && data.result.chunks.length > 0);
+
+              if (audioUrl && !isMusic && !hasChunks && !audioUrl.startsWith("blob:") && data?.status === "COMPLETED") {
+                // Dispara a masterização em segundo plano para já estar pronta quando o vídeo for montado
+                masterCommercialVoice(audioUrl, prevFetch);
+              }
+
+              // B) Se retornou chunks do Whisper, remapeia os timestamps para o áudio já cortado sem silêncios!
+              if (hasChunks && Array.isArray(latestVoiceTimeMap) && latestVoiceTimeMap.length > 0) {
+                const remapList = (list) => list.map((ch) => {
+                  if (!ch || !Array.isArray(ch.timestamp)) return ch;
+                  const ns = Number(mapTimeWithVoiceMap(Number(ch.timestamp[0]), latestVoiceTimeMap).toFixed(3));
+                  const ne = Math.max(ns + 0.08, Number(mapTimeWithVoiceMap(Number(ch.timestamp[1]), latestVoiceTimeMap).toFixed(3)));
+                  return { ...ch, timestamp: [ns, ne] };
+                });
+
+                if (Array.isArray(data.chunks) && data.chunks.length > 0) {
+                  data.chunks = remapList(data.chunks);
+                }
+                if (Array.isArray(data?.result?.chunks) && data.result.chunks.length > 0) {
+                  data.result.chunks = remapList(data.result.chunks);
+                }
+                const newHeaders = new Headers(resp.headers);
+                newHeaders.delete("content-length");
+                return new Response(JSON.stringify(data), {
+                  status: resp.status,
+                  statusText: resp.statusText,
+                  headers: newHeaders
+                });
+              }
+            } catch (_) {}
+          }
+        }
+
+        return resp;
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
