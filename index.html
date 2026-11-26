@@ -6189,6 +6189,149 @@
         };
       }
     })();
+  // === MOTOR NARRAÇÃO +3S PROPORCIONAL (RITMO COMERCIAL SINCRONIZADO) + REFORÇO ANTI-ENGASGO ===
+    (function initNexoraProNarrationSync() {
+      if (window.__nexoraProNarrationSync) return;
+      window.__nexoraProNarrationSync = true;
+
+      const durSelect = document.getElementById("minDuration");
+      const anglesPanel = document.getElementById("angles3Panel");
+
+      // Barrinha discreta mostrando o ritmo proporcional +3s em tempo real
+      let pacingBar = document.getElementById("nexoraPacingBar");
+      if (!pacingBar && anglesPanel && anglesPanel.parentNode) {
+        pacingBar = document.createElement("div");
+        pacingBar.id = "nexoraPacingBar";
+        pacingBar.style.cssText =
+          "margin-top:10px;padding:10px 14px;border-radius:11px;background:rgba(14,165,233,0.10);" +
+          "border:1px solid rgba(56,189,248,0.35);display:flex;align-items:center;justify-content:space-between;" +
+          "gap:10px;flex-wrap:wrap;font-size:12px;color:#e0f2fe;";
+        pacingBar.innerHTML =
+          '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;margin:0;">' +
+          '<input type="checkbox" id="chkProPacing3s" checked style="width:16px;height:16px;accent-color:#38bdf8;cursor:pointer;">' +
+          '<span>⚡ Ritmo Comercial +3s Proporcional (Fala rápida profissional + Legenda 100% sincronizada)</span>' +
+          '</label>' +
+          '<span id="pacingRatioBadge" style="font-size:11px;font-weight:800;color:#7dd3fc;"></span>';
+        anglesPanel.insertAdjacentElement("afterend", pacingBar);
+      }
+
+      const chkProPacing = document.getElementById("chkProPacing3s");
+      const ratioBadge = document.getElementById("pacingRatioBadge");
+
+      function getTargetVideoSeconds() {
+        const raw = Number(durSelect?.value || 10);
+        return Number.isFinite(raw) && raw >= 5 ? raw : 10;
+      }
+
+      function updatePacingBadge() {
+        if (!ratioBadge) return;
+        const vidSec = getTargetVideoSeconds();
+        const extraSec = Number((vidSec * 0.3).toFixed(1));
+        const speechSec = Number((vidSec + extraSec).toFixed(1));
+        const extraTxt = String(extraSec).replace(".", ",");
+        const speechTxt = String(speechSec).replace(".", ",");
+        const active = !chkProPacing || chkProPacing.checked;
+        ratioBadge.textContent = active
+          ? `Vídeo ${vidSec}s → ${speechTxt}s de fala (+${extraTxt}s) encaixados em ${vidSec}s`
+          : `Modo padrão (${vidSec}s)`;
+      }
+
+      durSelect?.addEventListener("change", updatePacingBadge);
+      chkProPacing?.addEventListener("change", updatePacingBadge);
+      updatePacingBadge();
+
+      // Frases comerciais universais 100% seguras p/ TikTok Shop (zero preço, servem p/ qualquer produto)
+      const UNIVERSAL_COMMERCIAL_BOOSTERS = [
+        "Design pensado nos mínimos detalhes para entregar máxima qualidade no seu dia a dia.",
+        "Acabamento de alto nível que impressiona já no primeiro contato e faz toda a diferença.",
+        "Praticidade real, visual moderno e desempenho que supera qualquer expectativa.",
+        "Toque agora no carrinho aqui embaixo e garanta o seu antes que acabe."
+      ];
+
+      function normalizePausesForCommercialPace(txt) {
+        return String(txt || "")
+          .replace(/\.{2,}/g, ",")
+          .replace(/\s*[\r\n]+\s*/g, " ")
+          .replace(/\s{2,}/g, " ")
+          .trim();
+      }
+
+      function applyProportional3sScript(rawText, vidSec) {
+        let txt = normalizePausesForCommercialPace(rawText);
+        if (!txt) return txt;
+
+        // Meta proporcional (+30% de fala): 10s→~34 palavras, 15s→~50, 20s→~67, 30s→~99
+        const targetWords = Math.round(vidSec * 1.3 * 2.62);
+        const currentWords = txt.split(/\s+/).filter(Boolean).length;
+
+        if (currentWords < targetWords) {
+          if (!/[.!?]$/.test(txt)) txt += ".";
+          const lowerTxt = txt.toLowerCase();
+          for (let i = 0; i < UNIVERSAL_COMMERCIAL_BOOSTERS.length; i++) {
+            const wordsNow = txt.split(/\s+/).filter(Boolean).length;
+            if (wordsNow >= targetWords) break;
+            const phrase = UNIVERSAL_COMMERCIAL_BOOSTERS[i];
+            // Evita duplicar CTA de carrinho caso o roteiro já termine chamando p/ o carrinho
+            if (i === 3 && (lowerTxt.includes("carrinho") || lowerTxt.includes("clique") || lowerTxt.includes("garanta"))) {
+              continue;
+            }
+            const candidate = `${txt} ${phrase}`;
+            if (candidate.length <= 685) {
+              txt = candidate;
+            } else {
+              break;
+            }
+          }
+        }
+        return txt.slice(0, 690).trim();
+      }
+
+      // Intercepta a geração da narração (submit_tts) p/ aplicar ritmo comercial +3s proporcional
+      const prevFetch = window.fetch.bind(window);
+      window.fetch = async function (input, init) {
+        try {
+          const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+          const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+          const enabled = !chkProPacing || chkProPacing.checked;
+
+          if (enabled && reqUrl.includes("/api/generate") && method === "POST" && init && typeof init.body === "string") {
+            const payload = JSON.parse(init.body);
+            const act = String(payload.action || payload.task || payload.mode || "").trim().toLowerCase();
+
+            if (act === "submit_tts" || act === "tts" || act === "voice") {
+              const vidSec = getTargetVideoSeconds();
+              if (typeof payload.text === "string" && payload.text.trim()) {
+                payload.text = applyProportional3sScript(payload.text, vidSec);
+              }
+              // Velocidade comercial nativa (1.30x p/ MiniMax/Kokoro e teto limpo 1.20x no ElevenLabs, sem afinar voz)
+              payload.speed = Math.max(Number(payload.speed || 1.14), 1.30);
+              init = { ...init, body: JSON.stringify(payload) };
+            }
+          }
+        } catch (_) {}
+        return prevFetch(input, init);
+      };
+
+      // Reforço extra de estabilidade na reprodução de áudio/vídeo durante a montagem
+      const origCreateEl = document.createElement.bind(document);
+      document.createElement = function (tagName) {
+        const el = origCreateEl(tagName);
+        const tag = String(tagName || "").toLowerCase();
+        if (tag === "audio") {
+          try {
+            el.preservesPitch = true;
+            el.mozPreservesPitch = true;
+            el.webkitPreservesPitch = true;
+          } catch (_) {}
+        } else if (tag === "video") {
+          try {
+            el.playsInline = true;
+            el.preload = "auto";
+          } catch (_) {}
+        }
+        return el;
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
