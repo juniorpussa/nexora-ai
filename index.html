@@ -6332,6 +6332,266 @@
         return el;
       };
     })();
+  // === BLOCO 1: ULTRA-HD 16MBPS + PRODUTO EM MOVIMENTO 3D REAL + FÍSICA VIVA NOS 105 CENÁRIOS + FIDELIDADE 100% ===
+    (function initNexoraUltraHD2000() {
+      if (window.__nexoraUltraHD2000) return;
+      window.__nexoraUltraHD2000 = true;
+
+      // 1) UPGRADE ULTRA-HD NO GRAVADOR DE VÍDEO (16 Mbps vídeo + 256 kbps áudio — fim do quadriculado)
+      if (typeof window.MediaRecorder === "function") {
+        const OrigMediaRecorder = window.MediaRecorder;
+        window.MediaRecorder = new Proxy(OrigMediaRecorder, {
+          construct(target, args) {
+            const stream = args[0];
+            const origOpts = (args[1] && typeof args[1] === "object") ? { ...args[1] } : {};
+            const reqMime = String(origOpts.mimeType || "").toLowerCase();
+
+            const mp4Candidates = [
+              "video/mp4;codecs=avc1.640028,mp4a.40.2",
+              "video/mp4;codecs=avc1.4d4028,mp4a.40.2",
+              "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+              "video/mp4"
+            ];
+            const webmCandidates = [
+              "video/webm;codecs=vp9,opus",
+              "video/webm;codecs=h264,opus",
+              "video/webm;codecs=vp8,opus",
+              "video/webm"
+            ];
+            const orderedMimes = reqMime.includes("webm")
+              ? [...webmCandidates, ...mp4Candidates]
+              : [...mp4Candidates, ...webmCandidates];
+
+            let bestMime = origOpts.mimeType || "";
+            if (typeof OrigMediaRecorder.isTypeSupported === "function") {
+              for (const m of orderedMimes) {
+                try {
+                  if (OrigMediaRecorder.isTypeSupported(m)) {
+                    bestMime = m;
+                    break;
+                  }
+                } catch (_) {}
+              }
+            }
+
+            const ultraOpts = {
+              ...origOpts,
+              ...(bestMime ? { mimeType: bestMime } : {}),
+              videoBitsPerSecond: Math.max(Number(origOpts.videoBitsPerSecond || 0), 16000000),
+              audioBitsPerSecond: Math.max(Number(origOpts.audioBitsPerSecond || 0), 256000)
+            };
+
+            try {
+              return Reflect.construct(target, [stream, ultraOpts]);
+            } catch (_) {
+              try {
+                const safeOpts = {
+                  ...origOpts,
+                  videoBitsPerSecond: Math.max(Number(origOpts.videoBitsPerSecond || 0), 12000000),
+                  audioBitsPerSecond: Math.max(Number(origOpts.audioBitsPerSecond || 0), 192000)
+                };
+                return Reflect.construct(target, [stream, safeOpts]);
+              } catch (__) {
+                return Reflect.construct(target, args);
+              }
+            }
+          }
+        });
+      }
+
+      // 2) NITIDEZ MÁXIMA DE RENDERIZAÇÃO NO CANVAS
+      if (typeof drawCroppedCover === "function") {
+        const prevDraw = drawCroppedCover;
+        drawCroppedCover = function (c2d) {
+          try {
+            if (c2d) {
+              c2d.imageSmoothingEnabled = true;
+              c2d.imageSmoothingQuality = "high";
+            }
+          } catch (_) {}
+          return prevDraw.apply(this, arguments);
+        };
+      }
+
+      // 3) MOTOR DE FÍSICA VIVA PARA TODOS OS 105 UNIVERSOS + GIRO 3D REAL DO PRODUTO + FIDELIDADE TRAVADA
+      const prevFetch = window.fetch.bind(window);
+      let uhdSceneIdx = 0;
+      let uhdClipIdx = 0;
+      let lastUhdSceneTs = 0;
+      let lastUhdClipTs = 0;
+
+      productImg?.addEventListener("change", () => { uhdSceneIdx = 0; uhdClipIdx = 0; });
+      btnGen3Angles?.addEventListener("click", () => { uhdSceneIdx = 0; uhdClipIdx = 0; });
+
+      function getActiveProductFidelity() {
+        const desc = String(document.getElementById("productDetailHint")?.value || "").trim();
+        const macro = String(document.getElementById("macroTarget")?.value || "").trim();
+        const lock = desc
+          ? `MANDATORY 100% PRODUCT COLOR & MATERIAL LOCK: The product is strictly "${desc}". Preserve its EXACT original opaque/matte/glossy surface colors, exact material finish, exact shape and authentic details with 100% accuracy. NEVER change its color, NEVER turn white or solid matte surfaces into dark mirrored glass, black visors or invented screens.`
+          : `MANDATORY 100% PRODUCT COLOR & MATERIAL LOCK: Preserve the EXACT original colors, solid matte/glossy textures, silhouette and physical markings of the product from the reference cutouts. NEVER recolor panels, NEVER turn solid surfaces into black glass or mirrors, zero distortion or morphing.`;
+        const macroHint = macro ? ` Highlight authentic macro detail: ${macro}.` : "";
+        return { desc, macro, lock, macroHint };
+      }
+
+      function getOrdered3AngleUrls(cutNum) {
+        const kit = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((a) => a && a.url) : [];
+        if (kit.length === 0) return [];
+        const pattern = [0, 1, 2, 1, 2, 1, 0];
+        const primaryIdx = pattern[cutNum % pattern.length] % kit.length;
+        const ordered = [kit[primaryIdx].url];
+        for (let i = 0; i < kit.length; i++) {
+          if (i !== primaryIdx && !ordered.includes(kit[i].url)) ordered.push(kit[i].url);
+        }
+        return ordered;
+      }
+
+      function getLivingUniversePhysics(text) {
+        const selectedCardTxt = Array.from(document.querySelectorAll(".universe-card.active, .model-card.active, .template-card.active, .selected"))
+          .map((el) => el.textContent || "")
+          .join(" ");
+        const s = `${text || ""} ${selectedCardTxt}`.toLowerCase();
+
+        if (/(vulc|volcan|lava|magma|erup|crater)/.test(s)) {
+          return "ACTIVE LIVING VOLCANO PHYSICS (ZERO STILL WALLPAPER): Bright molten orange-red lava rivers visibly flowing, cascading and bubbling downhill in real time behind the product, erupting fire plumes, thick billowing volcanic smoke and ash clouds rising continuously, blazing hot embers and glowing sparks flying rapidly past the foreground lens, shimmering heat waves.";
+        }
+        if (/(agua|água|water|ocean|oceano|mar |sea |onda|wave|chuva|rain|splash|cachoeira|waterfall|submar|underwater|piscina|pool)/.test(s)) {
+          return "ACTIVE LIVING WATER PHYSICS (ZERO STILL WALLPAPER): Dynamic crystal-clear water splashes, rippling liquid waves and cascading mist surging vigorously in real time, sparkling water droplets flying across the foreground air in crisp backlight, moving underwater/surface light caustics dancing continuously.";
+        }
+        if (/(gelo|ice|neve|snow|glac|arctic|inverno|winter|frost|cristal gelado|blizzard)/.test(s)) {
+          return "ACTIVE LIVING ICE & SNOW PHYSICS (ZERO STILL WALLPAPER): Swirling snow flurries, sparkling frost crystals and dense sub-zero cold mist blowing actively across foreground and background in real time, crisp glacial light rays shifting dynamically across refractive ice surfaces.";
+        }
+        if (/(fogo|fire|chama|flame|brasa|ember|forja|forge|explos|spark|faísca|faisca|inferno|magma|plasma|incendi)/.test(s)) {
+          return "ACTIVE LIVING FIRE & SPARKS PHYSICS (ZERO STILL WALLPAPER): Roaring golden flames dancing upward in real time, bursts of bright incandescent sparks and glowing embers streaking swiftly past the camera lens, rolling volumetric dark smoke billowing continuously with flickering warm firelight.";
+        }
+        if (/(cyber|neon|laser|futur|hologra|matrix|tech|circuit|sci-fi|portal|eletric|elétric|raio|lightning|trov|thunder|gamer|rgb)/.test(s)) {
+          return "ACTIVE LIVING CYBER & ENERGY PHYSICS (ZERO STILL WALLPAPER): Pulsing neon laser beams, crackling high-voltage electric arcs and fast-moving light streaks racing through 3D space in real time, drifting volumetric fog, floating glowing energy dust and sweeping chromatic reflections across the entire set.";
+        }
+        if (/(luxo|luxury|ouro|gold|diamant|diamond|marmor|marble|velud|velvet|champagne|natal|christmas|seda|silk|royal|palace|joia|jóia|perfum)/.test(s)) {
+          return "ACTIVE LIVING LUXURY PHYSICS (ZERO STILL WALLPAPER): Shimmering golden micro-particles, floating bokeh sparkles and liquid-gold light caustics gliding smoothly in 3D depth, billowing silk ribbons or drifting champagne mist and sweeping studio key-lights dancing continuously across polished surfaces.";
+        }
+        if (/(florest|forest|selva|jungl|natur|folha|leaf|vento|wind|deserto|desert|areia|sand|montanh|mountain|nuve|cloud|sky|céu|ceu|praia|beach|sunset|por do sol)/.test(s)) {
+          return "ACTIVE LIVING NATURE PHYSICS (ZERO STILL WALLPAPER): Active gusts of wind blowing leaves, swirling golden dust, sand grains or mountain mist smoothly across foreground and background in real time, dramatic volumetric sunbeams moving through drifting clouds with deep multi-layer parallax.";
+        }
+        if (/(espac|espaç|space|galax|nebul|cosmos|lua|moon|planet|estrel|star|univers|zero grav|gravidade)/.test(s)) {
+          return "ACTIVE LIVING COSMOS PHYSICS (ZERO STILL WALLPAPER): Swirling luminous nebula clouds drifting continuously in deep 3D space, sweeping starfield parallax, floating radiant cosmic dust and gleaming planetary rim light moving smoothly across the scene.";
+        }
+        return "ACTIVE LIVING CINEMA SET PHYSICS (ZERO STILL WALLPAPER): The entire environment is vividly alive in real time — sweeping volumetric light shafts, billowing atmospheric smoke/mist, floating glowing micro-particles, shifting floor/wall light reflections, and strong multi-layer 3D parallax moving continuously behind and in front of the product.";
+      }
+
+      const UHD_SCENE_COMPOSITIONS = [
+        "ULTRA-HD 8K COMMERCIAL HERO SHOT (CUT 1): Dynamic low-angle 3/4 frontal perspective showcasing bold 3D volume, crisp sculpted rim lighting, authentic contact shadows and deep living cinematic background.",
+        "ULTRA-HD 8K 3D PROFILE SHOT (CUT 2): Dramatic 60-degree lateral 3/4 view exposing true side thickness, sleek contours and dimensional geometry integrated naturally into the moving environment.",
+        "ULTRA-HD 8K MACRO 100MM SHOT (CUT 3): Razor-sharp cinematic close-up angled diagonally across the product's finest physical materials, textures and craftsmanship with creamy anamorphic bokeh.",
+        "ULTRA-HD 8K ELEVATED 3D SHOT (CUT 4): Sweeping 45-degree high-angle diagonal perspective showing upper surfaces, full 3D depth and grand immersive background scale.",
+        "ULTRA-HD 8K OPPOSITE FLANK SHOT (CUT 5): Bold reverse 3/4 angle showcasing opposite contours and physical details lit by dramatic sweeping volumetric light beams.",
+        "ULTRA-HD 8K KINETIC DEPTH SHOT (CUT 6): Energetic wide-depth 3D perspective with rich foreground particles and glowing atmospheric depth separating product from background.",
+        "ULTRA-HD 8K HERO FINALE SHOT (CUT 7): Triumphant blockbuster hero composition centered in the upper TikTok Shop safe zone with iconic commercial lighting and crystal-clear detail."
+      ];
+
+      const UHD_CLIP_3D_PRODUCT_CHOREO = [
+        "CUT 1 — SUBTLE 3D PRODUCT TURN + CRASH-ZOOM ORBIT: The product itself performs a smooth, subtle continuous 3D rotation (turning ~25 degrees steadily on its axis to showcase its real 3D form and side silhouette) while the cinema camera executes a fast dynamic dolly push-in curving into a 3D orbital arc with strong parallax.",
+        "CUT 2 — FLUID 3D LATERAL TURN + LOW SWEEP: The product gently turns and subtly angles its side flank toward the lens in continuous 3D motion, revealing authentic thickness and contours as the camera sweeps smoothly from left to right around its 3D silhouette.",
+        "CUT 3 — MACRO DETAIL REVEAL + MICRO 3D TILT: Razor-sharp macro push-in zooming smoothly across the product's physical details while the product executes a gentle, refined 3D tilt-and-turn so specular highlights glide realistically across its authentic surface texture.",
+        "CUT 4 — ELEVATED 3D COUNTER-ROTATION + CRANE ARC: The camera sweeps gracefully on an ascending diagonal 3D crane arc while the product smoothly counter-rotates in subtle 3D motion, exposing top geometry, curves and complete dimensional volume.",
+        "CUT 5 — OPPOSITE FLANK 3D PIVOT + WHIP-ARC: Energetic curved camera sweep gliding swiftly around the opposite side while the product subtly pivots in 3D space to display its reverse craftsmanship and side details under sweeping rim lights.",
+        "CUT 6 — DYNAMIC PARALLAX + CONTINUOUS 3D TURN: Kinetic speed-ramp camera orbit with dramatic foreground-to-background parallax while the product glides and turns smoothly in 3D with lifelike physical weight and shifting light reflections.",
+        "CUT 7 — BLOCKBUSTER HERO 3D FINALE: Commanding orbital push-in as the product completes a smooth, authoritative subtle 3D turn facing hero-front in the upper safe zone while brilliant cinema spotlights sweep across its pristine surface."
+      ];
+
+      function cleanStaticLanguage(text) {
+        return String(text || "")
+          .replace(/\b(static background|frozen background|still background|locked[- ]off camera|still camera|product remains still|product stays still|product stays locked|remains fixed|stationary product|no rotation|no orbiting|minimal motion|very subtle movement|subtle slow movement|keep background still|keep product still)\b/gi, "")
+          .replace(/\s{2,}/g, " ")
+          .trim();
+      }
+
+      function buildUltraCleanNegative(neg) {
+        const blockers = /\b(orbiting|orbit|banking|bank|rotating|rotation|rotate|spinning|spin|turning|turn|panning|pan|tilting|tilt|dolly|zooming|zoom|camera movement|camera motion|dynamic camera|fast movement|moving background|background movement|background motion|whip pan)\b/gi;
+        let cleaned = String(neg || "").replace(blockers, "").replace(/,\s*,+/g, ",").replace(/^\s*,|,\s*$/g, "").trim();
+        const strictNeg = "static image, wallpaper effect, frozen background, motionless product, pixelation, compression artifacts, blurry, lowres, color change, recolored product, black glass visor, mirrored replacement, morphing product, melted geometry, distorted shape, garbled text, watermark";
+        return (cleaned ? `${cleaned}, ${strictNeg}` : strictNeg).slice(0, 500);
+      }
+
+      window.fetch = async function (input, init) {
+        try {
+          const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+          const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+
+          if (reqUrl.includes("/api/generate") && method === "POST" && init && typeof init.body === "string") {
+            const payload = JSON.parse(init.body);
+            const act = String(payload.action || payload.task || payload.mode || "").trim().toLowerCase();
+
+            if (act === "submit_scene" || act === "generate_image" || act === "scene") {
+              const now = Date.now();
+              if (now - lastUhdSceneTs > 120000) uhdSceneIdx = 0;
+              lastUhdSceneTs = now;
+              const idx = uhdSceneIdx++;
+
+              const orderedAngles = getOrdered3AngleUrls(idx);
+              if (orderedAngles.length > 0) {
+                payload.referenceImages = orderedAngles;
+                payload.imageUrl = orderedAngles[0];
+                delete payload.imageBase64;
+                delete payload.image_base64;
+                delete payload.image;
+                delete payload.dataUrl;
+                delete payload.data_url;
+              }
+
+              const promptKey = typeof payload.prompt === "string" && payload.prompt.trim()
+                ? "prompt"
+                : (typeof payload.imagePrompt === "string" ? "imagePrompt" : "prompt");
+              const basePrompt = cleanStaticLanguage(payload[promptKey] || "");
+              const fidelity = getActiveProductFidelity();
+              const comp = UHD_SCENE_COMPOSITIONS[idx % UHD_SCENE_COMPOSITIONS.length];
+              const worldPhys = getLivingUniversePhysics(basePrompt);
+              const multiAngleLock = orderedAngles.length >= 2
+                ? "MULTI-ANGLE 3D SYNTHESIS: Use all provided multi-angle product reference cutouts together for true 3D depth, accurate side thickness and realistic lighting integration — NEVER flat or pasted on. "
+                : "";
+
+              payload[promptKey] =
+                `${comp} ${multiAngleLock}${fidelity.lock}${fidelity.macroHint} ${basePrompt} ${worldPhys} Shot on ARRI Alexa 65 8K cinema lens, hyper-detailed, crisp optical clarity, zero text, zero watermarks.`
+                  .replace(/\s{2,}/g, " ")
+                  .trim()
+                  .slice(0, 2100);
+
+              // Usa alias "image" (mapeado p/ submit_scene no servidor) p/ evitar duplicação de prompt
+              payload.action = "image";
+              delete payload.task;
+              delete payload.mode;
+              init = { ...init, body: JSON.stringify(payload) };
+            } else if (act === "submit_clip" || act === "generate_video" || act === "clip") {
+              const now = Date.now();
+              if (now - lastUhdClipTs > 180000) uhdClipIdx = 0;
+              lastUhdClipTs = now;
+              const idx = uhdClipIdx++;
+
+              const promptKey = typeof payload.prompt === "string" && payload.prompt.trim()
+                ? "prompt"
+                : (typeof payload.motionPrompt === "string" ? "motionPrompt" : "prompt");
+              const baseMotion = cleanStaticLanguage(payload[promptKey] || "");
+              const fidelity = getActiveProductFidelity();
+              const choreo = UHD_CLIP_3D_PRODUCT_CHOREO[idx % UHD_CLIP_3D_PRODUCT_CHOREO.length];
+              const worldPhys = getLivingUniversePhysics(baseMotion);
+
+              payload[promptKey] =
+                `${choreo} ${worldPhys} ${fidelity.lock}${fidelity.macroHint} ${baseMotion} Ultra-crisp 4K Hollywood commercial film quality, silky fluid motion, continuous 3D rotation of the product showing real details while the entire background surges with physical motion.`
+                  .replace(/\s{2,}/g, " ")
+                  .trim()
+                  .slice(0, 2300);
+
+              payload.negativePrompt = buildUltraCleanNegative(payload.negativePrompt);
+              // Usa alias "video" (mapeado p/ submit_clip no servidor) p/ evitar duplicação de prompt
+              payload.action = "video";
+              delete payload.task;
+              delete payload.mode;
+              init = { ...init, body: JSON.stringify(payload) };
+            }
+          }
+        } catch (_) {}
+        return prevFetch(input, init);
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
