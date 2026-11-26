@@ -8783,6 +8783,309 @@
         return resp;
       };
     })();
+  // === UPGRADE 2/4: MASTERIZAÇÃO DE TRILHA (DROP 00:00 + RECORTE VOCAL DE ESTÚDIO + UPLOAD MP3/WAV PRÓPRIO) ===
+    (function initNexoraMusicMastering2000() {
+      if (window.__nexoraMusicMastering2000) return;
+      window.__nexoraMusicMastering2000 = true;
+
+      const masteredMusicMap = new Map(); // origUrl -> blobUrl
+      const customVirtualJobs = new Map();
+      let customUploadedMusicUrl = "";
+      let customUploadedMusicName = "";
+
+      function encodeStereoWav(audioBuffer) {
+        const numCh = Math.min(2, audioBuffer.numberOfChannels || 1);
+        const sr = audioBuffer.sampleRate;
+        const len = audioBuffer.length;
+        const blockAlign = numCh * 2;
+        const dataSize = len * blockAlign;
+        const ab = new ArrayBuffer(44 + dataSize);
+        const view = new DataView(ab);
+        const writeStr = (off, s) => {
+          for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i));
+        };
+        writeStr(0, "RIFF");
+        view.setUint32(4, 36 + dataSize, true);
+        writeStr(8, "WAVE");
+        writeStr(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, numCh, true);
+        view.setUint32(24, sr, true);
+        view.setUint32(28, sr * blockAlign, true);
+        view.setUint16(32, blockAlign, true);
+        view.setUint16(34, 16, true);
+        writeStr(36, "data");
+        view.setUint32(40, dataSize, true);
+
+        const chData = [];
+        for (let c = 0; c < numCh; c++) chData.push(audioBuffer.getChannelData(c));
+        let offset = 44;
+        for (let i = 0; i < len; i++) {
+          for (let c = 0; c < numCh; c++) {
+            const s = Math.max(-1, Math.min(1, chData[c][i] || 0));
+            view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+            offset += 2;
+          }
+        }
+        return new Blob([ab], { type: "audio/wav" });
+      }
+
+      // Encontra o ponto exato do primeiro impacto real (corta introduções fracas até 2.8s para abrir no drop em 00:00)
+      function findDropStartSample(audioBuffer) {
+        const sr = audioBuffer.sampleRate;
+        const ch0 = audioBuffer.getChannelData(0);
+        const maxScanSamples = Math.min(ch0.length, Math.floor(sr * 2.8));
+        const win = Math.max(1, Math.floor(sr * 0.05)); // 50ms
+
+        let maxRms = 0;
+        for (let i = 0; i < Math.min(ch0.length, sr * 8); i += win) {
+          let sum = 0;
+          const end = Math.min(ch0.length, i + win);
+          for (let j = i; j < end; j++) sum += ch0[j] * ch0[j];
+          const rms = Math.sqrt(sum / Math.max(1, end - i));
+          if (rms > maxRms) maxRms = rms;
+        }
+        if (maxRms < 0.01) return 0;
+
+        const targetRms = maxRms * 0.38;
+        for (let i = 0; i < maxScanSamples; i += win) {
+          let sum = 0;
+          const end = Math.min(maxScanSamples, i + win);
+          for (let j = i; j < end; j++) sum += ch0[j] * ch0[j];
+          const rms = Math.sqrt(sum / Math.max(1, end - i));
+          if (rms >= targetRms) {
+            return Math.max(0, i - Math.floor(sr * 0.02));
+          }
+        }
+        return 0;
+      }
+
+      // Masteriza qualquer trilha (Lyria 2 ou Upload próprio) com Drop 00:00 + Recorte Vocal + Punch Comercial
+      async function masterCommercialMusicBuffer(arrayBuffer) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        if (!AudioCtx || !OfflineCtx) return null;
+
+        const decodeCtx = new AudioCtx();
+        const decoded = await decodeCtx.decodeAudioData(arrayBuffer.slice(0));
+        try { await decodeCtx.close(); } catch (_) {}
+
+        const sr = decoded.sampleRate;
+        const numCh = Math.min(2, decoded.numberOfChannels || 1);
+        const startSample = findDropStartSample(decoded);
+        const newLen = Math.max(sr, decoded.length - startSample);
+
+        const offCtx = new OfflineCtx(numCh, newLen, sr);
+        const trimmedBuf = offCtx.createBuffer(numCh, newLen, sr);
+        for (let c = 0; c < numCh; c++) {
+          const srcData = decoded.getChannelData(c);
+          const dstData = trimmedBuf.getChannelData(c);
+          dstData.set(srcData.subarray(startSample, startSample + newLen));
+          // Micro fade-in de 12ms para evitar estalo no corte
+          const fadeIn = Math.min(Math.floor(sr * 0.012), newLen);
+          for (let i = 0; i < fadeIn; i++) dstData[i] *= i / fadeIn;
+        }
+
+        const src = offCtx.createBufferSource();
+        src.buffer = trimmedBuf;
+
+        // 1) Sub-Bass Punch (+3.2dB em 65Hz — peso de anúncio viral)
+        const bassBoost = offCtx.createBiquadFilter();
+        bassBoost.type = "lowshelf";
+        bassBoost.frequency.value = 65;
+        bassBoost.gain.value = 3.2;
+
+        // 2) Recorte Vocal de Agência (-4.8dB em 2.8kHz — abre espaço perfeito para a narração brilhar)
+        const vocalPocket = offCtx.createBiquadFilter();
+        vocalPocket.type = "peaking";
+        vocalPocket.frequency.value = 2800;
+        vocalPocket.Q.value = 0.95;
+        vocalPocket.gain.value = -4.8;
+
+        // 3) Brilho comercial nos pratos/hi-hats (+1.8dB acima de 10.5kHz)
+        const sheen = offCtx.createBiquadFilter();
+        sheen.type = "highshelf";
+        sheen.frequency.value = 10500;
+        sheen.gain.value = 1.8;
+
+        // 4) Compressor de Masterização (batida firme e constante do início ao fim)
+        const comp = offCtx.createDynamicsCompressor();
+        comp.threshold.value = -14;
+        comp.knee.value = 8;
+        comp.ratio.value = 4.5;
+        comp.attack.value = 0.005;
+        comp.release.value = 0.12;
+
+        // Ganho equilibrado para não engolir o locutor
+        const outGain = offCtx.createGain();
+        outGain.gain.value = 0.78;
+
+        src.connect(bassBoost);
+        bassBoost.connect(vocalPocket);
+        vocalPocket.connect(sheen);
+        sheen.connect(comp);
+        comp.connect(outGain);
+        outGain.connect(offCtx.destination);
+        src.start(0);
+
+        const rendered = await offCtx.startRendering();
+        const wavBlob = encodeStereoWav(rendered);
+        return URL.createObjectURL(wavBlob);
+      }
+
+      async function masterMusicFromUrl(rawUrl, origFetchFn) {
+        if (!rawUrl || rawUrl.startsWith("blob:")) return null;
+        if (masteredMusicMap.has(rawUrl)) return masteredMusicMap.get(rawUrl);
+        try {
+          const res = await origFetchFn(`/api/generate?proxyUrl=${encodeURIComponent(rawUrl)}`);
+          if (!res || !res.ok) return null;
+          const ab = await res.arrayBuffer();
+          const blobUrl = await masterCommercialMusicBuffer(ab);
+          if (blobUrl) masteredMusicMap.set(rawUrl, blobUrl);
+          return blobUrl;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      // Interface de Upload de Trilha Própria (MP3/WAV) + Selo de Masterização Ativa no painel de música
+      function mountMusicMasteringUI() {
+        const panel = document.getElementById("nexoraMusicProPanel");
+        if (!panel || document.getElementById("nxCustomMusicRow")) return;
+
+        const row = document.createElement("div");
+        row.id = "nxCustomMusicRow";
+        row.style.cssText =
+          "margin-top:4px;padding-top:9px;border-top:1px dashed rgba(168,85,247,0.35);" +
+          "display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;";
+        row.innerHTML =
+          '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+          '  <label for="nxUploadMusicInput" class="nx-mbtn alt" style="margin:0;cursor:pointer;">📁 Subir Minha Trilha (MP3/WAV • 0 Créditos)</label>' +
+          '  <input type="file" id="nxUploadMusicInput" accept="audio/*" style="display:none;" />' +
+          '  <button type="button" id="btnClearCustomMusic" class="nx-mbtn" style="display:none;background:#475569;border-color:#64748b;">✕ Usar Lyria 2</button>' +
+          '</div>' +
+          '<span id="nxCustomMusicInfo" style="font-size:11px;font-weight:700;color:#86efac;">🎛️ Masterização Agência ATIVA: Drop 00:00 + Recorte Vocal</span>';
+
+        panel.appendChild(row);
+
+        const fileInp = document.getElementById("nxUploadMusicInput");
+        const btnClear = document.getElementById("btnClearCustomMusic");
+        const infoEl = document.getElementById("nxCustomMusicInfo");
+
+        fileInp?.addEventListener("change", async () => {
+          const f = fileInp.files && fileInp.files[0];
+          if (!f) return;
+          if (infoEl) infoEl.textContent = "⏳ Masterizando sua trilha (Drop 00:00 + Recorte Vocal)...";
+          try {
+            const ab = await f.arrayBuffer();
+            const masteredUrl = await masterCommercialMusicBuffer(ab);
+            customUploadedMusicUrl = masteredUrl || URL.createObjectURL(f);
+            customUploadedMusicName = f.name;
+            if (btnClear) btnClear.style.display = "inline-flex";
+            if (infoEl) infoEl.textContent = `✅ Trilha própria ativa (0 créditos): ${f.name.slice(0, 32)}`;
+          } catch (_) {
+            customUploadedMusicUrl = URL.createObjectURL(f);
+            customUploadedMusicName = f.name;
+            if (btnClear) btnClear.style.display = "inline-flex";
+            if (infoEl) infoEl.textContent = `✅ Trilha própria carregada: ${f.name.slice(0, 32)}`;
+          }
+        });
+
+        btnClear?.addEventListener("click", () => {
+          customUploadedMusicUrl = "";
+          customUploadedMusicName = "";
+          if (fileInp) fileInp.value = "";
+          btnClear.style.display = "none";
+          if (infoEl) infoEl.textContent = "🎛️ Masterização Agência ATIVA: Drop 00:00 + Recorte Vocal";
+        });
+      }
+
+      setTimeout(mountMusicMasteringUI, 1500);
+      setTimeout(mountMusicMasteringUI, 3000);
+
+      // Intercepta: 1) Trilha própria enviada pelo usuário | 2) Masterização automática das trilhas Lyria 2
+      const prevFetch = window.fetch.bind(window);
+      window.fetch = async function (input, init) {
+        const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+        const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+
+        // Entrega a trilha já masterizada quando o montador de vídeo baixa via proxyUrl
+        if (method === "GET" && reqUrl.includes("/api/generate") && reqUrl.includes("proxyUrl=")) {
+          try {
+            const u = new URL(reqUrl, window.location.origin);
+            const px = u.searchParams.get("proxyUrl") || "";
+            if (px && masteredMusicMap.has(px)) {
+              return prevFetch(masteredMusicMap.get(px));
+            }
+          } catch (_) {}
+        }
+
+        if (reqUrl.includes("/api/generate") && method === "POST" && init && typeof init.body === "string") {
+          try {
+            const payload = JSON.parse(init.body);
+            const act = String(payload.action || payload.task || payload.mode || "").trim().toLowerCase();
+
+            // Poll da trilha própria enviada pelo usuário
+            if (act === "poll" || act === "status" || act === "check_status") {
+              const stUrl = String(payload.statusUrl || payload.status_url || payload.url || "");
+              if (stUrl.includes("nexora-custom-music/")) {
+                const jobId = stUrl.split("nexora-custom-music/")[1]?.split("/")[0] || "";
+                const localUrl = customVirtualJobs.get(jobId) || "";
+                if (localUrl) {
+                  return new Response(JSON.stringify({
+                    status: "COMPLETED",
+                    audioUrl: localUrl,
+                    audio_url: localUrl,
+                    url: localUrl,
+                    result: { audio: { url: localUrl } }
+                  }), { status: 200, headers: { "Content-Type": "application/json" } });
+                }
+              }
+            }
+
+            // Se o usuário subiu uma trilha própria MP3/WAV, usa ela diretamente com 0 créditos
+            if ((act === "submit_music" || act === "music") && customUploadedMusicUrl && !payload.__isMusicPreviewPro && !payload.__isMusicPreview) {
+              const jobId = `usr_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+              customVirtualJobs.set(jobId, customUploadedMusicUrl);
+              return new Response(JSON.stringify({
+                status: "COMPLETED",
+                engine: "custom-user-mastered",
+                request_id: jobId,
+                statusUrl: `https://queue.fal.run/nexora-custom-music/${jobId}/status`,
+                responseUrl: `https://queue.fal.run/nexora-custom-music/${jobId}`,
+                audioUrl: customUploadedMusicUrl,
+                audio_url: customUploadedMusicUrl,
+                url: customUploadedMusicUrl,
+                charged: 0
+              }), { status: 200, headers: { "Content-Type": "application/json" } });
+            }
+          } catch (_) {}
+        }
+
+        const resp = await prevFetch(input, init);
+
+        // Quando o Lyria 2 concluir uma trilha, já masteriza em segundo plano (Drop 00:00 + Recorte Vocal)
+        if (reqUrl.includes("/api/generate") && method === "POST" && resp && resp.ok) {
+          const ct = String(resp.headers.get("content-type") || "").toLowerCase();
+          if (ct.includes("application/json")) {
+            try {
+              const cloned = resp.clone();
+              const data = await cloned.json();
+              const audioUrl = data?.audioUrl || data?.audio_url || data?.result?.audio?.url || "";
+              const isMusic = String(data?.engine || "").toLowerCase().includes("lyria") ||
+                              String(data?.engine || "").toLowerCase().includes("music") ||
+                              String(audioUrl).includes("lyria");
+              if (audioUrl && isMusic && !audioUrl.startsWith("blob:") && data?.status === "COMPLETED") {
+                masterMusicFromUrl(audioUrl, prevFetch);
+              }
+            } catch (_) {}
+          }
+        }
+
+        return resp;
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
