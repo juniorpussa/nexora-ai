@@ -720,26 +720,77 @@ export async function onRequestPost(context) {
         gen_text: String(body.gen_text || body.text || "Confira este lançamento agora mesmo.").slice(0, 600),
       });
     } else if (action === "submit_tts") {
-      usedEndpoint = "fal-ai/kokoro/pt-br";
-      const voiceKey = String(body.voice || body.voiceId || "").trim();
-      const gender = String(body.gender || "").toLowerCase();
-      const fallbackVoice = gender === "female" ? "pf_ora" : "pm_alex";
-      const voiceObj = TTS_VOICE_MAP[voiceKey] || TTS_VOICE_MAP[fallbackVoice] || TTS_VOICE_MAP["pf_dylan"];
-      const speed = Math.min(1.35, Math.max(0.75, Number(body.speed || 1.05)));
       const textClean = String(body.text || "").trim().slice(0, 600);
+      const voiceIdRaw = String(body.voiceId || body.voice || "").trim();
+      const customVoiceId = String(body.customVoiceId || "").trim();
+      const gender = String(body.gender || "male").toLowerCase();
+      const engIdx = Number(body.engineIndex || 0);
+      const reqSpeed = Number(body.speed || 1.14);
 
-      upstream = await falFetch(usedEndpoint, falKey, "POST", {
-        prompt: textClean,
-        voice: voiceObj.voice,
-        speed,
-      });
+      const ELEVEN_MAP = {
+        roger: "Roger", brian: "Brian", charlie: "Charlie", liam: "Liam",
+        will: "Will", eric: "Eric", chris: "Chris", callum: "Callum",
+        daniel: "Daniel", george: "George", bill: "Bill",
+        aria: "Aria", jessica: "Jessica", sarah: "Sarah", laura: "Laura",
+        alice: "Alice", matilda: "Matilda", lily: "Lily", rachel: "Sarah",
+        charlotte: "Charlotte",
+      };
+      const MINIMAX_MAP = {
+        m25_mm_grave: "Deep_Voice_Man",
+        m26_mm_casual: "Casual_Guy",
+        m27_mm_determinado: "Determined_Man",
+        m28_mm_elegante: "Elegant_Man",
+        m29_mm_imponente: "Imposing_Manner",
+        m30_mm_jovem: "Decent_Boy",
+        f25_mm_vibrante: "Lively_Girl",
+        f26_mm_confiante: "Calm_Woman",
+        f27_mm_elegante: "Wise_Woman",
+        f28_mm_inspiradora: "Inspirational_girl",
+        f29_mm_exuberante: "Exuberant_Girl",
+        f30_mm_doce: "Sweet_Girl_2",
+      };
 
-      if (!upstream.ok) {
-        usedEndpoint = "fal-ai/kokoro/american-english";
+      const isMiniMaxChoice = Boolean(customVoiceId) || Boolean(MINIMAX_MAP[voiceIdRaw]);
+      let elevenVoice = gender === "female" ? "Aria" : "Roger";
+      for (const [k, v] of Object.entries(ELEVEN_MAP)) {
+        if (voiceIdRaw.toLowerCase().includes(k)) {
+          elevenVoice = v;
+          break;
+        }
+      }
+      const miniVoice =
+        customVoiceId ||
+        MINIMAX_MAP[voiceIdRaw] ||
+        (gender === "female" ? "Lively_Girl" : "Deep_Voice_Man");
+      const kokoroVoice = gender === "female" ? "pf_dora" : "pm_alex";
+
+      if ((engIdx === 0 && isMiniMaxChoice) || (engIdx === 1 && !isMiniMaxChoice)) {
+        usedEndpoint = "fal-ai/minimax/speech-02-hd";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          text: textClean,
+          voice_setting: {
+            voice_id: miniVoice,
+            speed: Math.min(1.5, Math.max(0.7, reqSpeed)),
+            vol: 1,
+            pitch: 0,
+          },
+          language_boost: "Portuguese",
+        });
+      } else if (engIdx === 0 || (engIdx === 1 && isMiniMaxChoice)) {
+        usedEndpoint = "fal-ai/elevenlabs/tts/multilingual-v2";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          text: textClean,
+          voice: elevenVoice,
+          stability: 0.5,
+          similarity_boost: 0.75,
+          speed: Math.min(1.2, Math.max(0.7, reqSpeed)),
+        });
+      } else {
+        usedEndpoint = "fal-ai/kokoro/brazilian-portuguese";
         upstream = await falFetch(usedEndpoint, falKey, "POST", {
           prompt: textClean,
-          voice: voiceObj.voice,
-          speed,
+          voice: kokoroVoice,
+          speed: Math.min(1.35, Math.max(0.75, reqSpeed)),
         });
       }
     } else if (action === "transcribe_words") {
