@@ -5788,6 +5788,132 @@
         if (btnGen3Angles) btnGen3Angles.disabled = !uploadedBase64;
       }
     });
+  // === MOTOR CINEMA 3D NOTA 10 (3 ÂNGULOS + MOVIMENTO 3D REAL + CENÁRIOS VIVOS NOS 105 MODELOS) ===
+    (function initNexoraCinema3DUpgrade() {
+      if (window.__nexoraCinema3DActive) return;
+      window.__nexoraCinema3DActive = true;
+
+      const origFetch = window.fetch.bind(window);
+      let sceneCutIdx = 0;
+      let clipCutIdx = 0;
+      let lastSceneTs = 0;
+      let lastClipTs = 0;
+
+      productImg?.addEventListener("change", () => { sceneCutIdx = 0; clipCutIdx = 0; });
+      btnGen3Angles?.addEventListener("click", () => { sceneCutIdx = 0; clipCutIdx = 0; });
+
+      const SCENE_ANGLE_DIRECTIVES = [
+        "Hero dynamic 3/4 frontal perspective with bold 3D depth, dramatic low-angle presence and sculpted rim lighting.",
+        "Sharp side three-quarter 60-degree profile perspective highlighting true lateral 3D thickness, contours and sleek silhouette.",
+        "Elevated 45-degree diagonal high-angle perspective showcasing top surface geometry, upper details and sweeping deep background.",
+        "Wide cinematic panoramic 3D establishing angle integrating the product naturally with strong foreground-to-background parallax.",
+        "Intimate diagonal macro close-up angle highlighting tactile materials, micro-textures, metallic/glass highlights and crisp depth of field.",
+        "Opposite flank dynamic 3D tilt perspective revealing reverse contours with sweeping rim light beams across the edges.",
+        "Commanding Hero 3D finale perspective centered in the upper TikTok Shop safe zone with grand cinematic lighting."
+      ];
+
+      const CLIP_HOLLYWOOD_CHOREOGRAPHY = [
+        "HOLLYWOOD 3D CAMERA & LIVING SET (CUT 1 - CRASH-ZOOM ORBIT): Explosive high-energy dolly crash-zoom pushing rapidly toward the product while curving into a smooth 35-degree 3D orbital arc with deep foreground-to-background parallax. Dramatic volumetric light shafts sweep across the product surfaces as background mist, sparks, reflections, and atmospheric particles surge dynamically in full 3D depth.",
+        "HOLLYWOOD 3D CAMERA & LIVING SET (CUT 2 - LOW-ANGLE 3D SWEEP): Fluid cinematic gimbal sweep gliding low from left to right around the product's 3D silhouette, exposing true side volume and bold perspective shift. Gleaming rim lights travel smoothly across the contours while the entire environment pulses with living wind, drifting haze, light streaks, and active bokeh depth.",
+        "HOLLYWOOD 3D CAMERA & LIVING SET (CUT 3 - MACRO SPEED-RAMP GLIDE): Thrilling speed-ramp push-in diving sharply toward crisp material texture and then smoothly arcing diagonally outward in 3D space. Rich specular reflections ripple organically across the product finish while glowing particles, droplets, or atmospheric energy flow briskly through the background.",
+        "HOLLYWOOD 3D CAMERA & LIVING SET (CUT 4 - EPIC 3D CRANE REVEAL): Sweeping ascending 3D crane arc circling the product from an elevated diagonal perspective, revealing full dimensional geometry against a grand living world. Volumetric fog, sweeping cinema spotlights, and environmental elements move continuously with deep multi-layer parallax.",
+        "HOLLYWOOD 3D CAMERA & LIVING SET (CUT 5 - WHIP-ARC OPPOSITE FLANK): Energetic whip-arc camera sweep curving swiftly around the opposite side of the product with bold 3D depth separation. Shifting highlights race across edges and curves while sparks, light waves, reflections, and atmospheric currents swirl vigorously across the set.",
+        "HOLLYWOOD 3D CAMERA & LIVING SET (CUT 6 - COUNTER-ORBIT PARALLAX): Dynamic diagonal 3D counter-orbit gliding smoothly across the product with strong perspective compression and lens depth. Live caustic light reflections dance over the body while background scenery flows continuously with vivid energy and motion.",
+        "HOLLYWOOD 3D CAMERA & LIVING SET (CUT 7 - HERO 3D POWER FINALE): Triumphant blockbuster finale — commanding 3D orbital push-in gliding smoothly around the hero product as a bright specular gleam sweeps across the front face, surrounded by vibrant moving light rays, floating micro-particles, and deep living background motion."
+      ];
+
+      function buildOrderedAngleUrls(cutNumber) {
+        const kit = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((a) => a && a.url) : [];
+        if (kit.length === 0) return [];
+        const pattern = [0, 1, 2, 1, 2, 1, 0];
+        const primaryIdx = pattern[cutNumber % pattern.length] % kit.length;
+        const ordered = [kit[primaryIdx].url];
+        for (let i = 0; i < kit.length; i++) {
+          if (i !== primaryIdx && !ordered.includes(kit[i].url)) {
+            ordered.push(kit[i].url);
+          }
+        }
+        return ordered;
+      }
+
+      function unlockNegativePrompt(neg) {
+        let cleaned = String(neg || "");
+        const motionBlockers = /\b(orbiting|orbit|banking|bank|rotating|rotation|rotate|spinning|spin|panning|pan|tilting|tilt|dolly|zooming|zoom|camera movement|camera motion|dynamic camera|fast movement|moving background|background movement|background motion|whip pan)\b/gi;
+        cleaned = cleaned.replace(motionBlockers, "").replace(/,\s*,+/g, ",").replace(/^\s*,|,\s*$/g, "").trim();
+        const antiWallpaper = "static photo, frozen background, wallpaper effect, still image, slideshow, morphing product, melting geometry, distorted shape, deformed logo, garbled text, watermark";
+        const combined = cleaned ? `${cleaned}, ${antiWallpaper}` : antiWallpaper;
+        return combined.slice(0, 500);
+      }
+
+      function stripStaticPhrases(text) {
+        return String(text || "")
+          .replace(/\b(static background|frozen background|locked[- ]off camera|still camera|minimal motion|very subtle movement|subtle slow movement|keep background still|no camera rotation|no orbiting)\b/gi, "")
+          .replace(/\s{2,}/g, " ")
+          .trim();
+      }
+
+      window.fetch = async function (input, init) {
+        try {
+          const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+          const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+
+          if (reqUrl.includes("/api/generate") && method === "POST" && init && typeof init.body === "string") {
+            const payload = JSON.parse(init.body);
+            const act = String(payload.action || payload.task || payload.mode || "").trim().toLowerCase();
+
+            if (act === "submit_scene" || act === "generate_image" || act === "scene") {
+              const now = Date.now();
+              if (now - lastSceneTs > 120000) sceneCutIdx = 0;
+              lastSceneTs = now;
+              const cutIdx = sceneCutIdx++;
+
+              const orderedAngles = buildOrderedAngleUrls(cutIdx);
+              if (orderedAngles.length > 0) {
+                payload.referenceImages = orderedAngles;
+                payload.imageUrl = orderedAngles[0];
+                delete payload.imageBase64;
+                delete payload.image_base64;
+                delete payload.image;
+                delete payload.dataUrl;
+                delete payload.data_url;
+              }
+
+              const promptKey = typeof payload.prompt === "string" && payload.prompt.trim()
+                ? "prompt"
+                : (typeof payload.imagePrompt === "string" ? "imagePrompt" : "prompt");
+              const basePrompt = stripStaticPhrases(payload[promptKey] || "");
+              const angleDir = SCENE_ANGLE_DIRECTIVES[cutIdx % SCENE_ANGLE_DIRECTIVES.length];
+              const multiAngleLock = orderedAngles.length >= 2
+                ? "MULTI-ANGLE 3D PRODUCT TURNAROUND LOCK: Synthesize all provided multi-angle product reference cutouts together to render the EXACT physical product with authentic 3D volume, accurate side thickness, physically integrated contact shadows and real environmental reflections — NEVER flat or pasted on. "
+                : "";
+              const livingWorldBoost =
+                `CINEMA DEPTH & LIVING WORLD: ${angleDir} Shot on ARRI Alexa 65 cinema lens, sculptural volumetric three-point lighting + dynamic rim light wrapping the edges, deep multi-layer 3D background with living atmospheric haze, glowing micro-particles, light shafts and dynamic reflections in motion. Preserve 100% exact product design, colors and original markings, zero text, zero watermarks.`;
+
+              payload[promptKey] = `${multiAngleLock}${basePrompt} ${livingWorldBoost}`.trim().slice(0, 1950);
+              init = { ...init, body: JSON.stringify(payload) };
+            } else if (act === "submit_clip" || act === "generate_video" || act === "clip") {
+              const now = Date.now();
+              if (now - lastClipTs > 180000) clipCutIdx = 0;
+              lastClipTs = now;
+              const cutIdx = clipCutIdx++;
+
+              const promptKey = typeof payload.prompt === "string" && payload.prompt.trim()
+                ? "prompt"
+                : (typeof payload.motionPrompt === "string" ? "motionPrompt" : "prompt");
+              const baseMotion = stripStaticPhrases(payload[promptKey] || "");
+              const choreo = CLIP_HOLLYWOOD_CHOREOGRAPHY[cutIdx % CLIP_HOLLYWOOD_CHOREOGRAPHY.length];
+              const rigidFidelityRule =
+                "TRUE 3D MOTION — ZERO WALLPAPER EFFECT: Both the camera perspective and the entire background scenery must move continuously with vivid 3D parallax, flowing atmospheric particles, and shifting light reflections, while the product maintains 100% rigid physical geometry, exact colors, and original markings with zero morphing or distortion.";
+
+              payload[promptKey] = `${choreo} ${baseMotion} ${rigidFidelityRule}`.trim().slice(0, 2200);
+              payload.negativePrompt = unlockNegativePrompt(payload.negativePrompt);
+              init = { ...init, body: JSON.stringify(payload) };
+            }
+          }
+        } catch (_) {}
+        return origFetch(input, init);
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
