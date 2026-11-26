@@ -854,3 +854,4 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: "Erro no servidor de geração: " + (err?.message || "erro interno") }, 500);
   }
 }
+
