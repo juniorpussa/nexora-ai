@@ -1296,6 +1296,16 @@
                   </div>
                 </div>
                 <div class="req-box" id="inlineProdReqBox">
+                  <div style="margin-bottom:9px;">
+                    <label for="selAdPlatformInline" style="color:#86efac;">📢 Onde você vai anunciar? (Amarra a chamada CTA da narração automaticamente)</label>
+                    <select id="selAdPlatformInline" style="border-color:rgba(34,197,94,0.55);font-weight:700;">
+                      <option value="tiktok" selected>🛒 TikTok Shop — CTA: "Toque no carrinho aqui embaixo e garanta o seu!"</option>
+                      <option value="whatsapp">💬 WhatsApp — CTA: "Chama no WhatsApp agora e garanta o seu!"</option>
+                      <option value="instagram">📲 Instagram (Reels / Stories) — CTA: "Toque em Saiba Mais agora e garanta o seu!"</option>
+                      <option value="facebook">📘 Facebook Ads (Feed / Reels) — CTA: "Clique em Saiba Mais aqui embaixo e garanta o seu!"</option>
+                      <option value="universal">✨ Universal — CTA: "Clique no botão aqui embaixo e garanta o seu agora!"</option>
+                    </select>
+                  </div>
                   <label for="inlineProductName" style="color:#fde047;">Qual é o produto? <span class="req-tag">OBRIGATÓRIO P/ GERAR NARRAÇÃO</span></label>
                   <div style="display:flex;gap:8px;flex-wrap:wrap;">
                     <input type="text" id="inlineProductName" style="flex:1;min-width:190px;" placeholder="Ex: Óculos de Sol / Tênis Esportivo / Perfume Árabe / Relógio" />
@@ -2465,6 +2475,20 @@
         if (!hist.sigs.includes(chosenSig)) break;
       }
 
+      // Amarra a CTA final à plataforma selecionada (TikTok Shop / WhatsApp / Instagram / Facebook)
+      const activePlat = document.getElementById("selAdPlatformInline")?.value || document.getElementById("selAdPlatform")?.value || "tiktok";
+      const platCtaMap = {
+        tiktok: `Toque no carrinho aqui embaixo e garanta ${meta.poss}!`,
+        whatsapp: `Chama no WhatsApp agora e garanta ${meta.poss}!`,
+        instagram: `Toque em Saiba Mais agora e garanta ${meta.poss}!`,
+        facebook: `Clique em Saiba Mais aqui embaixo e garanta ${meta.poss}!`,
+        universal: `Clique no botão aqui embaixo e garanta ${meta.poss} agora!`
+      };
+      const origCtaStr = PERSUASIVE_POOLS.ctasDynamic[cIdx](meta);
+      if (bestText.endsWith(origCtaStr) && platCtaMap[activePlat]) {
+        bestText = bestText.slice(0, bestText.length - origCtaStr.length) + platCtaMap[activePlat];
+      }
+
       hist.sigs.push(chosenSig);
       hist.lastHook = hIdx;
       hist.lastBen = bIdx;
@@ -3183,7 +3207,7 @@
       if (errs >= 6) throw new Error(`Instabilidade na fila fal.ai: ${err.message}`);
     }
     if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
-    await sleep(2000);
+    await sleep(1200);
   }
   throw new Error("Fila da IA demorou além do limite rápido");
 }
@@ -3193,19 +3217,29 @@
       let lastErr = "Falha na trilha.";
       for (let engIdx = 0; engIdx <= 2; engIdx++) {
         if (signal && signal.aborted) return null;
+        const attemptCtrl = new AbortController();
+        const onOuterAbort = () => attemptCtrl.abort();
+        if (signal) signal.addEventListener("abort", onOuterAbort, { once: true });
+        // Se Lyria 2 demorar > 30s na fila, troca automaticamente para o motor rápido (8-12s)!
+        const fastTimeoutMs = engIdx === 0 ? 30000 : 28000;
+        let timedOutLocal = false;
+        const fastTimer = setTimeout(() => { timedOutLocal = true; attemptCtrl.abort(); }, fastTimeoutMs);
         try {
-          if (onStatus) onStatus(engIdx === 0 ? "enviando (Lyria 2)..." : `fallback motor ${engIdx + 1}...`);
-          const qm = await callApi({ task: "submit_music", engineIndex: engIdx, musicPrompt: prompt, musicNegativePrompt: MUSIC_CLEAN_NEGATIVE, duration: durationSec }, 26000, signal);
+          if (onStatus) onStatus(engIdx === 0 ? "enviando (Lyria 2 Pro)..." : `motor rápido ${engIdx + 1}...`);
+          const qm = await callApi({ task: "submit_music", engineIndex: engIdx, musicPrompt: prompt, musicNegativePrompt: MUSIC_CLEAN_NEGATIVE, duration: durationSec }, 22000, attemptCtrl.signal);
           const engName = qm.engine || `Motor ${engIdx + 1}`;
           if (onStatus) onStatus(`${engName}: gerando...`);
-          const rm = await pollFalJob(qm, (st) => { if (onStatus) onStatus(`${engName}: ${st}`); }, signal);
+          const rm = await pollFalJob(qm, (st) => { if (onStatus) onStatus(`${engName}: ${st}`); }, attemptCtrl.signal);
           if (rm && rm.audioUrl) {
             if (onStatus) onStatus(`pronta ✓ (${engName})`);
             return { audioUrl: rm.audioUrl, engine: engName };
           }
         } catch (err) {
-          if (err.message === "ABORTED_RUN") return null;
-          lastErr = err.message || "erro";
+          if (signal && signal.aborted) return null;
+          lastErr = timedOutLocal ? "fila lenta (trocando p/ motor rápido)" : (err.message || "erro");
+        } finally {
+          clearTimeout(fastTimer);
+          if (signal) signal.removeEventListener("abort", onOuterAbort);
         }
       }
       if (onStatus) onStatus(`seguindo com Whoosh Sutil`);
@@ -3502,7 +3536,14 @@
       return new Promise((resolve, reject) => {
         const url = URL.createObjectURL(blob);
         const vid = document.createElement("video");
-        vid.src = url; vid.muted = true; vid.playsInline = true; vid.preload = "auto";
+        vid.src = url;
+        vid.muted = true;
+        vid.defaultMuted = true;
+        vid.loop = true;
+        vid.playsInline = true;
+        vid.preload = "auto";
+        vid.setAttribute("muted", "");
+        vid.setAttribute("playsinline", "");
         let settled = false;
         const finish = () => {
           if (settled) return;
@@ -3512,9 +3553,9 @@
         const t = setTimeout(() => { if (!settled) { settled = true; reject(new Error("Timeout ao decodificar MP4.")); } }, 15000);
         vid.onloadeddata = () => {
           vid.onseeked = finish;
-          const jumpTo = (vid.duration && vid.duration >= 4.0) ? 0.45 : Math.min(0.22, Math.max(0.08, (vid.duration || 5) * 0.10));
+          const jumpTo = 0.08;
           try { vid.currentTime = jumpTo; } catch { finish(); }
-          setTimeout(finish, 800);
+          setTimeout(finish, 700);
         };
         vid.onerror = () => { if (!settled) { settled = true; clearTimeout(t); URL.revokeObjectURL(url); reject(new Error("Erro ao decodificar MP4.")); } };
       });
@@ -3707,14 +3748,15 @@
     }
 
     function scheduleSubtleWhoosh(audioCtx, dest, noiseBuf, cutTime, variant = 0, gainScale = 1.0) {
+      // Whoosh cinematográfico real audível em todo corte (camada de ar agudo + corpo grave + swish limpo)
       const profiles = [
-        { fStart: 250, fPeak: 2100, fEnd: 380, q: 1.5, durBefore: 0.11, durAfter: 0.11, gAir: 0.18, gBody: 0.11 },
-        { fStart: 165, fPeak: 1300, fEnd: 240, q: 1.7, durBefore: 0.13, durAfter: 0.12, gAir: 0.16, gBody: 0.13 },
-        { fStart: 310, fPeak: 2500, fEnd: 440, q: 1.4, durBefore: 0.10, durAfter: 0.10, gAir: 0.17, gBody: 0.09 }
+        { fStart: 220, fPeak: 3400, fEnd: 290, q: 1.25, durBefore: 0.14, durAfter: 0.14, gAir: 0.62, gBody: 0.42 },
+        { fStart: 160, fPeak: 2400, fEnd: 220, q: 1.40, durBefore: 0.16, durAfter: 0.15, gAir: 0.56, gBody: 0.46 },
+        { fStart: 280, fPeak: 4000, fEnd: 340, q: 1.15, durBefore: 0.13, durAfter: 0.13, gAir: 0.64, gBody: 0.38 }
       ];
       const p = profiles[variant % profiles.length];
       const start = Math.max(audioCtx.currentTime, cutTime - p.durBefore);
-      const peak = Math.max(start + 0.03, cutTime - 0.01);
+      const peak = Math.max(start + 0.04, cutTime - 0.008);
       const end = cutTime + p.durAfter;
 
       const s1 = audioCtx.createBufferSource(); s1.buffer = noiseBuf;
@@ -3727,19 +3769,19 @@
       g1.gain.linearRampToValueAtTime(p.gAir * gainScale, peak);
       g1.gain.exponentialRampToValueAtTime(0.001, end);
       s1.connect(bp); bp.connect(g1); g1.connect(dest);
-      s1.start(start); s1.stop(end + 0.03);
+      s1.start(start); s1.stop(end + 0.04);
 
       const s2 = audioCtx.createBufferSource(); s2.buffer = noiseBuf;
-      const lp = audioCtx.createBiquadFilter(); lp.type = "lowpass"; lp.Q.value = 1.6;
-      lp.frequency.setValueAtTime(110, start);
-      lp.frequency.exponentialRampToValueAtTime(560, peak);
-      lp.frequency.exponentialRampToValueAtTime(120, end);
+      const lp = audioCtx.createBiquadFilter(); lp.type = "lowpass"; lp.Q.value = 1.8;
+      lp.frequency.setValueAtTime(120, start);
+      lp.frequency.exponentialRampToValueAtTime(780, peak);
+      lp.frequency.exponentialRampToValueAtTime(130, end);
       const g2 = audioCtx.createGain();
       g2.gain.setValueAtTime(0.001, start);
       g2.gain.linearRampToValueAtTime(p.gBody * gainScale, peak);
       g2.gain.exponentialRampToValueAtTime(0.001, end);
       s2.connect(lp); lp.connect(g2); g2.connect(dest);
-      s2.start(start); s2.stop(end + 0.03);
+      s2.start(start); s2.stop(end + 0.04);
     }
 
     function scheduleSoftSubHit(audioCtx, dest, t, gainScale = 1.0) {
@@ -3747,27 +3789,27 @@
       const osc = audioCtx.createOscillator();
       const g = audioCtx.createGain();
       osc.type = "sine";
-      osc.frequency.setValueAtTime(84, start);
-      osc.frequency.exponentialRampToValueAtTime(29, start + 0.24);
-      g.gain.setValueAtTime(0.24 * gainScale, start);
-      g.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
+      osc.frequency.setValueAtTime(108, start);
+      osc.frequency.exponentialRampToValueAtTime(32, start + 0.28);
+      g.gain.setValueAtTime(0.50 * gainScale, start);
+      g.gain.exponentialRampToValueAtTime(0.001, start + 0.34);
       osc.connect(g); g.connect(dest);
-      osc.start(start); osc.stop(start + 0.30);
+      osc.start(start); osc.stop(start + 0.36);
     }
 
-    function scheduleCinemaRiser(audioCtx, dest, noiseBuf, hitTime, dur = 0.55, gainScale = 1.0) {
+    function scheduleCinemaRiser(audioCtx, dest, noiseBuf, hitTime, dur = 0.60, gainScale = 1.0) {
       const start = Math.max(audioCtx.currentTime, hitTime - dur);
       const peak = Math.max(start + 0.08, hitTime - 0.01);
       const s = audioCtx.createBufferSource();
       s.buffer = noiseBuf;
       const bp = audioCtx.createBiquadFilter();
       bp.type = "bandpass";
-      bp.Q.value = 2.4;
-      bp.frequency.setValueAtTime(190, start);
-      bp.frequency.exponentialRampToValueAtTime(3200, peak);
+      bp.Q.value = 2.0;
+      bp.frequency.setValueAtTime(220, start);
+      bp.frequency.exponentialRampToValueAtTime(4200, peak);
       const g = audioCtx.createGain();
       g.gain.setValueAtTime(0.001, start);
-      g.gain.exponentialRampToValueAtTime(0.16 * gainScale, peak);
+      g.gain.exponentialRampToValueAtTime(0.42 * gainScale, peak);
       g.gain.linearRampToValueAtTime(0.001, hitTime + 0.04);
       s.connect(bp); bp.connect(g); g.connect(dest);
       s.start(start); s.stop(hitTime + 0.06);
@@ -3965,7 +4007,7 @@
         const span = Math.max(0.8, endT - startT);
         const weights = rawScriptWords.map((w) => {
           const cleanLen = Math.max(2, w.replace(/[^A-Za-zÀ-ÿ0-9]/g, "").length);
-          const pauseBonus = /[.!?]$/.test(w) ? 2.6 : /[,;:]$/.test(w) ? 1.4 : 0;
+          const pauseBonus = /[.!?]$/.test(w) ? 0.35 : /[,;:]$/.test(w) ? 0.15 : 0;
           return cleanLen + pauseBonus;
         });
         const totalW = weights.reduce((a, b) => a + b, 0);
@@ -4538,25 +4580,49 @@
       const recProf = pickRecorderProfile();
       const stream = new MediaStream(tracks);
       let rec;
-      const targetBitrate = 14000000;
+      // 8.5 Mbps p/ 720x1280 30fps: nitidez de TV SEM dropar quadros nem encolher o vídeo de 10s para 8.6s!
+      const targetBitrate = 8500000;
       try {
         rec = recProf.mimeType
           ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: targetBitrate, audioBitsPerSecond: 192000 })
           : new MediaRecorder(stream, { videoBitsPerSecond: targetBitrate });
       } catch {
-        try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 10000000 }) : new MediaRecorder(stream); }
+        try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 6500000 }) : new MediaRecorder(stream); }
         catch { rec = new MediaRecorder(canvasStream); }
       }
+
+      // Monta todos os <video> num container oculto no DOM p/ o Chrome NUNCA congelar a decodificação!
+      const hiddenVidBox = document.createElement("div");
+      hiddenVidBox.style.cssText = "position:fixed;left:-9999px;top:0;width:4px;height:4px;opacity:0.001;overflow:hidden;pointer-events:none;";
+      loaded.forEach((x) => {
+        if (x.type === "video") {
+          x.el.loop = true;
+          x.el.muted = true;
+          x.el.playsInline = true;
+          try { x.el.playbackRate = 1.12; } catch {}
+          hiddenVidBox.appendChild(x.el);
+        }
+      });
+      document.body.appendChild(hiddenVidBox);
 
       const chunks = [];
       rec.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
       const doneP = new Promise((resolve) => {
-        rec.onstop = () => { if (clockOsc) { try { clockOsc.stop(); } catch {} } resolve(new Blob(chunks, { type: recProf.baseType || rec.mimeType || "video/mp4" })); };
+        rec.onstop = () => {
+          if (clockOsc) { try { clockOsc.stop(); } catch {} }
+          resolve(new Blob(chunks, { type: recProf.baseType || rec.mimeType || "video/mp4" }));
+        };
       });
 
-      rec.start(200);
+      // Pré-aquece o 1º clipe antes de iniciar a gravação
+      if (loaded[0] && loaded[0].type === "video") {
+        try { loaded[0].el.currentTime = 0.08; } catch {}
+        await loaded[0].el.play().catch(() => {});
+      }
+
+      rec.start(100);
       if (audioCtx && audioCtx.state === "running" && comp) {
-        const startAt = audioCtx.currentTime + 0.04;
+        const startAt = audioCtx.currentTime + 0.05;
         audioOriginCtxTime = startAt;
         if (voiceDecodedForSubs) {
           const vSrc = audioCtx.createBufferSource();
@@ -4566,7 +4632,7 @@
           vg.gain.setValueAtTime(1.18, startAt);
           vSrc.connect(vg); vg.connect(comp);
           vSrc.start(startAt, voiceTrimForSubs);
-          vSrc.stop(startAt + totalSec + 0.15);
+          vSrc.stop(startAt + totalSec + 0.20);
         }
         if (soundtrackDecoded) {
           const dropOffset = soundtrackPreTrimmed ? 0 : findLoudestDropOffset(soundtrackDecoded, totalSec);
@@ -4575,7 +4641,6 @@
           sSrc.loop = true;
           const mg = audioCtx.createGain();
 
-          // Volume calibrado padrão comercial de TV: trilha nítida e presente sem brigar com a voz (recorte vocal -5.2dB já ativo)
           const openVol = voiceMixedOk ? 0.52 : 0.68;
           const duckVol = 0.30;
           mg.gain.setValueAtTime(0.10, startAt);
@@ -4601,30 +4666,31 @@
           }
 
           mg.gain.setValueAtTime(voiceMixedOk ? 0.46 : openVol, fadeAt);
-          mg.gain.linearRampToValueAtTime(0.008, startAt + totalSec);
+          mg.gain.linearRampToValueAtTime(0.008, startAt + totalSec + 0.05);
           sSrc.connect(mg); mg.connect(comp);
           sSrc.start(startAt, dropOffset);
-          sSrc.stop(startAt + totalSec + 0.15);
+          sSrc.stop(startAt + totalSec + 0.20);
         }
         if (withSfx) {
-          const len = Math.floor(audioCtx.sampleRate * 1.2);
+          const len = Math.floor(audioCtx.sampleRate * 1.4);
           const nBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
           const d = nBuf.getChannelData(0);
           for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-          const sfxScale = voiceMixedOk ? (fxOn ? 0.50 : 0.28) : (fxOn ? 0.68 : 0.44);
-          scheduleSoftSubHit(audioCtx, comp, startAt, 0.95 * sfxScale);
+          // WHOOSH + SUB-IMPACT audíveis e limpos em TODOS os cortes!
+          const sfxScale = voiceMixedOk ? (fxOn ? 0.85 : 0.55) : (fxOn ? 1.0 : 0.72);
+          scheduleSoftSubHit(audioCtx, comp, startAt, 0.92 * sfxScale);
           const lastIdx = segments.length - 1;
           for (let idx = 1; idx < segments.length; idx++) {
             const cutT = startAt + segments[idx].start;
             if (idx === lastIdx && lastIdx >= 2) {
-              scheduleCinemaRiser(audioCtx, comp, nBuf, cutT, 0.50, 0.95 * sfxScale);
-              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, 2, 0.95 * sfxScale);
+              scheduleCinemaRiser(audioCtx, comp, nBuf, cutT, 0.55, 0.90 * sfxScale);
+              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, 2, 1.0 * sfxScale);
               scheduleSoftSubHit(audioCtx, comp, cutT, 0.90 * sfxScale);
             } else {
               const variant = idx % 3;
-              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, variant, (idx % 2 === 1 ? 0.85 : 0.60) * sfxScale);
+              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, variant, 0.92 * sfxScale);
               if (idx % 2 === 1) {
-                scheduleSoftSubHit(audioCtx, comp, cutT, 0.65 * sfxScale);
+                scheduleSoftSubHit(audioCtx, comp, cutT, 0.68 * sfxScale);
               }
             }
           }
@@ -4635,7 +4701,7 @@
       const fillEl = document.getElementById("renderProgressFill");
       const secEl = document.getElementById("renderProgressSec");
 
-      let currentSegIdx = -1;
+      let currentSegIdx = 0;
       const activateSegment = (sIdx) => {
         if (currentSegIdx === sIdx) return;
         if (currentSegIdx >= 0 && loaded[segments[currentSegIdx].clipIdx].type === "video") {
@@ -4645,11 +4711,17 @@
         const nextItem = loaded[segments[sIdx].clipIdx];
         if (nextItem.type === "video") {
           try {
-            if (nextItem.el.currentTime >= Math.max(0.5, (nextItem.el.duration || 5) - 0.6)) {
-              nextItem.el.currentTime = 0.2;
+            nextItem.el.playbackRate = 1.12;
+            if (nextItem.el.currentTime >= Math.max(0.5, (nextItem.el.duration || 5) - 0.8)) {
+              nextItem.el.currentTime = 0.08;
             }
           } catch {}
           nextItem.el.play().catch(() => {});
+        }
+        // Pré-aquece o próximo corte para troca instantânea sem congelar
+        const upcoming = segments[sIdx + 1] ? loaded[segments[sIdx + 1].clipIdx] : null;
+        if (upcoming && upcoming.type === "video" && upcoming.el !== nextItem.el) {
+          try { if (upcoming.el.currentTime > 0.3) upcoming.el.currentTime = 0.08; } catch {}
         }
       };
 
@@ -4661,18 +4733,27 @@
         let finished = false;
         const stop = makeTicker(30, () => {
           if (finished) return;
-          const elapsed = (performance.now() - startTime) / 1000;
-          if (fillEl) fillEl.style.width = `${Math.min(100, Math.round((elapsed / totalSec) * 100))}%`;
-          if (secEl) secEl.textContent = `${Math.min(totalSec, elapsed).toFixed(1)}s / ${totalSec}.0s`;
+          const wallElapsed = (performance.now() - startTime) / 1000;
+          // Relógio ÚNICO travado no hardware de áudio -> 0.00s de drift entre vídeo, voz, whooshes e legendas!
+          const clockSec = (audioCtx && audioOriginCtxTime > 0)
+            ? Math.max(0, audioCtx.currentTime - audioOriginCtxTime)
+            : wallElapsed;
 
-          if (elapsed >= totalSec + 0.08) {
+          if (fillEl) fillEl.style.width = `${Math.min(100, Math.round((clockSec / totalSec) * 100))}%`;
+          if (secEl) secEl.textContent = `${Math.min(totalSec, clockSec).toFixed(1)}s / ${totalSec}.0s`;
+
+          if (clockSec >= totalSec + 0.14 || wallElapsed >= totalSec + 1.5) {
             finished = true; stop();
             loaded.forEach((x) => { if (x.type === "video") x.el.pause(); });
-            if (rec.state !== "inactive") rec.stop();
-            resolve(); return;
+            try { if (rec.state === "recording") rec.requestData(); } catch {}
+            setTimeout(() => {
+              if (rec.state !== "inactive") rec.stop();
+              resolve();
+            }, 220);
+            return;
           }
 
-          const t = Math.min(totalSec - 0.001, elapsed);
+          const t = Math.min(totalSec - 0.001, clockSec);
           let sIdx = segments.length - 1;
           for (let i = 0; i < segments.length; i++) {
             if (t >= segments[i].start && t < segments[i].end) { sIdx = i; break; }
@@ -4685,116 +4766,132 @@
           const item = loaded[seg.clipIdx];
           const mediaEl = item.el;
 
+          // Garante movimento contínuo — NUNCA congela no fim da cena!
           if (item.type === "video") {
-            const curT = mediaEl.currentTime || 0;
+            if (mediaEl.paused && !mediaEl.ended) mediaEl.play().catch(() => {});
             const vDur = mediaEl.duration || 5;
-            if (curT >= Math.max(3.9, vDur - 0.35)) {
-              try { mediaEl.playbackRate = 0.92; } catch {}
-            } else if (isBlockbuster) {
-              const rate = p < 0.18 ? 1.55 : p < 0.78 ? 1.20 : 1.45;
-              try { mediaEl.playbackRate = rate; } catch {}
-            } else {
-              try { mediaEl.playbackRate = isCleanMode ? 1.15 : 1.32; } catch {}
+            if (mediaEl.ended || (mediaEl.currentTime || 0) >= Math.max(0.5, vDur - 0.12)) {
+              try { mediaEl.currentTime = 0.08; mediaEl.play().catch(() => {}); } catch {}
             }
-            if (mediaEl.readyState < 2 || mediaEl.seeking) return;
           }
 
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = "high";
 
-          // A) MOVIMENTO DE CÂMERA FULL-SCREEN 9:16 SINGLE-PASS (NÍTIDO, ZERO TELA DIVIDIDA, ZERO PIXELIZAÇÃO)
-          {
+          // A) ZOOMS DINÂMICOS DE AGÊNCIA + EFEITO DE VELOCIDADE NA APROXIMAÇÃO (SINGLE-PASS NÍTIDO!)
+          if (item.type !== "video" || mediaEl.readyState >= 2) {
             const smoothCurve = easeInOutQuad(p);
+            const fastIn = easeOutCubic(p);
             const dir = (sIdx % 2 === 0 ? 1 : -1) * dna.flipDir;
-            const optBoost = seg.isImg ? 1.25 : 1.0;
-            let scale = 1.03, panX = 0, panY = 0, angle = 0;
+            const optBoost = seg.isImg ? 1.18 : 1.0;
+            let scale = 1.04, panX = 0, panY = 0, angle = 0;
+            let zoomRushIntensity = 0;
 
             if (isCleanMode) {
-              scale = 1.03 + smoothCurve * (seg.isImg ? 0.10 : 0.06);
-              panX = dir * Math.sin(p * Math.PI) * 8;
-              panY = (0.5 - smoothCurve) * 6;
+              scale = 1.03 + smoothCurve * 0.14 * optBoost;
+              panX = dir * Math.sin(p * Math.PI) * 12;
+              panY = (0.5 - smoothCurve) * 8;
             } else {
-              if (seg.editMove === "crashZoom") {
-                scale = 1.03 + easeOutCubic(p) * 0.10 * optBoost;
-                panX = -1 * Math.sin(p * Math.PI) * 10;
-                panY = (0.45 - smoothCurve) * 8;
-              } else if (seg.editMove === "macroSweep") {
-                const macroDir = seg.key === "super_macro" ? 1 : -1;
-                scale = 1.07 + smoothCurve * 0.08 * optBoost;
-                panX = macroDir * (smoothCurve - 0.5) * 26 * optBoost;
-                panY = (0.5 - smoothCurve) * 5;
-              } else if (seg.editMove === "sweepLeft3D") {
-                scale = 1.04 + Math.sin(p * Math.PI) * 0.07 * optBoost;
-                panX = (0.5 - smoothCurve) * 28 * optBoost;
-                angle = -0.005 * Math.sin(p * Math.PI);
-              } else if (seg.editMove === "sweepRight3D") {
-                scale = 1.04 + Math.sin(p * Math.PI) * 0.07 * optBoost;
-                panX = (smoothCurve - 0.5) * 28 * optBoost;
-                angle = 0.005 * Math.sin(p * Math.PI);
-              } else if (seg.editMove === "panoramicGlide") {
-                scale = 1.04 + smoothCurve * 0.07 * optBoost;
-                panX = (smoothCurve - 0.5) * 30 * optBoost;
-              } else if (seg.editMove === "heroPunch") {
-                scale = 1.10 - easeOutCubic(p) * 0.07;
-                panX = dir * (1 - smoothCurve) * 8;
+              const mv = sIdx % 7;
+              if (mv === 0) {
+                // Corte 1: CRASH-ZOOM explosivo para dentro (1.02 -> 1.24)
+                scale = 1.02 + fastIn * 0.22 * optBoost;
+                panX = -14 * Math.sin(p * Math.PI);
+                panY = (0.4 - smoothCurve) * 14;
+                if (cEl < 0.24) zoomRushIntensity = (1 - cEl / 0.24) * 0.65;
+              } else if (mv === 1) {
+                // Corte 2: MACRO ZOOM-IN subindo de baixo p/ cima (1.05 -> 1.23)
+                scale = 1.05 + smoothCurve * 0.18 * optBoost;
+                panX = (smoothCurve - 0.5) * 34;
+                panY = (0.5 - smoothCurve) * 24;
+                if (cEl < 0.20) zoomRushIntensity = (1 - cEl / 0.20) * 0.50;
+              } else if (mv === 2) {
+                // Corte 3: LIFESTYLE PUNCH-IN dinâmico (1.04 -> 1.19)
+                scale = 1.04 + fastIn * 0.15 * optBoost;
+                panX = (0.5 - smoothCurve) * 26;
+                panY = (smoothCurve - 0.5) * 10;
+              } else if (mv === 3) {
+                // Corte 4: GIRO 180° + SPEED-ZOOM PULSE (1.04 -> 1.22 -> 1.10)
+                scale = 1.04 + Math.sin(p * Math.PI) * 0.18 * optBoost;
+                panX = (smoothCurve - 0.5) * 40;
+                angle = -0.012 * Math.sin(p * Math.PI);
+                if (cEl < 0.22) zoomRushIntensity = (1 - cEl / 0.22) * 0.58;
+              } else if (mv === 4) {
+                // Corte 5: TOP-DOWN mergulho zoom-in (1.03 -> 1.22)
+                scale = 1.03 + fastIn * 0.19 * optBoost;
+                panX = (0.5 - smoothCurve) * 30;
+                panY = (smoothCurve - 0.5) * 22;
+                if (cEl < 0.20) zoomRushIntensity = (1 - cEl / 0.20) * 0.52;
+              } else if (mv === 5) {
+                // Corte 6: PULL-OUT dinâmico revelando o cenário (1.22 -> 1.04)
+                scale = 1.22 - fastIn * 0.18 * optBoost;
+                panX = (smoothCurve - 0.5) * 36;
+                angle = 0.010 * Math.sin(p * Math.PI);
+                if (cEl < 0.22) zoomRushIntensity = (1 - cEl / 0.22) * 0.55;
               } else {
-                scale = 1.04 + Math.sin(p * Math.PI) * 0.07 * optBoost;
-                panX = dir * (smoothCurve - 0.5) * 20 * optBoost;
+                // Corte 7: HERO FRONTAL POWER ZOOM-IN contínuo (1.03 -> 1.20)
+                scale = 1.03 + smoothCurve * 0.17 * optBoost;
+                panX = dir * (1 - smoothCurve) * 10;
+                panY = (0.5 - smoothCurve) * 10;
+                if (cEl < 0.22) zoomRushIntensity = (1 - cEl / 0.22) * 0.55;
               }
 
-              if (fxOn && sIdx > 0 && cEl < 0.18) {
-                const cp = 1 - easeOutCubic(cEl / 0.18);
-                scale += cp * 0.068;
+              // Micro-punch extra na entrada de cada corte (0.16s)
+              if (fxOn && sIdx > 0 && cEl < 0.16) {
+                const cp = 1 - easeOutCubic(cEl / 0.16);
+                scale += cp * 0.075;
               }
-              const maxPanX = canvas.width * 0.06;
-              const maxPanY = canvas.height * 0.05;
+              const maxPanX = canvas.width * 0.065;
+              const maxPanY = canvas.height * 0.055;
               panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
               panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
             }
 
             drawCroppedCover(ctx, mediaEl, item.crop, scale, panX, panY, angle, 1, renderFilter);
 
+            // Efeito óptico de velocidade na aproximação do zoom (Zoom-Blur Burst)
+            if (fxOn && isBlockbuster && zoomRushIntensity > 0.04) {
+              drawZoomBlurBurst(ctx, mediaEl, item.crop, scale, panX, panY, angle, zoomRushIntensity, renderFilter);
+            }
+            // Flash óptico limpo sincronizado com o whoosh no corte
             if (fxOn && sIdx > 0 && cEl < 0.12) {
               const fp = 1 - cEl / 0.12;
               ctx.save();
               ctx.globalCompositeOperation = "screen";
-              ctx.fillStyle = `rgba(255,250,240,${(fp * fp * 0.22).toFixed(3)})`;
+              ctx.fillStyle = `rgba(255,250,240,${(fp * fp * 0.24).toFixed(3)})`;
               ctx.fillRect(0, 0, canvas.width, canvas.height);
               ctx.restore();
             }
-            if (isBlockbuster && seg.trans === "zoomBlur" && cEl < 0.10) {
-              drawZoomBlurBurst(ctx, mediaEl, item.crop, scale, panX, panY, angle, (1 - easeOutCubic(cEl / 0.10)) * 0.42, renderFilter);
-            }
-            if (isBlockbuster && (seg.isImg || seg.editMove === "macroSweep" || seg.editMove === "heroPunch")) {
-              drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.10 * Math.sin(p * Math.PI), dir);
+            if (isBlockbuster) {
+              drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.11 * Math.sin(p * Math.PI), dir);
             }
             if (!allowLightBg) {
               drawCinematicVignette(ctx, canvas.width, canvas.height, 0.22);
             }
           }
 
-          // C) CTA ANIMADO / PLACA FINAL LIMPA
+          // C) CTA ANIMADO / PLACA FINAL LIMPA (se usuário ativar; padrão é vídeo limpo)
           const ctaWindow = ctaMode === "endcard" ? 1.85 : 2.15;
           const ctaActiveNow = ctaMode !== "none" && t >= Math.max(0.5, totalSec - ctaWindow);
           if (ctaActiveNow && window.NEXORA_UI_OVERLAY && typeof window.NEXORA_UI_OVERLAY.drawCtaOrEndCard === "function") {
             window.NEXORA_UI_OVERLAY.drawCtaOrEndCard(ctx, canvas.width, canvas.height, t, totalSec, ctaMode, endCardContact);
           }
 
-          // D) LEGENDAS DE ALTO IMPACTO (SEM COLISÃO COM CTA)
+          // D) LEGENDAS CRAVADAS NO MESMO RELÓGIO DE ÁUDIO (0.00s DE SINCRONISMO!)
           const hideCapForEndCard = ctaMode === "endcard" && ctaActiveNow;
           if (!hideCapForEndCard && captionBlocks.length > 0 && captionCfg) {
-            const rhmCapClock = (audioCtx && audioOriginCtxTime > 0) ? Math.max(0, audioCtx.currentTime - audioOriginCtxTime) : elapsed;
-            drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, rhmCapClock, captionCfg.style, captionCfg.pos || "safe_tiktok", captionCfg.size || "normal", ctaActiveNow);
+            drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, clockSec, captionCfg.style, captionCfg.pos || "safe_tiktok", captionCfg.size || "normal", ctaActiveNow);
           }
         });
       });
 
       const outBlob = await doneP;
+      try { hiddenVidBox.remove(); } catch {}
       loaded.forEach((x) => URL.revokeObjectURL(x.blobUrl));
       if (activeVideoBlobUrl) URL.revokeObjectURL(activeVideoBlobUrl);
       activeVideoBlobUrl = URL.createObjectURL(outBlob);
       const gpuCount = mediaItems.filter((x) => x.type === "video").length;
-      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: `${recProf.label} 14.0Mbps`, uniqueCount: n, gpuCount, sec: totalSec, musicMixedOk, voiceMixedOk };
+      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: `${recProf.label} 8.5Mbps`, uniqueCount: n, gpuCount, sec: totalSec, musicMixedOk, voiceMixedOk };
     }
 
     function downloadBlob(blob, filename) {
@@ -5142,7 +5239,7 @@
       let musicPromise = Promise.resolve(null);
       if (mKey !== "mute" && mKey !== "custom" && MUSIC_PROMPTS[mKey]) {
         musicPromise = (async () => {
-          const res = await generateMusicWithTripleFallback(mKey, dna, targetSec + 6, (st) => { aiMusicStatus = st; }, runSignal);
+          const res = await generateMusicWithTripleFallback(mKey, dna, Math.min(24, Math.max(12, targetSec + 2)), (st) => { aiMusicStatus = st; }, runSignal);
           if (res && res.audioUrl) { aiMusicUrl = res.audioUrl; aiMusicEngine = res.engine; }
           return aiMusicUrl;
         })();
@@ -5219,8 +5316,8 @@
         renderPipelineUI();
         uiClock = setInterval(renderPipelineUI, 1000);
 
-        const imgSem = createSemaphore(4);
-        const vidSem = createSemaphore(3);
+        const imgSem = createSemaphore(7);
+        const vidSem = createSemaphore(7);
 
         const runSingleCut = async (i) => {
           if (runSignal.aborted || deadlineReached) return;
@@ -6660,16 +6757,16 @@
         };
 
         const b = BANK[cat] || BANK.universal;
-        const adPlatform = document.getElementById("selAdPlatform")?.value || "tiktok";
-        let platformCta = b.cta;
-        if (adPlatform === "instagram") {
-          platformCta = `Estoque voando — toque em Saiba Mais agora e garanta ${meta.poss}!`;
+        const adPlatform = document.getElementById("selAdPlatformInline")?.value || document.getElementById("selAdPlatform")?.value || "tiktok";
+        let platformCta = `Toque no carrinho aqui embaixo e garanta ${meta.poss}!`;
+        if (adPlatform === "whatsapp") {
+          platformCta = `Chama no WhatsApp agora e garanta ${meta.poss}!`;
+        } else if (adPlatform === "instagram") {
+          platformCta = `Toque em Saiba Mais agora e garanta ${meta.poss}!`;
         } else if (adPlatform === "facebook") {
-          platformCta = `Oferta limitada — clique em Saiba Mais aqui embaixo e garanta ${meta.poss}!`;
-        } else if (adPlatform === "whatsapp") {
-          platformCta = `Estoque voando — chame no WhatsApp agora e garanta ${meta.poss}!`;
+          platformCta = `Clique em Saiba Mais aqui embaixo e garanta ${meta.poss}!`;
         } else if (adPlatform === "universal") {
-          platformCta = `Unidades acabando rápido — garanta ${meta.poss} agora mesmo!`;
+          platformCta = `Clique no botão aqui embaixo e garanta ${meta.poss} agora!`;
         }
         let out = "";
         if (vidSec <= 12) out = `${b.hook} ${b.b1} ${platformCta}`;
@@ -6711,13 +6808,13 @@
         const lifeShot = getLifestyleScenePrompt(cat, prodDesc);
 
         const worlds = [
-          `SHOT 1 — EXPLOSIVE COMMERCIAL HOOK (00:00): Dramatic low-angle 3/4 hero shot inside the chosen universe (${selectedModelBase.slice(0, 340)}), bold directional rim lighting, glowing foreground sparks/particles streaking toward lens, product commanding center-upper safe zone.`,
-          `SHOT 2 — 100MM SUPER MACRO DARK STUDIO: Extreme diagonal 100mm Master Prime macro close-up filling 88% of the frame on a sleek pitch-black obsidian slate studio surface (completely clean architectural dark stage, NO volcano/repetitive scenery), razor-sharp texture grain and a bright golden-white specular highlight sweeping across the product finish.`,
-          `SHOT 3 — ${lifeShot}`,
-          `SHOT 4 — KINETIC 3D PROFILE & LUMINOUS ENERGY WAVES: Sharp 60-degree lateral 3D profile view exposing true side thickness and silhouette of the product floating/angled dynamically inside a sleek dark architectural tunnel with glowing cyan-and-gold neon light waves and speed trails sweeping behind.`,
-          `SHOT 5 — HIGH-CONTRAST LUXURY MARBLE STAGE: Elevated 45-degree diagonal commercial shot resting on polished Nero Marquina black marble with subtle golden reflections, dramatic overhead god-ray spotlight beam cutting through light atmospheric mist, deep luxury bokeh.`,
-          `SHOT 6 — URBAN NIGHT DEPTH & KINETIC BOKEH: Wide dynamic 3D three-quarter angle positioned on dark architectural stone overlooking a vibrant blurred neon-and-gold night skyline with rushing bokeh light streaks and crisp dual-tone rim lighting.`,
-          `SHOT 7 — BLOCKBUSTER FRONT-FACING HERO FINALE (UPPER SAFE ZONE): Iconic dead-center FRONT-FACING hero composition with the exact product facing DIRECTLY TOWARD THE CAMERA (showing its full front face clearly — NEVER sideways, NEVER turned away), commanding the upper 58% of the frame (clean dark atmospheric bottom 35% free for captions & CTA), dramatic studio spotlights, sweeping lens flare and subtle floating golden embers.`
+          `SHOT 1 — RIGHT-FACING 3/4 EXPLOSIVE HOOK (ROTATE PRODUCT TOWARD RIGHT): CHANGE POSE FROM INPUT — angle the exact product 40 degrees TOWARD THE RIGHT SIDE of the frame inside the chosen living universe (${selectedModelBase.slice(0, 320)}), dramatic dynamic rim lighting, glowing sparks and energetic motion streaks flying toward the lens, product bold in upper-center safe zone.`,
+          `SHOT 2 — LOW-ANGLE UPWARD 100MM SUPER MACRO (LOOKING UP FROM BELOW): CHANGE CAMERA ANGLE COMPLETELY — dramatic worm's-eye low-angle 100mm macro shot looking UPWARD from below at the product turned toward the LEFT, exposing bottom bevels, lenses and micro-texture on a sleek dark obsidian stage (NO volcano), bright moving spotlight beams and glowing dust sweeping across the background.`,
+          `SHOT 3 — ${lifeShot} Subject angled dynamically toward the RIGHT with vivid kinetic light streaks in motion behind.`,
+          `SHOT 4 — 180-DEGREE REAR/SIDE-TO-FRONT TURNAROUND ANGLE: CHANGE CAMERA ANGLE 180 DEGREES — dramatic deep opposite-flank & back-three-quarter perspective revealing the side contours, rear strap/back architecture and opposite side of the exact product suspended inside a hyper-dynamic luminous neon-and-gold energy light tunnel with speed trails racing past.`,
+          `SHOT 5 — HIGH OVERHEAD TOP-DOWN ANGLE (LOOKING DOWN FROM 55° ABOVE): CHANGE CAMERA ANGLE COMPLETELY — steep 55-degree bird's-eye overhead angle looking DOWN from above onto the exact product rotated TOWARD THE RIGHT on polished Nero Marquina dark reflective marble, revealing top contours and full depth with sweeping god-rays, swirling volumetric mist and rising golden embers.`,
+          `SHOT 6 — LEFT-TO-RIGHT LOW DYNAMIC ACTION PROFILE: Sharp left-facing low-angle 3D profile view revealing full lateral silhouette against a hyper-kinetic night city skyline with fast streaking neon traffic light trails, drifting atmospheric sparks and intense bokeh depth.`,
+          `SHOT 7 — DEAD-CENTER FRONT-FACING 0° HERO FINALE (UPPER SAFE ZONE): Iconic symmetrical dead-center FRONT-FACING (0 degrees) hero composition with the exact product facing STRAIGHT AT THE CAMERA (never sideways), commanding the upper 58% of the frame with clean atmospheric space below, dramatic pulsing cinema flares, sweeping light beams and swirling golden sparks behind.`
         ];
 
         const worldDirective = worlds[cutIdx % worlds.length];
@@ -6725,13 +6822,13 @@
       }
 
       const SUPER_CLIP_CHOREO = [
-        "CUT 1 — EXPLOSIVE 00:01 CRASH-ZOOM + 3D ORBIT: Fast high-energy dolly crash-zoom pushing boldly toward the product while curving into a smooth 30-degree 3D orbital arc as glowing particles, sparks and sweeping light rays surge dynamically across the frame.",
-        "CUT 2 — RAZOR 100MM MACRO GLIDE + SPECULAR SWEEP: Silky fast 100mm macro tracking camera sliding diagonally across the product's authentic textures and edges while a crisp bright rim reflection glides smoothly over the surface.",
-        "CUT 3 — DYNAMIC REAL-LIFE ACTION TRACKING: Authentic natural human movement actively using/presenting the product in real time, energetic handheld cinema camera gliding smoothly around the subject with vibrant moving background bokeh.",
-        "CUT 4 — AGGRESSIVE WHIP-ARC + LIGHT WAVES: Energetic curved cinema whip-arc sweeping around the product's 3D side profile while luminous neon energy waves and light trails flow briskly in deep multi-layer 3D parallax.",
-        "CUT 5 — ELEVATED CRANE DIVE + VOLUMETRIC SPOTLIGHT: Sweeping elevated 45-degree crane arc descending smoothly toward the product as overhead volumetric god-rays and subtle golden dust drift dynamically around the luxury marble stage.",
-        "CUT 6 — SPEED-RAMP 3D ORBIT + RUSHING BOKEH: Dynamic speed-ramp 3D camera orbit circling smoothly around the product with strong foreground-to-background parallax as vibrant city bokeh lights streak past behind.",
-        "CUT 7 — FRONT-FACING HERO FINALE PUSH-IN: Authoritative smooth straight-in camera push-in keeping the product FRONT FACE locked directly toward the viewer in the upper safe zone (NEVER rotating sideways or away from camera) while bright studio flares sweep across the front surface and golden sparks drift behind."
+        "CUT 1 — RIGHT-SIDE CRASH-ZOOM + 3D TURN RIGHT + LIVING SET: Explosive fast dolly zoom-in rushing straight toward the product while curving RIGHT in a bold 40-degree 3D orbit (showing right flank to front), with fiery sparks, lava glow, wind and volumetric energy streaming nonstop across the entire moving background.",
+        "CUT 2 — UPWARD LOW-ANGLE CRANE RISE (BAIXO→CIMA) + MACRO ZOOM: Dynamic cinema camera swooping rapidly UPWARD from below while zooming in across crisp surface textures as the product tilts gently left-to-center and dramatic spotlight beams + glowing dust race continuously across the background.",
+        "CUT 3 — KINETIC LIFESTYLE ACTION + ORBIT RIGHT-TO-LEFT: Lifelike natural human movement actively using/presenting the product while the cinema camera orbits smoothly from right to left and vibrant neon bokeh lights + atmospheric energy stream continuously behind.",
+        "CUT 4 — FULL 180-DEGREE 3D ORBITAL SPIN REVEAL: Thrilling continuous 180-degree orbital camera sweep swinging swiftly from the rear/opposite flank all the way around to the front of the product, exposing every 3D contour while luminous neon energy waves and light tunnels rush nonstop at high speed behind.",
+        "CUT 5 — TOP-DOWN OVERHEAD DIVE (CIMA→BAIXO) + RIGHT ROTATION: Dramatic elevated crane camera diving smoothly DOWNWARD from above while arcing around the right side of the product as billowing volumetric mist, moving light caustics and rising golden embers flow nonstop across the luxury marble set.",
+        "CUT 6 — LEFT-TO-RIGHT WHIP-ORBIT + HYPER-MOVING SKYLINE: Fast kinetic whip-arc camera sweeping boldly from LEFT to RIGHT while pulling dynamically out-and-in as streaking night city lights, neon bokeh and atmospheric sparks surge rapidly across 100% of the background.",
+        "CUT 7 — FRONTAL HERO POWER ZOOM-IN + MOVING LIGHT RAYS: Authoritative continuous fast zoom-in keeping the product FRONT FACE locked toward the viewer in the upper safe zone while dazzling volumetric cinema flares, pulsing spotlight rays and golden fire sparks swirl continuously behind."
       ];
 
       const SUPER_NEGATIVE =
@@ -7092,19 +7189,46 @@
                 const cKey = `lyria_${tr.id}`;
                 playable = musicTrackCache.get(cKey) || "";
                 if (!playable) {
-                  btnPrev.textContent = "⏳ Gerando Lyria 2...";
-                  if (statusEl) statusEl.textContent = `Gerando trilha de estúdio Lyria 2...`;
-                  const q = await callApi({
-                    task: "submit_music",
-                    __isMusicPreviewDirect: true,
-                    engineIndex: 1,
-                    duration: 18,
-                    musicPrompt: tr.lyriaPrompt,
-                    musicNegativePrompt: MUSIC_NEG_STRICT
-                  }, 35000);
-                  const r = await pollFalJob(q, (st) => { if (statusEl) statusEl.textContent = `Lyria 2: ${st}...`; });
-                  const rawUrl = r?.audioUrl || r?.audio_url || r?.url || "";
-                  if (!rawUrl) throw new Error("Lyria 2 não retornou áudio.");
+                  const tStartM = Date.now();
+                  let musicStLbl = "iniciando";
+                  const mTick = setInterval(() => {
+                    const s = Math.round((Date.now() - tStartM) / 1000);
+                    if (statusEl) statusEl.textContent = `${musicStLbl} (${s}s)... Dica: MP3 próprio / tracks/ toca em 0s!`;
+                  }, 1000);
+                  let rawUrl = "";
+                  try {
+                    // Tenta Lyria 2 (limite rápido 32s); se a fila do Lyria 2 estiver lenta, cai automaticamente p/ motor rápido (8-12s)!
+                    for (const tryEng of [1, 0]) {
+                      const engTitle = tryEng === 1 ? "Lyria 2 Pro" : "Estúdio Rápido";
+                      btnPrev.textContent = `⏳ ${engTitle}...`;
+                      musicStLbl = `${engTitle}: enviando`;
+                      const mCtrl = new AbortController();
+                      let mTimedOut = false;
+                      const mTimer = setTimeout(() => { mTimedOut = true; mCtrl.abort(); }, tryEng === 1 ? 32000 : 28000);
+                      try {
+                        const q = await callApi({
+                          task: "submit_music",
+                          __isMusicPreviewDirect: true,
+                          engineIndex: tryEng,
+                          duration: 14,
+                          musicPrompt: tr.lyriaPrompt,
+                          musicNegativePrompt: MUSIC_NEG_STRICT
+                        }, 24000, mCtrl.signal);
+                        const r = await pollFalJob(q, (st) => { musicStLbl = `${engTitle}: ${st}`; }, mCtrl.signal);
+                        rawUrl = r?.audioUrl || r?.audio_url || r?.url || "";
+                        if (rawUrl) break;
+                      } catch (eTry) {
+                        const msg = String(eTry?.message || "");
+                        if (/exhausted balance|user is locked|top up|401|402|403/i.test(msg)) throw eTry;
+                        if (!mTimedOut && tryEng === 0) throw eTry;
+                      } finally {
+                        clearTimeout(mTimer);
+                      }
+                    }
+                  } finally {
+                    clearInterval(mTick);
+                  }
+                  if (!rawUrl) throw new Error("Servidor de música ocupado. Tente de novo ou suba um MP3 (0 créditos!).");
                   const blob = await fetchMediaBlob(rawUrl);
                   playable = URL.createObjectURL(blob);
                   musicTrackCache.set(cKey, playable);
@@ -7146,8 +7270,8 @@
           sp.className = "nx-super-panel";
           sp.innerHTML =
             '<div class="nx-super-title">' +
-            '  <span>🏆 Motor Superprodução Agência v14.2 (Padrão 10/10 Absoluto)</span>' +
-            '  <span style="font-size:11px;color:#7dd3fc;">Zero Botão Carrinho • 14 Mbps Nítido</span>' +
+            '  <span>🏆 Motor Superprodução Agência v15.0 (Turbo 7x GPU • Zero Congelamento • 3D Total)</span>' +
+            '  <span style="font-size:11px;color:#7dd3fc;">Sync 0,00s • Whooshes Reais • Zooms Dinâmicos</span>' +
             '</div>' +
             '<div class="nx-super-checks">' +
             '  <label><input type="checkbox" id="chkAll3DGpu100" checked> <span>🚀 100% Cortes 3D GPU + Troca Real de Cenários (Hero + Macro Dark + Uso Real + Ondas Neon + Luxo)</span></label>' +
@@ -7181,9 +7305,13 @@
             '</div>';
           musicPanel.insertAdjacentElement("afterend", sp);
 
-          // Ao trocar a plataforma do anúncio, atualiza o roteiro automaticamente se já houver produto digitado
+          // Sincroniza nos dois sentidos os seletores de Plataforma e atualiza a CTA do roteiro na hora!
           const platSel = document.getElementById("selAdPlatform");
-          platSel?.addEventListener("change", () => {
+          const platInline = document.getElementById("selAdPlatformInline");
+          const onPlatformChange = (srcEl) => {
+            const val = srcEl.value;
+            if (platSel && platSel !== srcEl) platSel.value = val;
+            if (platInline && platInline !== srcEl) platInline.value = val;
             const ta = document.getElementById("inlineVoiceScript");
             const prod = String(document.getElementById("inlineProductName")?.value || "").trim();
             if (ta && prod && ta.value.trim()) {
@@ -7191,7 +7319,9 @@
               ta.value = buildSuperCommercialScript(vidSec);
               ta.dispatchEvent(new Event("input", { bubbles: true }));
             }
-          });
+          };
+          platSel?.addEventListener("change", () => onPlatformChange(platSel));
+          platInline?.addEventListener("change", () => onPlatformChange(platInline));
         }
       }
 
@@ -7214,7 +7344,7 @@
       function getOrdered3Angles(cutNum) {
         const kit = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((a) => a && a.url) : [];
         if (!kit.length) return [];
-        const pattern = [0, 2, 1, 1, 2, 1, 0];
+        const pattern = [1, 2, 0, 2, 1, 0, 0];
         const pIdx = pattern[cutNum % pattern.length] % kit.length;
         const out = [kit[pIdx].url];
         for (let i = 0; i < kit.length; i++) {
