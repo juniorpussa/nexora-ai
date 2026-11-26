@@ -10490,14 +10490,28 @@
               const bands = [s0, s1, s2];
 
               for (let b = 0; b < 3; b++) {
+                const bEl = bands[b].el;
+                if (b !== 1 && bEl && bEl.tagName === "VIDEO") {
+                  try {
+                    if (bEl.paused) {
+                      if (bEl.currentTime >= (bEl.duration || 5) - 0.6) bEl.currentTime = 0.2;
+                      bEl.play().catch(() => {});
+                    }
+                    clearTimeout(bEl.__nxSplitStop);
+                    bEl.__nxSplitStop = setTimeout(() => {
+                      try { if (bEl !== lastMediaEl) bEl.pause(); } catch (_) {}
+                    }, 250);
+                  } catch (_) {}
+                }
                 c2d.save();
                 c2d.beginPath();
                 c2d.rect(0, b * bandH, cw, bandH);
                 c2d.clip();
+                c2d.translate(0, (b - 1) * bandH);
                 const dir = b === 1 ? 1 : (b === 0 ? -1 : 1);
                 const bPanX = dir * (tSplit - 0.5) * 44;
                 const bScale = (b === 1 ? 1.12 : 1.08) + tSplit * 0.08;
-                __origDrawCover.call(this, c2d, bands[b].el, bands[b].crop, bScale, bPanX, 0, 0, 1, filterStr);
+                __origDrawCover.call(this, c2d, bEl, bands[b].crop, bScale, bPanX, 0, 0, 1, filterStr);
                 c2d.restore();
               }
 
