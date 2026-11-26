@@ -9294,6 +9294,256 @@
         return prevFetch(input, init);
       };
     })();
+  // === UPGRADE 4/4: SOUND DESIGN CINEMA (IMPACTO 00:00 + WHOOSHES NOS CORTES + COLOR GRADING + FECHAMENTO LIMPO) ===
+    (function initNexoraCinemaPolish4() {
+      if (window.__nexoraCinemaPolish4) return;
+      window.__nexoraCinemaPolish4 = true;
+
+      const sfxEnhancedCache = new Map(); // blobUrl/rawUrl -> enhancedBlobUrl
+
+      // 1) Color Grading Comercial sutil no canvas (cores sempre vivas, nunca lavadas)
+      if (typeof drawCroppedCover === "function") {
+        const prevDrawCover = drawCroppedCover;
+        drawCroppedCover = function (c2d) {
+          const polishOn = !document.getElementById("chkCinemaPolish4") || document.getElementById("chkCinemaPolish4").checked;
+          if (!polishOn || !c2d) return prevDrawCover.apply(this, arguments);
+          const prevFilter = c2d.filter;
+          try {
+            c2d.filter = "contrast(1.06) saturate(1.12)";
+            return prevDrawCover.apply(this, arguments);
+          } finally {
+            try { c2d.filter = prevFilter || "none"; } catch (_) {}
+          }
+        };
+      }
+
+      // Codifica AudioBuffer estéreo em WAV 16-bit PCM
+      function encodeWavStereo(buffer) {
+        const numCh = Math.min(2, buffer.numberOfChannels || 1);
+        const sr = buffer.sampleRate;
+        const len = buffer.length;
+        const blockAlign = numCh * 2;
+        const dataSize = len * blockAlign;
+        const ab = new ArrayBuffer(44 + dataSize);
+        const view = new DataView(ab);
+        const writeStr = (off, s) => {
+          for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i));
+        };
+        writeStr(0, "RIFF");
+        view.setUint32(4, 36 + dataSize, true);
+        writeStr(8, "WAVE");
+        writeStr(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, numCh, true);
+        view.setUint32(24, sr, true);
+        view.setUint32(28, sr * blockAlign, true);
+        view.setUint16(32, blockAlign, true);
+        view.setUint16(34, 16, true);
+        writeStr(36, "data");
+        view.setUint32(40, dataSize, true);
+
+        const chs = [];
+        for (let c = 0; c < numCh; c++) chs.push(buffer.getChannelData(c));
+        let off = 44;
+        for (let i = 0; i < len; i++) {
+          for (let c = 0; c < numCh; c++) {
+            const s = Math.max(-1, Math.min(1, chs[c][i] || 0));
+            view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+            off += 2;
+          }
+        }
+        return new Blob([ab], { type: "audio/wav" });
+      }
+
+      // 2) Injeta Sound Design Cinematográfico (Sub-Boom 00:00 + Whooshes nos cortes + Riser Final) na trilha
+      async function bakeCinemaSfxIntoTrack(trackBlobOrUrl, origFetchFn) {
+        if (!trackBlobOrUrl) return null;
+        if (sfxEnhancedCache.has(trackBlobOrUrl)) return sfxEnhancedCache.get(trackBlobOrUrl);
+
+        try {
+          const res = await origFetchFn(trackBlobOrUrl);
+          if (!res || !res.ok) return null;
+          const arrBuf = await res.arrayBuffer();
+
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+          if (!AudioCtx || !OfflineCtx) return null;
+
+          const decCtx = new AudioCtx();
+          const decoded = await decCtx.decodeAudioData(arrBuf.slice(0));
+          try { await decCtx.close(); } catch (_) {}
+
+          const sr = decoded.sampleRate;
+          const numCh = Math.min(2, decoded.numberOfChannels || 1);
+          const vidSec = Number(document.getElementById("minDuration")?.value || 10) || 10;
+          const totalLen = Math.max(decoded.length, Math.ceil((vidSec + 1.2) * sr));
+          const durSec = totalLen / sr;
+
+          const offCtx = new OfflineCtx(numCh, totalLen, sr);
+
+          // Trilha base
+          const musicSrc = offCtx.createBufferSource();
+          musicSrc.buffer = decoded;
+          const musicGain = offCtx.createGain();
+          musicGain.gain.setValueAtTime(0.95, 0);
+          // Fade-out limpo nos últimos 0.45s para fechamento profissional
+          const fadeStart = Math.max(0.5, Math.min(durSec - 0.5, vidSec + 0.15));
+          musicGain.gain.setValueAtTime(0.95, fadeStart);
+          musicGain.gain.linearRampToValueAtTime(0.001, Math.min(durSec, fadeStart + 0.55));
+          musicSrc.connect(musicGain);
+          musicGain.connect(offCtx.destination);
+          musicSrc.start(0);
+
+          // Buffer de ruído branco para Whooshes e Risers
+          const noiseBuf = offCtx.createBuffer(1, sr * 2, sr);
+          const nd = noiseBuf.getChannelData(0);
+          for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+
+          // SFX A: Cinema Sub-Boom (Impacto grave)
+          function addCinemaBoom(time, amp = 0.48) {
+            if (time < 0 || time >= durSec - 0.1) return;
+            const osc = offCtx.createOscillator();
+            const g = offCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(115, time);
+            osc.frequency.exponentialRampToValueAtTime(34, time + 0.48);
+            g.gain.setValueAtTime(0.001, time);
+            g.gain.linearRampToValueAtTime(amp, time + 0.008);
+            g.gain.exponentialRampToValueAtTime(0.001, time + 0.62);
+            osc.connect(g);
+            g.connect(offCtx.destination);
+            osc.start(time);
+            osc.stop(Math.min(durSec, time + 0.65));
+          }
+
+          // SFX B: Whoosh rápido de transição de cena
+          function addCinemaWhoosh(centerTime, amp = 0.24) {
+            const start = Math.max(0, centerTime - 0.18);
+            if (start >= durSec - 0.15) return;
+            const n = offCtx.createBufferSource();
+            n.buffer = noiseBuf;
+            const bp = offCtx.createBiquadFilter();
+            bp.type = "bandpass";
+            bp.Q.value = 1.8;
+            bp.frequency.setValueAtTime(320, start);
+            bp.frequency.exponentialRampToValueAtTime(3200, start + 0.18);
+            bp.frequency.exponentialRampToValueAtTime(480, start + 0.36);
+
+            const g = offCtx.createGain();
+            g.gain.setValueAtTime(0.001, start);
+            g.gain.linearRampToValueAtTime(amp, start + 0.17);
+            g.gain.exponentialRampToValueAtTime(0.001, start + 0.38);
+
+            n.connect(bp);
+            bp.connect(g);
+            g.connect(offCtx.destination);
+            n.start(start);
+            n.stop(Math.min(durSec, start + 0.40));
+          }
+
+          // SFX C: Riser tenso antes do fechamento CTA
+          function addCinemaRiser(endTime, amp = 0.20) {
+            const start = Math.max(0, endTime - 0.85);
+            if (endTime > durSec) return;
+            const n = offCtx.createBufferSource();
+            n.buffer = noiseBuf;
+            const hp = offCtx.createBiquadFilter();
+            hp.type = "bandpass";
+            hp.Q.value = 2.4;
+            hp.frequency.setValueAtTime(400, start);
+            hp.frequency.exponentialRampToValueAtTime(5200, endTime);
+
+            const g = offCtx.createGain();
+            g.gain.setValueAtTime(0.001, start);
+            g.gain.exponentialRampToValueAtTime(amp, endTime - 0.02);
+            g.gain.linearRampToValueAtTime(0.001, endTime + 0.04);
+
+            n.connect(hp);
+            hp.connect(g);
+            g.connect(offCtx.destination);
+            n.start(start);
+            n.stop(Math.min(durSec, endTime + 0.06));
+          }
+
+          // Aplica a coreografia de Sound Design sincronizada aos cortes (ritmo de ~1.43s)
+          addCinemaBoom(0.0, 0.52); // Impacto explosivo no 00:00
+          const cutStep = vidSec <= 12 ? 1.43 : (vidSec <= 18 ? 1.55 : 1.65);
+          for (let t = cutStep; t < vidSec - 1.3; t += cutStep) {
+            addCinemaWhoosh(t, 0.22);
+            // A cada 2 cortes, adiciona um sub-impacto seco para manter energia alta
+            if (Math.round(t / cutStep) % 2 === 0) {
+              addCinemaBoom(t, 0.26);
+            }
+          }
+          // Riser + Impacto final no momento do CTA ("Toque no carrinho!")
+          const ctaHit = Math.max(2.0, vidSec - 1.6);
+          addCinemaRiser(ctaHit, 0.20);
+          addCinemaBoom(ctaHit, 0.38);
+
+          const rendered = await offCtx.startRendering();
+          const wavBlob = encodeWavStereo(rendered);
+          const enhancedUrl = URL.createObjectURL(wavBlob);
+          sfxEnhancedCache.set(trackBlobOrUrl, enhancedUrl);
+          return enhancedUrl;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      // 3) Badge de controle do Upgrade 4/4 na interface
+      function mountCinemaPolishBadge() {
+        const anchor = document.getElementById("nxDirectorMultiSceneBar") || document.getElementById("nexoraMusicProPanel");
+        if (!anchor || document.getElementById("nxCinemaPolish4Bar")) return;
+        const bar = document.createElement("div");
+        bar.id = "nxCinemaPolish4Bar";
+        bar.style.cssText =
+          "margin-top:8px;padding:8px 12px;border-radius:10px;background:linear-gradient(135deg,rgba(14,165,233,0.14),rgba(139,92,246,0.16));" +
+          "border:1px solid rgba(56,189,248,0.45);font-size:11.5px;font-weight:700;color:#e0f2fe;" +
+          "display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;";
+        bar.innerHTML =
+          '<label style="display:flex;align-items:center;gap:7px;cursor:pointer;margin:0;">' +
+          '  <input type="checkbox" id="chkCinemaPolish4" checked style="width:15px;height:15px;accent-color:#38bdf8;cursor:pointer;">' +
+          '  <span>🔊 Sound Design Cinema ATIVO (Impacto 00:00 + Whooshes nos Cortes + Color Grading)</span>' +
+          '</label>' +
+          '<span style="color:#7dd3fc;font-weight:800;">Padrão Agência 4/4</span>';
+        anchor.insertAdjacentElement("afterend", bar);
+      }
+      setTimeout(mountCinemaPolishBadge, 1800);
+      setTimeout(mountCinemaPolishBadge, 3400);
+
+      // 4) Intercepta o download da trilha na montagem do vídeo para entregar a versão com Sound Design embutido
+      const prevFetch = window.fetch.bind(window);
+      window.fetch = async function (input, init) {
+        const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+        const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+        const polishOn = !document.getElementById("chkCinemaPolish4") || document.getElementById("chkCinemaPolish4").checked;
+
+        if (polishOn && method === "GET" && reqUrl.includes("/api/generate") && reqUrl.includes("proxyUrl=")) {
+          try {
+            const u = new URL(reqUrl, window.location.origin);
+            const px = u.searchParams.get("proxyUrl") || "";
+            const isLikelyMusic = px.includes("lyria") || px.includes("music") || px.startsWith("blob:");
+            if (isLikelyMusic) {
+              const baseResp = await prevFetch(input, init);
+              if (baseResp && baseResp.ok) {
+                const ct = String(baseResp.headers.get("content-type") || "").toLowerCase();
+                if (ct.includes("audio") || px.startsWith("blob:")) {
+                  const rawBlob = await baseResp.blob();
+                  const tmpUrl = URL.createObjectURL(rawBlob);
+                  const enhancedUrl = await bakeCinemaSfxIntoTrack(tmpUrl, prevFetch);
+                  if (enhancedUrl) return prevFetch(enhancedUrl);
+                  return prevFetch(tmpUrl);
+                }
+              }
+              return baseResp;
+            }
+          } catch (_) {}
+        }
+
+        return prevFetch(input, init);
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
