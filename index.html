@@ -5581,6 +5581,194 @@
       }
     });
 
+  // === KIT 3 ÂNGULOS 3D UNIVERSAIS SEM FUNDO + DESCRIÇÃO AUTOMÁTICA ===
+    window.nexora3Angles = [];
+    const btnGen3Angles = document.getElementById("btnGen3Angles");
+    const angles3Status = document.getElementById("angles3Status");
+
+    function reset3AnglesUI(msg) {
+      window.nexora3Angles = [];
+      for (let i = 0; i < 3; i++) {
+        const slot = document.getElementById(`angleSlot${i}`);
+        const thumb = document.getElementById(`angleThumb${i}`);
+        if (slot) slot.classList.remove("ready");
+        if (thumb) thumb.innerHTML = "Aguardando...";
+      }
+      if (angles3Status) {
+        angles3Status.textContent = msg || 'Foto carregada — clique em "Gerar 3 Ângulos 3D + Descrição IA"';
+      }
+    }
+
+    function setAngleSlotState(idx, htmlContent, isReady = false) {
+      const slot = document.getElementById(`angleSlot${idx}`);
+      const thumb = document.getElementById(`angleThumb${idx}`);
+      if (slot) slot.classList.toggle("ready", Boolean(isReady));
+      if (thumb) thumb.innerHTML = htmlContent;
+    }
+
+    // Sincroniza automaticamente o estado ativo/desativado do botão 3 Ângulos com o botão Remover Fundo
+    if (btnQuickRemoveBg && btnGen3Angles) {
+      const syncBtn3Angles = () => {
+        btnGen3Angles.disabled = btnQuickRemoveBg.disabled || !uploadedBase64;
+      };
+      new MutationObserver(syncBtn3Angles).observe(btnQuickRemoveBg, { attributes: true, attributeFilter: ["disabled"] });
+      syncBtn3Angles();
+    }
+
+    productImg?.addEventListener("change", () => {
+      reset3AnglesUI('Foto nova carregada — clique em "Gerar 3 Ângulos 3D + Descrição IA"');
+    });
+
+    async function removeBgFromUrl(imageUrl, onStatus, signal) {
+      let lastErr = "Falha ao remover fundo.";
+      for (let engIdx = 0; engIdx <= 2; engIdx++) {
+        if (signal && signal.aborted) return null;
+        try {
+          const qb = await callApi({ task: "remove_bg", engineIndex: engIdx, imageUrl }, 28000, signal);
+          const rb = await pollFalJob(qb, (st) => { if (onStatus) onStatus(st); }, signal);
+          if (rb && rb.imageUrl) return rb.imageUrl;
+        } catch (err) {
+          if (err.message === "ABORTED_RUN") return null;
+          if (err.status === 402 || err.status === 403) throw err;
+          lastErr = err.message || "erro";
+        }
+      }
+      throw new Error(lastErr);
+    }
+
+    async function generateAngleCutout(baseImageUrl, anglePrompt, slotIdx, signal) {
+      setAngleSlotState(slotIdx, "Gerando ângulo 3D...", false);
+      const qa = await callApi({
+        task: "generate_angle",
+        aspectRatio: "1:1",
+        imageUrl: baseImageUrl,
+        imagePrompt: anglePrompt
+      }, 32000, signal);
+      const ra = await pollFalJob(qa, (st) => {
+        setAngleSlotState(slotIdx, `Ângulo 3D: ${st}`, false);
+      }, signal);
+      if (!ra || !ra.imageUrl) throw new Error("Falha ao criar ângulo 3D.");
+      setAngleSlotState(slotIdx, "Recortando PNG...", false);
+      const pngUrl = await removeBgFromUrl(ra.imageUrl, (st) => {
+        setAngleSlotState(slotIdx, `Recorte: ${st}`, false);
+      }, signal);
+      return pngUrl || ra.imageUrl;
+    }
+
+    async function describeProductAuto(imageUrl, signal) {
+      for (let engIdx = 0; engIdx <= 2; engIdx++) {
+        if (signal && signal.aborted) return null;
+        try {
+          const qd = await callApi({ task: "describe_product", engineIndex: engIdx, imageUrl }, 25000, signal);
+          const rd = await pollFalJob(qd, null, signal);
+          const raw = String(rd?.textOutput || rd?.result?.output || rd?.result?.results || "").trim();
+          if (!raw) continue;
+          const jsonMatch = raw.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            try {
+              const parsed = JSON.parse(jsonMatch[0]);
+              if (parsed.visual_description || parsed.macro_detail) {
+                return {
+                  desc: String(parsed.visual_description || "").trim().slice(0, 160),
+                  macro: String(parsed.macro_detail || "").trim().slice(0, 100)
+                };
+              }
+            } catch {}
+          }
+          const cleaned = raw.replace(/```json|```/gi, "").replace(/\s+/g, " ").trim();
+          if (cleaned.length > 6) return { desc: cleaned.slice(0, 160), macro: "" };
+        } catch (err) {
+          if (err.message === "ABORTED_RUN") return null;
+        }
+      }
+      return null;
+    }
+
+    btnGen3Angles?.addEventListener("click", async () => {
+      if (!uploadedBase64) {
+        stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`;
+        return;
+      }
+
+      const orientShort = (ORIENTATION_RULES[productOrientation.value] || ORIENTATION_RULES.auto).short;
+      activeRunController = new AbortController();
+      const sig = activeRunController.signal;
+      setAllButtonsDisabled(true);
+      if (btnGen3Angles) btnGen3Angles.disabled = true;
+
+      try {
+        reset3AnglesUI("Passo 1/2: Recortando Ângulo 1 (Frontal PNG)...");
+        setAngleSlotState(0, "Recortando PNG...", false);
+        setAngleSlotState(1, "Aguardando base...", false);
+        setAngleSlotState(2, "Aguardando base...", false);
+
+        const r1 = await removeBgWithTripleFallback(uploadedBase64, uploadedMime, (st) => {
+          setAngleSlotState(0, `Recorte: ${st}`, false);
+        }, sig);
+        if (!r1 || !r1.imageUrl) throw new Error(r1?.error || "Não foi possível recortar a foto principal.");
+
+        const angle1Url = r1.imageUrl;
+        const blob1 = await fetchMediaBlob(angle1Url);
+        const dataUrl1 = await blobToDataUrl(blob1);
+        const b64_1 = dataUrl1.split(",")[1] || "";
+        setUploadedProduct(dataUrl1, b64_1, "image/png", true);
+        setAngleSlotState(0, `<img src="${dataUrl1}" alt="Frontal 0°" />`, true);
+
+        if (angles3Status) angles3Status.textContent = "Passo 2/2: Criando Ângulos 2 e 3 + Descrição Automática...";
+
+        const promptAngle2 =
+          `Ultra-realistic commercial studio 3D product turnaround photograph of the EXACT same product from the reference image, ${orientShort}, rotated sharply to a dramatic 60-degree LEFT SIDE three-quarter profile view clearly exposing the left lateral thickness, side silhouette, contoured side geometry and full 3D depth. Completely different camera angle from the straight front view. Preserve 100% identical design, exact colors, authentic materials, proportions and original markings with zero invented logos or altered parts. Isolated completely alone centered on a spotless pure solid white #FFFFFF studio background, clean even commercial softbox lighting, razor-sharp focus, zero hands, zero props, zero text, zero watermarks.`;
+
+        const promptAngle3 =
+          `Ultra-realistic commercial studio 3D product turnaround photograph of the EXACT same product from the reference image, ${orientShort}, captured from the OPPOSITE RIGHT side at an elevated 45-degree high-angle diagonal three-quarter perspective clearly revealing the top surface, right side thickness, upper contours and opposite diagonal 3D depth. Completely different angle from both the front view and the left profile. Preserve 100% identical design, exact colors, authentic materials, proportions and original markings with zero invented logos or altered parts. Isolated completely alone centered on a spotless pure solid white #FFFFFF studio background, clean even commercial softbox lighting, razor-sharp focus, zero hands, zero props, zero text, zero watermarks.`;
+
+        const [res2, res3, descRes] = await Promise.allSettled([
+          generateAngleCutout(angle1Url, promptAngle2, 1, sig),
+          generateAngleCutout(angle1Url, promptAngle3, 2, sig),
+          describeProductAuto(angle1Url, sig)
+        ]);
+
+        const finalKit = [{ angle: "frontal", url: angle1Url, dataUrl: dataUrl1 }];
+
+        if (res2.status === "fulfilled" && res2.value) {
+          setAngleSlotState(1, `<img src="${res2.value}" alt="Perfil 3/4 Esq 60°" />`, true);
+          finalKit.push({ angle: "left_60", url: res2.value });
+        } else {
+          setAngleSlotState(1, "Falhou (usando base)", false);
+        }
+
+        if (res3.status === "fulfilled" && res3.value) {
+          setAngleSlotState(2, `<img src="${res3.value}" alt="Elevado Dir 45°" />`, true);
+          finalKit.push({ angle: "right_elevated_45", url: res3.value });
+        } else {
+          setAngleSlotState(2, "Falhou (usando base)", false);
+        }
+
+        window.nexora3Angles = finalKit;
+
+        let descNote = "";
+        if (descRes.status === "fulfilled" && descRes.value) {
+          if (descRes.value.desc && productDetailHint) {
+            productDetailHint.value = descRes.value.desc;
+            descNote = " + Descrição Visual preenchida automaticamente ✓";
+          }
+          if (descRes.value.macro && macroTarget && !macroTarget.value.trim()) {
+            macroTarget.value = descRes.value.macro;
+          }
+        }
+
+        if (angles3Status) {
+          angles3Status.textContent = `✅ ${finalKit.length} ângulos sem fundo prontos${descNote}`;
+        }
+      } catch (err) {
+        if (angles3Status) angles3Status.textContent = `Erro: ${err.message}`;
+        stage.innerHTML = `<div class="err-msg">${err.message === "ABORTED_RUN" ? "Cancelado." : err.message}</div>`;
+      } finally {
+        activeRunController = null;
+        setAllButtonsDisabled(false);
+        if (btnGen3Angles) btnGen3Angles.disabled = !uploadedBase64;
+      }
+    });
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
