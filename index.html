@@ -4110,9 +4110,12 @@
       vid.preload = "auto";
       vid.setAttribute("muted", "");
       vid.setAttribute("playsinline", "");
-      // Mantém o vídeo anexado na página (invisível) para o Chrome não congelar os quadros
-      vid.style.cssText = "position:fixed;left:0;top:0;width:1px;height:1px;opacity:0.01;pointer-events:none;z-index:-1;";
-      document.body.appendChild(vid);
+      // Fica visível no painel durante a gravação para o Chrome não congelar os quadros
+      vid.style.cssText = "width:120px;aspect-ratio:9/16;object-fit:cover;border-radius:10px;border:1px solid #334155;margin:6px auto;display:block;";
+
+      const stageEl = document.getElementById("stage");
+      if (stageEl) stageEl.appendChild(vid);
+      else document.body.appendChild(vid);
 
       const cleanupVid = () => {
         try { vid.pause(); } catch {}
@@ -4149,15 +4152,14 @@
         }
       }
 
-      // Garante tempo suficiente para concluir 100% da narração e da última legenda
       let voiceTrimStart = 0;
       let speechSpan = 0;
       if (voiceDecoded) {
         const bounds = detectSpeechBounds(voiceDecoded);
         voiceTrimStart = Math.max(0, bounds.start - 0.015);
-        speechSpan = Math.max(0.5, bounds.end - voiceTrimStart);
+        speechSpan = Math.max(0.5, voiceDecoded.duration - voiceTrimStart);
       }
-      const totalSec = Number(Math.max(baseVidSec, speechSpan > 0 ? speechSpan + 0.45 : baseVidSec).toFixed(2));
+      const totalSec = Number(Math.max(baseVidSec, speechSpan > 0 ? speechSpan + 0.7 : baseVidSec).toFixed(2));
 
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -4170,6 +4172,8 @@
       let origAudioMixedOk = false;
       let mediaElemAudioSrc = null;
       let audioOriginCtxTime = 0;
+      let voiceEnded = !voiceDecoded;
+      let voiceEndedAt = 0;
 
       if (subStyle && subStyle !== "none" && scriptText) {
         captionBlocks = buildWordTimingsFromWhisperOrEstimate(scriptText, whisperChunks, voiceDecoded, 1.0, 0.0, voiceTrimStart);
@@ -4206,7 +4210,8 @@
       const recProf = pickRecorderProfile();
       const stream = new MediaStream(tracks);
       let rec;
-      try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 14500000 }) : new MediaRecorder(stream); }
+      // 5.5 Mbps mantém qualidade HD sem travar o gravador MP4 do Chrome
+      try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 5500000 }) : new MediaRecorder(stream); }
       catch { rec = new MediaRecorder(canvasStream); }
 
       const chunks = [];
@@ -4219,12 +4224,12 @@
         };
       });
 
-      // Garante que o vídeo começou a rodar antes de iniciar a gravação
+      try { vid.currentTime = 0.05; } catch {}
       await vid.play().catch(() => {});
 
       rec.start(200);
       if (audioCtx && audioCtx.state === "running" && comp) {
-        audioOriginCtxTime = audioCtx.currentTime + 0.04;
+        audioOriginCtxTime = audioCtx.currentTime + 0.05;
         if (origDecoded && origVolScale > 0.01) {
           const origSrc = audioCtx.createBufferSource();
           origSrc.buffer = origDecoded;
@@ -4233,7 +4238,7 @@
           og.gain.setValueAtTime(origVolScale, audioOriginCtxTime);
           origSrc.connect(og); og.connect(comp);
           origSrc.start(audioOriginCtxTime);
-          origSrc.stop(audioOriginCtxTime + totalSec + 0.12);
+          origSrc.stop(audioOriginCtxTime + totalSec + 2.0);
           origAudioMixedOk = true;
         }
         if (voiceDecoded) {
@@ -4243,14 +4248,16 @@
           const vg = audioCtx.createGain();
           vg.gain.setValueAtTime(1.16, audioOriginCtxTime);
           vSrc.connect(vg); vg.connect(comp);
+          vSrc.onended = () => { voiceEnded = true; voiceEndedAt = performance.now(); };
           vSrc.start(audioOriginCtxTime, voiceTrimStart);
-          vSrc.stop(audioOriginCtxTime + totalSec + 0.12);
         }
       }
 
       const startTime = performance.now();
       const fillEl = document.getElementById("renderProgressFill");
       const secEl = document.getElementById("renderProgressSec");
+      let lastVidTime = -1;
+      let stallCount = 0;
 
       await new Promise((resolve) => {
         let finished = false;
@@ -4258,16 +4265,36 @@
           if (finished) return;
           const elapsed = (performance.now() - startTime) / 1000;
           if (fillEl) fillEl.style.width = `${Math.min(100, Math.round((elapsed / totalSec) * 100))}%`;
-          if (secEl) secEl.textContent = `${Math.min(totalSec, elapsed).toFixed(1)}s / ${totalSec.toFixed(1)}s`;
+          if (secEl) secEl.textContent = `${Math.min(totalSec, elapsed).toFixed(1)}s / ${totalSec.toFixed(1)}s (v2)`;
 
-          if (elapsed >= totalSec + 0.08) {
+          const voiceDoneWithTail = voiceEnded && (!voiceEndedAt || (performance.now() - voiceEndedAt) >= 650);
+          const shouldStop = (elapsed >= totalSec && voiceDoneWithTail) || elapsed >= totalSec + 4.5;
+
+          if (shouldStop) {
             finished = true; stop();
-            if (rec.state !== "inactive") rec.stop();
-            resolve(); return;
+            try { if (rec.state === "recording") rec.requestData(); } catch {}
+            setTimeout(() => {
+              if (rec.state !== "inactive") rec.stop();
+              resolve();
+            }, 180);
+            return;
           }
 
           if (vid.paused && !vid.ended) {
             vid.play().catch(() => {});
+          }
+
+          // Anti-congelamento: se o MP4 travar no mesmo quadro, força o avanço do tempo
+          if (elapsed > 0.35 && Math.abs((vid.currentTime || 0) - lastVidTime) < 0.001) {
+            stallCount++;
+            if (stallCount >= 6) {
+              stallCount = 0;
+              const targetT = elapsed % Math.max(1, baseVidSec - 0.15);
+              try { vid.currentTime = targetT; } catch {}
+            }
+          } else {
+            stallCount = 0;
+            lastVidTime = vid.currentTime || 0;
           }
 
           if (vid.readyState >= 2) {
@@ -4288,7 +4315,6 @@
       activeVideoBlobUrl = URL.createObjectURL(outBlob);
       return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: recProf.label, sec: totalSec, captionCount: captionBlocks.length, origAudioMixedOk };
     }
-
     async function renderHollywoodMaster(mediaItems, totalSec, dna, editMode, withSfx, audioCtx, soundtrackArrayBuf, voiceoverArrayBuf = null, allowLightBg = false, captionCfg = null) {
       await ensureCaptionFontsLoaded();
       if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume().catch(() => {});
