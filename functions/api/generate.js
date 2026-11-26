@@ -1,23 +1,5 @@
 const FAL_QUEUE_BASE = "https://queue.fal.run";
 
-const TTS_VOICE_MAP = {
-  "pf_dylan": { voice: "pf_dylan", label: "Dylan (PT-BR Masculino)", gender: "male" },
-  "pm_alex": { voice: "pm_alex", label: "Alex (PT-BR Masculino)", gender: "male" },
-  "pm_santa": { voice: "pm_santa", label: "Santa (PT-BR Masculino)", gender: "male" },
-  "am_adam": { voice: "am_adam", label: "Adam (EN Commercial Male)", gender: "male" },
-  "am_michael": { voice: "am_michael", label: "Michael (EN Deep Male)", gender: "male" },
-  "am_eric": { voice: "am_eric", label: "Eric (EN Energetic Male)", gender: "male" },
-  "bm_george": { voice: "bm_george", label: "George (UK Male)", gender: "male" },
-  "bm_lewis": { voice: "bm_lewis", label: "Lewis (UK Narrator Male)", gender: "male" },
-  "pf_ora": { voice: "pf_ora", label: "Ora (PT-BR Feminino)", gender: "female" },
-  "af_bella": { voice: "af_bella", label: "Bella (EN Commercial Female)", gender: "female" },
-  "af_sarah": { voice: "af_sarah", label: "Sarah (EN Bright Female)", gender: "female" },
-  "af_nova": { voice: "af_nova", label: "Nova (EN Modern Female)", gender: "female" },
-  "af_nicole": { voice: "af_nicole", label: "Nicole (EN Warm Female)", gender: "female" },
-  "bf_emma": { voice: "bf_emma", label: "Emma (UK Female)", gender: "female" },
-  "bf_isabella": { voice: "bf_isabella", label: "Isabella (UK Expressive Female)", gender: "female" },
-};
-
 const ALLOWED_SCENE_MODELS = new Set([
   "fal-ai/nano-banana/edit",
   "fal-ai/nano-banana",
@@ -46,6 +28,8 @@ const DEFAULT_CLIP_MODEL = "fal-ai/kling-video/v2.6/pro/image-to-video";
 
 const ACTION_CREDIT_COSTS = {
   submit_scene: 2,
+  generate_angle: 1,
+  describe_product: 0,
   submit_clip: 12,
   submit_music: 3,
   clone_voice: 3,
@@ -56,6 +40,8 @@ const ACTION_CREDIT_COSTS = {
 
 const ACTION_DESCRIPTIONS = {
   submit_scene: "Geração de cena visual 9:16",
+  generate_angle: "Geração de ângulo 3D do produto",
+  describe_product: "Descrição visual automática do produto",
   submit_clip: "Geração de clipe de vídeo cinematográfico",
   submit_music: "Geração de trilha sonora / batida",
   clone_voice: "Clonagem de voz de referência",
@@ -73,6 +59,8 @@ const ACTION_ALIASES = {
   generate_image: "submit_scene",
   image: "submit_scene",
   scene: "submit_scene",
+  generate_angle: "generate_angle",
+  describe_product: "describe_product",
   submit_clip: "submit_clip",
   generate_video: "submit_clip",
   video: "submit_clip",
@@ -90,6 +78,41 @@ const ACTION_ALIASES = {
   status: "poll",
   check_status: "poll",
 };
+
+function normalizeSingleImage(item, fallbackMime = "image/jpeg") {
+  if (!item) return "";
+  if (typeof item === "string") {
+    const trimmed = item.trim();
+    if (!trimmed) return "";
+    if (
+      trimmed.startsWith("http://") ||
+      trimmed.startsWith("https://") ||
+      trimmed.startsWith("data:image/")
+    ) {
+      return trimmed;
+    }
+    const cleanB64 = trimmed.replace(/\s+/g, "");
+    if (/^[A-Za-z0-9+/=]{100,}$/.test(cleanB64)) {
+      return `data:${fallbackMime};base64,${cleanB64}`;
+    }
+    return "";
+  }
+  if (typeof item === "object") {
+    const mime =
+      typeof item.mimeType === "string" && item.mimeType.startsWith("image/")
+        ? item.mimeType
+        : fallbackMime;
+    const nested =
+      item.url ||
+      item.image_url ||
+      item.imageUrl ||
+      item.dataUrl ||
+      item.base64 ||
+      "";
+    return normalizeSingleImage(nested, mime);
+  }
+  return "";
+}
 
 function extractImageInput(body) {
   if (!body || typeof body !== "object") return "";
@@ -109,30 +132,34 @@ function extractImageInput(body) {
     body.data_url,
   ];
   for (const item of candidates) {
-    if (!item) continue;
-    if (typeof item === "string") {
-      const trimmed = item.trim();
-      if (!trimmed) continue;
-      if (
-        trimmed.startsWith("http://") ||
-        trimmed.startsWith("https://") ||
-        trimmed.startsWith("data:image/")
-      ) {
-        return trimmed;
-      }
-      const cleanB64 = trimmed.replace(/\s+/g, "");
-      if (/^[A-Za-z0-9+/=]{100,}$/.test(cleanB64)) {
-        return `data:${mime};base64,${cleanB64}`;
-      }
-    } else if (typeof item === "object") {
-      const nested =
-        item.url || item.image_url || item.imageUrl || item.dataUrl || item.base64 || "";
-      if (typeof nested === "string" && nested.trim()) {
-        return extractImageInput({ image_url: nested.trim(), mimeType: mime });
-      }
-    }
+    const norm = normalizeSingleImage(item, mime);
+    if (norm) return norm;
   }
   return "";
+}
+
+function extractImageInputList(body) {
+  const list = [];
+  const mime =
+    typeof body?.mimeType === "string" && body.mimeType.startsWith("image/")
+      ? body.mimeType
+      : "image/jpeg";
+
+  const arrCandidates = [body?.referenceImages, body?.imageUrls, body?.image_urls];
+  for (const arr of arrCandidates) {
+    if (!Array.isArray(arr)) continue;
+    for (const item of arr) {
+      const norm = normalizeSingleImage(item, mime);
+      if (norm && !list.includes(norm)) list.push(norm);
+    }
+  }
+
+  const single = extractImageInput(body);
+  if (single && !list.includes(single)) {
+    list.unshift(single);
+  }
+
+  return list.slice(0, 4);
 }
 
 function extractMediaUrls(obj) {
@@ -191,6 +218,16 @@ function extractMediaUrls(obj) {
   return { imageUrl, videoUrl, audioUrl, url: fallbackUrl };
 }
 
+function extractTextOutput(obj) {
+  if (!obj || typeof obj !== "object") return "";
+  if (typeof obj.output === "string" && obj.output.trim()) return obj.output.trim();
+  if (typeof obj.results === "string" && obj.results.trim()) return obj.results.trim();
+  if (typeof obj.text === "string" && obj.text.trim()) return obj.text.trim();
+  if (obj.result && typeof obj.result === "object") return extractTextOutput(obj.result);
+  if (obj.data && typeof obj.data === "object") return extractTextOutput(obj.data);
+  return "";
+}
+
 function normalizeFalQueueUrl(rawUrl) {
   if (!rawUrl || typeof rawUrl !== "string") return "";
   const s = rawUrl.trim();
@@ -247,7 +284,6 @@ function jsonResponse(payload, status = 200) {
   });
 }
 
-// Proxy GET para download seguro de mídia da fal.ai sem erro de CORS no Canvas
 export async function onRequestGet(context) {
   const urlObj = new URL(context.request.url);
   const proxyUrl = urlObj.searchParams.get("proxyUrl");
@@ -458,7 +494,8 @@ export async function onRequestPost(context) {
     const body = await request.json();
     const rawAction = String(body.action || body.mode || body.task || "").trim().toLowerCase();
     const action = ACTION_ALIASES[rawAction] || rawAction;
-    const resolvedImageUrl = extractImageInput(body);
+    const resolvedImageList = extractImageInputList(body);
+    const resolvedImageUrl = resolvedImageList[0] || "";
 
     if (action === "poll") {
       if (body.result && typeof body.result === "object") {
@@ -472,7 +509,9 @@ export async function onRequestPost(context) {
           video_url: media.videoUrl,
           audioUrl: media.audioUrl,
           audio_url: media.audioUrl,
+          textOutput: extractTextOutput(body.result),
           chunks: body.result?.chunks || null,
+          customVoiceId: body.result?.custom_voice_id || body.result?.voice_id || null,
           url: media.url,
         });
       }
@@ -568,7 +607,6 @@ export async function onRequestPost(context) {
         });
         const resJson = await resResp.json().catch(() => ({}));
 
-        // IMPORTANTE: se a fal.ai retornou erro dentro do resultado (ex.: HTTP 422), reportar como FAILED!
         if (!resResp.ok) {
           const errDetail = formatFalError(resJson, `Erro no resultado da IA (HTTP ${resResp.status})`);
           const refundAmt = Number(body.charged ?? body.creditCost ?? 0);
@@ -592,6 +630,7 @@ export async function onRequestPost(context) {
           video_url: media.videoUrl,
           audioUrl: media.audioUrl,
           audio_url: media.audioUrl,
+          textOutput: extractTextOutput(resJson),
           chunks: resJson?.chunks || null,
           customVoiceId: resJson?.custom_voice_id || resJson?.voice_id || null,
           url: media.url,
@@ -605,8 +644,8 @@ export async function onRequestPost(context) {
       });
     }
 
-    if (action === "remove_bg" && !resolvedImageUrl) {
-      return jsonResponse({ error: "Envie a imagem do produto para remover o fundo." }, 400);
+    if ((action === "remove_bg" || action === "generate_angle" || action === "describe_product") && !resolvedImageUrl) {
+      return jsonResponse({ error: "Envie a imagem do produto primeiro." }, 400);
     }
 
     if (action === "submit_tts") {
@@ -614,20 +653,22 @@ export async function onRequestPost(context) {
       if (!rawText.trim()) {
         return jsonResponse({ error: "Digite o texto da narração antes de gerar." }, 400);
       }
-      if (rawText.length > 600) {
+      if (rawText.length > 700) {
         return jsonResponse({
-          error: `O texto excede o limite de 600 caracteres (${rawText.length}/600). Reduza o roteiro para gerar a voz.`,
+          error: `O texto excede o limite de 700 caracteres (${rawText.length}/700). Reduza um pouco o roteiro.`,
         }, 400);
       }
     }
 
-    const resolvedSceneModel = resolveAllowedSceneModel(body, Boolean(resolvedImageUrl));
+    const resolvedSceneModel = resolveAllowedSceneModel(body, resolvedImageList.length > 0);
     const resolvedClipModel = resolveAllowedClipModel(body);
     const promptText = resolvePromptCandidate(body);
     const requestedClipSeconds = Number(body.duration || 5);
     const clipDuration = requestedClipSeconds > 5 ? "10" : "5";
 
-    let creditCost = ACTION_CREDIT_COSTS[action] || 2;
+    let creditCost = Object.prototype.hasOwnProperty.call(ACTION_CREDIT_COSTS, action)
+      ? ACTION_CREDIT_COSTS[action]
+      : 2;
     let actionDesc = ACTION_DESCRIPTIONS[action] || "Geração no estúdio";
 
     if (action === "submit_clip") {
@@ -637,47 +678,80 @@ export async function onRequestPost(context) {
       actionDesc = `${ACTION_DESCRIPTIONS.submit_clip} (${tierLabel} ${clipDuration}s)`;
     }
 
-    const debit = await deductUserCredits(env, user.id, creditCost, action, actionDesc);
-    if (!debit.ok) {
-      return jsonResponse({
-        error: "Seus créditos acabaram! Recarregue seu saldo ou assine um plano para continuar gerando.",
-        code: "INSUFFICIENT_CREDITS",
-        credits: debit.newBalance,
-      }, 402);
+    let debit = { ok: true, newBalance: null };
+    if (creditCost > 0) {
+      debit = await deductUserCredits(env, user.id, creditCost, action, actionDesc);
+      if (!debit.ok) {
+        return jsonResponse({
+          error: "Seus créditos acabaram! Recarregue seu saldo ou assine um plano para continuar gerando.",
+          code: "INSUFFICIENT_CREDITS",
+          credits: debit.newBalance,
+        }, 402);
+      }
     }
 
     let upstream = null;
     let usedEndpoint = "";
 
-    if (action === "submit_scene") {
-      usedEndpoint = resolvedSceneModel;
+    if (action === "submit_scene" || action === "generate_angle") {
+      usedEndpoint = action === "generate_angle" ? DEFAULT_SCENE_MODEL_EDIT : resolvedSceneModel;
+      const aspectRatio = String(body.aspectRatio || (action === "generate_angle" ? "1:1" : "9:16"));
+      const outFmt = action === "generate_angle" ? "png" : "jpeg";
       let inputPayload;
 
-      if (resolvedSceneModel === "fal-ai/nano-banana/edit" && resolvedImageUrl) {
+      if (usedEndpoint === "fal-ai/nano-banana/edit" && resolvedImageList.length > 0) {
         inputPayload = {
-          prompt: promptText || "Ultra-realistic 9:16 commercial product photo",
-          image_urls: [resolvedImageUrl],
-          aspect_ratio: "9:16",
+          prompt: promptText || "Ultra-realistic commercial studio product photograph",
+          image_urls: resolvedImageList,
+          aspect_ratio: aspectRatio,
           num_images: 1,
-          output_format: "jpeg",
+          output_format: outFmt,
         };
-      } else if (resolvedSceneModel === "fal-ai/flux-pro/kontext" && resolvedImageUrl) {
+      } else if (usedEndpoint === "fal-ai/flux-pro/kontext" && resolvedImageUrl) {
         inputPayload = {
-          prompt: promptText || "Ultra-realistic 9:16 commercial product photo",
+          prompt: promptText || "Ultra-realistic commercial studio product photograph",
           image_url: resolvedImageUrl,
-          aspect_ratio: "9:16",
+          aspect_ratio: aspectRatio,
           num_images: 1,
         };
       } else {
         inputPayload = {
-          prompt: promptText || "Ultra-realistic 9:16 commercial product photo",
-          image_size: "portrait_16_9",
+          prompt: promptText || "Ultra-realistic commercial studio product photograph",
+          image_size: aspectRatio === "1:1" ? "square_hd" : "portrait_16_9",
           num_images: 1,
           enable_safety_checker: false,
           ...(resolvedImageUrl ? { image_url: resolvedImageUrl } : {}),
         };
       }
       upstream = await falFetch(usedEndpoint, falKey, "POST", inputPayload);
+    } else if (action === "describe_product") {
+      const engIdx = Number(body.engineIndex || 0);
+      const visionPrompt =
+        promptText ||
+        "Analyze the exact physical product in this image. Return ONLY valid JSON with two keys in Brazilian Portuguese: " +
+          '{"visual_description": "concise ultra-faithful physical description of the product type, colors, material finishes, shapes and distinctive details in up to 140 characters", ' +
+          '"macro_detail": "3 to 6 words naming the best close-up detail for a 100mm macro shot, e.g. textura metálica, lentes e acabamento"}';
+
+      if (engIdx === 0) {
+        usedEndpoint = "fal-ai/any-llm/vision";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          model: "google/gemini-2.5-flash",
+          image_url: resolvedImageUrl,
+          prompt: visionPrompt,
+        });
+      } else if (engIdx === 1) {
+        usedEndpoint = "fal-ai/any-llm/vision";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          model: "openai/gpt-4o-mini",
+          image_url: resolvedImageUrl,
+          prompt: visionPrompt,
+        });
+      } else {
+        usedEndpoint = "fal-ai/florence-2-large/detailed-caption";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          image_url: resolvedImageUrl,
+        });
+      }
     } else if (action === "submit_clip") {
       usedEndpoint = resolvedClipModel;
       const isVeo = resolvedClipModel.includes("veo");
@@ -700,27 +774,39 @@ export async function onRequestPost(context) {
           };
       upstream = await falFetch(usedEndpoint, falKey, "POST", inputPayload);
     } else if (action === "submit_music") {
-      usedEndpoint = "fal-ai/stable-audio";
+      const engIdx = Number(body.engineIndex || 0);
       const prompt = promptText || "upbeat energetic commercial background track";
       const duration = Math.min(45, Math.max(8, Number(body.duration || 15)));
-      upstream = await falFetch(usedEndpoint, falKey, "POST", {
-        prompt,
-        seconds_total: duration,
-      });
+      if (engIdx === 1) {
+        usedEndpoint = "fal-ai/lyria2";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          prompt,
+          ...(body.musicNegativePrompt ? { negative_prompt: String(body.musicNegativePrompt).slice(0, 400) } : {}),
+        });
+      } else {
+        usedEndpoint = "fal-ai/stable-audio";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          prompt,
+          seconds_total: duration,
+        });
+      }
     } else if (action === "clone_voice") {
-      usedEndpoint = "fal-ai/f5-tts";
-      const audioUrl = String(body.audio_url || body.audioUrl || "").trim();
-      if (!audioUrl) {
-        await refundUserCredits(env, user.id, creditCost, action, "Áudio de referência ausente");
+      usedEndpoint = "fal-ai/minimax/voice-clone";
+      const rawAudioUrl = String(body.audio_url || body.audioUrl || "").trim();
+      const rawAudioB64 = String(body.audioBase64 || "").trim();
+      const audioMime = String(body.mimeType || "audio/wav").trim();
+      const audioDataUrl = rawAudioUrl || (rawAudioB64 ? `data:${audioMime};base64,${rawAudioB64}` : "");
+      if (!audioDataUrl) {
+        if (creditCost > 0) await refundUserCredits(env, user.id, creditCost, action, "Áudio de referência ausente");
         return jsonResponse({ error: "Envie um áudio de referência para clonar a voz." }, 400);
       }
       upstream = await falFetch(usedEndpoint, falKey, "POST", {
-        ref_audio_url: audioUrl,
-        ref_text: String(body.ref_text || "Olá, confira este lançamento exclusivo com entrega rápida.").trim(),
-        gen_text: String(body.gen_text || body.text || "Confira este lançamento agora mesmo.").slice(0, 600),
+        audio_url: audioDataUrl,
+        need_noise_reduction: true,
+        need_volume_normalization: true,
       });
     } else if (action === "submit_tts") {
-      const textClean = String(body.text || "").trim().slice(0, 600);
+      const textClean = String(body.text || "").trim().slice(0, 700);
       const voiceIdRaw = String(body.voiceId || body.voice || "").trim();
       const customVoiceId = String(body.customVoiceId || "").trim();
       const gender = String(body.gender || "male").toLowerCase();
@@ -797,33 +883,48 @@ export async function onRequestPost(context) {
       usedEndpoint = "fal-ai/whisper";
       const audioUrl = String(body.audio_url || body.audioUrl || "").trim();
       if (!audioUrl) {
-        await refundUserCredits(env, user.id, creditCost, action, "Áudio ausente para legendas");
+        if (creditCost > 0) await refundUserCredits(env, user.id, creditCost, action, "Áudio ausente para legendas");
         return jsonResponse({ error: "Áudio não encontrado para gerar legendas." }, 400);
       }
       upstream = await falFetch(usedEndpoint, falKey, "POST", {
         audio_url: audioUrl,
         task: "transcribe",
+        language: "pt",
         chunk_level: "word",
         version: "3",
       });
     } else if (action === "remove_bg") {
-      usedEndpoint = "fal-ai/birefnet";
-      upstream = await falFetch(usedEndpoint, falKey, "POST", {
-        image_url: resolvedImageUrl,
-        output_format: "png",
-      });
+      const engIdx = Number(body.engineIndex || 0);
+      if (engIdx === 1) {
+        usedEndpoint = "fal-ai/birefnet/v2";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          image_url: resolvedImageUrl,
+          output_format: "png",
+        });
+      } else if (engIdx >= 2) {
+        usedEndpoint = "fal-ai/bria/background/remove";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          image_url: resolvedImageUrl,
+        });
+      } else {
+        usedEndpoint = "fal-ai/birefnet";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          image_url: resolvedImageUrl,
+          output_format: "png",
+        });
+      }
     } else {
-      await refundUserCredits(env, user.id, creditCost, action, "Ação desconhecida");
+      if (creditCost > 0) await refundUserCredits(env, user.id, creditCost, action, "Ação desconhecida");
       return jsonResponse({ error: "Ação de geração não reconhecida." }, 400);
     }
 
     if (!upstream || !upstream.ok) {
       const errMsg = formatFalError(upstream?.data, "Falha ao iniciar geração na IA.");
-      await refundUserCredits(env, user.id, creditCost, action, errMsg);
+      if (creditCost > 0) await refundUserCredits(env, user.id, creditCost, action, errMsg);
       return jsonResponse({
         error: errMsg,
-        credits: debit.newBalance + creditCost,
-        refunded: true,
+        ...(typeof debit.newBalance === "number" ? { credits: debit.newBalance + creditCost } : {}),
+        refunded: creditCost > 0,
       }, 502);
     }
 
@@ -847,11 +948,10 @@ export async function onRequestPost(context) {
       ...(directMedia.videoUrl ? { videoUrl: directMedia.videoUrl, video_url: directMedia.videoUrl } : {}),
       ...(directMedia.audioUrl ? { audioUrl: directMedia.audioUrl, audio_url: directMedia.audioUrl } : {}),
       ...(directMedia.url ? { url: directMedia.url } : {}),
-      credits: debit.newBalance,
+      ...(typeof debit.newBalance === "number" ? { credits: debit.newBalance } : {}),
       charged: creditCost,
     });
   } catch (err) {
     return jsonResponse({ error: "Erro no servidor de geração: " + (err?.message || "erro interno") }, 500);
   }
 }
-
