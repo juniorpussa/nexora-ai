@@ -9086,6 +9086,214 @@
         return resp;
       };
     })();
+  // === UPGRADE 3/4: DIREÇÃO MULTI-CENA AGÊNCIA (HERO 3D + SUPER MACRO + USO REAL/LIFESTYLE + CORES VIVAS) ===
+    (function initNexoraMultiSceneDirector() {
+      if (window.__nexoraMultiSceneDirector) return;
+      window.__nexoraMultiSceneDirector = true;
+
+      let dirSceneIdx = 0;
+      let dirClipIdx = 0;
+      let lastDirSceneTs = 0;
+      let lastDirClipTs = 0;
+
+      document.getElementById("productImg")?.addEventListener("change", () => { dirSceneIdx = 0; dirClipIdx = 0; });
+      document.getElementById("btnGen3Angles")?.addEventListener("click", () => { dirSceneIdx = 0; dirClipIdx = 0; });
+
+      function detectCategoryForLifestyle(descRaw) {
+        const s = String(descRaw || "").toLowerCase();
+        if (/(headset|\bvr\b|realidade virtual|metaverso|quest|visor vr|óculos vr|oculos vr)/.test(s)) return "vr";
+        if (/(relógio|relogio|smartwatch|cronógrafo|cronografo|watch)/.test(s)) return "watch";
+        if (/(óculos de sol|oculos de sol|armação|armacao|lente uv|polarizada|solar)/.test(s)) return "sunglasses";
+        if (/(fone|earbud|airpod|headphone|microfone|lapela|caixa de som|speaker)/.test(s)) return "audio";
+        if (/(tênis|tenis|sapato|bota|sandália|sandalia|chinelo|sneaker)/.test(s)) return "footwear";
+        if (/(perfume|sérum|serum|creme|maquiagem|batom|cosmético|cosmetico|skincare)/.test(s)) return "beauty";
+        if (/(mouse|teclado|console|portátil|portatil|gamer|celular|smartphone|drone|câmera|camera)/.test(s)) return "tech";
+        if (/(bolsa|mochila|carteira|colar|anel|brinco|pulseira|joia|jóia)/.test(s)) return "fashion";
+        return "universal";
+      }
+
+      function getLifestyleShotPrompt(cat) {
+        const map = {
+          vr: "REAL-WORLD LIFESTYLE ACTION SHOT: A stylish young adult wearing the EXACT white VR headset in a vibrant neon-lit futuristic gaming room, hands holding controllers in mid-action, glowing holographic light reflections dancing across the room, cinematic shallow depth of field.",
+          watch: "REAL-WORLD LIFESTYLE ACTION SHOT: Crisp close-up of the EXACT watch worn confidently on a person's wrist gripping a luxury sports car steering wheel at dusk with golden city bokeh lights rushing past in the background.",
+          sunglasses: "REAL-WORLD LIFESTYLE ACTION SHOT: Stylish model wearing the EXACT sunglasses outdoors under golden sunset light, wind moving hair, vibrant coastal city bokeh behind, crisp lens reflections.",
+          audio: "REAL-WORLD LIFESTYLE ACTION SHOT: Energetic person using the EXACT audio product in a modern neon-accented studio/urban street at night, dynamic city lights and subtle sound-wave light streaks in the air.",
+          footwear: "REAL-WORLD LIFESTYLE ACTION SHOT: Dynamic low-angle tracking shot of the EXACT footwear striding powerfully on a rain-slicked neon urban street, water droplets splashing upward in crisp slow-motion backlight.",
+          beauty: "REAL-WORLD LIFESTYLE ACTION SHOT: Luxurious editorial beauty shot of a hand elegantly presenting the EXACT product beside sunlit marble, shimmering water ripples and golden light caustics.",
+          tech: "REAL-WORLD LIFESTYLE ACTION SHOT: Sleek hands actively using the EXACT tech product on a dark minimalist RGB-lit pro setup desk, glowing teal and gold rim lights, dynamic futuristic light trails.",
+          fashion: "REAL-WORLD LIFESTYLE ACTION SHOT: High-fashion editorial close-up of a stylish person showcasing the EXACT accessory in a vibrant luxury city avenue with warm golden bokeh and kinetic movement.",
+          universal: "REAL-WORLD LIFESTYLE ACTION SHOT: Confident human hands presenting and interacting with the EXACT product in a sleek, brightly lit modern studio-lifestyle environment with rich bokeh and sweeping light beams."
+        };
+        return map[cat] || map.universal;
+      }
+
+      function getOrderedAngles(cutNum) {
+        const kit = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((a) => a && a.url) : [];
+        if (kit.length === 0) return [];
+        const pattern = [0, 2, 1, 1, 2, 1, 0];
+        const primaryIdx = pattern[cutNum % pattern.length] % kit.length;
+        const ordered = [kit[primaryIdx].url];
+        for (let i = 0; i < kit.length; i++) {
+          if (i !== primaryIdx && !ordered.includes(kit[i].url)) ordered.push(kit[i].url);
+        }
+        return ordered;
+      }
+
+      function getProductFidelityLock() {
+        const desc = String(document.getElementById("productDetailHint")?.value || "").trim();
+        const macro = String(document.getElementById("macroTarget")?.value || "").trim();
+        const lock = desc
+          ? `100% STRICT PRODUCT FIDELITY: The product is strictly "${desc}". Keep its EXACT original colors, solid matte/glossy finish, shape and markings. NEVER recolor, NEVER turn white/solid surfaces into black glass or mirrors, zero morphing.`
+          : `100% STRICT PRODUCT FIDELITY: Preserve exact original colors, materials, silhouette and physical markings from the reference cutouts. Zero color shift, zero distortion, zero morphing.`;
+        const macroTxt = macro ? ` Showcase authentic macro detail: ${macro}.` : "";
+        return { desc, lock, macroTxt };
+      }
+
+      const VIBRANT_COLOR_LOCK =
+        "RICH CINEMATIC COLOR GRADING: Deep vivid saturated colors, glowing warm highlights and crisp contrast across 100% of the frame. NEVER black-and-white, NEVER desaturated, NEVER grey washed-out tones.";
+
+      const MULTI_SCENE_DIRECTOR_CUTS = [
+        // Cut 1: Hook explosivo no universo escolhido
+        (base, life) =>
+          `CUT 1 — EXPLOSIVE COMMERCIAL HOOK (00:00): Ultra-dynamic low-angle 3/4 hero shot inside the active living universe (${base}). Dramatic rim lighting, glowing foreground sparks/particles rushing toward the lens, maximum visual impact.`,
+        // Cut 2: Super Macro 100mm
+        (base) =>
+          `CUT 2 — RAZOR-SHARP 100MM SUPER MACRO: Extreme diagonal close-up gliding across the product's finest textures, edges and craftsmanship, vivid glowing rim light reflecting off authentic surfaces, creamy anamorphic bokeh (${base}).`,
+        // Cut 3: Cena em Uso Real / Lifestyle (quebra a monotonia do mesmo fundo!)
+        (base, life) =>
+          `CUT 3 — ${life} Seamless commercial color grade connecting to the ad's energy.`,
+        // Cut 4: Perfil 3D Lateral + Ondas de Luz Neon/Energia
+        (base) =>
+          `CUT 4 — KINETIC 3D PROFILE & LIGHT WAVES: Bold 60-degree lateral 3D angle exposing true side thickness and contours, surrounded by sweeping luminous energy light streaks and vibrant atmospheric depth (${base}).`,
+        // Cut 5: Segundo Ambiente de Alto Contraste (renova a retenção)
+        (base) =>
+          `CUT 5 — HIGH-CONTRAST LUXURY STAGE SHIFT: Dramatic elevated 45-degree diagonal shot on a dark reflective obsidian-and-gold commercial stage with volumetric spotlight beams and vibrant drifting particles.`,
+        // Cut 6: Órbita 3D Contínua em Ação
+        (base) =>
+          `CUT 6 — 360-DEGREE 3D ORBITAL SHOWCASE: Dynamic wide-depth 3D perspective with the product suspended/angled heroically in rich living environment physics (${base}), glowing embers/bokeh streaking past foreground.`,
+        // Cut 7: Fechamento Hero TikTok Shop (zona segura superior)
+        (base) =>
+          `CUT 7 — BLOCKBUSTER HERO FINALE (TIKTOK SHOP SAFE ZONE): Iconic centered hero composition in the upper 60% of the frame (clean breathing space at bottom for CTA), brilliant commercial key-lights and vivid living background (${base}).`
+      ];
+
+      const MULTI_CLIP_MOTION_CHOREO = [
+        "CUT 1 MOTION — CRASH-ZOOM + 3D TURN: Rapid energetic crash-zoom push-in curving into a 3D orbit while the product smoothly turns ~25 degrees on its axis and foreground particles/sparks streak past the lens.",
+        "CUT 2 MOTION — SILKY MACRO GLIDE + MICRO-TILT: Fast, ultra-smooth 100mm macro tracking shot sliding diagonally across the product's authentic surface details as studio highlights glide dynamically.",
+        "CUT 3 MOTION — DYNAMIC LIFESTYLE ACTION: Lifelike natural human movement showcasing the product in real use, handheld cinema tracking camera with vibrant moving bokeh and energetic commercial pacing.",
+        "CUT 4 MOTION — WHIP-ARC + LIGHT STREAKS: Energetic curved whip-arc camera sweep around the product's 3D side profile while luminous light waves and volumetric mist surge rapidly across the frame.",
+        "CUT 5 MOTION — ELEVATED CRANE SWEEP + COUNTER-ROTATION: Sweeping diagonal crane descent while the product subtly counter-rotates in 3D under moving volumetric spotlights.",
+        "CUT 6 MOTION — SPEED-RAMP 3D ORBIT: High-energy speed-ramp orbital motion circling the product with strong multi-layer 3D parallax and continuous fluid background physics.",
+        "CUT 7 MOTION — COMMANDING HERO PUSH-IN: Triumphant smooth push-in as the product completes a confident subtle 3D turn facing hero-front in the upper safe zone with sweeping cinema flares."
+      ];
+
+      const STRICT_NEGATIVE =
+        "black and white, monochrome, desaturated, greyscale, washed out colors, static wallpaper, frozen background, motionless product, blurry, pixelation, color change, black glass visor replacement, morphing product, distorted geometry, garbled text, watermark";
+
+      function cleanStaticWords(t) {
+        return String(t || "")
+          .replace(/\b(static background|frozen background|still background|locked[- ]off camera|still camera|stationary product|no rotation|no orbiting|minimal motion|keep background still|keep product still)\b/gi, "")
+          .replace(/\s{2,}/g, " ")
+          .trim();
+      }
+
+      // Badge com checkbox para o usuário ver o Diretor Multi-Cena ativo
+      function mountDirectorBadge() {
+        const anchor = document.getElementById("nxBroadcastBadge") || document.getElementById("nexoraMusicProPanel") || document.getElementById("angles3Panel");
+        if (!anchor || document.getElementById("nxDirectorMultiSceneBar")) return;
+        const bar = document.createElement("div");
+        bar.id = "nxDirectorMultiSceneBar";
+        bar.style.cssText =
+          "margin-top:8px;padding:8px 12px;border-radius:10px;background:linear-gradient(135deg,rgba(245,158,11,0.14),rgba(239,68,68,0.14));" +
+          "border:1px solid rgba(251,191,36,0.45);font-size:11.5px;font-weight:700;color:#fde68a;" +
+          "display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;";
+        bar.innerHTML =
+          '<label style="display:flex;align-items:center;gap:7px;cursor:pointer;margin:0;">' +
+          '  <input type="checkbox" id="chkMultiSceneDirector" checked style="width:15px;height:15px;accent-color:#f59e0b;cursor:pointer;">' +
+          '  <span>🎬 Direção Multi-Cena Agência ATIVA (Hero 3D + Super Macro + Uso Real + Cores Vivas)</span>' +
+          '</label>' +
+          '<span style="color:#fcd34d;font-weight:800;">Padrão Comercial Viral</span>';
+        anchor.insertAdjacentElement("afterend", bar);
+      }
+      setTimeout(mountDirectorBadge, 1600);
+      setTimeout(mountDirectorBadge, 3200);
+
+      const prevFetch = window.fetch.bind(window);
+      window.fetch = async function (input, init) {
+        try {
+          const reqUrl = typeof input === "string" ? input : (input && input.url ? input.url : "");
+          const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+          const directorOn = !document.getElementById("chkMultiSceneDirector") || document.getElementById("chkMultiSceneDirector").checked;
+
+          if (directorOn && reqUrl.includes("/api/generate") && method === "POST" && init && typeof init.body === "string") {
+            const payload = JSON.parse(init.body);
+            const act = String(payload.action || payload.task || payload.mode || "").trim().toLowerCase();
+
+            if (act === "submit_scene" || act === "generate_image" || act === "scene") {
+              const now = Date.now();
+              if (now - lastDirSceneTs > 120000) dirSceneIdx = 0;
+              lastDirSceneTs = now;
+              const idx = dirSceneIdx++;
+
+              const angles = getOrderedAngles(idx);
+              if (angles.length > 0) {
+                payload.referenceImages = angles;
+                payload.imageUrl = angles[0];
+                delete payload.imageBase64;
+                delete payload.image_base64;
+                delete payload.image;
+                delete payload.dataUrl;
+                delete payload.data_url;
+              }
+
+              const promptKey = typeof payload.prompt === "string" && payload.prompt.trim()
+                ? "prompt"
+                : (typeof payload.imagePrompt === "string" ? "imagePrompt" : "prompt");
+              const basePrompt = cleanStaticWords(payload[promptKey] || "");
+              const fidelity = getProductFidelityLock();
+              const cat = detectCategoryForLifestyle(fidelity.desc);
+              const lifePrompt = getLifestyleShotPrompt(cat);
+              const cutDir = MULTI_SCENE_DIRECTOR_CUTS[idx % MULTI_SCENE_DIRECTOR_CUTS.length](basePrompt.slice(0, 420), lifePrompt);
+
+              payload[promptKey] =
+                `${cutDir} ${fidelity.lock}${fidelity.macroTxt} ${VIBRANT_COLOR_LOCK} Shot on ARRI Alexa 65 8K cinema lens, hyper-detailed commercial photography, zero text, zero watermarks.`
+                  .replace(/\s{2,}/g, " ")
+                  .trim()
+                  .slice(0, 2150);
+
+              payload.action = "image";
+              delete payload.task;
+              delete payload.mode;
+              init = { ...init, body: JSON.stringify(payload) };
+            } else if (act === "submit_clip" || act === "generate_video" || act === "clip") {
+              const now = Date.now();
+              if (now - lastDirClipTs > 180000) dirClipIdx = 0;
+              lastDirClipTs = now;
+              const idx = dirClipIdx++;
+
+              const promptKey = typeof payload.prompt === "string" && payload.prompt.trim()
+                ? "prompt"
+                : (typeof payload.motionPrompt === "string" ? "motionPrompt" : "prompt");
+              const baseMotion = cleanStaticWords(payload[promptKey] || "");
+              const fidelity = getProductFidelityLock();
+              const choreo = MULTI_CLIP_MOTION_CHOREO[idx % MULTI_CLIP_MOTION_CHOREO.length];
+
+              payload[promptKey] =
+                `${choreo} ${fidelity.lock}${fidelity.macroTxt} ${VIBRANT_COLOR_LOCK} ${baseMotion.slice(0, 480)} Ultra-crisp 4K Hollywood commercial film quality, silky fluid kinetic motion.`
+                  .replace(/\s{2,}/g, " ")
+                  .trim()
+                  .slice(0, 2250);
+
+              payload.negativePrompt = STRICT_NEGATIVE;
+              payload.action = "video";
+              delete payload.task;
+              delete payload.mode;
+              init = { ...init, body: JSON.stringify(payload) };
+            }
+          }
+        } catch (_) {}
+        return prevFetch(input, init);
+      };
+    })();
   </script>
   <style id="nexoraVisual10">
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
