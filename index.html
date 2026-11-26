@@ -1281,10 +1281,9 @@
                   <div>
                     <label for="inlineSubtitleSize">Tamanho da Letra</label>
                     <select id="inlineSubtitleSize">
-                      <option value="small">🔹 Compacta (28px)</option>
-                      <option value="normal" selected>🔥 Comercial Agência (38px • Padrão)</option>
-                      <option value="medium">⚡ Grande Impacto (46px)</option>
-                      <option value="large">💥 Gigante Viral (54px)</option>
+                      <option value="small">🔹 Extra Compacta (19px)</option>
+                      <option value="normal" selected>✅ Padrão TikTok Shop (23px)</option>
+                      <option value="medium">🔸 Média (28px)</option>
                     </select>
                   </div>
                   <div>
@@ -1365,10 +1364,9 @@
               <div>
                 <label for="labSubtitleSize">5. Tamanho da Letra</label>
                 <select id="labSubtitleSize">
-                  <option value="small">🔹 Compacta (28px)</option>
-                  <option value="normal" selected>🔥 Comercial Agência (38px • Padrão)</option>
-                  <option value="medium">⚡ Grande Impacto (46px)</option>
-                  <option value="large">💥 Gigante Viral (54px)</option>
+                  <option value="small">🔹 Extra Compacta (19px)</option>
+                  <option value="normal" selected>✅ Padrão TikTok Shop (23px)</option>
+                  <option value="medium">🔸 Média (28px)</option>
                 </select>
               </div>
               <div>
@@ -4033,21 +4031,32 @@
 
     function drawTikTokCaption(c2d, cw, ch, blocks, curTime, style = "viral_yellow", posKey = "safe_tiktok", sizeKey = "normal", ctaActiveNow = false) {
       if (!blocks || !blocks.length || !style || style === "none") return;
-      const activeBlock = blocks.find((b) => curTime >= b.start - 0.04 && curTime <= b.end + 0.09);
+
+      // Seleção cirúrgica sem atraso (+0.09s removido para nunca segurar o bloco anterior!)
+      let activeBlock = null;
+      for (let i = 0; i < blocks.length; i++) {
+        const b = blocks[i];
+        const isFirst = i === 0;
+        const isLast = i === blocks.length - 1;
+        const startBound = isFirst ? Math.max(0, b.start - 0.03) : b.start;
+        const endBound = isLast ? (b.end + 0.18) : b.end;
+        if (curTime >= startBound && curTime < endBound) {
+          activeBlock = b;
+          break;
+        }
+      }
       if (!activeBlock) return;
 
-      let yRatio = posKey === "top" ? 0.20 : posKey === "center" ? 0.50 : 0.72;
-      if (ctaActiveNow && posKey === "safe_tiktok") {
-        yRatio = 0.655;
-      }
+      // Altura fixa idêntica à anterior (0.725 zona segura / 0.52 centro / 0.22 topo) — sem pulo!
+      const yRatio = posKey === "top" ? 0.22 : posKey === "center" ? 0.52 : 0.725;
       const centerY = Math.round(ch * yRatio);
-      const maxWidth = cw * 0.86;
+      const maxWidth = cw * 0.68;
 
       const elapsedInBlock = Math.max(0, curTime - activeBlock.start);
-      const popScale = elapsedInBlock < 0.07
-        ? 0.90 + easeOutCubic(elapsedInBlock / 0.07) * 0.13
+      const popScale = elapsedInBlock < 0.075
+        ? 0.92 + easeOutCubic(elapsedInBlock / 0.075) * 0.10
         : elapsedInBlock < 0.12
-          ? 1.03 - ((elapsedInBlock - 0.07) / 0.05) * 0.03
+          ? 1.02 - ((elapsedInBlock - 0.075) / 0.045) * 0.02
           : 1.0;
 
       const isUpper = style !== "tiktok_native";
@@ -4062,35 +4071,36 @@
         .filter((w) => w.label);
       if (!displayWords.length) return;
 
-      let activeWordIdx = displayWords.findIndex((w) => curTime >= w.start && curTime <= w.end);
-      if (activeWordIdx === -1) {
-        activeWordIdx = curTime < displayWords[0].start ? 0 : displayWords.length - 1;
+      // Seleciona a palavra exata em tempo real (sem atrasar na palavra anterior)
+      let activeWordIdx = 0;
+      for (let i = 0; i < displayWords.length; i++) {
+        if (curTime >= displayWords[i].start) activeWordIdx = i;
       }
 
       c2d.save();
       c2d.textBaseline = "middle";
       c2d.textAlign = "left";
 
-      const sizeMap = { small: 28, normal: 38, medium: 46, large: 54 };
-      const rawBase = sizeMap[sizeKey] || 38;
-      const styleAdj = style === "tiktok_native" ? 0.84 : style === "capcut_pill" ? 0.92 : 1.0;
-      const baseFontSize = Math.round(rawBase * styleAdj);
+      // Tamanho original compacto TikTok Shop (19px / 23px padrão / 28px média)
+      const sizeScale = sizeKey === "small" ? 0.83 : sizeKey === "medium" ? 1.22 : 1.0;
+      const rawBase = style === "viral_yellow" ? 23 : style === "capcut_pill" ? 21 : 20;
+      const baseFontSize = Math.round(rawBase * sizeScale);
       const fontFamily = style === "tiktok_native"
-        ? '800 {SZ}px "Poppins", "Montserrat", Inter, sans-serif'
-        : '900 {SZ}px "Montserrat", "Plus Jakarta Sans", Inter, Arial, sans-serif';
+        ? '700 {SZ}px "Poppins", "Montserrat", Inter, sans-serif'
+        : '800 {SZ}px "Montserrat", Inter, Arial, sans-serif';
 
       let fontSize = baseFontSize;
-      let spaceW = 14;
+      let spaceW = 10;
       let widths = [];
       let totalW = 0;
 
-      while (fontSize >= 20) {
+      while (fontSize >= 15) {
         c2d.font = fontFamily.replace("{SZ}", String(fontSize));
-        spaceW = Math.max(10, Math.round(fontSize * (style === "tiktok_native" ? 0.34 : 0.42)));
+        spaceW = Math.max(8, Math.round(fontSize * (style === "tiktok_native" ? 0.34 : 0.45)));
         widths = displayWords.map((w) => c2d.measureText(w.label).width);
         totalW = widths.reduce((a, b) => a + b, 0) + spaceW * Math.max(0, displayWords.length - 1);
         if (totalW <= maxWidth) break;
-        fontSize -= 2;
+        fontSize -= 1;
       }
 
       c2d.translate(cw / 2, centerY);
@@ -4099,15 +4109,15 @@
       const startX = -totalW / 2;
 
       if (style === "tiktok_native") {
-        const padX = 20, padY = 12;
+        const padX = 14, padY = 8;
         const boxW = totalW + padX * 2;
         const boxH = fontSize + padY * 2;
         c2d.save();
-        c2d.shadowColor = "rgba(0,0,0,0.48)";
-        c2d.shadowBlur = 14;
-        c2d.shadowOffsetY = 4;
-        c2d.fillStyle = "rgba(255,255,255,0.97)";
-        drawRoundedRectPath(c2d, -boxW / 2, -boxH / 2, boxW, boxH, 14);
+        c2d.shadowColor = "rgba(0,0,0,0.38)";
+        c2d.shadowBlur = 10;
+        c2d.shadowOffsetY = 3;
+        c2d.fillStyle = "rgba(255,255,255,0.96)";
+        drawRoundedRectPath(c2d, -boxW / 2, -boxH / 2, boxW, boxH, 10);
         c2d.fill();
         c2d.restore();
 
@@ -4120,12 +4130,12 @@
           x += widths[i] + spaceW;
         }
       } else if (style === "capcut_pill") {
-        const bgPadX = 20, bgPadY = 12;
+        const bgPadX = 14, bgPadY = 8;
         const bgW = totalW + bgPadX * 2;
         const bgH = fontSize + bgPadY * 2;
         c2d.save();
-        c2d.fillStyle = "rgba(5,9,18,0.68)";
-        drawRoundedRectPath(c2d, -bgW / 2, -bgH / 2, bgW, bgH, 14);
+        c2d.fillStyle = "rgba(7,11,18,0.58)";
+        drawRoundedRectPath(c2d, -bgW / 2, -bgH / 2, bgW, bgH, 10);
         c2d.fill();
         c2d.restore();
 
@@ -4134,19 +4144,19 @@
           const w = displayWords[i];
           const isAct = i === activeWordIdx;
           if (isAct) {
-            const pPadX = 10, pPadY = 6;
+            const pPadX = 6, pPadY = 4;
             c2d.save();
             c2d.fillStyle = w.isCta ? "#22FF66" : "#FFE600";
-            c2d.shadowColor = "rgba(0,0,0,0.48)";
-            c2d.shadowBlur = 10;
-            drawRoundedRectPath(c2d, x - pPadX, -(fontSize / 2) - pPadY, widths[i] + pPadX * 2, fontSize + pPadY * 2, 10);
+            c2d.shadowColor = "rgba(0,0,0,0.38)";
+            c2d.shadowBlur = 6;
+            drawRoundedRectPath(c2d, x - pPadX, -(fontSize / 2) - pPadY, widths[i] + pPadX * 2, fontSize + pPadY * 2, 8);
             c2d.fill();
             c2d.restore();
             c2d.fillStyle = "#06090F";
             c2d.fillText(w.label, x, 1);
           } else {
             c2d.lineJoin = "round";
-            c2d.lineWidth = Math.max(6, Math.round(fontSize * 0.20));
+            c2d.lineWidth = Math.max(4, Math.round(fontSize * 0.18));
             c2d.strokeStyle = "#000000";
             c2d.strokeText(w.label, x, 1);
             c2d.fillStyle = "#FFFFFF";
@@ -4155,6 +4165,7 @@
           x += widths[i] + spaceW;
         }
       } else {
+        // Padrão TikTok Shop (Branco + Amarelo Ouro Ativo + Verde CTA + Contorno Preto nítido)
         let x = startX;
         for (let i = 0; i < displayWords.length; i++) {
           const w = displayWords[i];
@@ -4162,14 +4173,14 @@
           const wordCenterX = x + widths[i] / 2;
           c2d.save();
           c2d.translate(wordCenterX, 0);
-          if (isAct) c2d.scale(1.07, 1.07);
+          if (isAct) c2d.scale(1.04, 1.04);
           c2d.lineJoin = "round";
           c2d.miterLimit = 2;
-          c2d.lineWidth = Math.max(7, Math.round(fontSize * 0.22));
+          c2d.lineWidth = Math.max(4, Math.round(fontSize * 0.20));
           c2d.strokeStyle = "#000000";
-          c2d.shadowColor = "rgba(0,0,0,0.88)";
-          c2d.shadowBlur = 10;
-          c2d.shadowOffsetY = 4;
+          c2d.shadowColor = "rgba(0,0,0,0.78)";
+          c2d.shadowBlur = 6;
+          c2d.shadowOffsetY = 2;
           c2d.strokeText(w.label, -widths[i] / 2, 0);
           c2d.shadowBlur = 0;
           c2d.shadowOffsetY = 0;
@@ -4436,7 +4447,7 @@
 
       const fxOn = !document.getElementById("chkNota1000Fx") || document.getElementById("chkNota1000Fx").checked;
       const broadcastVoiceOn = !document.getElementById("chkBroadcastVoice") || document.getElementById("chkBroadcastVoice").checked;
-      const ctaMode = document.getElementById("selNota1000Cta")?.value || "tiktok";
+      const ctaMode = document.getElementById("selNota1000Cta")?.value || "none";
       const endCardContact = String(document.getElementById("nxEndCardContact")?.value || "").trim();
 
       ctx.imageSmoothingEnabled = true;
@@ -4564,31 +4575,32 @@
           sSrc.loop = true;
           const mg = audioCtx.createGain();
 
-          const openVol = voiceMixedOk ? 0.38 : 0.56;
-          const duckVol = 0.21;
-          mg.gain.setValueAtTime(0.06, startAt);
-          mg.gain.linearRampToValueAtTime(openVol, startAt + 0.07);
+          // Volume calibrado padrão comercial de TV: trilha nítida e presente sem brigar com a voz (recorte vocal -5.2dB já ativo)
+          const openVol = voiceMixedOk ? 0.52 : 0.68;
+          const duckVol = 0.30;
+          mg.gain.setValueAtTime(0.10, startAt);
+          mg.gain.linearRampToValueAtTime(openVol, startAt + 0.05);
 
-          const fadeAt = startAt + Math.max(0.8, totalSec - 0.50);
+          const fadeAt = startAt + Math.max(0.8, totalSec - 0.35);
           if (voiceMixedOk && Array.isArray(voiceEnvelope) && voiceEnvelope.length > 0) {
             let prevTarget = openVol;
             for (let i = 0; i < voiceEnvelope.length; i++) {
               const tEvt = startAt + i * voiceEnvStepSec;
-              if (tEvt < startAt + 0.09 || tEvt >= fadeAt - 0.08) continue;
+              if (tEvt < startAt + 0.07 || tEvt >= fadeAt - 0.06) continue;
               const isSpeaking = voiceEnvelope[i] > 0.045;
               const targetV = isSpeaking ? duckVol : openVol;
               if (Math.abs(targetV - prevTarget) > 0.02) {
-                mg.gain.setTargetAtTime(targetV, tEvt, isSpeaking ? 0.035 : 0.11);
+                mg.gain.setTargetAtTime(targetV, tEvt, isSpeaking ? 0.03 : 0.085);
                 prevTarget = targetV;
               }
             }
             const endSpeechT = startAt + voiceEnvelope.length * voiceEnvStepSec;
-            if (endSpeechT < fadeAt - 0.15) {
-              mg.gain.setTargetAtTime(Math.min(0.44, openVol + 0.05), endSpeechT, 0.09);
+            if (endSpeechT < fadeAt - 0.08) {
+              mg.gain.setTargetAtTime(Math.min(0.56, openVol + 0.04), endSpeechT, 0.06);
             }
           }
 
-          mg.gain.setValueAtTime(voiceMixedOk ? 0.30 : openVol, fadeAt);
+          mg.gain.setValueAtTime(voiceMixedOk ? 0.46 : openVol, fadeAt);
           mg.gain.linearRampToValueAtTime(0.008, startAt + totalSec);
           sSrc.connect(mg); mg.connect(comp);
           sSrc.start(startAt, dropOffset);
@@ -4599,7 +4611,7 @@
           const nBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
           const d = nBuf.getChannelData(0);
           for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-          const sfxScale = voiceMixedOk ? (fxOn ? 0.42 : 0.24) : (fxOn ? 0.62 : 0.40);
+          const sfxScale = voiceMixedOk ? (fxOn ? 0.50 : 0.28) : (fxOn ? 0.68 : 0.44);
           scheduleSoftSubHit(audioCtx, comp, startAt, 0.95 * sfxScale);
           const lastIdx = segments.length - 1;
           for (let idx = 1; idx < segments.length; idx++) {
@@ -4624,7 +4636,6 @@
       const secEl = document.getElementById("renderProgressSec");
 
       let currentSegIdx = -1;
-      let splitBandPlaying = false;
       const activateSegment = (sIdx) => {
         if (currentSegIdx === sIdx) return;
         if (currentSegIdx >= 0 && loaded[segments[currentSegIdx].clipIdx].type === "video") {
@@ -4691,55 +4702,8 @@
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = "high";
 
-          // A) TELA DIVIDIDA EM 3 FAIXAS VIVAS (42% a 55% do vídeo)
-          const inSplitWindow = fxOn && totalSec >= 8 && loaded.length >= 3 && t >= totalSec * 0.42 && t <= totalSec * 0.55;
-          if (inSplitWindow) {
-            const bandH = canvas.height / 3;
-            const tSplit = (t - totalSec * 0.42) / Math.max(0.2, totalSec * 0.13);
-            const idxTop = (seg.clipIdx - 1 + loaded.length) % loaded.length;
-            const idxMid = seg.clipIdx;
-            const idxBot = (seg.clipIdx + 1) % loaded.length;
-            const bandItems = [loaded[idxTop], loaded[idxMid], loaded[idxBot]];
-            splitBandPlaying = true;
-
-            for (let b = 0; b < 3; b++) {
-              const bItem = bandItems[b];
-              if (b !== 1 && bItem.type === "video" && bItem.el.paused) {
-                try {
-                  if (bItem.el.currentTime >= Math.max(0.5, (bItem.el.duration || 5) - 0.6)) bItem.el.currentTime = 0.25;
-                  bItem.el.play().catch(() => {});
-                } catch {}
-              }
-              ctx.save();
-              ctx.beginPath();
-              ctx.rect(0, b * bandH, canvas.width, bandH);
-              ctx.clip();
-              ctx.translate(0, (b - 1) * bandH);
-              const bDir = b === 1 ? 1 : (b === 0 ? -1 : 1);
-              const bPanX = bDir * (tSplit - 0.5) * 34;
-              const bScale = (b === 1 ? 1.09 : 1.06) + tSplit * 0.05;
-              drawCroppedCover(ctx, bItem.el, bItem.crop, bScale, bPanX, 0, 0, 1, renderFilter);
-              ctx.restore();
-            }
-
-            ctx.save();
-            ctx.fillStyle = "rgba(255,255,255,0.95)";
-            ctx.shadowColor = "rgba(255,255,255,0.85)";
-            ctx.shadowBlur = 10;
-            ctx.fillRect(0, bandH - 2, canvas.width, 4);
-            ctx.fillRect(0, bandH * 2 - 2, canvas.width, 4);
-            ctx.restore();
-          } else {
-            if (splitBandPlaying) {
-              splitBandPlaying = false;
-              loaded.forEach((x, idxL) => {
-                if (idxL !== seg.clipIdx && x.type === "video" && !x.el.paused) {
-                  try { x.el.pause(); } catch {}
-                }
-              });
-            }
-
-            // B) MOVIMENTO DE CÂMERA SINGLE-PASS (NÍTIDO, ZERO ZOOM EMPILHADO, ZERO PIXELIZAÇÃO)
+          // A) MOVIMENTO DE CÂMERA FULL-SCREEN 9:16 SINGLE-PASS (NÍTIDO, ZERO TELA DIVIDIDA, ZERO PIXELIZAÇÃO)
+          {
             const smoothCurve = easeInOutQuad(p);
             const dir = (sIdx % 2 === 0 ? 1 : -1) * dna.flipDir;
             const optBoost = seg.isImg ? 1.25 : 1.0;
@@ -6147,13 +6111,14 @@
           const sr = rawAudioBuffer.sampleRate;
           const { samples: trimmed, timeMap } = trimDeadSilencesWithMap(rawAudioBuffer);
           const trimmedDur = trimmed.length / sr;
-          const targetMaxDur = Math.max(2.5, (Number(targetSec) || 10) - 0.22);
+          // Encerra a fala entre 00:09.3 e 00:09.6 (deixa ~0.5s de impacto musical limpo no fecho — nunca corta "o seu!")
+          const targetMaxDur = Math.max(2.5, (Number(targetSec) || 10) - 0.52);
 
           let speedRate = 1.0;
           if (trimmedDur > targetMaxDur) {
-            speedRate = Math.min(1.30, trimmedDur / targetMaxDur);
-          } else if (trimmedDur >= (Number(targetSec) || 10) * 0.88) {
-            speedRate = 1.04;
+            speedRate = Math.min(1.36, trimmedDur / targetMaxDur);
+          } else if (trimmedDur >= (Number(targetSec) || 10) * 0.86) {
+            speedRate = 1.05;
           }
 
           const stretched = speedRate > 1.015 ? wsolaStretchMono(trimmed, sr, speedRate) : trimmed;
@@ -6220,24 +6185,47 @@
 
           let remappedWhisper = null;
           if (Array.isArray(whisperChunks) && whisperChunks.length > 0) {
-            let lastEnd = 0;
-            const LEAD = 0.03;
-            remappedWhisper = whisperChunks.map((ch, idx) => {
-              if (!ch || !Array.isArray(ch.timestamp)) return ch;
+            // 1) Mapeia cada palavra pelo corte de silêncios + WSOLA
+            const prelim = [];
+            for (let idx = 0; idx < whisperChunks.length; idx++) {
+              const ch = whisperChunks[idx];
+              if (!ch || !Array.isArray(ch.timestamp)) continue;
               const rawS = Number(ch.timestamp[0]);
               let rawE = Number(ch.timestamp[1]);
-              if (!Number.isFinite(rawS)) return ch;
+              if (!Number.isFinite(rawS)) continue;
               if (!Number.isFinite(rawE) || rawE <= rawS) {
                 const nextS = whisperChunks[idx + 1]?.timestamp?.[0];
-                rawE = Number.isFinite(nextS) && nextS > rawS ? nextS : rawS + 0.22;
+                rawE = Number.isFinite(nextS) && nextS > rawS ? nextS : rawS + 0.20;
               }
-              let ns = Math.max(0, Number((mapTimeThroughMap(rawS, timeMap, speedRate) - LEAD).toFixed(3)));
-              let ne = Math.max(ns + 0.07, Number((mapTimeThroughMap(rawE, timeMap, speedRate) - LEAD * 0.4).toFixed(3)));
-              if (ns < lastEnd) ns = Number(Math.max(0, lastEnd - 0.015).toFixed(3));
-              if (ne <= ns) ne = Number((ns + 0.08).toFixed(3));
-              lastEnd = ne;
-              return { ...ch, text: fixPtAccents(ch.text || ""), timestamp: [ns, ne] };
-            });
+              const ms = mapTimeThroughMap(rawS, timeMap, speedRate);
+              const me = Math.max(ms + 0.06, mapTimeThroughMap(rawE, timeMap, speedRate));
+              prelim.push({ ch, s: ms, e: me });
+            }
+
+            // 2) Normaliza diretamente à duração real da fala no áudio final + avanço visual de 0.10s (Sync 0.00s!)
+            if (prelim.length > 0) {
+              const finalBounds = detectSpeechBounds(finalBuffer);
+              const pStart = prelim[0].s;
+              const pEnd = prelim[prelim.length - 1].e;
+              const pSpan = Math.max(0.25, pEnd - pStart);
+              const fStart = Math.max(0, finalBounds.start);
+              const fEnd = Math.max(fStart + 0.4, Math.min(finalBuffer.duration, finalBounds.end));
+              const fSpan = Math.max(0.25, fEnd - fStart);
+              const normRatio = fSpan / pSpan;
+              const VISUAL_LEAD = 0.10;
+
+              let lastEnd = 0;
+              remappedWhisper = prelim.map((item) => {
+                let ns = fStart + (item.s - pStart) * normRatio - VISUAL_LEAD;
+                let ne = fStart + (item.e - pStart) * normRatio - VISUAL_LEAD;
+                ns = Math.max(0, Number(ns.toFixed(3)));
+                ne = Math.max(ns + 0.06, Number(ne.toFixed(3)));
+                if (ns < lastEnd) ns = lastEnd;
+                if (ne <= ns) ne = Number((ns + 0.07).toFixed(3));
+                lastEnd = ne;
+                return { ...item.ch, text: fixPtAccents(item.ch.text || ""), timestamp: [ns, ne] };
+              });
+            }
           }
 
           const envelope = extractRmsEnvelope(finalBuffer.getChannelData(0), sr, 0.05);
@@ -6296,14 +6284,14 @@
 
           const bass = off.createBiquadFilter();
           bass.type = "lowshelf";
-          bass.frequency.value = 68;
-          bass.gain.value = 3.5;
+          bass.frequency.value = 72;
+          bass.gain.value = 4.8;
 
           const pocket = off.createBiquadFilter();
           pocket.type = "peaking";
           pocket.frequency.value = 2900;
           pocket.Q.value = 0.9;
-          pocket.gain.value = hasVoice ? -5.0 : -1.2;
+          pocket.gain.value = hasVoice ? -5.2 : -1.2;
 
           const sheen = off.createBiquadFilter();
           sheen.type = "highshelf";
@@ -6367,15 +6355,15 @@
       }
 
       function drawCtaOrEndCard(c2d, cw, ch, elapsed, totalSec, mode, contactText) {
-        if (!mode || mode === "none") return;
+        // Mensagem/botão "TOQUE NO CARRINHO" removida definitivamente!
+        if (!mode || mode === "none" || mode === "tiktok") return;
         const win = mode === "endcard" ? 1.85 : 2.15;
         const startAt = Math.max(0.5, totalSec - win);
         if (elapsed < startAt || elapsed > totalSec + 0.15) return;
 
         const localT = elapsed - startAt;
         const fadeIn = Math.min(1, localT / 0.22);
-        const pulse = 1 + 0.048 * Math.sin(localT * Math.PI * 5.0);
-        const bounce = Math.sin(localT * Math.PI * 5.8) * (ch * 0.008);
+        const pulse = 1 + 0.045 * Math.sin(localT * Math.PI * 5.0);
 
         c2d.save();
         c2d.globalAlpha = fadeIn;
@@ -6412,52 +6400,12 @@
           c2d.textAlign = "center";
           c2d.textBaseline = "middle";
           const mainLabel = contactText || "GARANTA O SEU AGORA";
-          const subLabel = contactText ? "CHAME AGORA • ACESSO IMEDIATO" : "TOQUE NO LINK OU CARRINHO ABAIXO";
+          const subLabel = contactText ? "CHAME AGORA • ACESSO IMEDIATO" : "TOQUE EM SAIBA MAIS ABAIXO";
           c2d.font = `900 ${Math.round(cw * 0.052)}px "Montserrat", "Plus Jakarta Sans", Arial, sans-serif`;
           c2d.fillText(mainLabel.slice(0, 28), 0, -cardH * 0.14);
           c2d.font = `700 ${Math.round(cw * 0.029)}px "Plus Jakarta Sans", Arial, sans-serif`;
           c2d.fillStyle = "#e0f2fe";
           c2d.fillText(subLabel, 0, cardH * 0.22);
-        } else if (mode === "tiktok") {
-          const boxW = cw * 0.60;
-          const boxH = ch * 0.068;
-          const cx = cw * 0.36;
-          const cy = ch * 0.825;
-
-          c2d.translate(cx, cy);
-          c2d.scale(pulse, pulse);
-
-          const grad = c2d.createLinearGradient(-boxW / 2, 0, boxW / 2, 0);
-          grad.addColorStop(0, "#ff2a5f");
-          grad.addColorStop(1, "#ff7a00");
-          c2d.shadowColor = "rgba(255,42,95,0.65)";
-          c2d.shadowBlur = 22;
-          drawCtaRoundRect(c2d, -boxW / 2, -boxH / 2, boxW, boxH, boxH / 2);
-          c2d.fillStyle = grad;
-          c2d.fill();
-          c2d.lineWidth = 3;
-          c2d.strokeStyle = "rgba(255,255,255,0.95)";
-          c2d.stroke();
-
-          c2d.shadowBlur = 0;
-          c2d.fillStyle = "#ffffff";
-          c2d.font = `900 ${Math.round(cw * 0.043)}px "Montserrat", "Plus Jakarta Sans", Arial, sans-serif`;
-          c2d.textAlign = "center";
-          c2d.textBaseline = "middle";
-          c2d.fillText("TOQUE NO CARRINHO", 0, 1);
-
-          c2d.restore();
-          c2d.save();
-          c2d.globalAlpha = fadeIn;
-          const ax = cw * 0.14 - bounce * 0.6;
-          const ay = ch * 0.89 + bounce;
-          c2d.font = `900 ${Math.round(cw * 0.092)}px Arial, sans-serif`;
-          c2d.textAlign = "center";
-          c2d.textBaseline = "middle";
-          c2d.shadowColor = "rgba(0,0,0,0.85)";
-          c2d.shadowBlur = 12;
-          c2d.fillStyle = "#ffe600";
-          c2d.fillText("↙", ax, ay);
         } else if (mode === "ig_fb") {
           const boxW = cw * 0.72;
           const boxH = ch * 0.068;
@@ -6630,7 +6578,13 @@
         const cat = detectRealProductCategory(prodRaw, descRaw);
         const prodName = prodRaw || "esse lançamento";
         const meta = inferPtMeta(prodName);
-        const macroTxt = macroRaw ? macroRaw.toLowerCase() : "acabamento impecável em cada detalhe";
+        let macroClean = macroRaw ? macroRaw.toLowerCase().replace(/[.;]+/g, ",").trim() : "";
+        if (vidSec <= 12 && macroClean.length > 28) {
+          const firstPart = macroClean.split(",")[0].trim();
+          const words = firstPart.split(/\s+/).filter(Boolean).slice(0, 4).join(" ");
+          macroClean = words.length >= 6 && words.length <= 28 ? words : "acabamento impecável";
+        }
+        const macroTxt = macroClean || (vidSec <= 12 ? "acabamento impecável" : "acabamento impecável em cada detalhe");
 
         const BANK = {
           vr: {
@@ -6706,11 +6660,22 @@
         };
 
         const b = BANK[cat] || BANK.universal;
+        const adPlatform = document.getElementById("selAdPlatform")?.value || "tiktok";
+        let platformCta = b.cta;
+        if (adPlatform === "instagram") {
+          platformCta = `Estoque voando — toque em Saiba Mais agora e garanta ${meta.poss}!`;
+        } else if (adPlatform === "facebook") {
+          platformCta = `Oferta limitada — clique em Saiba Mais aqui embaixo e garanta ${meta.poss}!`;
+        } else if (adPlatform === "whatsapp") {
+          platformCta = `Estoque voando — chame no WhatsApp agora e garanta ${meta.poss}!`;
+        } else if (adPlatform === "universal") {
+          platformCta = `Unidades acabando rápido — garanta ${meta.poss} agora mesmo!`;
+        }
         let out = "";
-        if (vidSec <= 12) out = `${b.hook} ${b.b1} ${b.cta}`;
-        else if (vidSec <= 17) out = `${b.hook} ${b.b1} ${b.b2} ${b.cta}`;
-        else if (vidSec <= 24) out = `${b.hook} ${b.b1} ${b.b2} ${b.b3} ${b.cta}`;
-        else out = `${b.hook} ${b.b1} ${b.b2} ${b.b3} Qualidade comprovada que impressiona em cada ângulo. ${b.cta}`;
+        if (vidSec <= 12) out = `${b.hook} ${b.b1} ${platformCta}`;
+        else if (vidSec <= 17) out = `${b.hook} ${b.b1} ${b.b2} ${platformCta}`;
+        else if (vidSec <= 24) out = `${b.hook} ${b.b1} ${b.b2} ${b.b3} ${platformCta}`;
+        else out = `${b.hook} ${b.b1} ${b.b2} ${b.b3} Qualidade comprovada que impressiona em cada ângulo. ${platformCta}`;
         return fixPtAccents(fixPtBrContractions(out));
       }
 
@@ -6752,7 +6717,7 @@
           `SHOT 4 — KINETIC 3D PROFILE & LUMINOUS ENERGY WAVES: Sharp 60-degree lateral 3D profile view exposing true side thickness and silhouette of the product floating/angled dynamically inside a sleek dark architectural tunnel with glowing cyan-and-gold neon light waves and speed trails sweeping behind.`,
           `SHOT 5 — HIGH-CONTRAST LUXURY MARBLE STAGE: Elevated 45-degree diagonal commercial shot resting on polished Nero Marquina black marble with subtle golden reflections, dramatic overhead god-ray spotlight beam cutting through light atmospheric mist, deep luxury bokeh.`,
           `SHOT 6 — URBAN NIGHT DEPTH & KINETIC BOKEH: Wide dynamic 3D three-quarter angle positioned on dark architectural stone overlooking a vibrant blurred neon-and-gold night skyline with rushing bokeh light streaks and crisp dual-tone rim lighting.`,
-          `SHOT 7 — BLOCKBUSTER HERO FINALE (UPPER SAFE ZONE): Iconic centered 3/4 hero composition placing the product commanding in the upper 58% of the frame (clean dark atmospheric bottom 35% free for captions & CTA button), dramatic studio spotlights, sweeping lens flare and subtle floating golden embers.`
+          `SHOT 7 — BLOCKBUSTER FRONT-FACING HERO FINALE (UPPER SAFE ZONE): Iconic dead-center FRONT-FACING hero composition with the exact product facing DIRECTLY TOWARD THE CAMERA (showing its full front face clearly — NEVER sideways, NEVER turned away), commanding the upper 58% of the frame (clean dark atmospheric bottom 35% free for captions & CTA), dramatic studio spotlights, sweeping lens flare and subtle floating golden embers.`
         ];
 
         const worldDirective = worlds[cutIdx % worlds.length];
@@ -6766,7 +6731,7 @@
         "CUT 4 — AGGRESSIVE WHIP-ARC + LIGHT WAVES: Energetic curved cinema whip-arc sweeping around the product's 3D side profile while luminous neon energy waves and light trails flow briskly in deep multi-layer 3D parallax.",
         "CUT 5 — ELEVATED CRANE DIVE + VOLUMETRIC SPOTLIGHT: Sweeping elevated 45-degree crane arc descending smoothly toward the product as overhead volumetric god-rays and subtle golden dust drift dynamically around the luxury marble stage.",
         "CUT 6 — SPEED-RAMP 3D ORBIT + RUSHING BOKEH: Dynamic speed-ramp 3D camera orbit circling smoothly around the product with strong foreground-to-background parallax as vibrant city bokeh lights streak past behind.",
-        "CUT 7 — COMMANDING HERO FINALE PUSH-IN: Triumphant smooth commercial push-in curving into iconic hero-front framing in the upper safe zone as bright studio flares sweep across the pristine product finish."
+        "CUT 7 — FRONT-FACING HERO FINALE PUSH-IN: Authoritative smooth straight-in camera push-in keeping the product FRONT FACE locked directly toward the viewer in the upper safe zone (NEVER rotating sideways or away from camera) while bright studio flares sweep across the front surface and golden sparks drift behind."
       ];
 
       const SUPER_NEGATIVE =
@@ -6949,7 +6914,13 @@
               if (meta) meta.textContent = `🔊 Ouvindo: ${label.slice(0, 44)}`;
             } catch (err) {
               stopVoicePrev();
-              if (meta) meta.textContent = `Aviso: ${err?.message || "verifique login/créditos"}`;
+              const rawMsg = String(err?.message || "");
+              const isFalBalance = /exhausted balance|user is locked|top up|403/i.test(rawMsg);
+              if (meta) {
+                meta.textContent = isFalBalance
+                  ? "⚠️ Saldo da sua conta fal.ai zerou! Recarregue em fal.ai/dashboard/billing para ouvir as vozes reais."
+                  : `Aviso: ${rawMsg || "verifique login/créditos"}`;
+              }
             } finally {
               voicePreviewBusy = false;
               btn.disabled = false;
@@ -7059,6 +7030,16 @@
           trackSel?.addEventListener("change", refreshMusicHint);
           engSel?.addEventListener("change", refreshMusicHint);
 
+          const topAudioInp = document.getElementById("customAudioFile");
+          topAudioInp?.addEventListener("change", () => {
+            const f = topAudioInp.files && topAudioInp.files[0];
+            if (!f) return;
+            const u = URL.createObjectURL(f);
+            musicTrackCache.set("custom_upload_preview", u);
+            if (btnClear) btnClear.style.display = "inline-flex";
+            if (statusEl) statusEl.textContent = `✅ MP3/WAV próprio carregado (0 créditos): ${f.name.slice(0, 34)} — clique em ▶ Ouvir!`;
+          });
+
           fileInp?.addEventListener("change", async () => {
             const f = fileInp.files && fileInp.files[0];
             if (!f) return;
@@ -7116,7 +7097,7 @@
                   const q = await callApi({
                     task: "submit_music",
                     __isMusicPreviewDirect: true,
-                    engineIndex: 0,
+                    engineIndex: 1,
                     duration: 18,
                     musicPrompt: tr.lyriaPrompt,
                     musicNegativePrompt: MUSIC_NEG_STRICT
@@ -7144,7 +7125,13 @@
               if (statusEl) statusEl.textContent = `🔊 Ouvindo: ${tr.name}`;
             } catch (err) {
               stopMusicPrev();
-              if (statusEl) statusEl.textContent = `⚠️ ${err?.message || "Erro ao carregar trilha"}`;
+              const rawMsg = String(err?.message || "");
+              const isFalBalance = /exhausted balance|user is locked|top up|403/i.test(rawMsg);
+              if (statusEl) {
+                statusEl.textContent = isFalBalance
+                  ? "⚠️ Saldo da fal.ai zerou! Recarregue em fal.ai/dashboard/billing — ou clique em 'Subir Meu MP3/WAV' / use a pasta tracks/ (0 créditos!)."
+                  : `⚠️ ${rawMsg || "Erro ao carregar trilha"}`;
+              }
             } finally {
               musicPreviewBusy = false;
               btnPrev.disabled = false;
@@ -7159,31 +7146,52 @@
           sp.className = "nx-super-panel";
           sp.innerHTML =
             '<div class="nx-super-title">' +
-            '  <span>🏆 Motor Superprodução Agência v14.0 (Padrão Comercial de TV)</span>' +
-            '  <span style="font-size:11px;color:#7dd3fc;">Zero Conflitos • 14 Mbps Nítido</span>' +
+            '  <span>🏆 Motor Superprodução Agência v14.2 (Padrão 10/10 Absoluto)</span>' +
+            '  <span style="font-size:11px;color:#7dd3fc;">Zero Botão Carrinho • 14 Mbps Nítido</span>' +
             '</div>' +
             '<div class="nx-super-checks">' +
             '  <label><input type="checkbox" id="chkAll3DGpu100" checked> <span>🚀 100% Cortes 3D GPU + Troca Real de Cenários (Hero + Macro Dark + Uso Real + Ondas Neon + Luxo)</span></label>' +
-            '  <label><input type="checkbox" id="chkBroadcastVoice" checked> <span>🎙️ Voz Comercial TV (Corte de Silêncios + EQ/Compressor + Sync 0,0s + Sidechain Ducking na Trilha)</span></label>' +
-            '  <label><input type="checkbox" id="chkNota1000Fx" checked> <span>🎬 Edição Agência (Punch + Flash Limpo + Tela Dividida 3 Faixas Viva + Boom/Whoosh/Riser)</span></label>' +
+            '  <label><input type="checkbox" id="chkBroadcastVoice" checked> <span>🎙️ Voz Comercial TV (Corte de Silêncios + EQ/Compressor + Sync 0,0s + Trilha Audível com Ducking)</span></label>' +
+            '  <label><input type="checkbox" id="chkNota1000Fx" checked> <span>🎬 Edição Agência Full-Screen (Punch + Flash Limpo + Boom/Whoosh/Riser • Sem Tela Dividida)</span></label>' +
             '</div>' +
             '<div class="nx-cta-row">' +
             '  <div>' +
-            '    <label for="selNota1000Cta" style="color:#a7f3d0;font-size:10.5px;">🎯 CTA / Placa Final (últimos 2s)</label>' +
-            '    <select id="selNota1000Cta">' +
-            '      <option value="tiktok" selected>🛒 TikTok Shop (Seta p/ Carrinho ↙️)</option>' +
-            '      <option value="endcard">🏆 Placa Final Limpa (Estilo Nexora / Spotify)</option>' +
-            '      <option value="whatsapp">💬 WhatsApp (Chame Agora)</option>' +
-            '      <option value="ig_fb">📲 Instagram / Facebook (Saiba Mais ➔)</option>' +
-            '      <option value="none">✨ Sem CTA Visual (Vídeo Limpo)</option>' +
+            '    <label for="selAdPlatform" style="color:#a7f3d0;font-size:10.5px;">📢 Plataforma do Anúncio (Adapta Roteiro)</label>' +
+            '    <select id="selAdPlatform">' +
+            '      <option value="tiktok" selected>🛒 TikTok Shop (Anúncio p/ Carrinho Nativo)</option>' +
+            '      <option value="instagram">📲 Instagram (Reels / Stories — Saiba Mais)</option>' +
+            '      <option value="facebook">📘 Facebook Ads (Feed / Reels — Saiba Mais)</option>' +
+            '      <option value="whatsapp">💬 WhatsApp / Venda Direta</option>' +
+            '      <option value="universal">✨ Universal (Qualquer Rede)</option>' +
             '    </select>' +
             '  </div>' +
             '  <div>' +
-            '    <label for="nxEndCardContact" style="color:#a7f3d0;font-size:10.5px;">📱 Texto da Placa / WhatsApp (Opcional)</label>' +
-            '    <input type="text" id="nxEndCardContact" placeholder="Ex: 11 97538-1981 ou seusite.com.br" />' +
+            '    <label for="selNota1000Cta" style="color:#a7f3d0;font-size:10.5px;">🏷️ Selo / Placa Final no Vídeo (últimos 2s)</label>' +
+            '    <select id="selNota1000Cta">' +
+            '      <option value="none" selected>✨ Vídeo Limpo (Sem Botão na Tela • Padrão)</option>' +
+            '      <option value="endcard">🏆 Placa Final Limpa (Estilo Nexora / Spotify)</option>' +
+            '      <option value="ig_fb">📲 Selo Instagram / Facebook (Saiba Mais ➔)</option>' +
+            '      <option value="whatsapp">💬 Selo Verde WhatsApp (Chame Agora)</option>' +
+            '    </select>' +
             '  </div>' +
+            '</div>' +
+            '<div style="margin-top:2px;">' +
+            '  <label for="nxEndCardContact" style="color:#a7f3d0;font-size:10.5px;">📱 Texto da Placa Final / WhatsApp (usado se escolher Placa Final ou Selo WhatsApp)</label>' +
+            '  <input type="text" id="nxEndCardContact" placeholder="Ex: 11 97538-1981 ou seusite.com.br" />' +
             '</div>';
           musicPanel.insertAdjacentElement("afterend", sp);
+
+          // Ao trocar a plataforma do anúncio, atualiza o roteiro automaticamente se já houver produto digitado
+          const platSel = document.getElementById("selAdPlatform");
+          platSel?.addEventListener("change", () => {
+            const ta = document.getElementById("inlineVoiceScript");
+            const prod = String(document.getElementById("inlineProductName")?.value || "").trim();
+            if (ta && prod && ta.value.trim()) {
+              const vidSec = Number(document.getElementById("minDuration")?.value || 10) || 10;
+              ta.value = buildSuperCommercialScript(vidSec);
+              ta.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+          });
         }
       }
 
@@ -7366,6 +7374,9 @@
                   }), { status: 200, headers: { "Content-Type": "application/json" } });
                 }
 
+                // Prioriza Google Lyria 2 (engineIndex: 1 no backend) e mantém Stable Audio (0) como fallback automático!
+                if (payload.engineIndex === 0) payload.engineIndex = 1;
+                else if (payload.engineIndex === 1) payload.engineIndex = 0;
                 payload.musicPrompt = tr.lyriaPrompt;
                 payload.prompt = tr.lyriaPrompt;
                 payload.musicNegativePrompt = MUSIC_NEG_STRICT;
