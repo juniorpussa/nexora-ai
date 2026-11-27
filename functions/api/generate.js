@@ -695,29 +695,30 @@ export async function onRequestPost(context) {
 
     if (action === "submit_scene" || action === "generate_angle") {
       usedEndpoint = action === "generate_angle" ? DEFAULT_SCENE_MODEL_EDIT : resolvedSceneModel;
-      const aspectRatio = String(body.aspectRatio || (action === "generate_angle" ? "1:1" : "9:16"));
+      // TRAVA OBRIGATÓRIA 9:16 EM TODAS AS IMAGENS E ÂNGULOS 3D (PROIBIDO GERAR EM 1:1 OU OUTRO TAMANHO)
+      const aspectRatio = "9:16";
       const outFmt = action === "generate_angle" ? "png" : "jpeg";
       let inputPayload;
 
       if (usedEndpoint === "fal-ai/nano-banana/edit" && resolvedImageList.length > 0) {
         inputPayload = {
-          prompt: promptText || "Ultra-realistic commercial studio product photograph",
+          prompt: promptText || "Ultra-realistic 9:16 vertical commercial studio product photograph",
           image_urls: resolvedImageList,
-          aspect_ratio: aspectRatio,
+          aspect_ratio: "9:16",
           num_images: 1,
           output_format: outFmt,
         };
       } else if (usedEndpoint === "fal-ai/flux-pro/kontext" && resolvedImageUrl) {
         inputPayload = {
-          prompt: promptText || "Ultra-realistic commercial studio product photograph",
+          prompt: promptText || "Ultra-realistic 9:16 vertical commercial studio product photograph",
           image_url: resolvedImageUrl,
-          aspect_ratio: aspectRatio,
+          aspect_ratio: "9:16",
           num_images: 1,
         };
       } else {
         inputPayload = {
-          prompt: promptText || "Ultra-realistic commercial studio product photograph",
-          image_size: aspectRatio === "1:1" ? "square_hd" : "portrait_16_9",
+          prompt: promptText || "Ultra-realistic 9:16 vertical commercial studio product photograph",
+          image_size: "portrait_16_9",
           num_images: 1,
           enable_safety_checker: false,
           ...(resolvedImageUrl ? { image_url: resolvedImageUrl } : {}),
