@@ -979,7 +979,7 @@
                 <img id="thumbPreview" alt="Produto" />
               </label>
               <button type="button" class="btn-quick-bg" id="btnQuickRemoveBg" disabled>✂️ Remover Fundo (PNG)</button>
-              <button type="button" class="btn-quick-bg" id="btnGen3Angles" disabled style="background:rgba(34,197,94,0.16);color:#86efac;border-color:rgba(34,197,94,0.48);">📐 Gerar 3 Ângulos 3D + Descrição IA</button>
+              <button type="button" class="btn-quick-bg" id="btnGen3Angles" disabled style="background:rgba(34,197,94,0.16);color:#86efac;border-color:rgba(34,197,94,0.48);">📐 Gerar 6 Ângulos 3D (9:16) + Descrição IA</button>
             </div>
 
             <div class="box-group" id="productFieldsBox">
@@ -1079,14 +1079,14 @@
             }
             .angle3-thumb {
               width: 100%;
-              aspect-ratio: 1 / 1;
-              max-height: 130px;
+              aspect-ratio: 9 / 16;
+              max-height: 175px;
               border-radius: 8px;
               display: flex;
               align-items: center;
               justify-content: center;
               overflow: hidden;
-              font-size: 11px;
+              font-size: 10.5px;
               color: #64748b;
               padding: 4px;
             }
@@ -1096,13 +1096,13 @@
               object-fit: contain;
             }
             @media (max-width: 680px) {
-              .angles3-grid { grid-template-columns: 1fr; }
+              .angles3-grid { grid-template-columns: repeat(2, 1fr); }
             }
           </style>
           <div class="angles3-panel" id="angles3Panel">
             <div class="angles3-head">
-              <span>📐 Kit 3 Ângulos 3D Sem Fundo (Enviados Juntos p/ os Vídeos)</span>
-              <span class="angles3-status" id="angles3Status">Envie a foto acima e clique em "Gerar 3 Ângulos 3D"</span>
+              <span>📐 Kit 6 Ângulos 3D Sem Fundo • 100% Vertical 9:16 (Fidelidade + Movimento Real)</span>
+              <span class="angles3-status" id="angles3Status">Envie a foto acima e clique em "Gerar 6 Ângulos 3D (9:16)"</span>
             </div>
             <div class="angles3-grid">
               <div class="angle3-slot" id="angleSlot0">
@@ -1110,12 +1110,24 @@
                 <div class="angle3-thumb checker-bg" id="angleThumb0">Aguardando...</div>
               </div>
               <div class="angle3-slot" id="angleSlot1">
-                <div class="angle3-slot-title">2. Perfil 3/4 Esq (60°)</div>
+                <div class="angle3-slot-title">2. Lado Direito (45°/90°)</div>
                 <div class="angle3-thumb checker-bg" id="angleThumb1">Aguardando...</div>
               </div>
               <div class="angle3-slot" id="angleSlot2">
-                <div class="angle3-slot-title">3. Elevado Dir (45°)</div>
+                <div class="angle3-slot-title">3. Lado Esquerdo (60°/90°)</div>
                 <div class="angle3-thumb checker-bg" id="angleThumb2">Aguardando...</div>
+              </div>
+              <div class="angle3-slot" id="angleSlot3">
+                <div class="angle3-slot-title">4. De Cima p/ Baixo (60°)</div>
+                <div class="angle3-thumb checker-bg" id="angleThumb3">Aguardando...</div>
+              </div>
+              <div class="angle3-slot" id="angleSlot4">
+                <div class="angle3-slot-title">5. De Baixo p/ Cima</div>
+                <div class="angle3-thumb checker-bg" id="angleThumb4">Aguardando...</div>
+              </div>
+              <div class="angle3-slot" id="angleSlot5">
+                <div class="angle3-slot-title">6. Giro 180° / Traseira 3/4</div>
+                <div class="angle3-thumb checker-bg" id="angleThumb5">Aguardando...</div>
               </div>
             </div>
           </div>
@@ -3179,64 +3191,75 @@
     }
 
     async function pollFalJob(queued, onStateUpdate, outerSignal) {
-  let errs = 0;
-  const maxPolls = 90;
-  for (let i = 0; i < maxPolls; i++) {
-    if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
-    try {
-      const res = await callApi(
-        { task: "poll", statusUrl: queued.statusUrl, responseUrl: queued.responseUrl },
-        10000,
-        outerSignal
-      );
-      errs = 0;
-      if (res.status === "COMPLETED") return res;
-      if (res.status === "FAILED") {
-        throw new Error(res.error || "Falha na geração fal.ai");
+      let errs = 0;
+      const maxPolls = 140;
+      for (let i = 0; i < maxPolls; i++) {
+        if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
+        try {
+          const res = await callApi(
+            { task: "poll", statusUrl: queued.statusUrl, responseUrl: queued.responseUrl },
+            12000,
+            outerSignal
+          );
+          errs = 0;
+          if (res.status === "COMPLETED") return res;
+          if (res.status === "FAILED") {
+            throw new Error(res.error || "Falha na geração fal.ai");
+          }
+          if (onStateUpdate) {
+            const pos = typeof res.queuePosition === "number" ? ` (#${res.queuePosition + 1})` : "";
+            onStateUpdate(res.status === "IN_QUEUE" ? `fila${pos}` : "GPU");
+          }
+        } catch (err) {
+          if (err.message === "ABORTED_RUN") throw err;
+          if (err.status && err.status >= 400 && err.status < 500 && !err.transient) throw err;
+          if (String(err.message || "").toLowerCase().includes("falha na geração")) throw err;
+          errs++;
+          if (onStateUpdate) onStateUpdate(`retry ${errs}/6`);
+          if (errs >= 6) throw new Error(`Instabilidade na fila fal.ai: ${err.message}`);
+        }
+        if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
+        await sleep(i < 18 ? 1000 : 1400);
       }
-      if (onStateUpdate) {
-        const pos = typeof res.queuePosition === "number" ? ` (#${res.queuePosition + 1})` : "";
-        onStateUpdate(res.status === "IN_QUEUE" ? `fila${pos}` : "GPU");
-      }
-    } catch (err) {
-      if (err.message === "ABORTED_RUN") throw err;
-      if (err.status && err.status >= 400 && err.status < 500 && !err.transient) throw err;
-      if (String(err.message || "").toLowerCase().includes("falha na geração")) throw err;
-      errs++;
-      if (onStateUpdate) onStateUpdate(`retry ${errs}/6`);
-      if (errs >= 6) throw new Error(`Instabilidade na fila fal.ai: ${err.message}`);
+      throw new Error("Fila da IA demorou além do limite rápido");
     }
-    if (outerSignal && outerSignal.aborted) throw new Error("ABORTED_RUN");
-    await sleep(1200);
-  }
-  throw new Error("Fila da IA demorou além do limite rápido");
-}
 
     async function generateMusicWithTripleFallback(mKey, dna, durationSec, onStatus, signal) {
       const prompt = buildUniqueMusicPrompt(mKey, dna);
       let lastErr = "Falha na trilha.";
+      const modeSel = document.getElementById("nexoraMusicEngine2000")?.value || "lyria2";
+      // Lyria 2 leva ~35-55s na fila GPU e roda 100% em paralelo com os 7 cortes 3D (= 0s extras de espera!)
+      // NUNCA abortar Lyria 2 em 30s para não deixar o vídeo final sem trilha sonora!
+      const engineTimeoutMs = (idx) => {
+        if (modeSel === "fast") return idx === 0 ? 40000 : 75000;
+        return idx === 0 ? 92000 : 48000;
+      };
       for (let engIdx = 0; engIdx <= 2; engIdx++) {
         if (signal && signal.aborted) return null;
         const attemptCtrl = new AbortController();
         const onOuterAbort = () => attemptCtrl.abort();
         if (signal) signal.addEventListener("abort", onOuterAbort, { once: true });
-        // Se Lyria 2 demorar > 30s na fila, troca automaticamente para o motor rápido (8-12s)!
-        const fastTimeoutMs = engIdx === 0 ? 30000 : 28000;
+        const waitMs = engineTimeoutMs(engIdx);
         let timedOutLocal = false;
-        const fastTimer = setTimeout(() => { timedOutLocal = true; attemptCtrl.abort(); }, fastTimeoutMs);
+        const fastTimer = setTimeout(() => { timedOutLocal = true; attemptCtrl.abort(); }, waitMs);
         try {
-          if (onStatus) onStatus(engIdx === 0 ? "enviando (Lyria 2 Pro)..." : `motor rápido ${engIdx + 1}...`);
-          const qm = await callApi({ task: "submit_music", engineIndex: engIdx, musicPrompt: prompt, musicNegativePrompt: MUSIC_CLEAN_NEGATIVE, duration: durationSec }, 22000, attemptCtrl.signal);
+          const firstLbl = modeSel === "fast" ? "enviando (Estúdio Rápido IA)..." : "enviando (Lyria 2 Pro)...";
+          if (onStatus) onStatus(engIdx === 0 ? firstLbl : `fallback motor ${engIdx + 1}...`);
+          const qm = await callApi({ task: "submit_music", engineIndex: engIdx, musicPrompt: prompt, musicNegativePrompt: MUSIC_CLEAN_NEGATIVE, duration: durationSec }, 26000, attemptCtrl.signal);
           const engName = qm.engine || `Motor ${engIdx + 1}`;
           if (onStatus) onStatus(`${engName}: gerando...`);
           const rm = await pollFalJob(qm, (st) => { if (onStatus) onStatus(`${engName}: ${st}`); }, attemptCtrl.signal);
-          if (rm && rm.audioUrl) {
+          if (rm && (rm.audioUrl || rm.audio_url || rm.url)) {
+            const finalAudioUrl = rm.audioUrl || rm.audio_url || rm.url;
+            if (window.NEXORA_MUSIC_CACHE_SAVE) {
+              try { window.NEXORA_MUSIC_CACHE_SAVE(finalAudioUrl); } catch {}
+            }
             if (onStatus) onStatus(`pronta ✓ (${engName})`);
-            return { audioUrl: rm.audioUrl, engine: engName };
+            return { audioUrl: finalAudioUrl, engine: engName };
           }
         } catch (err) {
           if (signal && signal.aborted) return null;
-          lastErr = timedOutLocal ? "fila lenta (trocando p/ motor rápido)" : (err.message || "erro");
+          lastErr = timedOutLocal ? "fila lenta (trocando motor)" : (err.message || "erro");
         } finally {
           clearTimeout(fastTimer);
           if (signal) signal.removeEventListener("abort", onOuterAbort);
@@ -4370,9 +4393,12 @@
       const recProf = pickRecorderProfile();
       const stream = new MediaStream(tracks);
       let rec;
-      // 5.5 Mbps mantém qualidade HD sem travar o gravador MP4 do Chrome
-      try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 5500000 }) : new MediaRecorder(stream); }
-      catch { rec = new MediaRecorder(canvasStream); }
+      // 12 Mbps HD cristalino + rec.start() atômico (zero perda do segundo final!)
+      try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 12000000, audioBitsPerSecond: 192000 }) : new MediaRecorder(stream); }
+      catch {
+        try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 8000000 }) : new MediaRecorder(stream); }
+        catch { rec = new MediaRecorder(canvasStream); }
+      }
 
       const chunks = [];
       rec.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
@@ -4387,7 +4413,7 @@
       try { vid.currentTime = 0.05; } catch {}
       await vid.play().catch(() => {});
 
-      rec.start(200);
+      rec.start();
       if (audioCtx && audioCtx.state === "running" && comp) {
         audioOriginCtxTime = audioCtx.currentTime + 0.05;
         if (origDecoded && origVolScale > 0.01) {
@@ -4496,7 +4522,7 @@
       ctx.imageSmoothingQuality = "high";
       ctx.fillStyle = "#000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      drawCroppedCover(ctx, loaded[0].el, loaded[0].crop, 1.03, 0, 0, 0, 1, dna.cssFilter);
+      drawCroppedCover(ctx, loaded[0].el, loaded[0].crop, 1.03, 0, 0, 0, 1, "none");
 
       const canvasStream = canvas.captureStream(30);
       const tracks = [...canvasStream.getVideoTracks()];
@@ -4580,14 +4606,14 @@
       const recProf = pickRecorderProfile();
       const stream = new MediaStream(tracks);
       let rec;
-      // 8.5 Mbps p/ 720x1280 30fps: nitidez de TV SEM dropar quadros nem encolher o vídeo de 10s para 8.6s!
-      const targetBitrate = 8500000;
+      // 15 Mbps reais (sem ctx.filter na CPU -> 30 FPS cravados, imagem cristalina ~8 MB, ZERO granulação!)
+      const targetBitrate = 15000000;
       try {
         rec = recProf.mimeType
           ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: targetBitrate, audioBitsPerSecond: 192000 })
           : new MediaRecorder(stream, { videoBitsPerSecond: targetBitrate });
       } catch {
-        try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 6500000 }) : new MediaRecorder(stream); }
+        try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 11000000, audioBitsPerSecond: 192000 }) : new MediaRecorder(stream); }
         catch { rec = new MediaRecorder(canvasStream); }
       }
 
@@ -4599,7 +4625,7 @@
           x.el.loop = true;
           x.el.muted = true;
           x.el.playsInline = true;
-          try { x.el.playbackRate = 1.12; } catch {}
+          try { x.el.playbackRate = 1.24; } catch {}
           hiddenVidBox.appendChild(x.el);
         }
       });
@@ -4614,13 +4640,17 @@
         };
       });
 
-      // Pré-aquece o 1º clipe antes de iniciar a gravação
+      // Pré-aquece o 1º clipe já no pico de velocidade 3D (0.25s) antes de iniciar a gravação
       if (loaded[0] && loaded[0].type === "video") {
-        try { loaded[0].el.currentTime = 0.08; } catch {}
+        try {
+          const d0 = loaded[0].el.duration || 5;
+          loaded[0].el.currentTime = d0 > 1.5 ? 0.25 : 0.08;
+        } catch {}
         await loaded[0].el.play().catch(() => {});
       }
 
-      rec.start(100);
+      // rec.start() atômico (SEM timeslice 100ms) -> garante 10,0s completos sem jamais truncar em 8,7s!
+      rec.start();
       if (audioCtx && audioCtx.state === "running" && comp) {
         const startAt = audioCtx.currentTime + 0.05;
         audioOriginCtxTime = startAt;
@@ -4641,32 +4671,32 @@
           sSrc.loop = true;
           const mg = audioCtx.createGain();
 
-          const openVol = voiceMixedOk ? 0.52 : 0.68;
-          const duckVol = 0.30;
-          mg.gain.setValueAtTime(0.10, startAt);
-          mg.gain.linearRampToValueAtTime(openVol, startAt + 0.05);
+          const openVol = voiceMixedOk ? 0.58 : 0.78;
+          const duckVol = 0.32;
+          mg.gain.setValueAtTime(0.18, startAt);
+          mg.gain.linearRampToValueAtTime(openVol, startAt + 0.04);
 
-          const fadeAt = startAt + Math.max(0.8, totalSec - 0.35);
+          const fadeAt = startAt + Math.max(0.8, totalSec - 0.28);
           if (voiceMixedOk && Array.isArray(voiceEnvelope) && voiceEnvelope.length > 0) {
             let prevTarget = openVol;
             for (let i = 0; i < voiceEnvelope.length; i++) {
               const tEvt = startAt + i * voiceEnvStepSec;
-              if (tEvt < startAt + 0.07 || tEvt >= fadeAt - 0.06) continue;
+              if (tEvt < startAt + 0.06 || tEvt >= fadeAt - 0.05) continue;
               const isSpeaking = voiceEnvelope[i] > 0.045;
               const targetV = isSpeaking ? duckVol : openVol;
               if (Math.abs(targetV - prevTarget) > 0.02) {
-                mg.gain.setTargetAtTime(targetV, tEvt, isSpeaking ? 0.03 : 0.085);
+                mg.gain.setTargetAtTime(targetV, tEvt, isSpeaking ? 0.025 : 0.075);
                 prevTarget = targetV;
               }
             }
             const endSpeechT = startAt + voiceEnvelope.length * voiceEnvStepSec;
-            if (endSpeechT < fadeAt - 0.08) {
-              mg.gain.setTargetAtTime(Math.min(0.56, openVol + 0.04), endSpeechT, 0.06);
+            if (endSpeechT < fadeAt - 0.06) {
+              mg.gain.setTargetAtTime(Math.min(0.64, openVol + 0.06), endSpeechT, 0.05);
             }
           }
 
-          mg.gain.setValueAtTime(voiceMixedOk ? 0.46 : openVol, fadeAt);
-          mg.gain.linearRampToValueAtTime(0.008, startAt + totalSec + 0.05);
+          mg.gain.setValueAtTime(voiceMixedOk ? 0.54 : openVol, fadeAt);
+          mg.gain.linearRampToValueAtTime(0.01, startAt + totalSec + 0.10);
           sSrc.connect(mg); mg.connect(comp);
           sSrc.start(startAt, dropOffset);
           sSrc.stop(startAt + totalSec + 0.20);
@@ -4711,23 +4741,30 @@
         const nextItem = loaded[segments[sIdx].clipIdx];
         if (nextItem.type === "video") {
           try {
-            nextItem.el.playbackRate = 1.12;
-            if (nextItem.el.currentTime >= Math.max(0.5, (nextItem.el.duration || 5) - 0.8)) {
-              nextItem.el.currentTime = 0.08;
+            nextItem.el.playbackRate = 1.24;
+            const vDur = nextItem.el.duration || 5;
+            const entryT = vDur > 1.5 ? 0.25 : 0.08;
+            if (nextItem.el.currentTime < 0.20 || nextItem.el.currentTime >= Math.max(0.5, vDur - 0.8)) {
+              nextItem.el.currentTime = entryT;
             }
           } catch {}
           nextItem.el.play().catch(() => {});
         }
-        // Pré-aquece o próximo corte para troca instantânea sem congelar
+        // Pré-aquece o próximo corte já no pico de velocidade 3D (0.25s) para troca instantânea!
         const upcoming = segments[sIdx + 1] ? loaded[segments[sIdx + 1].clipIdx] : null;
         if (upcoming && upcoming.type === "video" && upcoming.el !== nextItem.el) {
-          try { if (upcoming.el.currentTime > 0.3) upcoming.el.currentTime = 0.08; } catch {}
+          try {
+            const uDur = upcoming.el.duration || 5;
+            upcoming.el.currentTime = uDur > 1.5 ? 0.25 : 0.08;
+          } catch {}
         }
       };
 
       const isBlockbuster = editMode === "cinema_blockbuster";
       const isCleanMode = editMode === "cinema_clean";
-      const renderFilter = allowLightBg ? "contrast(1.04) saturate(1.06)" : "contrast(1.06) saturate(1.10)";
+      // ZERO ctx.filter na CPU -> Chrome mantém 30 FPS cravados em GPU e imagem cristalina 15 Mbps!
+      const renderFilter = "none";
+      const easeOutQuart = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 4);
 
       await new Promise((resolve) => {
         let finished = false;
@@ -4742,14 +4779,13 @@
           if (fillEl) fillEl.style.width = `${Math.min(100, Math.round((clockSec / totalSec) * 100))}%`;
           if (secEl) secEl.textContent = `${Math.min(totalSec, clockSec).toFixed(1)}s / ${totalSec}.0s`;
 
-          if (clockSec >= totalSec + 0.14 || wallElapsed >= totalSec + 1.5) {
+          if (clockSec >= totalSec + 0.24 || wallElapsed >= totalSec + 2.0) {
             finished = true; stop();
             loaded.forEach((x) => { if (x.type === "video") x.el.pause(); });
-            try { if (rec.state === "recording") rec.requestData(); } catch {}
             setTimeout(() => {
               if (rec.state !== "inactive") rec.stop();
               resolve();
-            }, 220);
+            }, 240);
             return;
           }
 
@@ -4770,76 +4806,70 @@
           if (item.type === "video") {
             if (mediaEl.paused && !mediaEl.ended) mediaEl.play().catch(() => {});
             const vDur = mediaEl.duration || 5;
-            if (mediaEl.ended || (mediaEl.currentTime || 0) >= Math.max(0.5, vDur - 0.12)) {
-              try { mediaEl.currentTime = 0.08; mediaEl.play().catch(() => {}); } catch {}
+            if (mediaEl.ended || (mediaEl.currentTime || 0) >= Math.max(0.5, vDur - 0.15)) {
+              try { mediaEl.currentTime = vDur > 1.5 ? 0.25 : 0.08; mediaEl.play().catch(() => {}); } catch {}
             }
           }
 
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = "high";
 
-          // A) ZOOMS DINÂMICOS DE AGÊNCIA + EFEITO DE VELOCIDADE NA APROXIMAÇÃO (SINGLE-PASS NÍTIDO!)
+          // A) ZOOMS DINÂMICOS COM VELOCIDADE REAL NA APROXIMAÇÃO (PASSAGEM ÚNICA CRISTALINA — ZERO BORRÃO!)
           if (item.type !== "video" || mediaEl.readyState >= 2) {
             const smoothCurve = easeInOutQuad(p);
             const fastIn = easeOutCubic(p);
+            const rushIn = easeOutQuart(p);
             const dir = (sIdx % 2 === 0 ? 1 : -1) * dna.flipDir;
             const optBoost = seg.isImg ? 1.18 : 1.0;
-            let scale = 1.04, panX = 0, panY = 0, angle = 0;
-            let zoomRushIntensity = 0;
+            let scale = 1.03, panX = 0, panY = 0, angle = 0;
 
             if (isCleanMode) {
-              scale = 1.03 + smoothCurve * 0.14 * optBoost;
+              scale = 1.02 + smoothCurve * 0.14 * optBoost;
               panX = dir * Math.sin(p * Math.PI) * 12;
               panY = (0.5 - smoothCurve) * 8;
             } else {
               const mv = sIdx % 7;
               if (mv === 0) {
-                // Corte 1: CRASH-ZOOM explosivo para dentro (1.02 -> 1.24)
-                scale = 1.02 + fastIn * 0.22 * optBoost;
-                panX = -14 * Math.sin(p * Math.PI);
-                panY = (0.4 - smoothCurve) * 14;
-                if (cEl < 0.24) zoomRushIntensity = (1 - cEl / 0.24) * 0.65;
+                // Corte 1: CRASH-ZOOM de alta velocidade entrando rápido (1.00 -> 1.24)
+                scale = 1.00 + rushIn * 0.24 * optBoost;
+                panX = -16 * Math.sin(p * Math.PI);
+                panY = (0.38 - smoothCurve) * 14;
               } else if (mv === 1) {
-                // Corte 2: MACRO ZOOM-IN subindo de baixo p/ cima (1.05 -> 1.23)
-                scale = 1.05 + smoothCurve * 0.18 * optBoost;
-                panX = (smoothCurve - 0.5) * 34;
-                panY = (0.5 - smoothCurve) * 24;
-                if (cEl < 0.20) zoomRushIntensity = (1 - cEl / 0.20) * 0.50;
+                // Corte 2: MACRO subindo DE BAIXO PARA CIMA + aproximação (1.03 -> 1.23)
+                scale = 1.03 + fastIn * 0.20 * optBoost;
+                panX = (smoothCurve - 0.5) * 32;
+                panY = (0.55 - smoothCurve) * 26;
               } else if (mv === 2) {
-                // Corte 3: LIFESTYLE PUNCH-IN dinâmico (1.04 -> 1.19)
-                scale = 1.04 + fastIn * 0.15 * optBoost;
+                // Corte 3: LIFESTYLE USO REAL + punch-in dinâmico (1.02 -> 1.18)
+                scale = 1.02 + fastIn * 0.16 * optBoost;
                 panX = (0.5 - smoothCurve) * 26;
                 panY = (smoothCurve - 0.5) * 10;
               } else if (mv === 3) {
-                // Corte 4: GIRO 180° + SPEED-ZOOM PULSE (1.04 -> 1.22 -> 1.10)
-                scale = 1.04 + Math.sin(p * Math.PI) * 0.18 * optBoost;
-                panX = (smoothCurve - 0.5) * 40;
-                angle = -0.012 * Math.sin(p * Math.PI);
-                if (cEl < 0.22) zoomRushIntensity = (1 - cEl / 0.22) * 0.58;
+                // Corte 4: GIRO 180° TÚNEL ENERGIA + pulso de velocidade (1.02 -> 1.22 -> 1.08)
+                scale = 1.02 + Math.sin(p * Math.PI) * 0.20 * optBoost;
+                panX = (smoothCurve - 0.5) * 38;
+                angle = -0.011 * Math.sin(p * Math.PI);
               } else if (mv === 4) {
-                // Corte 5: TOP-DOWN mergulho zoom-in (1.03 -> 1.22)
-                scale = 1.03 + fastIn * 0.19 * optBoost;
+                // Corte 5: MERGULHO DE CIMA PARA BAIXO (Top-Down) + aproximação veloz (1.01 -> 1.23)
+                scale = 1.01 + rushIn * 0.22 * optBoost;
                 panX = (0.5 - smoothCurve) * 30;
-                panY = (smoothCurve - 0.5) * 22;
-                if (cEl < 0.20) zoomRushIntensity = (1 - cEl / 0.20) * 0.52;
+                panY = (smoothCurve - 0.45) * 26;
               } else if (mv === 5) {
-                // Corte 6: PULL-OUT dinâmico revelando o cenário (1.22 -> 1.04)
-                scale = 1.22 - fastIn * 0.18 * optBoost;
-                panX = (smoothCurve - 0.5) * 36;
+                // Corte 6: PULL-OUT explosivo revelando cenário + virada esquerda→direita (1.24 -> 1.02)
+                scale = 1.24 - rushIn * 0.22 * optBoost;
+                panX = (smoothCurve - 0.5) * 38;
                 angle = 0.010 * Math.sin(p * Math.PI);
-                if (cEl < 0.22) zoomRushIntensity = (1 - cEl / 0.22) * 0.55;
               } else {
-                // Corte 7: HERO FRONTAL POWER ZOOM-IN contínuo (1.03 -> 1.20)
-                scale = 1.03 + smoothCurve * 0.17 * optBoost;
-                panX = dir * (1 - smoothCurve) * 10;
-                panY = (0.5 - smoothCurve) * 10;
-                if (cEl < 0.22) zoomRushIntensity = (1 - cEl / 0.22) * 0.55;
+                // Corte 7: HERO FRONTAL 0° POWER ZOOM-IN firme no centro superior (1.01 -> 1.19)
+                scale = 1.01 + smoothCurve * 0.18 * optBoost;
+                panX = dir * (1 - smoothCurve) * 8;
+                panY = (0.5 - smoothCurve) * 8;
               }
 
-              // Micro-punch extra na entrada de cada corte (0.16s)
-              if (fxOn && sIdx > 0 && cEl < 0.16) {
-                const cp = 1 - easeOutCubic(cEl / 0.16);
-                scale += cp * 0.075;
+              // Micro-punch óptico limpo sincronizado no exato corte (0.14s) — sensação de velocidade sem borrão!
+              if (fxOn && sIdx > 0 && cEl < 0.14) {
+                const cp = 1 - easeOutQuart(cEl / 0.14);
+                scale += cp * 0.068;
               }
               const maxPanX = canvas.width * 0.065;
               const maxPanY = canvas.height * 0.055;
@@ -4849,13 +4879,9 @@
 
             drawCroppedCover(ctx, mediaEl, item.crop, scale, panX, panY, angle, 1, renderFilter);
 
-            // Efeito óptico de velocidade na aproximação do zoom (Zoom-Blur Burst)
-            if (fxOn && isBlockbuster && zoomRushIntensity > 0.04) {
-              drawZoomBlurBurst(ctx, mediaEl, item.crop, scale, panX, panY, angle, zoomRushIntensity, renderFilter);
-            }
-            // Flash óptico limpo sincronizado com o whoosh no corte
-            if (fxOn && sIdx > 0 && cEl < 0.12) {
-              const fp = 1 - cEl / 0.12;
+            // Flash óptico cinematográfico limpo sincronizado com o whoosh no corte
+            if (fxOn && sIdx > 0 && cEl < 0.11) {
+              const fp = 1 - cEl / 0.11;
               ctx.save();
               ctx.globalCompositeOperation = "screen";
               ctx.fillStyle = `rgba(255,250,240,${(fp * fp * 0.24).toFixed(3)})`;
@@ -4863,10 +4889,10 @@
               ctx.restore();
             }
             if (isBlockbuster) {
-              drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.11 * Math.sin(p * Math.PI), dir);
+              drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.10 * Math.sin(p * Math.PI), dir);
             }
             if (!allowLightBg) {
-              drawCinematicVignette(ctx, canvas.width, canvas.height, 0.22);
+              drawCinematicVignette(ctx, canvas.width, canvas.height, 0.20);
             }
           }
 
@@ -4891,7 +4917,7 @@
       if (activeVideoBlobUrl) URL.revokeObjectURL(activeVideoBlobUrl);
       activeVideoBlobUrl = URL.createObjectURL(outBlob);
       const gpuCount = mediaItems.filter((x) => x.type === "video").length;
-      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: `${recProf.label} 8.5Mbps`, uniqueCount: n, gpuCount, sec: totalSec, musicMixedOk, voiceMixedOk };
+      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: `${recProf.label} 15Mbps HD`, uniqueCount: n, gpuCount, sec: totalSec, musicMixedOk, voiceMixedOk };
     }
 
     function downloadBlob(blob, filename) {
@@ -5163,7 +5189,7 @@
         stage.innerHTML = `<div class="status-msg">Gerando imagem 9:16 Cinema (<strong>${dna.id}</strong>)<br/>${selectedImgModel.name}</div><div class="status-log" id="imgLog">enviando... (0s)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div><div class="action-inline"><button type="button" class="btn-cancel" id="btnCancelNow">Cancelar</button></div>`;
         document.getElementById("btnCancelNow")?.addEventListener("click", () => activeRunController?.abort());
         uiClock = setInterval(() => { const el = document.getElementById("imgLog"); if (el) el.textContent = `${stTxt} (${Math.round((performance.now() - t0) / 1000)}s)`; }, 1000);
-        const q = await callApi({ task: "submit_scene", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildStandaloneImagePrompt(selectedImgModel, dna) }, 30000, activeRunController.signal);
+        const q = await callApi({ task: "submit_scene", aspectRatio: "9:16", imageBase64: uploadedBase64, mimeType: uploadedMime, imagePrompt: buildStandaloneImagePrompt(selectedImgModel, dna) }, 30000, activeRunController.signal);
         const r = await pollFalJob(q, (s) => { stTxt = s; }, activeRunController.signal);
         clearInterval(uiClock);
         stage.innerHTML = `
@@ -5232,15 +5258,23 @@
 
       const keyframeUrls = new Array(totalUnique).fill(null);
       const readyClipUrls = new Array(totalUnique).fill(null);
+      const preloadedMediaBlobs = new Array(totalUnique).fill(null);
       let aiMusicUrl = null, aiMusicEngine = "", aiVoiceUrl = null, aiVoiceEngine = "", noteMsg = "";
+      let preloadedMusicBuf = null, preloadedVoiceBuf = null;
+      let parallelWhisperChunks = savedWhisperChunks || null;
+      const wantsCaptionsEarly = wantsVoice && inlineSubtitleStyle.value !== "none" && Boolean(voiceScriptText);
       let aiMusicStatus = mKey === "mute" ? "mudo" : (mKey === "custom" ? `MP3: ${customAudioName}` : "iniciando...");
       let aiVoiceStatus = !wantsVoice ? "desativada" : (savedVoiceBuf ? `pronta ✓ (${savedVoiceMeta})` : "iniciando...");
 
       let musicPromise = Promise.resolve(null);
       if (mKey !== "mute" && mKey !== "custom" && MUSIC_PROMPTS[mKey]) {
         musicPromise = (async () => {
-          const res = await generateMusicWithTripleFallback(mKey, dna, Math.min(24, Math.max(12, targetSec + 2)), (st) => { aiMusicStatus = st; }, runSignal);
-          if (res && res.audioUrl) { aiMusicUrl = res.audioUrl; aiMusicEngine = res.engine; }
+          const res = await generateMusicWithTripleFallback(mKey, dna, Math.min(24, Math.max(14, targetSec + 4)), (st) => { aiMusicStatus = st; }, runSignal);
+          if (res && res.audioUrl) {
+            aiMusicUrl = res.audioUrl;
+            aiMusicEngine = res.engine;
+            try { preloadedMusicBuf = await (await fetchMediaBlob(aiMusicUrl)).arrayBuffer(); } catch {}
+          }
           return aiMusicUrl;
         })();
       }
@@ -5249,9 +5283,26 @@
       if (wantsVoice && !savedVoiceBuf && voiceScriptText) {
         voicePromise = (async () => {
           const res = await generateVoiceWithTripleFallback(voiceScriptText, inlineVoiceGender.value, inlineVoiceStyle.value, Number(inlineVoiceSpeed?.value) || 1.14, (st) => { aiVoiceStatus = st; }, runSignal);
-          if (res && res.audioUrl) { aiVoiceUrl = res.audioUrl; aiVoiceEngine = res.engine; }
-          else if (res && res.error) noteMsg += ` | Aviso voz: ${res.error}`;
+          if (res && res.audioUrl) {
+            aiVoiceUrl = res.audioUrl;
+            aiVoiceEngine = res.engine;
+            const [vBufRes, wRes] = await Promise.all([
+              fetchMediaBlob(aiVoiceUrl).then((b) => b.arrayBuffer()).catch(() => null),
+              wantsCaptionsEarly ? transcribeWordsWithWhisper(aiVoiceUrl, (st) => { aiVoiceStatus = `voz ✓ | ${st}`; }, runSignal) : Promise.resolve(null)
+            ]);
+            if (vBufRes) preloadedVoiceBuf = vBufRes;
+            if (wRes) { parallelWhisperChunks = wRes; savedWhisperChunks = wRes; }
+            aiVoiceStatus = `pronta ✓ (${aiVoiceEngine}${parallelWhisperChunks ? " + Sync 0.00s" : ""})`;
+          } else if (res && res.error) {
+            noteMsg += ` | Aviso voz: ${res.error}`;
+          }
           return aiVoiceUrl;
+        })();
+      } else if (wantsCaptionsEarly && savedVoiceUrl && !parallelWhisperChunks) {
+        voicePromise = (async () => {
+          const wRes = await transcribeWordsWithWhisper(savedVoiceUrl, (st) => { aiVoiceStatus = `pronta ✓ | ${st}`; }, runSignal);
+          if (wRes) { parallelWhisperChunks = wRes; savedWhisperChunks = wRes; }
+          return savedVoiceUrl;
         })();
       }
 
@@ -5340,6 +5391,8 @@
                   renderPipelineUI();
                   const qImg = await callApi({
                     task: "submit_scene",
+                    cutIndex: i,
+                    aspectRatio: "9:16",
                     imageBase64: uploadedBase64,
                     mimeType: uploadedMime,
                     imagePrompt: promptsToTry[pIdx].prompt
@@ -5393,6 +5446,7 @@
                 try {
                   qVid = await callApi({
                     task: "submit_clip",
+                    cutIndex: i,
                     engine: chosenEngine,
                     imageUrl: kfUrl,
                     duration: "5",
@@ -5420,6 +5474,8 @@
               if (rVid && rVid.videoUrl) {
                 readyClipUrls[i] = rVid.videoUrl;
                 pipeStates[i].done = true;
+                // Pré-baixa o MP4 imediatamente enquanto os outros cortes terminam na GPU!
+                fetchMediaBlob(rVid.videoUrl).then((b) => { preloadedMediaBlobs[i] = b; }).catch(() => {});
               } else {
                 pipeStates[i].status = "resgate 4K óptico";
               }
@@ -5444,8 +5500,8 @@
 
         const assembledPlan = [];
         for (let i = 0; i < totalUnique; i++) {
-          if (readyClipUrls[i]) assembledPlan.push({ type: "video", url: readyClipUrls[i], act: actPlan[i] });
-          else if (keyframeUrls[i]) assembledPlan.push({ type: "image", url: keyframeUrls[i], act: actPlan[i] });
+          if (readyClipUrls[i]) assembledPlan.push({ type: "video", url: readyClipUrls[i], act: actPlan[i], cutIdx: i });
+          else if (keyframeUrls[i]) assembledPlan.push({ type: "image", url: keyframeUrls[i], act: actPlan[i], cutIdx: i });
         }
 
         const readyGpuTotal = assembledPlan.filter((x) => x.type === "video").length;
@@ -5464,19 +5520,20 @@
 
         stage.innerHTML = `
           <div class="status-msg">
-            <strong>Finalizando Superprodução Blockbuster (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
-            Montando ${assembledPlan.length} cortes + Speed-Ramp + Mirror Punch-In + áudio...
+            <strong>Finalizando Superprodução Cinema 15Mbps (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
+            Montando ${assembledPlan.length} cortes 3D + Zooms Dinâmicos + Trilha + Voz + Legendas 0.00s...
           </div>
           <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:10%"></div></div>
         `;
 
         const mediaItems = await Promise.all(assembledPlan.map(async (item) => ({
           ...item,
-          blob: await fetchMediaBlob(item.url)
+          blob: (item.type === "video" && preloadedMediaBlobs[item.cutIdx]) ? preloadedMediaBlobs[item.cutIdx] : await fetchMediaBlob(item.url)
         })));
 
         let soundtrackBuf = null;
         if (mKey === "custom" && customAudioBuf) soundtrackBuf = customAudioBuf;
+        else if (preloadedMusicBuf) soundtrackBuf = preloadedMusicBuf;
         else if (aiMusicUrl) {
           try { soundtrackBuf = await (await fetchMediaBlob(aiMusicUrl)).arrayBuffer(); } catch {}
         }
@@ -5484,6 +5541,7 @@
         let voiceBuf = null;
         if (wantsVoice) {
           if (savedVoiceBuf) voiceBuf = savedVoiceBuf;
+          else if (preloadedVoiceBuf) voiceBuf = preloadedVoiceBuf;
           else if (aiVoiceUrl) {
             try { voiceBuf = await (await fetchMediaBlob(aiVoiceUrl)).arrayBuffer(); } catch {}
           }
@@ -5492,7 +5550,7 @@
         const totalElapsedSec = Math.round((performance.now() - globalStart) / 1000) + targetSec;
         lastMasterSession = { mediaItems, targetSec, keyframeUrls, actPlan, vidModel: selectedVidModel, dna, totalElapsedSec, engineUsed };
 
-        let buildWhisper = savedWhisperChunks;
+        let buildWhisper = parallelWhisperChunks || savedWhisperChunks;
         const wantsCaptions = wantsVoice && inlineSubtitleStyle.value !== "none" && Boolean(voiceScriptText);
         if (wantsCaptions && (aiVoiceUrl || savedVoiceUrl) && !buildWhisper) {
           buildWhisper = await transcribeWordsWithWhisper(aiVoiceUrl || savedVoiceUrl, null, runSignal);
@@ -5774,21 +5832,23 @@
       }
     });
 
-  // === KIT 3 ÂNGULOS 3D UNIVERSAIS SEM FUNDO + DESCRIÇÃO AUTOMÁTICA ===
+  // === KIT 6 ÂNGULOS 3D UNIVERSAIS SEM FUNDO (100% TRAVADO EM 9:16) + DESCRIÇÃO AUTOMÁTICA ===
     window.nexora3Angles = [];
+    window.nexora6Angles = window.nexora3Angles;
     const btnGen3Angles = document.getElementById("btnGen3Angles");
     const angles3Status = document.getElementById("angles3Status");
 
     function reset3AnglesUI(msg) {
       window.nexora3Angles = [];
-      for (let i = 0; i < 3; i++) {
+      window.nexora6Angles = window.nexora3Angles;
+      for (let i = 0; i < 6; i++) {
         const slot = document.getElementById(`angleSlot${i}`);
         const thumb = document.getElementById(`angleThumb${i}`);
         if (slot) slot.classList.remove("ready");
         if (thumb) thumb.innerHTML = "Aguardando...";
       }
       if (angles3Status) {
-        angles3Status.textContent = msg || 'Foto carregada — clique em "Gerar 3 Ângulos 3D + Descrição IA"';
+        angles3Status.textContent = msg || 'Foto carregada — clique em "Gerar 6 Ângulos 3D (9:16) + Descrição IA"';
       }
     }
 
@@ -5799,7 +5859,7 @@
       if (thumb) thumb.innerHTML = htmlContent;
     }
 
-    // Sincroniza automaticamente o estado ativo/desativado do botão 3 Ângulos com o botão Remover Fundo
+    // Sincroniza automaticamente o estado ativo/desativado do botão 6 Ângulos com o botão Remover Fundo
     if (btnQuickRemoveBg && btnGen3Angles) {
       const syncBtn3Angles = () => {
         btnGen3Angles.disabled = btnQuickRemoveBg.disabled || !uploadedBase64;
@@ -5809,7 +5869,7 @@
     }
 
     productImg?.addEventListener("change", () => {
-      reset3AnglesUI('Foto nova carregada — clique em "Gerar 3 Ângulos 3D + Descrição IA"');
+      reset3AnglesUI('Foto nova carregada — clique em "Gerar 6 Ângulos 3D (9:16) + Descrição IA"');
     });
 
     async function removeBgFromUrl(imageUrl, onStatus, signal) {
@@ -5830,20 +5890,21 @@
     }
 
     async function generateAngleCutout(baseImageUrl, anglePrompt, slotIdx, signal) {
-      setAngleSlotState(slotIdx, "Gerando ângulo 3D...", false);
+      setAngleSlotState(slotIdx, "Gerando 9:16...", false);
       const qa = await callApi({
         task: "generate_angle",
-        aspectRatio: "1:1",
+        aspectRatio: "9:16",
+        aspect_ratio: "9:16",
         imageUrl: baseImageUrl,
         imagePrompt: anglePrompt
       }, 32000, signal);
       const ra = await pollFalJob(qa, (st) => {
-        setAngleSlotState(slotIdx, `Ângulo 3D: ${st}`, false);
+        setAngleSlotState(slotIdx, `3D 9:16: ${st}`, false);
       }, signal);
-      if (!ra || !ra.imageUrl) throw new Error("Falha ao criar ângulo 3D.");
+      if (!ra || !ra.imageUrl) throw new Error("Falha ao criar ângulo 3D 9:16.");
       setAngleSlotState(slotIdx, "Recortando PNG...", false);
       const pngUrl = await removeBgFromUrl(ra.imageUrl, (st) => {
-        setAngleSlotState(slotIdx, `Recorte: ${st}`, false);
+        setAngleSlotState(slotIdx, `PNG: ${st}`, false);
       }, signal);
       return pngUrl || ra.imageUrl;
     }
@@ -5890,79 +5951,107 @@
       if (btnGen3Angles) btnGen3Angles.disabled = true;
 
       try {
-        reset3AnglesUI("Passo 1/2: Recortando Ângulo 1 (Frontal PNG)...");
+        reset3AnglesUI("Passo 1/2: Recortando Ângulo 1 (Frontal PNG 9:16)...");
         setAngleSlotState(0, "Recortando PNG...", false);
-        setAngleSlotState(1, "Aguardando base...", false);
-        setAngleSlotState(2, "Aguardando base...", false);
+        for (let s = 1; s < 6; s++) setAngleSlotState(s, "Aguardando base...", false);
 
         const r1 = await removeBgWithTripleFallback(uploadedBase64, uploadedMime, (st) => {
-          setAngleSlotState(0, `Recorte: ${st}`, false);
+          setAngleSlotState(0, `PNG: ${st}`, false);
         }, sig);
         if (!r1 || !r1.imageUrl) throw new Error(r1?.error || "Não foi possível recortar a foto principal.");
 
         const angle1Url = r1.imageUrl;
         const blob1 = await fetchMediaBlob(angle1Url);
         const dataUrl1 = await blobToDataUrl(blob1);
-        const b64_1 = dataUrl1.split(",")[1] || "";
-        setUploadedProduct(dataUrl1, b64_1, "image/png", true);
-        setAngleSlotState(0, `<img src="${dataUrl1}" alt="Frontal 0°" />`, true);
 
-        if (angles3Status) angles3Status.textContent = "Passo 2/2: Criando Ângulos 2 e 3 + Descrição Automática...";
-
-        // Coloca o produto num estúdio branco com margem para liberar a rotação 3D real
-        const whiteStudioBase = await new Promise((resolve) => {
+        // Normaliza o Frontal 0° em canvas 9:16 transparente (720x1280) e cria a base estúdio branca 9:16 (720x1280)
+        const { transparent916DataUrl, whiteStudioBase916 } = await new Promise((resolve) => {
           const im = new Image();
           im.onload = () => {
-            const c = document.createElement("canvas");
-            c.width = 1024; c.height = 1024;
-            const g = c.getContext("2d");
+            const W = 720, H = 1280;
+            const sc = Math.min(480 / (im.naturalWidth || 720), 680 / (im.naturalHeight || 720));
+            const dw = Math.round((im.naturalWidth || 720) * sc);
+            const dh = Math.round((im.naturalHeight || 720) * sc);
+            const dx = Math.round((W - dw) / 2);
+            const dy = Math.round((H - dh) / 2);
+
+            const cPng = document.createElement("canvas");
+            cPng.width = W; cPng.height = H;
+            cPng.getContext("2d").drawImage(im, dx, dy, dw, dh);
+            const tUrl = cPng.toDataURL("image/png");
+
+            const cW = document.createElement("canvas");
+            cW.width = W; cW.height = H;
+            const g = cW.getContext("2d");
             g.fillStyle = "#FFFFFF";
-            g.fillRect(0, 0, 1024, 1024);
-            const sc = Math.min(680 / (im.naturalWidth || 1024), 680 / (im.naturalHeight || 1024));
-            const dw = Math.round((im.naturalWidth || 1024) * sc);
-            const dh = Math.round((im.naturalHeight || 1024) * sc);
-            g.drawImage(im, Math.round((1024 - dw) / 2), Math.round((1024 - dh) / 2), dw, dh);
-            resolve(c.toDataURL("image/jpeg", 0.92));
+            g.fillRect(0, 0, W, H);
+            g.drawImage(im, dx, dy, dw, dh);
+            const wUrl = cW.toDataURL("image/jpeg", 0.92);
+
+            resolve({ transparent916DataUrl: tUrl, whiteStudioBase916: wUrl });
           };
-          im.onerror = () => resolve(angle1Url);
+          im.onerror = () => resolve({ transparent916DataUrl: dataUrl1, whiteStudioBase916: angle1Url });
           im.src = dataUrl1;
         });
 
-        const promptAngle2 =
-          `CHANGE THE CAMERA ANGLE COMPLETELY — DO NOT KEEP THE ORIGINAL FRONT POSE FROM THE INPUT IMAGE. Move the camera 90 degrees around to the side to shoot a dramatic TRUE SIDE PROFILE view of the exact same product from the reference photo (${orientShort}), rotated sharply sideways so the product faces toward the RIGHT side of the frame. Clearly expose the full lateral thickness, side silhouette, depth and side details that were hidden in the front view. Keep the exact same product model, colors, materials and proportions, zero invented logos, zero hands, zero text, centered alone on a pure solid white #FFFFFF studio background with clean softbox lighting.`;
+        const b64_1 = transparent916DataUrl.split(",")[1] || "";
+        setUploadedProduct(transparent916DataUrl, b64_1, "image/png", true);
+        setAngleSlotState(0, `<img src="${transparent916DataUrl}" alt="1. Frontal Hero 0° (9:16)" />`, true);
 
-        const promptAngle3 =
-          `CHANGE THE CAMERA ANGLE COMPLETELY — DO NOT KEEP THE ORIGINAL FRONT POSE FROM THE INPUT IMAGE. Move the camera high above and to the OPPOSITE side to shoot a dramatic 60-DEGREE ELEVATED TOP-DOWN DIAGONAL view looking steeply down at the exact same product from the reference photo (${orientShort}), rotated in the opposite direction facing toward the BOTTOM-LEFT of the frame. Clearly reveal the top surface, upper contours, back-diagonal depth and opposite flank from above. Keep the exact same product model, colors, materials and proportions, zero invented logos, zero hands, zero text, centered alone on a pure solid white #FFFFFF studio background with clean softbox lighting.`;
+        if (angles3Status) angles3Status.textContent = "Passo 2/2: Gerando 5 novos ângulos 3D em 9:16 (paralelo) + Descrição IA...";
 
-        const [res2, res3, descRes] = await Promise.allSettled([
-          generateAngleCutout(whiteStudioBase, promptAngle2, 1, sig),
-          generateAngleCutout(whiteStudioBase, promptAngle3, 2, sig),
+        const commonTail =
+          `Keep the exact same product model, colors, materials, markings and proportions from the reference photo, zero invented logos, zero hands, zero text, centered alone with generous clean margin in a VERTICAL 9:16 pure solid white #FFFFFF studio background with crisp even commercial softbox lighting.`;
+
+        const angleSpecs = [
+          {
+            slot: 1, key: "right_45", label: "2. Lado Direito (45°/90°)",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE COMPLETELY (DO NOT REPEAT FRONT POSE). Rotate the camera 65 degrees to shoot the exact product (${orientShort}) turned boldly toward the RIGHT side of the vertical 9:16 frame, clearly revealing its right lateral flank, 3D depth and side silhouette. ${commonTail}`
+          },
+          {
+            slot: 2, key: "left_60", label: "3. Lado Esquerdo (60°/90°)",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE COMPLETELY (DO NOT REPEAT FRONT POSE). Rotate the camera 75 degrees to the opposite side to shoot the exact product (${orientShort}) turned sharply toward the LEFT side of the vertical 9:16 frame, clearly exposing its full left side profile, thickness and lateral contours. ${commonTail}`
+          },
+          {
+            slot: 3, key: "top_down", label: "4. De Cima p/ Baixo (60°)",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE COMPLETELY (DO NOT REPEAT FRONT POSE). Elevate the camera steeply 60 degrees overhead looking DOWN from above onto the exact product (${orientShort}) angled diagonally toward the right, clearly showing the entire top surface, upper bevels and 3D depth from above. ${commonTail}`
+          },
+          {
+            slot: 4, key: "bottom_up", label: "5. De Baixo p/ Cima",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE COMPLETELY (DO NOT REPEAT FRONT POSE). Position the camera at a dramatic low worm's-eye angle looking UPWARD from below at the exact product (${orientShort}) turned slightly left, giving a heroic imposing silhouette and revealing bottom edges, underside contours and precision details. ${commonTail}`
+          },
+          {
+            slot: 5, key: "back_180", label: "6. Giro 180° / Traseira 3/4",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE 180 DEGREES (DO NOT REPEAT FRONT POSE). Orbit the camera 150 to 180 degrees around behind the exact product (${orientShort}) to reveal its rear three-quarter and opposite back architecture, back strap/back finish and opposite side depth. ${commonTail}`
+          }
+        ];
+
+        const settledAll = await Promise.allSettled([
+          ...angleSpecs.map((sp) => generateAngleCutout(whiteStudioBase916, sp.prompt, sp.slot, sig)),
           describeProductAuto(angle1Url, sig)
         ]);
 
-        const finalKit = [{ angle: "frontal", url: angle1Url, dataUrl: dataUrl1 }];
-
-        if (res2.status === "fulfilled" && res2.value) {
-          setAngleSlotState(1, `<img src="${res2.value}" alt="Perfil 3/4 Esq 60°" />`, true);
-          finalKit.push({ angle: "left_60", url: res2.value });
-        } else {
-          setAngleSlotState(1, "Falhou (usando base)", false);
-        }
-
-        if (res3.status === "fulfilled" && res3.value) {
-          setAngleSlotState(2, `<img src="${res3.value}" alt="Elevado Dir 45°" />`, true);
-          finalKit.push({ angle: "right_elevated_45", url: res3.value });
-        } else {
-          setAngleSlotState(2, "Falhou (usando base)", false);
+        const finalKit = [{ key: "frontal", angle: "frontal", url: angle1Url, dataUrl: transparent916DataUrl }];
+        for (let idx = 0; idx < angleSpecs.length; idx++) {
+          const sp = angleSpecs[idx];
+          const res = settledAll[idx];
+          if (res.status === "fulfilled" && res.value) {
+            setAngleSlotState(sp.slot, `<img src="${res.value}" alt="${sp.label}" />`, true);
+            finalKit.push({ key: sp.key, angle: sp.key, url: res.value });
+          } else {
+            setAngleSlotState(sp.slot, "Fallback base", false);
+          }
         }
 
         window.nexora3Angles = finalKit;
+        window.nexora6Angles = finalKit;
 
+        const descRes = settledAll[angleSpecs.length];
         let descNote = "";
-        if (descRes.status === "fulfilled" && descRes.value) {
+        if (descRes && descRes.status === "fulfilled" && descRes.value) {
           if (descRes.value.desc && productDetailHint) {
             productDetailHint.value = descRes.value.desc;
-            descNote = " + Descrição Visual preenchida automaticamente ✓";
+            descNote = " + Descrição Visual preenchida ✓";
           }
           if (descRes.value.macro && macroTarget && !macroTarget.value.trim()) {
             macroTarget.value = descRes.value.macro;
@@ -5970,7 +6059,7 @@
         }
 
         if (angles3Status) {
-          angles3Status.textContent = `✅ ${finalKit.length} ângulos sem fundo prontos${descNote}`;
+          angles3Status.textContent = `✅ ${finalKit.length}/6 ângulos 3D em 9:16 sem fundo prontos${descNote}`;
         }
       } catch (err) {
         if (angles3Status) angles3Status.textContent = `Erro: ${err.message}`;
@@ -6208,14 +6297,14 @@
           const sr = rawAudioBuffer.sampleRate;
           const { samples: trimmed, timeMap } = trimDeadSilencesWithMap(rawAudioBuffer);
           const trimmedDur = trimmed.length / sr;
-          // Encerra a fala entre 00:09.3 e 00:09.6 (deixa ~0.5s de impacto musical limpo no fecho — nunca corta "o seu!")
-          const targetMaxDur = Math.max(2.5, (Number(targetSec) || 10) - 0.52);
+          // Encerra a fala completa entre 00:09.30 e 00:09.45 (deixa ~0.55s limpos de impacto musical — NUNCA corta "o seu!")
+          const targetMaxDur = Math.max(2.5, (Number(targetSec) || 10) - 0.58);
 
           let speedRate = 1.0;
           if (trimmedDur > targetMaxDur) {
-            speedRate = Math.min(1.36, trimmedDur / targetMaxDur);
-          } else if (trimmedDur >= (Number(targetSec) || 10) * 0.86) {
-            speedRate = 1.05;
+            speedRate = Math.min(1.42, trimmedDur / targetMaxDur);
+          } else if (trimmedDur >= (Number(targetSec) || 10) * 0.88) {
+            speedRate = 1.04;
           }
 
           const stretched = speedRate > 1.015 ? wsolaStretchMono(trimmed, sr, speedRate) : trimmed;
@@ -6299,26 +6388,18 @@
               prelim.push({ ch, s: ms, e: me });
             }
 
-            // 2) Normaliza diretamente à duração real da fala no áudio final + avanço visual de 0.10s (Sync 0.00s!)
+            // 2) Mapeamento determinístico direto (sem esticamento pós-compressor -> 0,00s exato de sincronia!)
             if (prelim.length > 0) {
-              const finalBounds = detectSpeechBounds(finalBuffer);
-              const pStart = prelim[0].s;
-              const pEnd = prelim[prelim.length - 1].e;
-              const pSpan = Math.max(0.25, pEnd - pStart);
-              const fStart = Math.max(0, finalBounds.start);
-              const fEnd = Math.max(fStart + 0.4, Math.min(finalBuffer.duration, finalBounds.end));
-              const fSpan = Math.max(0.25, fEnd - fStart);
-              const normRatio = fSpan / pSpan;
-              const VISUAL_LEAD = 0.10;
-
+              const maxDur = Math.max(0.5, finalBuffer.duration);
+              const VISUAL_LEAD = 0.03;
               let lastEnd = 0;
               remappedWhisper = prelim.map((item) => {
-                let ns = fStart + (item.s - pStart) * normRatio - VISUAL_LEAD;
-                let ne = fStart + (item.e - pStart) * normRatio - VISUAL_LEAD;
-                ns = Math.max(0, Number(ns.toFixed(3)));
-                ne = Math.max(ns + 0.06, Number(ne.toFixed(3)));
+                let ns = Math.max(0, Math.min(maxDur - 0.06, item.s - VISUAL_LEAD));
+                let ne = Math.max(ns + 0.06, Math.min(maxDur, item.e - VISUAL_LEAD));
+                ns = Number(ns.toFixed(3));
+                ne = Number(ne.toFixed(3));
                 if (ns < lastEnd) ns = lastEnd;
-                if (ne <= ns) ne = Number((ns + 0.07).toFixed(3));
+                if (ne <= ns) ne = Number((ns + 0.06).toFixed(3));
                 lastEnd = ne;
                 return { ...item.ch, text: fixPtAccents(item.ch.text || ""), timestamp: [ns, ne] };
               });
@@ -6382,13 +6463,13 @@
           const bass = off.createBiquadFilter();
           bass.type = "lowshelf";
           bass.frequency.value = 72;
-          bass.gain.value = 4.8;
+          bass.gain.value = 5.2;
 
           const pocket = off.createBiquadFilter();
           pocket.type = "peaking";
-          pocket.frequency.value = 2900;
-          pocket.Q.value = 0.9;
-          pocket.gain.value = hasVoice ? -5.2 : -1.2;
+          pocket.frequency.value = 2800;
+          pocket.Q.value = 0.95;
+          pocket.gain.value = hasVoice ? -4.5 : -0.8;
 
           const sheen = off.createBiquadFilter();
           sheen.type = "highshelf";
@@ -6626,6 +6707,11 @@
 
       const voicePreviewCache = new Map();
       const musicTrackCache = new Map();
+      window.NEXORA_MUSIC_CACHE_SAVE = (audioUrl) => {
+        if (!audioUrl) return;
+        const tr = getSelectedAgencyTrack();
+        if (tr) musicTrackCache.set(`lyria_${tr.id}`, audioUrl);
+      };
       const virtualMusicJobs = new Map();
       let activeVoicePreviewAudio = null;
       let activeMusicPreviewAudio = null;
@@ -6797,38 +6883,53 @@
       }
 
       function buildMultiWorldScenePrompt(cutIdx, selectedModelBase, cat, prodDesc, macroHint, anglesCount) {
+        const refItem = prodDesc ? `the exact "${prodDesc}"` : "the exact product from the reference cutouts";
         const refLock = prodDesc
-          ? `100% STRICT PRODUCT FIDELITY: The product is strictly "${prodDesc}". Preserve its EXACT original solid/matte/glossy colors, proportions, silhouette and physical markings. NEVER recolor, NEVER replace solid surfaces with black glass/mirrors, zero morphing.`
-          : `100% STRICT PRODUCT FIDELITY: Preserve exact original colors, materials, shape and physical markings from the reference cutouts. Zero color shift, zero morphing.`;
+          ? `Strict product fidelity: render ${refItem} with its exact original colors, proportions, materials, silhouette and markings — never recolor, never morph, never invent logos.`
+          : `Strict product fidelity: preserve the exact original colors, materials, proportions and markings of the reference product — never recolor or morph.`;
         const multiAngleNote = anglesCount >= 2
-          ? "MULTI-ANGLE 3D TURNAROUND SYNTHESIS: Use all provided multi-angle product reference cutouts together to render authentic 3D thickness, realistic contact shadows and physically accurate reflections — NEVER pasted-on or flat. "
+          ? "Adopt the EXACT 3D pose and orientation of the FIRST provided 9:16 reference PNG cutout while locking material/logo fidelity with the secondary frontal anchor — physically grounded contact shadows and authentic reflections, never pasted-on or flat. "
           : "";
-        const macroClause = macroHint ? ` Focus highlight on authentic detail: ${macroHint}.` : "";
-        const colorGrade = "VIVID AGENCY COLOR GRADING: Rich deep contrast, vibrant saturated highlights, crisp ARRI Alexa 65 8K optical clarity, NEVER grey/desaturated, zero text, zero watermarks, zero filming gear.";
+        const macroClause = macroHint ? ` Highlight real craftsmanship detail: ${macroHint}.` : "";
+        const fullBleed = "Vertical 9:16 edge-to-edge full-bleed ARRI Alexa 65 commercial photograph (strictly 9:16 vertical, zero white bars, zero black bars, zero borders, zero text, zero watermarks, zero filming gear), vivid cinema contrast and rich saturated highlights.";
         const lifeShot = getLifestyleScenePrompt(cat, prodDesc);
 
         const worlds = [
-          `SHOT 1 — RIGHT-FACING 3/4 EXPLOSIVE HOOK (ROTATE PRODUCT TOWARD RIGHT): CHANGE POSE FROM INPUT — angle the exact product 40 degrees TOWARD THE RIGHT SIDE of the frame inside the chosen living universe (${selectedModelBase.slice(0, 320)}), dramatic dynamic rim lighting, glowing sparks and energetic motion streaks flying toward the lens, product bold in upper-center safe zone.`,
-          `SHOT 2 — LOW-ANGLE UPWARD 100MM SUPER MACRO (LOOKING UP FROM BELOW): CHANGE CAMERA ANGLE COMPLETELY — dramatic worm's-eye low-angle 100mm macro shot looking UPWARD from below at the product turned toward the LEFT, exposing bottom bevels, lenses and micro-texture on a sleek dark obsidian stage (NO volcano), bright moving spotlight beams and glowing dust sweeping across the background.`,
-          `SHOT 3 — ${lifeShot} Subject angled dynamically toward the RIGHT with vivid kinetic light streaks in motion behind.`,
-          `SHOT 4 — 180-DEGREE REAR/SIDE-TO-FRONT TURNAROUND ANGLE: CHANGE CAMERA ANGLE 180 DEGREES — dramatic deep opposite-flank & back-three-quarter perspective revealing the side contours, rear strap/back architecture and opposite side of the exact product suspended inside a hyper-dynamic luminous neon-and-gold energy light tunnel with speed trails racing past.`,
-          `SHOT 5 — HIGH OVERHEAD TOP-DOWN ANGLE (LOOKING DOWN FROM 55° ABOVE): CHANGE CAMERA ANGLE COMPLETELY — steep 55-degree bird's-eye overhead angle looking DOWN from above onto the exact product rotated TOWARD THE RIGHT on polished Nero Marquina dark reflective marble, revealing top contours and full depth with sweeping god-rays, swirling volumetric mist and rising golden embers.`,
-          `SHOT 6 — LEFT-TO-RIGHT LOW DYNAMIC ACTION PROFILE: Sharp left-facing low-angle 3D profile view revealing full lateral silhouette against a hyper-kinetic night city skyline with fast streaking neon traffic light trails, drifting atmospheric sparks and intense bokeh depth.`,
-          `SHOT 7 — DEAD-CENTER FRONT-FACING 0° HERO FINALE (UPPER SAFE ZONE): Iconic symmetrical dead-center FRONT-FACING (0 degrees) hero composition with the exact product facing STRAIGHT AT THE CAMERA (never sideways), commanding the upper 58% of the frame with clean atmospheric space below, dramatic pulsing cinema flares, sweeping light beams and swirling golden sparks behind.`
+          // 0: RIGHT-FACING 45°/90° EXPLOSIVE HOOK (uses right_45 PNG)
+          `Dynamic vertical 9:16 commercial hero shot with ${refItem} angled boldly toward the RIGHT side of the frame inside the chosen living universe (${selectedModelBase.slice(0, 320)}), photographed from an energetic right three-quarter perspective with dramatic rim highlights, glowing embers, atmospheric haze and radiant light streaks surging through deep f/1.4 bokeh, product bold in the upper-center safe zone.`,
+          // 1: BOTTOM-UP LOW-ANGLE 100MM SUPER MACRO (uses bottom_up PNG)
+          `Extreme 100mm cinema super-macro photograph shot from a steep low worm's-eye angle looking UPWARD from below at ${refItem}, showcasing sculpted underside contours, real material grain and precision edges on a glossy obsidian luxury stage bathed in sweeping golden-white spotlight beams and floating luminous dust particles in deep bokeh.`,
+          // 2: REAL-WORLD LIFESTYLE HUMAN ACTION (uses right_45 + frontal)
+          `${lifeShot} Product and subject framed dynamically in real action with vivid kinetic light ribbons, rich atmospheric depth and energetic real-world motion across the entire background.`,
+          // 3: 180-DEGREE REAR/OPPOSITE FLANK IN LUMINOUS ENERGY VORTEX (uses back_180 PNG)
+          `Ultra-dynamic futuristic commercial shot capturing ${refItem} from its dramatic 180-degree rear-and-opposite-flank 3D perspective suspended dynamically in mid-air inside a hyper-kinetic glowing cyan-and-gold luminous energy light tunnel with swirling light waves and high-speed bokeh trails racing toward the lens.`,
+          // 4: HIGH 60° OVERHEAD TOP-DOWN ANGLE ON MARBLE (uses top_down PNG)
+          `Dramatic elevated 60-degree bird's-eye overhead commercial photograph looking steeply DOWN from above onto ${refItem} resting on dark reflective Nero Marquina marble, revealing top geometry and full 3D contours surrounded by curling volumetric studio mist, shimmering water-light caustics, sweeping diagonal god-rays and rising golden sparks.`,
+          // 5: LEFT-FACING 60°/90° LOW ACTION PROFILE AGAINST RACING SKYLINE (uses left_60 PNG)
+          `Cinematic low-angle 3D lateral profile showing ${refItem} facing sharply toward the LEFT on a dark reflective architectural ledge overlooking a blazing night metropolis skyline with streaking neon traffic light trails, glowing amber-and-teal bokeh spheres and drifting atmospheric sparks filling 100% of the vertical 9:16 frame.`,
+          // 6: DEAD-CENTER FRONT-FACING 0° ICONIC HERO FINALE (uses pure frontal PNG)
+          `Iconic symmetrical dead-center FRONT-FACING (0 degrees) flagship commercial finale with ${refItem} facing STRAIGHT AT THE CAMERA in commanding full-front view, positioned cleanly in the upper 60% safe zone (with rich dark atmospheric stage space below for subtitles), backlit by dramatic volumetric golden-white cinema flares, sweeping spotlight beams and swirling fire sparks.`
         ];
 
         const worldDirective = worlds[cutIdx % worlds.length];
-        return `${worldDirective} ${multiAngleNote}${refLock}${macroClause} ${colorGrade}`.replace(/\s{2,}/g, " ").trim().slice(0, 2150);
+        return `${worldDirective} ${multiAngleNote}${refLock}${macroClause} ${fullBleed}`.replace(/\s{2,}/g, " ").trim().slice(0, 2150);
       }
 
       const SUPER_CLIP_CHOREO = [
-        "CUT 1 — RIGHT-SIDE CRASH-ZOOM + 3D TURN RIGHT + LIVING SET: Explosive fast dolly zoom-in rushing straight toward the product while curving RIGHT in a bold 40-degree 3D orbit (showing right flank to front), with fiery sparks, lava glow, wind and volumetric energy streaming nonstop across the entire moving background.",
-        "CUT 2 — UPWARD LOW-ANGLE CRANE RISE (BAIXO→CIMA) + MACRO ZOOM: Dynamic cinema camera swooping rapidly UPWARD from below while zooming in across crisp surface textures as the product tilts gently left-to-center and dramatic spotlight beams + glowing dust race continuously across the background.",
-        "CUT 3 — KINETIC LIFESTYLE ACTION + ORBIT RIGHT-TO-LEFT: Lifelike natural human movement actively using/presenting the product while the cinema camera orbits smoothly from right to left and vibrant neon bokeh lights + atmospheric energy stream continuously behind.",
-        "CUT 4 — FULL 180-DEGREE 3D ORBITAL SPIN REVEAL: Thrilling continuous 180-degree orbital camera sweep swinging swiftly from the rear/opposite flank all the way around to the front of the product, exposing every 3D contour while luminous neon energy waves and light tunnels rush nonstop at high speed behind.",
-        "CUT 5 — TOP-DOWN OVERHEAD DIVE (CIMA→BAIXO) + RIGHT ROTATION: Dramatic elevated crane camera diving smoothly DOWNWARD from above while arcing around the right side of the product as billowing volumetric mist, moving light caustics and rising golden embers flow nonstop across the luxury marble set.",
-        "CUT 6 — LEFT-TO-RIGHT WHIP-ORBIT + HYPER-MOVING SKYLINE: Fast kinetic whip-arc camera sweeping boldly from LEFT to RIGHT while pulling dynamically out-and-in as streaking night city lights, neon bokeh and atmospheric sparks surge rapidly across 100% of the background.",
-        "CUT 7 — FRONTAL HERO POWER ZOOM-IN + MOVING LIGHT RAYS: Authoritative continuous fast zoom-in keeping the product FRONT FACE locked toward the viewer in the upper safe zone while dazzling volumetric cinema flares, pulsing spotlight rays and golden fire sparks swirl continuously behind."
+        // 0: High-velocity Crash-Zoom + Right-to-Front 3D Orbit + Living Background
+        "High-velocity FPV cinema crash-zoom rushing boldly forward toward the product while orbiting smoothly around its RIGHT flank toward front-center in strong 3D parallax, as glowing sparks, swirling volumetric mist and bright directional light streaks blast nonstop at high speed across 100% of the background.",
+        // 1: Low-to-High Upward Crane Rise (De Baixo para Cima) + Macro Sweep
+        "Fast upward low-angle crane camera swooping rapidly from BOTTOM TO TOP while pushing closer in 100mm macro along the product's sculpted underside and edges, sweeping bright specular reflections across every real texture as volumetric spotlight beams and glowing particles drift nonstop behind.",
+        // 2: Dynamic Lifestyle Action + Right-to-Left Cinema Orbit
+        "Fluid handheld cinema tracking camera orbiting swiftly from RIGHT TO LEFT around the person naturally using and presenting the product in lively real-world action, with vibrant moving neon light waves, traffic bokeh, shimmering reflections and atmospheric energy in full nonstop motion behind.",
+        // 3: Full 180-Degree 3D Orbital Revolution inside Hyper-Speed Energy Tunnel
+        "Thrilling continuous 180-degree 3D orbital camera revolution swinging rapidly from the rear and opposite flank all the way around to the front of the product, exposing every 3D angle and thickness as luminous energy ribbons, plasma waves and hyperspace speed-light trails surge nonstop through the tunnel.",
+        // 4: High Top-Down Overhead Crane Dive (De Cima para Baixo) + Clockwise Right Arc
+        "Dramatic high-angle crane camera plunging smoothly DOWNWARD from TOP TO BOTTOM while arcing clockwise around the RIGHT side of the product, showcasing top contours and 3D depth as billowing volumetric mist, moving light caustics and rising golden embers flow nonstop across the dark marble stage.",
+        // 5: Aggressive Left-to-Right Whip-Orbit + Dynamic Zoom-Out/In + Racing Skyline
+        "Kinetic whip-arc cinema camera sweeping rapidly from LEFT TO RIGHT while executing a dramatic pull-out-to-push-in speed ramp, exposing full left-side-to-front geometry as streaking night city lights, neon bokeh trails and glowing wind sparks surge continuously across the entire moving skyline.",
+        // 6: Authoritative Frontal 0° Hero Power Zoom-In (Locks Front Face Straight Toward Viewer!)
+        "Authoritative continuous fast zoom-in gliding straight forward toward the product while keeping its FRONT FACE locked squarely toward the camera in the upper safe zone (never turning sideways or away), as dazzling volumetric cinema flares, sweeping spotlight rays and swirling golden sparks radiate nonstop behind."
       ];
 
       const SUPER_NEGATIVE =
@@ -6905,117 +7006,126 @@
           document.head.appendChild(st);
         }
 
-        const voiceBox = document.getElementById("inlineVoiceBox");
-        const genderSel = document.getElementById("inlineVoiceGender");
-        const styleSel = document.getElementById("inlineVoiceStyle");
-        const speedSel = document.getElementById("inlineVoiceSpeed");
-        if (styleSel && !document.getElementById("nxVoicePreviewProBar")) {
+        function mountVoicePreviewBar(cfg) {
+          const styleSel = document.getElementById(cfg.styleId);
+          if (!styleSel || document.getElementById(cfg.barId)) return;
+          const genderGetter = cfg.getGender;
+          const speedSel = document.getElementById(cfg.speedId);
+
           const bar = document.createElement("div");
-          bar.id = "nxVoicePreviewProBar";
+          bar.id = cfg.barId;
           bar.className = "el-preview-bar";
           bar.innerHTML =
-            '<button type="button" class="el-play-btn" id="btnPreviewVoiceReal60">▶ Ouvir Locutor Selecionado</button>' +
-            '<div class="el-eq" id="nxVoiceEq60"><span></span><span></span><span></span><span></span><span></span></div>' +
-            '<span class="el-preview-meta" id="nxVoiceMeta60">Ouça qualquer um dos 60 locutores antes de gerar • Cache ativo</span>';
+            `<button type="button" class="el-play-btn" id="${cfg.btnId}">▶ Ouvir Locutor Selecionado</button>` +
+            `<div class="el-eq" id="${cfg.eqId}"><span></span><span></span><span></span><span></span><span></span></div>` +
+            `<span class="el-preview-meta" id="${cfg.metaId}">Ouça qualquer um dos 60 locutores antes de gerar • Cache ativo</span>` +
+            `<audio id="${cfg.audioId}" controls playsinline style="display:none;height:30px;max-width:210px;border-radius:999px;"></audio>`;
 
-          const gridRow = voiceBox ? voiceBox.querySelector(".grid-3") : null;
-          if (gridRow) gridRow.insertAdjacentElement("afterend", bar);
+          const anchor = cfg.getAnchor ? cfg.getAnchor(styleSel) : null;
+          if (anchor) anchor.insertAdjacentElement("afterend", bar);
           else styleSel.insertAdjacentElement("afterend", bar);
 
-          const btn = document.getElementById("btnPreviewVoiceReal60");
-          const eq = document.getElementById("nxVoiceEq60");
-          const meta = document.getElementById("nxVoiceMeta60");
+          const btn = document.getElementById(cfg.btnId);
+          const eq = document.getElementById(cfg.eqId);
+          const meta = document.getElementById(cfg.metaId);
+          const audioEl = document.getElementById(cfg.audioId);
 
-          function stopVoicePrev() {
-            if (activeVoicePreviewAudio) {
+          function stopThisVoicePrev() {
+            if (activeVoicePreviewAudio && activeVoicePreviewAudio !== audioEl) {
               try { activeVoicePreviewAudio.pause(); activeVoicePreviewAudio.currentTime = 0; } catch {}
-              activeVoicePreviewAudio = null;
             }
+            if (audioEl) {
+              try { audioEl.pause(); audioEl.currentTime = 0; } catch {}
+            }
+            activeVoicePreviewAudio = null;
             if (btn) { btn.classList.remove("playing"); btn.textContent = "▶ Ouvir Locutor Selecionado"; }
             if (eq) eq.classList.remove("active");
           }
 
           function refreshVoiceLabel() {
-            stopVoicePrev();
+            stopThisVoicePrev();
+            if (audioEl) audioEl.style.display = "none";
             const opt = styleSel.options && styleSel.selectedIndex >= 0 ? styleSel.options[styleSel.selectedIndex] : null;
             const label = opt ? opt.textContent.trim() : "Locutor";
-            const key = `${styleSel.value}__${genderSel?.value || "male"}__${speedSel?.value || "1.18"}`;
+            const gVal = genderGetter();
+            const key = `${styleSel.value}__${gVal}__${speedSel?.value || "1.14"}`;
             if (meta) meta.textContent = voicePreviewCache.has(key) ? `✓ Em cache (grátis): ${label.slice(0, 44)}` : `Pronto p/ ouvir: ${label.slice(0, 44)}`;
           }
 
           styleSel.addEventListener("change", refreshVoiceLabel);
           speedSel?.addEventListener("change", refreshVoiceLabel);
-          genderSel?.addEventListener("change", () => setTimeout(refreshVoiceLabel, 80));
+          if (cfg.genderElId) {
+            document.getElementById(cfg.genderElId)?.addEventListener("change", () => setTimeout(refreshVoiceLabel, 80));
+          }
+          if (cfg.genderBtnIds) {
+            cfg.genderBtnIds.forEach((gid) => document.getElementById(gid)?.addEventListener("click", () => setTimeout(refreshVoiceLabel, 80)));
+          }
 
           btn?.addEventListener("click", async () => {
-            if (activeVoicePreviewAudio && !activeVoicePreviewAudio.paused) {
-              stopVoicePrev();
+            if (audioEl && !audioEl.paused && audioEl.src) {
+              stopThisVoicePrev();
               if (meta) meta.textContent = "Preview pausado.";
               return;
             }
             if (voicePreviewBusy) return;
             const styleId = String(styleSel.value || "").trim();
-            const gender = String(genderSel?.value || "male").trim();
-            const speed = Math.min(1.20, Number(speedSel?.value || 1.18) || 1.18);
+            const gender = String(genderGetter() || "male").trim();
+            const speed = Math.min(1.20, Number(speedSel?.value || 1.14) || 1.14);
             const opt = styleSel.options && styleSel.selectedIndex >= 0 ? styleSel.options[styleSel.selectedIndex] : null;
             const label = opt ? opt.textContent.trim() : styleId;
-            const cleanName = extractVoiceName(styleId, label);
             const cacheKey = `${styleId}__${gender}__${speed}`;
+
+            // Destrava o elemento <audio> sincronamente no clique do usuário (resolve bloqueio de autoplay!)
+            try {
+              audioEl.muted = false;
+              audioEl.volume = 1.0;
+              audioEl.load();
+            } catch {}
 
             try {
               voicePreviewBusy = true;
               btn.disabled = true;
               let playableUrl = voicePreviewCache.get(cacheKey);
               if (!playableUrl) {
-                btn.textContent = "⏳ Gerando voz...";
-                if (meta) meta.textContent = `Carregando ${label.slice(0, 36)}...`;
-                const sampleText = "Para tudo e olha esse lançamento incrível! Qualidade absurda em cada detalhe. Toque no carrinho agora e garanta o seu!";
-                let audioUrl = "";
-                let lastErr = "Falha ao carregar preview.";
-                for (let engIdx = 0; engIdx <= 2; engIdx++) {
-                  try {
-                    const q = await callApi({
-                      task: "submit_tts",
-                      __isVoicePreview: true,
-                      engineIndex: engIdx,
-                      voiceStyle: styleId,
-                      voiceId: styleId,
-                      voice: cleanName || styleId,
-                      gender,
-                      speed,
-                      text: sampleText
-                    }, 30000);
-                    const r = await pollFalJob(q, (st) => { if (meta) meta.textContent = `${cleanName || "Locutor"}: ${st}...`; });
-                    if (r && (r.audioUrl || r.url)) { audioUrl = r.audioUrl || r.url; break; }
-                  } catch (e) {
-                    if (e && (e.status === 401 || e.status === 402 || e.status === 403)) throw e;
-                    lastErr = e?.message || lastErr;
-                  }
-                }
-                if (!audioUrl) throw new Error(lastErr);
-                const blob = await fetchMediaBlob(audioUrl);
+                btn.textContent = "⏳ Carregando voz...";
+                if (meta) meta.textContent = `Gerando amostra rápida de ${label.slice(0, 34)}...`;
+                const sampleText = "Olha a qualidade absurda desse lançamento! Garanta já o seu!";
+                const vRes = await generateVoiceWithTripleFallback(sampleText, gender, styleId, speed, (st) => {
+                  if (meta) meta.textContent = `${label.slice(0, 26)}: ${st}`;
+                }, null);
+                if (!vRes || !vRes.audioUrl) throw new Error(vRes?.error || "Falha ao carregar preview.");
+                const blob = await fetchMediaBlob(vRes.audioUrl);
                 playableUrl = URL.createObjectURL(blob);
                 voicePreviewCache.set(cacheKey, playableUrl);
               }
-              stopVoicePrev();
-              activeVoicePreviewAudio = new Audio(playableUrl);
-              activeVoicePreviewAudio.preservesPitch = true;
-              activeVoicePreviewAudio.onended = () => {
-                stopVoicePrev();
-                if (meta) meta.textContent = `✓ Ouvido (${label.slice(0, 38)}) — repetir é grátis`;
+
+              stopThisVoicePrev();
+              activeVoicePreviewAudio = audioEl;
+              audioEl.src = playableUrl;
+              audioEl.style.display = "inline-block";
+              audioEl.onended = () => {
+                if (btn) { btn.classList.remove("playing"); btn.textContent = "▶ Ouvir Locutor Selecionado"; }
+                if (eq) eq.classList.remove("active");
+                if (meta) meta.textContent = `✓ Ouvido (${label.slice(0, 36)}) — repetir é grátis`;
               };
-              await activeVoicePreviewAudio.play();
-              btn.classList.add("playing");
-              btn.textContent = "⏹ Parar Voz";
-              if (eq) eq.classList.add("active");
-              if (meta) meta.textContent = `🔊 Ouvindo: ${label.slice(0, 44)}`;
+              try {
+                await audioEl.play();
+                btn.classList.add("playing");
+                btn.textContent = "⏹ Parar Voz";
+                if (eq) eq.classList.add("active");
+                if (meta) meta.textContent = `🔊 Ouvindo: ${label.slice(0, 42)}`;
+              } catch {
+                btn.classList.remove("playing");
+                btn.textContent = "▶ Ouvir Locutor Selecionado";
+                if (meta) meta.textContent = `✓ Áudio pronto! Aperte ▶ no player ao lado para ouvir.`;
+              }
             } catch (err) {
-              stopVoicePrev();
+              stopThisVoicePrev();
               const rawMsg = String(err?.message || "");
               const isFalBalance = /exhausted balance|user is locked|top up|403/i.test(rawMsg);
               if (meta) {
                 meta.textContent = isFalBalance
-                  ? "⚠️ Saldo da sua conta fal.ai zerou! Recarregue em fal.ai/dashboard/billing para ouvir as vozes reais."
+                  ? "⚠️ Saldo da fal.ai zerou! Recarregue em fal.ai/dashboard/billing."
                   : `Aviso: ${rawMsg || "verifique login/créditos"}`;
               }
             } finally {
@@ -7024,6 +7134,29 @@
             }
           });
         }
+
+        // Preview funcional nos 3 seletores de voz (Superprodução, Importar Vídeo e Narração PT-BR)
+        mountVoicePreviewBar({
+          barId: "nxVoicePreviewProBar", btnId: "btnPreviewVoiceReal60", eqId: "nxVoiceEq60",
+          metaId: "nxVoiceMeta60", audioId: "nxVoiceAudio60",
+          styleId: "inlineVoiceStyle", speedId: "inlineVoiceSpeed", genderElId: "inlineVoiceGender",
+          getGender: () => document.getElementById("inlineVoiceGender")?.value || "male",
+          getAnchor: () => document.getElementById("inlineVoiceBox")?.querySelector(".grid-3")
+        });
+        mountVoicePreviewBar({
+          barId: "nxVoicePreviewLabBar", btnId: "btnPreviewVoiceLab60", eqId: "nxVoiceEqLab60",
+          metaId: "nxVoiceMetaLab60", audioId: "nxVoiceAudioLab60",
+          styleId: "labVoiceStyle", speedId: "labVoiceSpeed", genderElId: "labVoiceGender",
+          getGender: () => document.getElementById("labVoiceGender")?.value || "male",
+          getAnchor: () => document.getElementById("labVoiceStyle")?.closest(".grid-3")
+        });
+        mountVoicePreviewBar({
+          barId: "nxVoicePreviewStudioBar", btnId: "btnPreviewVoiceStudio60", eqId: "nxVoiceEqStudio60",
+          metaId: "nxVoiceMetaStudio60", audioId: "nxVoiceAudioStudio60",
+          styleId: "studioVoiceStyle", speedId: "studioVoiceSpeed", genderBtnIds: ["btnGenderMale", "btnGenderFemale"],
+          getGender: () => studioGender || "male",
+          getAnchor: () => document.getElementById("studioVoiceStyle")?.closest(".grid-3")
+        });
 
         const scriptArea = document.getElementById("inlineVoiceScript");
         if (scriptArea && !document.getElementById("btnGenScriptSuper14")) {
@@ -7078,8 +7211,9 @@
             '<div class="nx-music-row">' +
             `  <select id="nexoraTrackSelect2000">${optsHtml}</select>` +
             '  <select id="nexoraMusicEngine2000">' +
-            '    <option value="lyria2" selected>🏆 Google Lyria 2 Pro (Estúdio IA • Corrigido)</option>' +
-            '    <option value="tracks">💿 Biblioteca MP3 Pronta (Pasta tracks/ • 0 Créditos)</option>' +
+            '    <option value="lyria2" selected>🏆 Google Lyria 2 Pro (Máxima Qualidade • Paralelo no Vídeo)</option>' +
+            '    <option value="fast">⚡ IA Rápida Estúdio (Stable Audio • ~12s • Batida Pesada)</option>' +
+            '    <option value="tracks">💿 Biblioteca MP3 Pronta (Pasta tracks/ • 0s • 0 Créditos)</option>' +
             '  </select>' +
             '</div>' +
             '<div class="nx-music-actions">' +
@@ -7088,7 +7222,8 @@
             '  <input type="file" id="nxUploadMusicInput" accept="audio/*" style="display:none;" />' +
             '  <button type="button" id="btnClearCustomMusic" class="nx-mbtn" style="display:none;background:#475569;border-color:#64748b;">✕ Limpar MP3</button>' +
             '  <div class="el-eq" id="nxMusicEq"><span></span><span></span><span></span><span></span><span></span></div>' +
-            '  <span class="nx-music-status" id="nxMusicStatus">Drop 00:00 + Recorte Vocal + Sidechain Ducking ativos</span>' +
+            '  <audio id="nxMusicPreviewAudioEl" controls playsinline style="display:none;height:30px;max-width:205px;border-radius:999px;"></audio>' +
+            '  <span class="nx-music-status" id="nxMusicStatus">Drop 00:00 + Grave 808/EDM + Recorte Vocal + Sidechain Ducking ativos</span>' +
             '</div>';
           musicGridWrap.insertAdjacentElement("afterend", panel);
 
@@ -7197,14 +7332,15 @@
                   }, 1000);
                   let rawUrl = "";
                   try {
-                    // Tenta Lyria 2 (limite rápido 32s); se a fila do Lyria 2 estiver lenta, cai automaticamente p/ motor rápido (8-12s)!
-                    for (const tryEng of [1, 0]) {
+                    // Respeita o modo escolhido (Lyria 2 recebe 82s completos — NUNCA aborta em 30s! Modo Rápido usa Stable Audio ~12s!)
+                    const orderEngines = mode === "fast" ? [0, 1] : [1, 0];
+                    for (const tryEng of orderEngines) {
                       const engTitle = tryEng === 1 ? "Lyria 2 Pro" : "Estúdio Rápido";
                       btnPrev.textContent = `⏳ ${engTitle}...`;
                       musicStLbl = `${engTitle}: enviando`;
                       const mCtrl = new AbortController();
                       let mTimedOut = false;
-                      const mTimer = setTimeout(() => { mTimedOut = true; mCtrl.abort(); }, tryEng === 1 ? 32000 : 28000);
+                      const mTimer = setTimeout(() => { mTimedOut = true; mCtrl.abort(); }, tryEng === 1 ? 82000 : 42000);
                       try {
                         const q = await callApi({
                           task: "submit_music",
@@ -7213,14 +7349,14 @@
                           duration: 14,
                           musicPrompt: tr.lyriaPrompt,
                           musicNegativePrompt: MUSIC_NEG_STRICT
-                        }, 24000, mCtrl.signal);
+                        }, 26000, mCtrl.signal);
                         const r = await pollFalJob(q, (st) => { musicStLbl = `${engTitle}: ${st}`; }, mCtrl.signal);
                         rawUrl = r?.audioUrl || r?.audio_url || r?.url || "";
                         if (rawUrl) break;
                       } catch (eTry) {
                         const msg = String(eTry?.message || "");
                         if (/exhausted balance|user is locked|top up|401|402|403/i.test(msg)) throw eTry;
-                        if (!mTimedOut && tryEng === 0) throw eTry;
+                        if (!mTimedOut && tryEng === orderEngines[orderEngines.length - 1]) throw eTry;
                       } finally {
                         clearTimeout(mTimer);
                       }
@@ -7236,17 +7372,31 @@
               }
 
               stopMusicPrev();
-              activeMusicPreviewAudio = new Audio(playable);
-              activeMusicPreviewAudio.volume = 0.85;
+              const mAudioEl = document.getElementById("nxMusicPreviewAudioEl");
+              if (mAudioEl) {
+                activeMusicPreviewAudio = mAudioEl;
+                mAudioEl.src = playable;
+                mAudioEl.volume = 0.88;
+                mAudioEl.style.display = "inline-block";
+              } else {
+                activeMusicPreviewAudio = new Audio(playable);
+                activeMusicPreviewAudio.volume = 0.88;
+              }
               activeMusicPreviewAudio.onended = () => {
                 stopMusicPrev();
                 if (statusEl) statusEl.textContent = "✓ Trilha aprovada em cache — 0 créditos extras no vídeo!";
               };
-              await activeMusicPreviewAudio.play();
-              btnPrev.classList.add("playing");
-              btnPrev.textContent = "⏹ Parar Trilha";
-              if (eqEl) eqEl.classList.add("active");
-              if (statusEl) statusEl.textContent = `🔊 Ouvindo: ${tr.name}`;
+              try {
+                await activeMusicPreviewAudio.play();
+                btnPrev.classList.add("playing");
+                btnPrev.textContent = "⏹ Parar Trilha";
+                if (eqEl) eqEl.classList.add("active");
+                if (statusEl) statusEl.textContent = `🔊 Ouvindo: ${tr.name}`;
+              } catch {
+                btnPrev.classList.remove("playing");
+                btnPrev.textContent = "▶ Ouvir Trilha Selecionada";
+                if (statusEl) statusEl.textContent = "✓ Trilha pronta! Aperte ▶ no player ao lado para ouvir.";
+              }
             } catch (err) {
               stopMusicPrev();
               const rawMsg = String(err?.message || "");
@@ -7270,7 +7420,7 @@
           sp.className = "nx-super-panel";
           sp.innerHTML =
             '<div class="nx-super-title">' +
-            '  <span>🏆 Motor Superprodução Agência v15.0 (Turbo 7x GPU • Zero Congelamento • 3D Total)</span>' +
+            '  <span>🏆 Motor Superprodução Agência v16.0 (Kit 6 Ângulos 9:16 • 15Mbps HD • Sync 0,00s • Lyria 2)</span>' +
             '  <span style="font-size:11px;color:#7dd3fc;">Sync 0,00s • Whooshes Reais • Zooms Dinâmicos</span>' +
             '</div>' +
             '<div class="nx-super-checks">' +
@@ -7344,13 +7494,24 @@
       function getOrdered3Angles(cutNum) {
         const kit = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((a) => a && a.url) : [];
         if (!kit.length) return [];
-        const pattern = [1, 2, 0, 2, 1, 0, 0];
-        const pIdx = pattern[cutNum % pattern.length] % kit.length;
-        const out = [kit[pIdx].url];
-        for (let i = 0; i < kit.length; i++) {
-          if (i !== pIdx && !out.includes(kit[i].url)) out.push(kit[i].url);
+        const byKey = new Map();
+        for (const item of kit) {
+          const k = item.key || item.angle || "";
+          if (k) byKey.set(k, item.url);
         }
-        return out;
+        const frontalUrl = byKey.get("frontal") || kit[0].url;
+        // Mapeamento exato: envia APENAS o par [Ângulo 9:16 do corte + Âncora Frontal 0°] para pose real sem confundir a IA!
+        // Cut 0: Direita | Cut 1: Baixo p/ Cima | Cut 2: Direita (Lifestyle) | Cut 3: Giro 180° | Cut 4: Cima p/ Baixo | Cut 5: Esquerda | Cut 6: Frontal 0° Puro
+        const targetKeys = ["right_45", "bottom_up", "right_45", "back_180", "top_down", "left_60", "frontal"];
+        const wantedKey = targetKeys[cutNum % targetKeys.length];
+        if (wantedKey === "frontal") {
+          return [frontalUrl];
+        }
+        const primaryUrl = byKey.get(wantedKey) || kit[cutNum % kit.length].url;
+        if (primaryUrl && primaryUrl !== frontalUrl) {
+          return [primaryUrl, frontalUrl];
+        }
+        return [frontalUrl];
       }
 
       window.fetch = async function (input, init) {
@@ -7392,7 +7553,13 @@
               const now = Date.now();
               if (now - lastSceneTime > 120000) sceneCutCounter = 0;
               lastSceneTime = now;
-              const cutIdx = sceneCutCounter++;
+              // Usa cutIndex exato do corte (elimina 100% troca de ângulos no paralelismo!)
+              const cutIdx = Number.isInteger(payload.cutIndex) ? payload.cutIndex : sceneCutCounter++;
+              delete payload.cutIndex;
+
+              // TRAVA OBRIGATÓRIA 9:16 FULL-BLEED EM TODA CENA!
+              payload.aspectRatio = "9:16";
+              payload.aspect_ratio = "9:16";
 
               const angles = getOrdered3Angles(cutIdx);
               if (angles.length > 0) {
@@ -7421,18 +7588,20 @@
               const now = Date.now();
               if (now - lastClipTime > 240000) clipCutCounter = 0;
               lastClipTime = now;
-              const cutIdx = clipCutCounter++;
+              // Usa cutIndex exato do corte (garante Hero 0° no Corte 7, Giro 180° no Corte 4, Top-Down no Corte 5, etc.!)
+              const cutIdx = Number.isInteger(payload.cutIndex) ? payload.cutIndex : clipCutCounter++;
+              delete payload.cutIndex;
 
               const promptKey = typeof payload.prompt === "string" && payload.prompt.trim() ? "prompt" : "motionPrompt";
               const descRaw = String(document.getElementById("productDetailHint")?.value || "").trim();
               const macroRaw = String(document.getElementById("macroTarget")?.value || "").trim();
               const choreo = SUPER_CLIP_CHOREO[cutIdx % SUPER_CLIP_CHOREO.length];
               const fidelity = descRaw
-                ? `100% STRICT PRODUCT FIDELITY: Keep exact original colors, finish and shape of "${descRaw}"${macroRaw ? ` (${macroRaw})` : ""}. Zero color shift, zero morphing.`
-                : `100% STRICT PRODUCT FIDELITY: Keep exact original product colors, materials and shape. Zero morphing.`;
+                ? `Strict product fidelity: keep exact original colors, finish and shape of "${descRaw}"${macroRaw ? ` (${macroRaw})` : ""}. Zero color shift, zero morphing.`
+                : `Strict product fidelity: keep exact original product colors, materials and shape. Zero morphing.`;
 
               payload[promptKey] =
-                `${choreo} ${fidelity} VIVID CINEMA COLORS & HIGH CONTRAST: Rich saturated cinematic tones, zero grey/washed-out look, crisp 4K ARRI Alexa motion from frame 1 to final frame.`
+                `${choreo} ${fidelity} Vivid ARRI Alexa 65 cinema colors, rich contrast and continuous high-energy 3D camera + living background motion from frame 1 to final frame.`
                   .replace(/\s{2,}/g, " ")
                   .trim()
                   .slice(0, 2200);
@@ -7504,9 +7673,12 @@
                   }), { status: 200, headers: { "Content-Type": "application/json" } });
                 }
 
-                // Prioriza Google Lyria 2 (engineIndex: 1 no backend) e mantém Stable Audio (0) como fallback automático!
-                if (payload.engineIndex === 0) payload.engineIndex = 1;
-                else if (payload.engineIndex === 1) payload.engineIndex = 0;
+                // Modo Lyria 2: prioriza Google Lyria 2 (1) e fallback Stable Audio (0).
+                // Modo Rápido: prioriza Stable Audio (0, ~12s) e fallback Lyria 2 (1).
+                if (mode !== "fast") {
+                  if (payload.engineIndex === 0) payload.engineIndex = 1;
+                  else if (payload.engineIndex === 1) payload.engineIndex = 0;
+                }
                 payload.musicPrompt = tr.lyriaPrompt;
                 payload.prompt = tr.lyriaPrompt;
                 payload.musicNegativePrompt = MUSIC_NEG_STRICT;
