@@ -1037,6 +1037,173 @@
             <div class="step-title"><span class="step-num">01</span> Foto do Produto &amp; Direção Visual</div>
             <span class="step-meta">Qualquer produto • <strong>Zona Segura TikTok Shop</strong></span>
           </div>
+
+          <style>
+            .nx-vault-bar {
+              margin-bottom: 13px;
+              background: linear-gradient(135deg, rgba(13, 25, 42, 0.96), rgba(11, 29, 25, 0.88));
+              border: 1px solid rgba(34, 197, 94, 0.34);
+              border-radius: 13px;
+              padding: 11px 13px;
+              display: flex;
+              flex-direction: column;
+              gap: 9px;
+            }
+            .nx-vault-head {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 8px;
+              flex-wrap: wrap;
+            }
+            .nx-vault-title {
+              font-size: 12px;
+              font-weight: 800;
+              color: #dcfce7;
+              display: flex;
+              align-items: center;
+              gap: 7px;
+              flex-wrap: wrap;
+            }
+            .nx-vault-pill {
+              font-size: 10px;
+              font-weight: 800;
+              padding: 2px 8px;
+              border-radius: 999px;
+              background: rgba(34, 197, 94, 0.16);
+              border: 1px solid rgba(34, 197, 94, 0.42);
+              color: #86efac;
+            }
+            .nx-vault-actions {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              flex-wrap: wrap;
+            }
+            .nx-vault-btn {
+              background: #14223a;
+              border: 1px solid rgba(148, 163, 184, 0.28);
+              color: #e2e8f0;
+              border-radius: 8px;
+              padding: 5px 10px;
+              font-size: 11px;
+              font-weight: 700;
+              cursor: pointer;
+              transition: 0.15s;
+            }
+            .nx-vault-btn:hover:not(:disabled) { border-color: #22c55e; color: #fff; background: #192d4a; }
+            .nx-vault-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+            .nx-vault-btn.save-ok { border-color: rgba(34, 197, 94, 0.55); background: rgba(34, 197, 94, 0.15); color: #86efac; }
+            .nx-vault-list {
+              display: flex;
+              gap: 9px;
+              overflow-x: auto;
+              padding-bottom: 4px;
+              align-items: stretch;
+            }
+            .nx-vault-list::-webkit-scrollbar { height: 5px; }
+            .nx-vault-list::-webkit-scrollbar-thumb { background: #294063; border-radius: 99px; }
+            .nx-vault-empty {
+              font-size: 11.5px;
+              color: #94a3b8;
+              line-height: 1.45;
+              padding: 2px 0;
+            }
+            .nx-vault-card {
+              position: relative;
+              flex: 0 0 auto;
+              width: 178px;
+              background: #0c1425;
+              border: 1.5px solid #223556;
+              border-radius: 11px;
+              padding: 8px 9px;
+              display: flex;
+              align-items: center;
+              gap: 9px;
+              cursor: pointer;
+              text-align: left;
+              color: #e2e8f0;
+              transition: all 0.15s ease;
+            }
+            .nx-vault-card:hover { border-color: #38bdf8; background: #12203a; transform: translateY(-1px); }
+            .nx-vault-card.active {
+              border-color: #22c55e;
+              background: linear-gradient(145deg, rgba(34, 197, 94, 0.16), rgba(11, 25, 22, 0.96));
+              box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.25);
+            }
+            .nx-vault-thumb {
+              width: 38px;
+              height: 54px;
+              border-radius: 7px;
+              object-fit: contain;
+              flex-shrink: 0;
+              border: 1px solid rgba(148, 163, 184, 0.25);
+              padding: 2px;
+            }
+            .nx-vault-meta {
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              min-width: 0;
+              flex: 1;
+              padding-right: 14px;
+            }
+            .nx-vault-name {
+              font-size: 11.5px;
+              font-weight: 800;
+              color: #fff;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .nx-vault-sub {
+              font-size: 10px;
+              font-weight: 700;
+              color: #86efac;
+            }
+            .nx-vault-date {
+              font-size: 9.5px;
+              color: #94a3b8;
+            }
+            .nx-vault-del {
+              position: absolute;
+              top: 5px;
+              right: 5px;
+              width: 19px;
+              height: 19px;
+              border-radius: 999px;
+              border: 1px solid rgba(248, 113, 113, 0.35);
+              background: rgba(15, 23, 42, 0.9);
+              color: #fca5a5;
+              font-size: 10px;
+              font-weight: 900;
+              line-height: 1;
+              cursor: pointer;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+            }
+            .nx-vault-del:hover { background: #dc2626; color: #fff; border-color: #ef4444; }
+          </style>
+
+          <!-- BIBLIOTECA PERMANENTE DE PRODUTOS SALVOS (INDEXEDDB • REUTILIZAR COM 0 CRÉDITOS!) -->
+          <div class="nx-vault-bar" id="nxProductVaultBar">
+            <div class="nx-vault-head">
+              <div class="nx-vault-title">
+                <span>📦 Meus Produtos Salvos</span>
+                <span class="nx-vault-pill" id="nxVaultCountPill">0 salvos • 0 créditos p/ reutilizar</span>
+                <span id="nxVaultSaveStatus" style="font-size:10.5px;font-weight:700;color:#7dd3fc;"></span>
+              </div>
+              <div class="nx-vault-actions">
+                <button type="button" class="nx-vault-btn" id="btnVaultSaveNow" disabled>💾 Salvar Produto</button>
+                <button type="button" class="nx-vault-btn" id="btnVaultNewProduct">➕ Novo Produto</button>
+              </div>
+            </div>
+            <div class="nx-vault-list" id="nxVaultList">
+              <div class="nx-vault-empty">Seus produtos preparados (PNG sem fundo + 3 ângulos + descrição IA) são salvos automaticamente aqui para você criar novos vídeos em outros cenários sem pagar pelos PNGs de novo!</div>
+            </div>
+          </div>
+
           <div class="row-top">
             <div class="upload-col">
               <label class="upload-area" for="productImg">
@@ -1047,7 +1214,7 @@
                 <img id="thumbPreview" alt="Produto" />
               </label>
               <button type="button" class="btn-quick-bg" id="btnQuickRemoveBg" disabled>✂️ Remover Fundo (PNG)</button>
-              <button type="button" class="btn-quick-bg" id="btnGen3Angles" disabled style="background:rgba(34,197,94,0.16);color:#86efac;border-color:rgba(34,197,94,0.48);">📐 Gerar 6 Ângulos 3D (9:16) + Descrição IA</button>
+              <button type="button" class="btn-quick-bg" id="btnGen3Angles" disabled style="background:rgba(34,197,94,0.16);color:#86efac;border-color:rgba(34,197,94,0.48);">📐 Gerar 3 Ângulos 3D (9:16) + Salvar</button>
             </div>
 
             <div class="box-group" id="productFieldsBox">
@@ -1179,8 +1346,8 @@
           </style>
           <div class="angles3-panel" id="angles3Panel">
             <div class="angles3-head">
-              <span>📐 Kit 6 Ângulos 3D Sem Fundo • 100% Vertical 9:16 (Fidelidade + Movimento Real)</span>
-              <span class="angles3-status" id="angles3Status">Envie a foto acima e clique em "Gerar 6 Ângulos 3D (9:16)"</span>
+              <span>📐 Kit 3 Ângulos 3D Essenciais Sem Fundo • 9:16 (Mesma Qualidade 10/10 • ~55% menos créditos • Salvo Permanente)</span>
+              <span class="angles3-status" id="angles3Status">Envie a foto (ou clique num produto salvo acima) • Opcional: gere os 3 ângulos 1 única vez!</span>
             </div>
             <div class="angles3-grid">
               <div class="angle3-slot" id="angleSlot0">
@@ -1188,24 +1355,12 @@
                 <div class="angle3-thumb checker-bg" id="angleThumb0">Aguardando...</div>
               </div>
               <div class="angle3-slot" id="angleSlot1">
-                <div class="angle3-slot-title">2. Lado Direito (45°/90°)</div>
+                <div class="angle3-slot-title">2. Perspectiva 3/4 Direita (35°)</div>
                 <div class="angle3-thumb checker-bg" id="angleThumb1">Aguardando...</div>
               </div>
               <div class="angle3-slot" id="angleSlot2">
-                <div class="angle3-slot-title">3. Lado Esquerdo (60°/90°)</div>
+                <div class="angle3-slot-title">3. De Cima p/ Baixo (50°)</div>
                 <div class="angle3-thumb checker-bg" id="angleThumb2">Aguardando...</div>
-              </div>
-              <div class="angle3-slot" id="angleSlot3">
-                <div class="angle3-slot-title">4. De Cima p/ Baixo (60°)</div>
-                <div class="angle3-thumb checker-bg" id="angleThumb3">Aguardando...</div>
-              </div>
-              <div class="angle3-slot" id="angleSlot4">
-                <div class="angle3-slot-title">5. De Baixo p/ Cima</div>
-                <div class="angle3-thumb checker-bg" id="angleThumb4">Aguardando...</div>
-              </div>
-              <div class="angle3-slot" id="angleSlot5">
-                <div class="angle3-slot-title">6. Giro 180° / Traseira 3/4</div>
-                <div class="angle3-thumb checker-bg" id="angleThumb5">Aguardando...</div>
               </div>
             </div>
           </div>
@@ -2968,9 +3123,25 @@
           selectedVidLabel.textContent = `Selecionado: ${selectedVidModel.name}`;
           updateDirectorBanner();
           renderVideoPresets();
+          if (typeof window.__NEXORA_ON_SCENARIO_CHANGE__ === "function") {
+            try { window.__NEXORA_ON_SCENARIO_CHANGE__(selectedVidModel, false); } catch {}
+          }
         });
       });
     }
+
+    window.__NEXORA_GET_SELECTED_VIDEO_MODEL__ = () => selectedVidModel;
+    window.__NEXORA_SET_VIDEO_MODEL_BY_ID__ = (modelId, isFromAuto = true) => {
+      const found = RAW_VIDEO_MODELS.find((x) => x.id === Number(modelId));
+      if (!found) return;
+      selectedVidModel = found;
+      selectedVidLabel.textContent = `Selecionado: ${selectedVidModel.name}`;
+      updateDirectorBanner();
+      renderVideoPresets();
+      if (typeof window.__NEXORA_ON_SCENARIO_CHANGE__ === "function") {
+        try { window.__NEXORA_ON_SCENARIO_CHANGE__(selectedVidModel, Boolean(isFromAuto)); } catch {}
+      }
+    };
 
     btnRandImg.addEventListener("click", () => {
       const pool = IMAGE_MODELS.filter((m) => m.id !== selectedImgModel.id);
@@ -2986,6 +3157,9 @@
       selectedVidLabel.textContent = `Selecionado: ${selectedVidModel.name}`;
       updateDirectorBanner();
       renderVideoPresets();
+      if (typeof window.__NEXORA_ON_SCENARIO_CHANGE__ === "function") {
+        try { window.__NEXORA_ON_SCENARIO_CHANGE__(selectedVidModel, false); } catch {}
+      }
     });
     imgSearch.addEventListener("input", renderImagePresets);
     imgCatFilter.addEventListener("change", renderImagePresets);
@@ -3217,13 +3391,19 @@
       });
     }
 
+    let uploadedDataUrl = "";
+    let uploadedIsTransparent = false;
     function setUploadedProduct(dataUrl, base64, mime, isTransparent = false, hasWhiteBg = false) {
       thumbPreview.src = dataUrl;
       thumbPreview.style.display = "block";
       thumbPreview.classList.toggle("checker-bg", isTransparent);
+      uploadedDataUrl = dataUrl;
       uploadedBase64 = base64;
       uploadedMime = mime;
+      uploadedIsTransparent = Boolean(isTransparent);
       btnQuickRemoveBg.disabled = false;
+      const saveBtn = document.getElementById("btnVaultSaveNow");
+      if (saveBtn) saveBtn.disabled = !base64;
       if (isTransparent) {
         btnQuickRemoveBg.textContent = "✅ Fundo Removido (PNG Pronto)";
         btnQuickRemoveBg.style.borderColor = "#22c55e";
@@ -3272,9 +3452,15 @@
             stEl.style.color = "#86efac";
             stEl.textContent = `✅ IA identificou: ${res.name || "Produto analisado"} • Diretor IA adaptado (${prof ? prof.badge : "Fidelidade 100%"})`;
           }
+          if (typeof window.__NEXORA_VAULT_AUTOSAVE__ === "function") {
+            window.__NEXORA_VAULT_AUTOSAVE__("detecção IA");
+          }
         } else if (stEl) {
           stEl.style.color = "#94a3b8";
-          stEl.textContent = "💡 Foto carregada! Se quiser, você também pode editar os detalhes abaixo ou clicar em Gerar 6 Ângulos.";
+          stEl.textContent = "💡 Foto carregada! Se quiser, você também pode editar os detalhes abaixo ou clicar em Gerar 3 Ângulos.";
+          if (typeof window.__NEXORA_VAULT_AUTOSAVE__ === "function") {
+            window.__NEXORA_VAULT_AUTOSAVE__("foto enviada");
+          }
         }
       } catch {
         if (stEl) {
@@ -3287,6 +3473,10 @@
     productImg.addEventListener("change", async (e) => {
       const f = e.target.files?.[0];
       if (!f) return;
+      // Ao subir foto nova manualmente, cria um novo registro na biblioteca (não sobrescreve produto anterior!)
+      if (typeof window.__NEXORA_VAULT_START_NEW_ID__ === "function") {
+        window.__NEXORA_VAULT_START_NEW_ID__();
+      }
       const opt = await optimizeUpload(f);
       const isWhiteBg = await detectWhiteCatalogBg(opt.dataUrl);
       setUploadedProduct(opt.dataUrl, opt.base64, opt.mime, f.type === "image/png" && !isWhiteBg, isWhiteBg);
@@ -4983,9 +5173,10 @@
 
         if (isCleanMode || isGentleNiche) {
           if (isLastCut) {
-            scale = 1.02 + smoothCurve * 0.12 * optBoost;
-            panX = dir * (1 - smoothCurve) * 6;
-            panY = (0.5 - smoothCurve) * 6;
+            // Zoom final bem suave (1.00 -> 1.05) p/ nunca encostar ou cortar o produto nas bordas!
+            scale = 1.00 + smoothCurve * 0.05 * optBoost;
+            panX = dir * (1 - smoothCurve) * 4;
+            panY = (0.5 - smoothCurve) * 4;
           } else if (sIdx % 2 === 0) {
             scale = 1.01 + smoothCurve * (0.16 * zoomMult) * optBoost;
             panX = dir * Math.sin(p * Math.PI) * 14;
@@ -4997,9 +5188,10 @@
           }
         } else {
           if (isLastCut) {
-            scale = 1.02 + fastIn * 0.13 * optBoost;
-            panX = dir * (1 - smoothCurve) * 6;
-            panY = (0.5 - smoothCurve) * 6;
+            // Zoom final reduzido e controlado (1.00 -> 1.05) — enquadramento limpo de estúdio!
+            scale = 1.00 + fastIn * 0.05 * optBoost;
+            panX = dir * (1 - smoothCurve) * 4;
+            panY = (0.5 - smoothCurve) * 4;
           } else {
             const mv = sIdx % 5;
             if (mv === 0) {
@@ -5479,6 +5671,7 @@
             <button type="button" id="btnDlVideo" class="dl-btn main">Baixar Superprodução (.${out.ext.toUpperCase()} • ${out.sec}s)</button>
             <button type="button" id="btnPlayAgain" class="dl-btn" style="grid-column:span 2;">Reproduzir com Som</button>
             <button type="button" id="btnRemixAudio" class="dl-btn remix">🎵 Trocar Trilha / Narração / Re-mixar (Zero custo GPU)</button>
+            <button type="button" id="btnNewVideoSameProd" class="dl-btn" style="grid-column:span 2;background:rgba(34,197,94,0.12);border-color:rgba(34,197,94,0.45);color:#86efac;">🔄 Criar Outro Vídeo deste Produto (Outro Cenário/Voz • 0 cr nos PNGs)</button>
           </div>
           <div class="clip-list">
             ${session.mediaItems.map((m, idx) => `<a class="clip-chip" href="${m.url}" target="_blank" rel="noopener noreferrer" download="corte-${idx + 1}.${m.type === "video" ? "mp4" : "jpg"}">${m.type === "video" ? `3D #${idx + 1}` : `4K #${idx + 1}`}</a>`).join("")}
@@ -5501,6 +5694,17 @@
         outPlayer.muted = false; outPlayer.currentTime = 0; outPlayer.play().catch(() => {});
       });
       document.getElementById("btnRemixAudio")?.addEventListener("click", () => remixLastSession());
+      document.getElementById("btnNewVideoSameProd")?.addEventListener("click", () => {
+        savedVoiceBuf = null; savedVoiceUrl = ""; savedWhisperChunks = null; savedVoiceMeta = "";
+        updateInlineVoiceUI();
+        const panel = document.getElementById("nxSmartPromptPanel") || document.getElementById("productSection");
+        panel?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const stEl = document.getElementById("nxAutoDetectStatus");
+        if (stEl) {
+          stEl.style.color = "#86efac";
+          stEl.textContent = "✅ Produto e PNGs já carregados e salvos (0 créditos)! Agora escolha outro cenário, trilha ou narração e clique em Gerar Vídeo.";
+        }
+      });
     }
 
     async function remixLastSession() {
@@ -5624,7 +5828,10 @@
           setUploadedProduct(pngDataUrl, pngBase64, "image/png", true);
           if (activeMode === "removebg") setMode("video");
           const btn = document.getElementById("btnApplyPng");
-          if (btn) btn.textContent = "✓ Aplicado como foto do produto!";
+          if (btn) btn.textContent = "✓ Aplicado e salvo permanentemente (0 cr p/ reutilizar)!";
+          if (typeof window.__NEXORA_VAULT_AUTOSAVE__ === "function") {
+            window.__NEXORA_VAULT_AUTOSAVE__("PNG sem fundo");
+          }
           if (res.imageUrl && (!productDetailHint?.value.trim() || !macroTarget?.value.trim())) {
             autoAnalyzeUploadedProduct(res.imageUrl, false);
           }
@@ -6366,7 +6573,7 @@
       }
     });
 
-  // === KIT 6 ÂNGULOS 3D UNIVERSAIS SEM FUNDO (100% TRAVADO EM 9:16) + DESCRIÇÃO AUTOMÁTICA ===
+  // === KIT 3 ÂNGULOS 3D ESSENCIAIS SEM FUNDO (9:16) + BIBLIOTECA PERMANENTE (INDEXEDDB • 0 CRÉDITOS) ===
     window.nexora3Angles = [];
     window.nexora6Angles = window.nexora3Angles;
     const btnGen3Angles = document.getElementById("btnGen3Angles");
@@ -6375,14 +6582,14 @@
     function reset3AnglesUI(msg) {
       window.nexora3Angles = [];
       window.nexora6Angles = window.nexora3Angles;
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 3; i++) {
         const slot = document.getElementById(`angleSlot${i}`);
         const thumb = document.getElementById(`angleThumb${i}`);
         if (slot) slot.classList.remove("ready");
         if (thumb) thumb.innerHTML = "Aguardando...";
       }
       if (angles3Status) {
-        angles3Status.textContent = msg || 'Foto carregada — clique em "Gerar 6 Ângulos 3D (9:16) + Descrição IA"';
+        angles3Status.textContent = msg || 'Foto carregada — clique em "Gerar 3 Ângulos 3D (9:16) + Salvar" (1 única vez!)';
       }
     }
 
@@ -6393,7 +6600,6 @@
       if (thumb) thumb.innerHTML = htmlContent;
     }
 
-    // Sincroniza automaticamente o estado ativo/desativado do botão 6 Ângulos com o botão Remover Fundo
     if (btnQuickRemoveBg && btnGen3Angles) {
       const syncBtn3Angles = () => {
         btnGen3Angles.disabled = btnQuickRemoveBg.disabled || !uploadedBase64;
@@ -6403,7 +6609,7 @@
     }
 
     productImg?.addEventListener("change", () => {
-      reset3AnglesUI('Foto nova carregada — clique em "Gerar 6 Ângulos 3D (9:16) + Descrição IA"');
+      reset3AnglesUI('Foto nova carregada — clique em "Gerar 3 Ângulos 3D (9:16) + Salvar" (fica salvo permanente!)');
     });
 
     async function removeBgFromUrl(imageUrl, onStatus, signal) {
@@ -6421,6 +6627,42 @@
         }
       }
       throw new Error(lastErr);
+    }
+
+    async function urlToCompactPngDataUrl(urlOrDataUrl, maxW = 540, maxH = 960) {
+      if (!urlOrDataUrl) return "";
+      try {
+        let srcUrl = urlOrDataUrl;
+        let objUrlToRevoke = "";
+        if (!String(urlOrDataUrl).startsWith("data:")) {
+          const b = await fetchMediaBlob(urlOrDataUrl);
+          objUrlToRevoke = URL.createObjectURL(b);
+          srcUrl = objUrlToRevoke;
+        }
+        const out = await new Promise((resolve) => {
+          const im = new Image();
+          im.onload = () => {
+            try {
+              const iw = im.naturalWidth || maxW;
+              const ih = im.naturalHeight || maxH;
+              const sc = Math.min(1, maxW / iw, maxH / ih);
+              const c = document.createElement("canvas");
+              c.width = Math.max(16, Math.round(iw * sc));
+              c.height = Math.max(16, Math.round(ih * sc));
+              c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+              resolve(c.toDataURL("image/png"));
+            } catch {
+              resolve(String(urlOrDataUrl).startsWith("data:") ? urlOrDataUrl : "");
+            }
+          };
+          im.onerror = () => resolve(String(urlOrDataUrl).startsWith("data:") ? urlOrDataUrl : "");
+          im.src = srcUrl;
+        });
+        if (objUrlToRevoke) URL.revokeObjectURL(objUrlToRevoke);
+        return out;
+      } catch {
+        return String(urlOrDataUrl).startsWith("data:") ? urlOrDataUrl : "";
+      }
     }
 
     async function generateAngleCutout(baseImageOrList, anglePrompt, slotIdx, signal, startDelayMs = 0) {
@@ -6448,7 +6690,9 @@
           const pngUrl = await removeBgFromUrl(ra.imageUrl, (st) => {
             setAngleSlotState(slotIdx, `PNG: ${st}`, false);
           }, signal);
-          return { pngUrl: pngUrl || ra.imageUrl, studioUrl: ra.imageUrl };
+          const finalUrl = pngUrl || ra.imageUrl;
+          const compactDataUrl = await urlToCompactPngDataUrl(finalUrl, 540, 960);
+          return { pngUrl: finalUrl, dataUrl: compactDataUrl, studioUrl: ra.imageUrl };
         } catch (err) {
           if (err.message === "ABORTED_RUN" || err.status === 402 || err.status === 403) throw err;
           lastErr = err;
@@ -6501,20 +6745,26 @@
       if (btnGen3Angles) btnGen3Angles.disabled = true;
 
       try {
-        reset3AnglesUI("Passo 1/2: Recortando Ângulo 1 (Frontal PNG 9:16)...");
-        setAngleSlotState(0, "Recortando PNG...", false);
-        for (let s = 1; s < 6; s++) setAngleSlotState(s, "Aguardando base...", false);
+        reset3AnglesUI("Passo 1/2: Preparando Ângulo 1 (Frontal PNG 9:16)...");
+        setAngleSlotState(0, uploadedIsTransparent ? "Reaproveitando PNG..." : "Recortando PNG...", false);
+        setAngleSlotState(1, "Aguardando base...", false);
+        setAngleSlotState(2, "Aguardando base...", false);
 
-        const r1 = await removeBgWithTripleFallback(uploadedBase64, uploadedMime, (st) => {
-          setAngleSlotState(0, `PNG: ${st}`, false);
-        }, sig);
-        if (!r1 || !r1.imageUrl) throw new Error(r1?.error || "Não foi possível recortar a foto principal.");
+        let angle1Url = "";
+        let dataUrl1 = uploadedDataUrl || `data:${uploadedMime};base64,${uploadedBase64}`;
 
-        const angle1Url = r1.imageUrl;
-        const blob1 = await fetchMediaBlob(angle1Url);
-        const dataUrl1 = await blobToDataUrl(blob1);
+        // ECONOMIA INTELIGENTE DE CRÉDITOS: se a foto já está sem fundo (PNG transparente), NÃO paga remove_bg de novo!
+        if (!uploadedIsTransparent) {
+          const r1 = await removeBgWithTripleFallback(uploadedBase64, uploadedMime, (st) => {
+            setAngleSlotState(0, `PNG: ${st}`, false);
+          }, sig);
+          if (!r1 || !r1.imageUrl) throw new Error(r1?.error || "Não foi possível recortar a foto principal.");
+          angle1Url = r1.imageUrl;
+          const blob1 = await fetchMediaBlob(angle1Url);
+          dataUrl1 = await blobToDataUrl(blob1);
+        }
 
-        // Normaliza o Frontal 0° em canvas 9:16 transparente (720x1280) com PRODUTO AMPLIADO na base branca 9:16
+        // Normaliza o Frontal 0° em canvas 9:16 transparente (540x960 p/ IndexedDB leve + base branca 720x1280 p/ IA)
         const { transparent916DataUrl, whiteStudioBase916 } = await new Promise((resolve) => {
           const im = new Image();
           im.onload = () => {
@@ -6526,8 +6776,9 @@
             const dy = Math.round((H - dh) / 2);
 
             const cPng = document.createElement("canvas");
-            cPng.width = W; cPng.height = H;
-            cPng.getContext("2d").drawImage(im, dx, dy, dw, dh);
+            cPng.width = 540; cPng.height = 960;
+            const scS = 0.75;
+            cPng.getContext("2d").drawImage(im, Math.round(dx * scS), Math.round(dy * scS), Math.round(dw * scS), Math.round(dh * scS));
             const tUrl = cPng.toDataURL("image/png");
 
             const cW = document.createElement("canvas");
@@ -6540,7 +6791,7 @@
 
             resolve({ transparent916DataUrl: tUrl, whiteStudioBase916: wUrl });
           };
-          im.onerror = () => resolve({ transparent916DataUrl: dataUrl1, whiteStudioBase916: angle1Url });
+          im.onerror = () => resolve({ transparent916DataUrl: dataUrl1, whiteStudioBase916: angle1Url || dataUrl1 });
           im.src = dataUrl1;
         });
 
@@ -6548,31 +6799,27 @@
         setUploadedProduct(transparent916DataUrl, b64_1, "image/png", true);
         setAngleSlotState(0, `<img src="${transparent916DataUrl}" alt="1. Frontal Hero 0° (9:16)" />`, true);
 
-        if (angles3Status) angles3Status.textContent = "Passo 2/3: Gerando Laterais, Topo 70° e Base Inferior 9:16 + Descrição IA...";
+        const needsDescribe = !productDetailHint?.value.trim() || !macroTarget?.value.trim();
+        if (angles3Status) {
+          angles3Status.textContent = needsDescribe
+            ? "Passo 2/2: Gerando 2 ângulos complementares 3D (9:16) + Descrição IA..."
+            : "Passo 2/2: Gerando apenas os 2 ângulos complementares 3D (9:16)...";
+        }
 
         const commonTail =
-          `Keep the exact same product model, colors, materials, markings and proportions from the reference photo, zero invented logos, zero hands, zero text, filling 75% of the frame centered alone in a VERTICAL 9:16 pure solid white #FFFFFF studio background with crisp even commercial softbox lighting.`;
+          `Keep the exact same product model, case/body geometry, face/details, colors, materials and proportions 100% IDENTICAL to the reference photo (never turn rectangular into round or square, zero invented logos, zero hands, zero text), filling 75% of the frame centered alone in a VERTICAL 9:16 pure solid white #FFFFFF studio background with crisp even commercial softbox lighting.`;
 
-        const phase1Specs = [
+        // APENAS OS 2 ÂNGULOS COMPLEMENTARES QUE REALMENTE ENTRAM NO VÍDEO COM FIDELIDADE 100%!
+        const angleSpecs = [
           {
-            slot: 1, key: "right_45", label: "2. Lado Direito (45°/90°)",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — MANDATORY 70-DEGREE RIGHT SIDE PROFILE (NEVER REPEAT FRONT VIEW). Physically turn the exact product (${orientShort}) 70 degrees clockwise so its RIGHT lateral flank faces the camera directly, clearly showing side thickness, side buttons/hinges and full right silhouette. ${commonTail}`
+            slot: 1, key: "right_45", label: "2. Perspectiva 3/4 Direita (35°)",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CLEAN 35-DEGREE FRONT-RIGHT THREE-QUARTER PERSPECTIVE (FRONT FACE STILL CLEARLY VISIBLE AND 100% FAITHFUL). Gently rotate the exact product (${orientShort}) 35 degrees toward the right so the camera sees BOTH the exact front face AND the right lateral thickness/contours in crisp 3D depth. ${commonTail}`
           },
           {
-            slot: 2, key: "left_60", label: "3. Lado Esquerdo (60°/90°)",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — MANDATORY 80-DEGREE LEFT SIDE PROFILE (NEVER REPEAT FRONT VIEW). Physically turn the exact product (${orientShort}) 80 degrees counter-clockwise to the opposite side so its LEFT lateral flank faces the camera directly, clearly exposing the full left side contour and 3D depth. ${commonTail}`
-          },
-          {
-            slot: 3, key: "top_down", label: "4. De Cima p/ Baixo (60°)",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — STEEP 75-DEGREE OVERHEAD BIRD'S-EYE TOP-DOWN SHOT (STRICTLY FORBIDDEN TO SHOW EYE-LEVEL FRONT VIEW). Position the camera directly above looking sharply DOWNWARD at 75 degrees onto the TOP roof/crown of the exact product (${orientShort}) angled diagonally, with the top surface dominating the frame and minimal front wall visible. ${commonTail}`
-          },
-          {
-            slot: 4, key: "bottom_up", label: "5. De Baixo p/ Cima",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — EXTREME LOW WORM'S-EYE UPWARD HERO SHOT (STRICTLY FORBIDDEN TO SHOW EYE-LEVEL FRONT VIEW). Place the camera very low beneath the product looking sharply UPWARD at 40 degrees toward the underside and lower chin of the exact product (${orientShort}) tilted dramatically in 3/4 heroic perspective, towering upward in the 9:16 frame. ${commonTail}`
+            slot: 2, key: "top_down", label: "3. De Cima p/ Baixo (50°)",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — ELEVATED 50-DEGREE HIGH THREE-QUARTER TOP-DOWN PERSPECTIVE (KEEP EXACT SILHOUETTE AND FRONT RECOGNIZABLE). Position the camera elevated at 50 degrees looking downward onto the top bevels, upper surface and angled front of the exact product (${orientShort}) in crisp 3D studio depth. ${commonTail}`
           }
         ];
-
-        setAngleSlotState(5, "Aguardando ponte lateral...", false);
 
         const renderRetryAngleBtn = (slotIdx, specObj, inputRefs) => {
           window.__nexoraAngleRetryMap = window.__nexoraAngleRetryMap || {};
@@ -6589,13 +6836,15 @@
           if (!ctxRetry) return;
           try {
             const outOne = await generateAngleCutout(ctxRetry.refs, ctxRetry.spec.prompt, slotIdx, null, 0);
-            if (outOne && outOne.pngUrl) {
-              setAngleSlotState(slotIdx, `<img src="${outOne.pngUrl}" alt="${ctxRetry.spec.label}" />`, true);
+            if (outOne && (outOne.dataUrl || outOne.pngUrl)) {
+              const showSrc = outOne.dataUrl || outOne.pngUrl;
+              setAngleSlotState(slotIdx, `<img src="${showSrc}" alt="${ctxRetry.spec.label}" />`, true);
               const kitNow = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((x) => x.key !== ctxRetry.spec.key) : [];
-              kitNow.push({ key: ctxRetry.spec.key, angle: ctxRetry.spec.key, url: outOne.pngUrl });
+              kitNow.push({ key: ctxRetry.spec.key, angle: ctxRetry.spec.key, label: ctxRetry.spec.label, url: outOne.pngUrl, dataUrl: outOne.dataUrl, savedAt: Date.now() });
               window.nexora3Angles = kitNow;
               window.nexora6Angles = kitNow;
-              if (angles3Status) angles3Status.textContent = `✅ ${kitNow.length}/6 ângulos 3D em 9:16 sem fundo prontos`;
+              if (angles3Status) angles3Status.textContent = `✅ ${kitNow.length}/3 ângulos 3D salvos permanentemente (0 cr p/ reutilizar)`;
+              if (typeof window.__NEXORA_VAULT_AUTOSAVE__ === "function") window.__NEXORA_VAULT_AUTOSAVE__("kit 3 ângulos");
             } else {
               renderRetryAngleBtn(slotIdx, ctxRetry.spec, ctxRetry.refs);
             }
@@ -6604,69 +6853,70 @@
           }
         };
 
-        // Escalonamento suave de 350ms entre os 4 ângulos paralelos para evitar erro de pico simultâneo na fila fal.ai!
-        const settledPhase1 = await Promise.allSettled([
-          ...phase1Specs.map((sp, i) => generateAngleCutout(whiteStudioBase916, sp.prompt, sp.slot, sig, i * 350)),
-          describeProductAuto(angle1Url, sig)
-        ]);
+        const tasks = [
+          ...angleSpecs.map((sp, i) => generateAngleCutout(whiteStudioBase916, sp.prompt, sp.slot, sig, i * 300)),
+          needsDescribe ? describeProductAuto(angle1Url || whiteStudioBase916, sig) : Promise.resolve(null)
+        ];
+        const settled = await Promise.allSettled(tasks);
 
-        const finalKit = [{ key: "frontal", angle: "frontal", url: angle1Url, dataUrl: transparent916DataUrl }];
-        let sideBridgeUrl = "";
-        for (let idx = 0; idx < phase1Specs.length; idx++) {
-          const sp = phase1Specs[idx];
-          const res = settledPhase1[idx];
-          if (res.status === "fulfilled" && res.value && res.value.pngUrl) {
-            setAngleSlotState(sp.slot, `<img src="${res.value.pngUrl}" alt="${sp.label}" />`, true);
-            finalKit.push({ key: sp.key, angle: sp.key, url: res.value.pngUrl });
-            if (!sideBridgeUrl && (sp.key === "right_45" || sp.key === "left_60")) {
-              sideBridgeUrl = res.value.studioUrl || res.value.pngUrl;
-            }
+        const nowTs = Date.now();
+        const finalKit = [{
+          key: "frontal",
+          angle: "frontal",
+          label: "1. Frontal Hero (0°)",
+          url: angle1Url || transparent916DataUrl,
+          dataUrl: transparent916DataUrl,
+          savedAt: nowTs
+        }];
+
+        for (let idx = 0; idx < angleSpecs.length; idx++) {
+          const sp = angleSpecs[idx];
+          const res = settled[idx];
+          if (res.status === "fulfilled" && res.value && (res.value.dataUrl || res.value.pngUrl)) {
+            const showSrc = res.value.dataUrl || res.value.pngUrl;
+            setAngleSlotState(sp.slot, `<img src="${showSrc}" alt="${sp.label}" />`, true);
+            finalKit.push({
+              key: sp.key,
+              angle: sp.key,
+              label: sp.label,
+              url: res.value.pngUrl || showSrc,
+              dataUrl: res.value.dataUrl || showSrc,
+              savedAt: nowTs
+            });
           } else {
             renderRetryAngleBtn(sp.slot, sp, [whiteStudioBase916]);
           }
         }
 
-        // Passo 3/3: Usa o perfil lateral recém-gerado como PONTE para destravar o Giro 180° Traseiro sem repetir a frente!
-        if (angles3Status) angles3Status.textContent = "Passo 3/3: Gerando Giro 180° Traseiro usando perfil lateral como ponte...";
-        const backSpec = {
-          slot: 5, key: "back_180", label: "6. Giro 180° / Traseira 3/4",
-          prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CONTINUE ROTATING 110 DEGREES FURTHER FROM THE SIDE PROFILE TO SHOW THE REAR BACK VIEW (160°–180° BEHIND THE PRODUCT, ZERO FRONT FACE VISIBLE). Starting from the side-profile reference image, orbit completely behind the exact product (${orientShort}) so the camera sees its BACK side, rear shell/strap/hinge architecture and opposite rear three-quarter contour cleanly. ${commonTail}`
-        };
-        const bridgeInputs = sideBridgeUrl ? [sideBridgeUrl, whiteStudioBase916] : [whiteStudioBase916];
-        try {
-          const backRes = await generateAngleCutout(bridgeInputs, backSpec.prompt, backSpec.slot, sig, 0);
-          if (backRes && backRes.pngUrl) {
-            setAngleSlotState(backSpec.slot, `<img src="${backRes.pngUrl}" alt="${backSpec.label}" />`, true);
-            finalKit.push({ key: backSpec.key, angle: backSpec.key, url: backRes.pngUrl });
-          } else {
-            renderRetryAngleBtn(backSpec.slot, backSpec, bridgeInputs);
-          }
-        } catch {
-          renderRetryAngleBtn(backSpec.slot, backSpec, bridgeInputs);
-        }
-
         window.nexora3Angles = finalKit;
         window.nexora6Angles = finalKit;
 
-        const descRes = settledPhase1[phase1Specs.length];
+        const descRes = settled[angleSpecs.length];
         let descNote = "";
         if (descRes && descRes.status === "fulfilled" && descRes.value) {
           if (descRes.value.name && inlineProductName && !inlineProductName.value.trim()) {
             inlineProductName.value = descRes.value.name;
             inlineProductName.dispatchEvent(new Event("input", { bubbles: true }));
           }
-          if (descRes.value.desc && productDetailHint) {
+          if (descRes.value.desc && productDetailHint && !productDetailHint.value.trim()) {
             productDetailHint.value = descRes.value.desc;
             productDetailHint.dispatchEvent(new Event("input", { bubbles: true }));
-            descNote = " + Descrição Visual preenchida ✓";
+            descNote = " + Descrição IA ✓";
           }
           if (descRes.value.macro && macroTarget && !macroTarget.value.trim()) {
             macroTarget.value = descRes.value.macro;
           }
         }
 
+        // SALVAMENTO AUTOMÁTICO E PERMANENTE NO INDEXEDDB (REUTILIZAR AMANHÃ OU SEMANA QUE VEM COM 0 CRÉDITOS!)
+        if (typeof window.__NEXORA_VAULT_AUTOSAVE__ === "function") {
+          await window.__NEXORA_VAULT_AUTOSAVE__("kit 3 ângulos 3D");
+        }
+        if (typeof window.__NEXORA_APPLY_NICHE__ === "function") {
+          window.__NEXORA_APPLY_NICHE__();
+        }
         if (angles3Status) {
-          angles3Status.textContent = `✅ ${finalKit.length}/6 ângulos 3D em 9:16 sem fundo prontos${descNote}`;
+          angles3Status.textContent = `✅ ${finalKit.length}/3 ângulos 3D prontos e SALVOS permanentemente${descNote} — reutilize em novos vídeos com 0 créditos!`;
         }
       } catch (err) {
         if (angles3Status) angles3Status.textContent = `Erro: ${err.message}`;
@@ -6677,6 +6927,338 @@
         if (btnGen3Angles) btnGen3Angles.disabled = !uploadedBase64;
       }
     });
+
+    // =========================================================================
+    // BIBLIOTECA PERMANENTE "MEUS PRODUTOS SALVOS" (INDEXEDDB • 0 CRÉDITOS)
+    // =========================================================================
+    (function initNexoraProductVault() {
+      const DB_NAME = "nexora_product_vault_v1";
+      const STORE_NAME = "products";
+      let activeVaultId = null;
+      let cachedVaultItems = [];
+      let editSaveTimer = null;
+
+      function openVaultDB() {
+        return new Promise((resolve, reject) => {
+          if (!window.indexedDB) return reject(new Error("IndexedDB indisponível"));
+          const req = indexedDB.open(DB_NAME, 1);
+          req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+              db.createObjectStore(STORE_NAME, { keyPath: "id" });
+            }
+          };
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error || new Error("Erro ao abrir biblioteca"));
+        });
+      }
+
+      async function vaultGetAll() {
+        const db = await openVaultDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, "readonly");
+          const req = tx.objectStore(STORE_NAME).getAll();
+          req.onsuccess = () => {
+            const list = Array.isArray(req.result) ? req.result : [];
+            list.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+            resolve(list);
+          };
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function vaultPut(record) {
+        const db = await openVaultDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, "readwrite");
+          tx.objectStore(STORE_NAME).put(record);
+          tx.oncomplete = () => resolve(record);
+          tx.onerror = () => reject(tx.error);
+        });
+      }
+
+      async function vaultDelete(id) {
+        const db = await openVaultDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, "readwrite");
+          tx.objectStore(STORE_NAME).delete(id);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => reject(tx.error);
+        });
+      }
+
+      function fmtVaultDate(ts) {
+        try {
+          const d = new Date(ts || Date.now());
+          return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) + " " +
+                 d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+        } catch { return ""; }
+      }
+
+      function setVaultStatusMsg(msg, color = "#86efac") {
+        const el = document.getElementById("nxVaultSaveStatus");
+        if (!el) return;
+        el.style.color = color;
+        el.textContent = msg;
+      }
+
+      function renderVaultList() {
+        const listEl = document.getElementById("nxVaultList");
+        const countEl = document.getElementById("nxVaultCountPill");
+        if (countEl) {
+          countEl.textContent = `${cachedVaultItems.length} ${cachedVaultItems.length === 1 ? "salvo" : "salvos"} • 0 créditos p/ reutilizar`;
+        }
+        if (!listEl) return;
+        if (!cachedVaultItems.length) {
+          listEl.innerHTML = `<div class="nx-vault-empty">Seus produtos preparados (PNG sem fundo + 3 ângulos + descrição IA) são salvos automaticamente aqui para você criar novos vídeos em outros cenários sem pagar pelos PNGs de novo!</div>`;
+          return;
+        }
+        listEl.innerHTML = cachedVaultItems.map((item) => {
+          const aCount = Array.isArray(item.angles) ? item.angles.length : 0;
+          const badge = aCount >= 2 ? `✓ ${aCount} ângulos 3D` : (item.isTransparent ? "✓ PNG sem fundo" : "✓ Foto salva");
+          const safeName = String(item.name || "Produto sem nome").replace(/[<>&"]/g, "");
+          const thumbSrc = (item.angles && item.angles[0] && (item.angles[0].dataUrl || item.angles[0].url)) || item.mainDataUrl || "";
+          const isAct = item.id === activeVaultId;
+          return `
+            <div class="nx-vault-card ${isAct ? "active" : ""}" data-vault-id="${item.id}" role="button" tabindex="0" title="Clique para carregar este produto com 0 créditos">
+              <img class="nx-vault-thumb ${item.isTransparent || aCount >= 1 ? "checker-bg" : ""}" src="${thumbSrc}" alt="${safeName}" />
+              <div class="nx-vault-meta">
+                <div class="nx-vault-name">${safeName}</div>
+                <div class="nx-vault-sub">${badge}</div>
+                <div class="nx-vault-date">${fmtVaultDate(item.updatedAt)}</div>
+              </div>
+              <button type="button" class="nx-vault-del" data-del-id="${item.id}" title="Excluir produto salvo">✕</button>
+            </div>
+          `;
+        }).join("");
+
+        listEl.querySelectorAll(".nx-vault-card").forEach((card) => {
+          card.addEventListener("click", (ev) => {
+            if (ev.target && ev.target.closest(".nx-vault-del")) return;
+            const id = card.getAttribute("data-vault-id");
+            const found = cachedVaultItems.find((x) => x.id === id);
+            if (found) loadSavedProductToWorkspace(found);
+          });
+        });
+        listEl.querySelectorAll(".nx-vault-del").forEach((delBtn) => {
+          delBtn.addEventListener("click", async (ev) => {
+            ev.stopPropagation();
+            const id = delBtn.getAttribute("data-del-id");
+            if (!id) return;
+            try {
+              await vaultDelete(id);
+              if (activeVaultId === id) activeVaultId = null;
+              cachedVaultItems = await vaultGetAll();
+              renderVaultList();
+              setVaultStatusMsg("Produto removido da biblioteca", "#94a3b8");
+            } catch {}
+          });
+        });
+      }
+
+      async function saveCurrentProductToVault(reasonLabel = "automático") {
+        if (!uploadedBase64 && !uploadedDataUrl) return null;
+        try {
+          const dataUrl = uploadedDataUrl || `data:${uploadedMime || "image/png"};base64,${uploadedBase64}`;
+          const prodName =
+            (inlineProductName?.value || "").trim() ||
+            (productDetailHint?.value || "").trim().split(",")[0].slice(0, 36) ||
+            `Produto ${cachedVaultItems.length + 1}`;
+          const desc = (productDetailHint?.value || "").trim();
+          const macro = (macroTarget?.value || "").trim();
+
+          // Garante que cada ângulo tenha dataUrl permanente antes de gravar no IndexedDB
+          const kitRaw = Array.isArray(window.nexora3Angles) ? window.nexora3Angles : [];
+          const cleanAngles = [];
+          for (const a of kitRaw.slice(0, 3)) {
+            if (!a) continue;
+            let dUrl = a.dataUrl || "";
+            if (!dUrl && a.url) dUrl = await urlToCompactPngDataUrl(a.url, 540, 960);
+            cleanAngles.push({
+              key: a.key || a.angle || "frontal",
+              angle: a.angle || a.key || "frontal",
+              label: a.label || "",
+              url: a.url || dUrl,
+              dataUrl: dUrl || a.url || "",
+              savedAt: a.savedAt || Date.now()
+            });
+          }
+
+          if (!activeVaultId) {
+            activeVaultId = `prod_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+          }
+          const existing = cachedVaultItems.find((x) => x.id === activeVaultId);
+          const record = {
+            id: activeVaultId,
+            name: prodName,
+            desc,
+            macro,
+            orientation: productOrientation?.value || "auto",
+            directorProfile: directorProfile?.value || "cinema_universal",
+            mainDataUrl: dataUrl,
+            mainMime: uploadedMime || "image/png",
+            isTransparent: Boolean(uploadedIsTransparent || cleanAngles.length > 0),
+            angles: cleanAngles,
+            createdAt: existing ? existing.createdAt : Date.now(),
+            updatedAt: Date.now()
+          };
+
+          await vaultPut(record);
+          cachedVaultItems = await vaultGetAll();
+          // Mantém até 30 produtos salvos automaticamente p/ nunca pesar o navegador
+          if (cachedVaultItems.length > 30) {
+            for (const old of cachedVaultItems.slice(30)) {
+              try { await vaultDelete(old.id); } catch {}
+            }
+            cachedVaultItems = cachedVaultItems.slice(0, 30);
+          }
+          renderVaultList();
+          const saveBtn = document.getElementById("btnVaultSaveNow");
+          if (saveBtn) {
+            saveBtn.classList.add("save-ok");
+            saveBtn.textContent = "✓ Salvo Permanente";
+            setTimeout(() => {
+              if (saveBtn) {
+                saveBtn.classList.remove("save-ok");
+                saveBtn.textContent = "💾 Salvar Produto";
+              }
+            }, 2200);
+          }
+          setVaultStatusMsg(`✓ Salvo automático (${reasonLabel})`, "#86efac");
+          return record;
+        } catch (err) {
+          console.warn("Vault save warning:", err);
+          return null;
+        }
+      }
+
+      function loadSavedProductToWorkspace(item) {
+        if (!item || !item.mainDataUrl) return;
+        activeVaultId = item.id;
+
+        const base64 = String(item.mainDataUrl).includes(",") ? String(item.mainDataUrl).split(",")[1] : "";
+        setUploadedProduct(item.mainDataUrl, base64, item.mainMime || "image/png", Boolean(item.isTransparent), false);
+
+        if (inlineProductName) {
+          inlineProductName.value = item.name || "";
+          inlineProductName.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+        if (productDetailHint) {
+          productDetailHint.value = item.desc || "";
+          productDetailHint.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+        if (macroTarget) {
+          macroTarget.value = item.macro || "";
+          macroTarget.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+        if (productOrientation && item.orientation) productOrientation.value = item.orientation;
+        if (directorProfile && item.directorProfile) directorProfile.value = item.directorProfile;
+
+        // Restaura os 3 ângulos 3D salvos permanentemente (0 créditos!)
+        reset3AnglesUI("");
+        const savedAngles = Array.isArray(item.angles) ? item.angles : [];
+        const restoredKit = [];
+        const slotMap = { frontal: 0, right_45: 1, top_down: 2 };
+        savedAngles.forEach((a, idx) => {
+          const srcShow = a.dataUrl || a.url || "";
+          if (!srcShow) return;
+          const slotIdx = typeof slotMap[a.key] === "number" ? slotMap[a.key] : idx;
+          if (slotIdx >= 0 && slotIdx < 3) {
+            setAngleSlotState(slotIdx, `<img src="${srcShow}" alt="${a.label || a.key}" />`, true);
+          }
+          restoredKit.push({
+            key: a.key || a.angle || "frontal",
+            angle: a.angle || a.key || "frontal",
+            label: a.label || "",
+            url: a.url || srcShow,
+            dataUrl: a.dataUrl || srcShow,
+            savedAt: a.savedAt || item.updatedAt || Date.now()
+          });
+        });
+        window.nexora3Angles = restoredKit;
+        window.nexora6Angles = restoredKit;
+
+        // Limpa narração antiga em cache p/ novo vídeo gerar voz nova sem misturar
+        savedVoiceBuf = null; savedVoiceUrl = ""; savedWhisperChunks = null; savedVoiceMeta = "";
+        updateInlineVoiceUI();
+
+        if (angles3Status) {
+          angles3Status.textContent = restoredKit.length > 0
+            ? `✅ ${restoredKit.length}/3 ângulos 3D carregados da biblioteca (0 créditos gastos) — pronto p/ novo cenário!`
+            : `✅ PNG carregado da biblioteca (0 créditos gastos) — opcional: gere os 3 ângulos ou gere o vídeo direto!`;
+        }
+        const stEl = document.getElementById("nxAutoDetectStatus");
+        if (stEl) {
+          stEl.style.color = "#86efac";
+          stEl.textContent = `📦 Produto "${item.name}" carregado em 1 clique (0 créditos)! Escolha outro cenário, trilha ou narração abaixo e gere seu novo vídeo.`;
+        }
+        if (typeof window.__NEXORA_APPLY_NICHE__ === "function") {
+          window.__NEXORA_APPLY_NICHE__();
+        }
+        if (typeof window.__NEXORA_REFRESH_SUMMARY__ === "function") {
+          window.__NEXORA_REFRESH_SUMMARY__();
+        }
+        renderVaultList();
+        setVaultStatusMsg(`✓ "${item.name}" carregado (0 cr)`, "#86efac");
+      }
+
+      function startFreshProduct() {
+        activeVaultId = null;
+        uploadedBase64 = "";
+        uploadedDataUrl = "";
+        uploadedIsTransparent = false;
+        if (productImg) productImg.value = "";
+        if (thumbPreview) { thumbPreview.src = ""; thumbPreview.style.display = "none"; }
+        if (btnQuickRemoveBg) {
+          btnQuickRemoveBg.disabled = true;
+          btnQuickRemoveBg.textContent = "✂️ Remover Fundo (PNG)";
+          btnQuickRemoveBg.style.borderColor = "#2563eb";
+          btnQuickRemoveBg.style.color = "#7dd3fc";
+        }
+        if (btnGen3Angles) btnGen3Angles.disabled = true;
+        const saveBtn = document.getElementById("btnVaultSaveNow");
+        if (saveBtn) saveBtn.disabled = true;
+        if (inlineProductName) { inlineProductName.value = ""; inlineProductName.dispatchEvent(new Event("input", { bubbles: true })); }
+        if (productDetailHint) { productDetailHint.value = ""; productDetailHint.dispatchEvent(new Event("input", { bubbles: true })); }
+        if (macroTarget) { macroTarget.value = ""; macroTarget.dispatchEvent(new Event("input", { bubbles: true })); }
+        if (inlineVoiceScript) { inlineVoiceScript.value = ""; }
+        savedVoiceBuf = null; savedVoiceUrl = ""; savedWhisperChunks = null; savedVoiceMeta = "";
+        reset3AnglesUI('Envie a foto de um novo produto acima (ou clique num produto salvo)');
+        const stEl = document.getElementById("nxAutoDetectStatus");
+        if (stEl) {
+          stEl.style.color = "#7dd3fc";
+          stEl.textContent = "🤖 Detecção IA automática: ao enviar a foto, a IA identifica o produto, preenche os campos abaixo e adapta cenário, ritmo e trilha.";
+        }
+        renderVaultList();
+        setVaultStatusMsg("Pronto para cadastrar novo produto", "#7dd3fc");
+        productImg?.click();
+      }
+
+      window.__NEXORA_VAULT_AUTOSAVE__ = saveCurrentProductToVault;
+      window.__NEXORA_VAULT_START_NEW_ID__ = () => { activeVaultId = null; };
+
+      document.getElementById("btnVaultSaveNow")?.addEventListener("click", () => {
+        saveCurrentProductToVault("salvo manual");
+      });
+      document.getElementById("btnVaultNewProduct")?.addEventListener("click", startFreshProduct);
+
+      // Auto-atualiza o produto salvo se o usuário editar nome, descrição ou detalhe macro
+      ["inlineProductName", "productDetailHint", "macroTarget", "productOrientation", "directorProfile"].forEach((id) => {
+        document.getElementById(id)?.addEventListener("change", () => {
+          if (!uploadedBase64) return;
+          clearTimeout(editSaveTimer);
+          editSaveTimer = setTimeout(() => saveCurrentProductToVault("campos atualizados"), 700);
+        });
+      });
+
+      // Carrega a lista de produtos salvos assim que o site abrir!
+      vaultGetAll()
+        .then((list) => {
+          cachedVaultItems = list;
+          renderVaultList();
+        })
+        .catch(() => {});
+    })();
   // =========================================================================
   // NEXORA SUPERPRODUÇÃO v14.0 — MOTOR UNIFICADO (ZERO CONFLITOS)
   // 1) Áudio Broadcast TV (Corte de Silêncios + EQ/Compressor + WSOLA + Sync 0.0s)
@@ -7380,24 +7962,40 @@
         })();
         const prodName = shortProd;
         const meta = inferPtMeta(prodName);
+        const normWords = (str) => String(str || "")
+          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length >= 4);
+        const prodWordSet = new Set(normWords(prodName));
+
         let macroClean = macroRaw ? macroRaw.toLowerCase().replace(/[.;]+/g, ",").trim() : "";
-        if (vidSec <= 12 && macroClean.length > 28) {
+        if (macroClean) {
           const firstPart = macroClean.split(",")[0].trim();
-          const words = firstPart.split(/\s+/).filter(Boolean).slice(0, 4).join(" ");
-          macroClean = words.length >= 6 && words.length <= 28 ? words : "acabamento impecável";
+          const mWords = firstPart.split(/\s+/).filter(Boolean).slice(0, 4).join(" ");
+          const mNorm = normWords(mWords);
+          const overlapCount = mNorm.filter((w) => prodWordSet.has(w)).length;
+          // Elimina 100% repetições como "relógio digital analógico" + "tela digital e analógica"!
+          if (overlapCount >= 1 && mNorm.length > 0 && (overlapCount / mNorm.length) >= 0.4) {
+            macroClean = "";
+          } else if (vidSec <= 12 && mWords.length > 26) {
+            macroClean = "";
+          } else {
+            macroClean = mWords;
+          }
         }
         const macroTxt = macroClean || (vidSec <= 12 ? "acabamento impecável" : "acabamento impecável em cada detalhe");
 
         const BANK = {
           women_fashion: {
             hook: `Olha o caimento maravilhoso ${meta.prepCom} ${prodName}!`,
+            b1Short: `Tecido leve, ${macroTxt} e elegância natural o dia todo.`,
             b1: `Tecido leve de toque macio, ${macroTxt} e modelagem que valoriza o corpo com elegância natural.`,
             b2: `Veste super bem do dia até a noite, sem apertar, com acabamento de boutique que chama atenção.`,
             b3: `É aquela peça coringa feminina que levanta o visual em segundos e rende elogios em todo lugar.`,
             cta: `Toque no carrinho aqui embaixo e garanta ${meta.poss}!`
           },
           toys: {
-            hook: `A diversão vai começar agora! Olha ${meta.dem} ${prodName}!`,
+            hook: `A diversão vai começar! Olha ${meta.dem} ${prodName}!`,
+            b1Short: `Cores vibrantes, ${macroTxt} e diversão segura garantida.`,
             b1: `Cores vibrantes, ${macroTxt} e material seguro feito para estimular a criatividade longe das telas.`,
             b2: `Fácil de brincar, super resistente e perfeito para arrancar sorrisos e criar momentos incríveis em família.`,
             b3: `As crianças se apaixonam logo no primeiro minuto — é o presente inesquecível que todo mundo elogia.`,
@@ -7405,6 +8003,7 @@
           },
           pet: {
             hook: `Seu pet merece esse carinho! Olha ${meta.dem} ${prodName}!`,
+            b1Short: `Toque macio, ${macroTxt} e conforto real para seu bichinho.`,
             b1: `Material macio e seguro, ${macroTxt} e conforto pensado para o bem-estar do seu melhor amigo todos os dias.`,
             b2: `Super prático de limpar, resistente no uso diário e feito com cuidado especial para deixar seu pet ainda mais feliz.`,
             b3: `Quem ama o seu bichinho vê a diferença na hora — carinho, proteção e alegria em cada detalhe.`,
@@ -7412,6 +8011,7 @@
           },
           vr: {
             hook: `Para tudo e olha ${meta.dem} ${prodName}!`,
+            b1Short: `Imersão absurda em alta definição e encaixe super confortável.`,
             b1: `Imersão absurda em alta definição, ${macroTxt} e encaixe ultra confortável sem cabos te atrapalhando.`,
             b2: `Resposta instantânea nos controles, imagem cristalina e experiência de cinema particular pronta em segundos.`,
             b3: `Seja para jogar, explorar novos mundos ou curtir como nunca, quem testa fica viciado no primeiro minuto.`,
@@ -7421,62 +8021,71 @@
             hook: /pulso/i.test(prodName)
               ? `Olha a presença marcante ${meta.prepCom} ${prodName}!`
               : `Olha a presença ${meta.prepCom} ${prodName} no pulso!`,
+            b1Short: `Design marcante, ${macroTxt} e presença de luxo real.`,
             b1: `Design marcante, ${macroTxt} e construção robusta que impõe respeito no trabalho ou no rolê.`,
             b2: `Brilho de alta joalheria, conforto o dia inteiro e visual luxuoso que faz todo mundo perguntar onde você comprou.`,
             b3: `Cada relevo mostra a qualidade real de perto — é o toque final que transforma completamente o seu estilo.`,
             cta: `Unidades acabando rápido — toque no carrinho aqui embaixo agora e garanta ${meta.poss}!`
           },
           sunglasses: {
-            hook: `Quer subir o nível do visual em um segundo? Olha ${meta.dem} ${prodName}!`,
+            hook: `Quer subir o nível do visual? Olha ${meta.dem} ${prodName}!`,
+            b1Short: `Lentes nítidas com proteção solar e leveza total no rosto.`,
             b1: `Lentes cristalinas com proteção solar real, ${macroTxt} e armação levíssima que não aperta o rosto.`,
             b2: `Bloqueia o reflexo na hora e entrega caimento de grife que combina com qualquer look o dia inteiro.`,
             b3: `É aquele acessório impossível de passar despercebido, feito para durar e destacar sua presença.`,
             cta: `Não deixa acabar — toque no carrinho aqui embaixo agora e garanta ${meta.poss}!`
           },
           audio: {
-            hook: `Som limpo, grave potente e liberdade total! Olha ${meta.dem} ${prodName}!`,
+            hook: `Som limpo e grave potente! Olha ${meta.dem} ${prodName}!`,
+            b1Short: `Conexão instantânea, ${macroTxt} e clareza absurda em cada batida.`,
             b1: `Com ${macroTxt}, conexão instantânea e encaixe super confortável, você sente cada batida com clareza absurda.`,
             b2: `Perfeito para treinar, trabalhar, gravar ou curtir o dia inteiro com autonomia de sobra e zero ruído.`,
             b3: `Chega de áudio abafado — é qualidade de estúdio no seu dia a dia com design moderno impecável.`,
             cta: `Últimas peças — toque no carrinho aqui embaixo agora e garanta ${meta.poss}!`
           },
           footwear: {
-            hook: `Conforto absurdo no primeiro passo! Olha o nível ${meta.prepCom} ${prodName}!`,
+            hook: `Conforto absurdo no primeiro passo! Olha ${meta.dem} ${prodName}!`,
+            b1Short: `Amortecimento macio, ${macroTxt} e leveza o dia inteiro.`,
             b1: `Amortecimento macio, ${macroTxt} e estrutura leve e respirável que abraça o pé o dia inteiro.`,
             b2: `Acabamento reforçado, pisada firme e visual moderno que combina com treino ou rotina corrida.`,
             b3: `Quem calça pela primeira vez não quer mais tirar do pé — durabilidade real que impressiona de perto.`,
             cta: `Corre antes que sua numeração acabe — toque no carrinho aqui embaixo agora!`
           },
           beauty: {
-            hook: `Olha o poder ${meta.prepCom} ${prodName} já na primeira aplicação!`,
+            hook: `Olha o poder ${meta.prepCom} ${prodName} já no primeiro uso!`,
+            b1Short: `Textura sofisticada, ${macroTxt} e resultado visível na hora.`,
             b1: `Textura sofisticada, ${macroTxt} e resultado visível que transforma a sua rotina todos os dias.`,
             b2: `Toque leve sem pesar, projeção marcante e padrão importado que rende elogios por onde você passa.`,
             b3: `Virou o favorito de quem exige cuidado de alto nível sem complicação no dia a dia.`,
             cta: `Estoque limitado — toque no carrinho aqui embaixo agora e garanta ${meta.poss}!`
           },
           tech: {
-            hook: `Velocidade extrema e design de outro nível! Olha ${meta.dem} ${prodName}!`,
+            hook: `Velocidade e design de outro nível! Olha ${meta.dem} ${prodName}!`,
+            b1Short: `Resposta instantânea, ${macroTxt} e desempenho firme no dia a dia.`,
             b1: `Resposta instantânea, ${macroTxt} e construção robusta feita para turbinar o seu setup sem travamentos.`,
             b2: `Compacto, moderno e ergonômico, entrega desempenho firme e visual limpo logo no primeiro toque.`,
             b3: `Esqueça modelos comuns lentos — aqui você tem tecnologia atual e praticidade real todo dia.`,
             cta: `Oferta rodando agora — toque no carrinho aqui embaixo e garanta ${meta.poss}!`
           },
           fashion: {
-            hook: `Um detalhe capaz de transformar o visual inteiro! Olha ${meta.dem} ${prodName}!`,
+            hook: `Um detalhe que transforma o visual! Olha ${meta.dem} ${prodName}!`,
+            b1Short: `Caimento impecável, ${macroTxt} e estilo que combina com tudo.`,
             b1: `Caimento impecável, ${macroTxt} e material resistente que une elegância e praticidade todo dia.`,
             b2: `Perfeita para looks casuais ou sofisticados, destacando bom gosto em cada costura e relevo.`,
             b3: `É aquela peça coringa de alto padrão que todo mundo elogia assim que você chega.`,
             cta: `Estoque voando — toque no carrinho aqui embaixo agora e garanta ${meta.poss}!`
           },
           home: {
-            hook: `Praticidade real que economiza tempo todo dia! Olha ${meta.dem} ${prodName}!`,
+            hook: `Praticidade real todo dia! Olha ${meta.dem} ${prodName}!`,
+            b1Short: `Material resistente, ${macroTxt} e uso simples em segundos.`,
             b1: `Material super resistente, ${macroTxt} e uso simples que resolve tudo em segundos.`,
             b2: `Design moderno, fácil de limpar e feito para aguentar o ritmo intenso da sua rotina.`,
             b3: `Depois que você usa pela primeira vez, não entende como viveu tanto tempo sem ter um desses.`,
             cta: `Aproveite agora — toque no carrinho aqui embaixo e garanta ${meta.poss}!`
           },
           universal: {
-            hook: `Para tudo e olha o nível real ${meta.prepCom} ${prodName}!`,
+            hook: `Para tudo e olha o nível ${meta.prepCom} ${prodName}!`,
+            b1Short: `Design de vitrine, ${macroTxt} e qualidade que impressiona de perto.`,
             b1: `Com ${macroTxt}, construção firme e design de vitrine, entrega padrão superior logo no primeiro segundo.`,
             b2: `Visual sofisticado de perto, praticidade imediata e durabilidade de verdade para superar qualquer expectativa.`,
             b3: `Quem recebe em casa se surpreende com a qualidade — é o upgrade inteligente que faz toda a diferença.`,
@@ -7496,31 +8105,18 @@
         } else if (adPlatform === "universal") {
           platformCta = `Clique no botão aqui embaixo e garanta ${meta.poss} agora!`;
         }
-        const trimSentence = (txt, maxChars) => {
-          const clean = String(txt || "").trim();
-          if (clean.length <= maxChars) return clean;
-          const cut = clean.slice(0, maxChars);
-          const lastComma = Math.max(cut.lastIndexOf(","), cut.lastIndexOf("—"), cut.lastIndexOf(" "));
-          const trimmed = (lastComma > maxChars * 0.55 ? cut.slice(0, lastComma) : cut).replace(/[,—–\-\s]+$/, "");
-          return /[.!?]$/.test(trimmed) ? trimmed : `${trimmed}.`;
-        };
         let out = "";
         if (vidSec <= 12) {
-          // 10s: ~122–150 chars -> fala natural ~8.5s–9.1s, ZERO corte no final e sync 0,00s perfeito!
-          const b1Fit = trimSentence(b.b1, 60);
-          out = `${b.hook} ${b1Fit} ${platformCta}`;
+          // 10s: frases 100% completas, sem cortes pela metade e sem repetições!
+          out = `${b.hook} ${b.b1Short || b.b1} ${platformCta}`;
         } else if (vidSec <= 17) {
-          // 15s: ~215–248 chars -> fala natural ~14.2s, sync 0,00s perfeito!
-          const b1Fit = trimSentence(b.b1, 78);
-          const b2Fit = trimSentence(b.b2, 74);
-          out = `${b.hook} ${b1Fit} ${b2Fit} ${platformCta}`;
+          // 15s: frases completas (~210–255 chars)
+          out = `${b.hook} ${b.b1} ${b.b2} ${platformCta}`;
         } else if (vidSec <= 24) {
-          // 20s: ~295–335 chars -> fala natural ~19.2s, sync 0,00s perfeito!
-          const b2Fit = trimSentence(b.b2, 88);
-          const b3Fit = trimSentence(b.b3, 82);
-          out = `${b.hook} ${b.b1} ${b2Fit} ${b3Fit} ${platformCta}`;
+          // 20s: frases completas (~290–345 chars)
+          out = `${b.hook} ${b.b1} ${b.b2} ${b.b3} ${platformCta}`;
         } else {
-          // 30s: ~440–485 chars -> fala natural ~29.2s (abaixo do limite de 700 chars do servidor!), sync 0,00s perfeito!
+          // 30s: frases completas (~430–490 chars)
           out = `${b.hook} ${b.b1} ${b.b2} ${b.b3} Acabamento premium que impressiona em cada ângulo e eleva seu nível desde o primeiro uso. ${platformCta}`;
         }
         return fixPtAccents(fixPtBrContractions(out));
@@ -7563,8 +8159,22 @@
         const fullBleed = "Vertical 9:16 edge-to-edge full-bleed flagship commercial photograph (strictly 9:16 vertical, zero white bars, zero black bars, zero borders, zero text, zero watermarks, zero filming gear), crystal-clear sharp focus and true-to-life colors.";
         const lifeShot = getLifestyleScenePrompt(cat, prodDesc);
 
+        const isManualScen = typeof window.NEXORA_IS_MANUAL_SCENARIO === "function" && window.NEXORA_IS_MANUAL_SCENARIO();
+        const scenMeta = typeof window.__NEXORA_GET_SELECTED_VIDEO_MODEL__ === "function" ? window.__NEXORA_GET_SELECTED_VIDEO_MODEL__() : null;
         let worlds;
-        if (nicheId === "moda_feminina") {
+        if (isManualScen && scenMeta) {
+          const sSurf = scenMeta.surface || "a refined commercial display pedestal";
+          const sLight = scenMeta.lighting || "balanced commercial studio lighting";
+          const sGenre = scenMeta.genre || "flagship commercial";
+          worlds = [
+            `Ultra-sharp vertical 9:16 ${sGenre} hero shot of ${refItem} clearly recognizable in front-right 25-degree three-quarter view resting naturally on ${sSurf} (${sLight}), crisp grounded shadow, zero plastic stand, generous clean framing in the upper-center safe zone.`,
+            `Extreme 100mm cinema macro photograph focusing closely on the authentic front texture, precision edges and ${macroHint || "real craftsmanship"} of ${refItem} matching the exact same universe (${sSurf}, ${sLight}) with clean gliding reflections and shallow bokeh.`,
+            `${lifeShot}`,
+            `High-impact ${sGenre} commercial showcase of ${refItem} positioned clearly in front-left 30-degree three-quarter view (front face and exact geometry 100% faithful) on ${sSurf} under ${sLight} with rich living depth behind.`,
+            `Dramatic elevated 40-degree commercial photograph looking down onto ${refItem} resting directly on ${sSurf} (zero clear plastic support or display ring), clearly preserving its exact original proportions and markings under ${sLight}.`,
+            `Iconic symmetrical dead-center FRONT-FACING (0 degrees) ${sGenre} finale with ${refItem} facing straight at the camera on ${sSurf} with generous clean breathing margin around all edges, positioned in the upper 62% safe zone (clean space below for captions), subtle balanced rim light without harsh white glow.`
+          ];
+        } else if (nicheId === "moda_feminina") {
           worlds = [
             `Bright airy high-fashion boutique commercial hero shot showcasing ${refItem} facing front three-quarter in a sunlit minimalist Parisian cream-and-travertine studio with soft golden window sunbeams and delicate floating light bokeh, centered cleanly in the upper-center safe zone.`,
             `Ultra-clean 100mm editorial macro photograph focusing closely on the authentic fabric weave, stitching, drape and ${macroHint || "fine boutique craftsmanship"} of ${refItem} bathed in soft warm natural daylight with bright creamy bokeh behind.`,
@@ -7621,7 +8231,7 @@
             `${lifeShot}`,
             `High-impact flagship commercial showcase of ${refItem} positioned clearly in front-left 30-degree three-quarter view (front face and exact geometry 100% visible and faithful) on dark reflective Nero Marquina marble framed by dynamic glowing golden-and-amber volumetric light ribbons and deep f/1.4 bokeh trails.`,
             `Dramatic elevated 40-degree commercial photograph looking down onto ${refItem} resting naturally and directly on dark reflective honed stone (zero clear plastic support or display ring), clearly preserving its exact original proportions and markings, surrounded by gentle curling mist and subtle golden sparks.`,
-            `Iconic symmetrical dead-center FRONT-FACING (0 degrees) flagship commercial finale with ${refItem} facing STRAIGHT AT THE CAMERA in full commanding view with generous clean breathing margin around all edges, positioned in the upper 62% safe zone (rich clean space below for captions), backlit by refined golden-white cinema rim light and subtle floating embers.`
+            `Iconic symmetrical dead-center FRONT-FACING (0 degrees) flagship commercial finale with ${refItem} facing STRAIGHT AT THE CAMERA in clean commanding view with generous breathing margin around all four edges (never cropped), positioned in the upper 62% safe zone (rich clean space below for captions), framed with subtle balanced studio rim lighting (zero harsh blown-out white halo around edges) and delicate floating golden embers behind.`
           ];
         }
 
@@ -7635,7 +8245,7 @@
         "Fluid natural commercial lifestyle shot: subtle realistic human presentation keeping the exact product 100% faithful in shape, proportion and finish (never warping or morphing, zero floating objects or camera clips), as the camera tracks gently with rich lively background bokeh and moving ambient light.",
         "Energetic 3D parallax cinema camera sweeping smoothly in a 25-degree front arc around the exact product while keeping its true front geometry and details 100% locked and unwarped, as vivid luminous light waves, glowing bokeh trails and fine atmospheric sparks surge continuously across the living background.",
         "Smooth elevated 40-degree crane camera gliding steadily forward and slightly downward toward the exact product resting directly on the surface (zero invented stands), keeping its exact silhouette and materials 100% locked while curling volumetric mist, dancing light reflections and subtle sparks move nonstop across the stage.",
-        "Commanding steady commercial finale: smooth controlled zoom-in gliding straight toward the exact product locked dead-center facing the camera (keeping generous clean margin around all edges, never cropping or morphing), while refined golden-white rim flares, sweeping light rays and floating embers radiate continuously behind."
+        "Commanding steady commercial finale: locked hero framing with ultra-subtle floating stillness keeping the exact product dead-center facing the camera with generous clean margin around all four edges (DO NOT zoom in closely, never crop top or bottom, zero harsh white outline glow), while subtle golden light rays, gentle reflections and floating embers move continuously across the background."
       ];
 
       const SUPER_CLIP_CHOREO_GENTLE = [
@@ -7643,11 +8253,11 @@
         "Gentle sensory 100mm macro camera drifting smoothly across the authentic texture, stitching and fine material quality of the exact product as soft natural light glides delicately across the surface with dreamy bright bokeh behind.",
         "Authentic serene lifestyle commercial shot: graceful natural movement showcasing the exact product 100% faithful in shape and color (zero distortion, zero extra objects), captured with silky fluid camera motion and warm lively sunlit background depth.",
         "Elegant smooth 20-degree front tracking arc gliding effortlessly around the exact product while preserving every original contour and color 100% rigidly, as gentle sunlit particles, airy fabric/foliage bokeh and warm reflections flow peacefully behind.",
-        "Timeless serene front-facing 0-degree flagship finale: gentle steady push-in toward the exact product centered cleanly with generous margin in the upper safe zone, bathed in glowing natural warm rim light and delicate living bokeh behind."
+        "Timeless serene front-facing 0-degree flagship finale: calm steady hero framing keeping the exact product centered cleanly with generous margin around all edges (DO NOT zoom in closely, never crop edges), bathed in soft natural light and delicate living bokeh drifting peacefully behind."
       ];
 
       const SUPER_NEGATIVE =
-        "morphing product, changing watch shape, rectangular turning round, rectangular turning square, invented brand logo, fake text on product, garbled text, transparent plastic stand, clear C-stand, watch holder ring, floating camera mount, black clip, object on head, extra fingers, deformed hands, blinding white flash covering frame 1, static background, black and white, monochrome, blurry, pixelation, color change, recolored product, watermark, studio light stand, camera rig";
+        "morphing product, changing watch shape, rectangular turning round, rectangular turning square, invented brand logo, fake text on product, garbled text, transparent plastic stand, clear C-stand, watch holder ring, floating camera mount, black clip, object on head, extra fingers, deformed hands, anime speed lines, radial motion lines, comic speed lines, white border streaks, harsh white glow halo, blinding white flash covering frame 1, static background, black and white, monochrome, blurry, pixelation, color change, recolored product, watermark, studio light stand, camera rig";
 
       // -----------------------------------------------------------------------
       // G) INTERFACE UNIFICADA E LIMPA
@@ -8240,27 +8850,35 @@
       document.getElementById("btnGen3Angles")?.addEventListener("click", () => { sceneCutCounter = 0; clipCutCounter = 0; });
 
       function getOrdered3Angles(cutNum) {
-        const kit = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((a) => a && a.url) : [];
+        const kit = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((a) => a && (a.url || a.dataUrl)) : [];
         if (!kit.length) return [];
+        const MAX_URL_AGE_MS = 20 * 60 * 60 * 1000; // 20h: depois disso usa dataUrl permanente p/ NUNCA expirar!
+        const resolveRef = (item) => {
+          if (!item) return "";
+          const isFreshHttp = typeof item.url === "string" && /^https?:\/\//i.test(item.url) && (!item.savedAt || (Date.now() - item.savedAt) < MAX_URL_AGE_MS);
+          if (isFreshHttp) return item.url;
+          return item.dataUrl || item.url || "";
+        };
         const byKey = new Map();
         for (const item of kit) {
           const k = item.key || item.angle || "";
-          if (k) byKey.set(k, item.url);
+          const ref = resolveRef(item);
+          if (k && ref) byKey.set(k, ref);
         }
-        const frontalUrl = byKey.get("frontal") || kit[0].url;
-        // TRAVA DE FIDELIDADE 100% TIKTOK SHOP:
-        // NUNCA envia traseira (back_180) ou perfil cego 90° como referência principal — mantém a Âncora Frontal 0° em 1º lugar
-        // para o produto NUNCA virar quadrado/redondo nem alucinar mostrador!
-        const secKeys = ["frontal", "bottom_up", "frontal", "right_45", "top_down", "frontal"];
+        const frontalRef = byKey.get("frontal") || resolveRef(kit[0]);
+        if (!frontalRef) return [];
+        // KIT 3 ÂNGULOS ESSENCIAIS + TRAVA DE FIDELIDADE 100% TIKTOK SHOP:
+        // Mantém sempre a Âncora Frontal 0° em 1º lugar + ângulo complementar (3/4 Direita ou Topo 50°)
+        const secKeys = ["frontal", "right_45", "frontal", "right_45", "top_down", "frontal"];
         const wantedSec = secKeys[cutNum % secKeys.length];
         if (wantedSec === "frontal") {
-          return [frontalUrl];
+          return [frontalRef];
         }
-        const secUrl = byKey.get(wantedSec);
-        if (secUrl && secUrl !== frontalUrl) {
-          return [frontalUrl, secUrl];
+        const secRef = byKey.get(wantedSec);
+        if (secRef && secRef !== frontalRef) {
+          return [frontalRef, secRef];
         }
-        return [frontalUrl];
+        return [frontalRef];
       }
 
       window.fetch = async function (input, init) {
@@ -9088,7 +9706,7 @@
     })();
   </script>
   <script src="./nexora-saas.js"></script>
-  <script src="./nexora-cinema-ui.js?v=4"></script>
+  <script src="./nexora-cinema-ui.js?v=5"></script>
 </body>
 </html>
 
