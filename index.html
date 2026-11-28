@@ -999,9 +999,32 @@
       </button>
       <button type="button" class="mode-btn" data-mode="removebg">
         <strong>✂️ Remover Fundo</strong>
-        <small>Recorte HD em PNG Transparente</small>
+        <small>Recorte em PNG Transparente</small>
       </button>
     </nav>
+
+    <!-- GUIDED 4-STEP QUICK NAVIGATION (PASSO A PASSO INTERATIVO) -->
+    <div class="nx-stepper" id="nxGuidedStepper" aria-label="Etapas para criar seu vídeo">
+      <button type="button" class="nx-step-item active" data-jump="productSection" id="nxStepBtn1">
+        <span class="nx-step-dot" id="nxStepDot1">1</span>
+        <span class="nx-step-copy"><strong>Produto &amp; Tempo</strong><small id="nxStepSub1">Envie a foto</small></span>
+      </button>
+      <span class="nx-step-arrow" aria-hidden="true">→</span>
+      <button type="button" class="nx-step-item" data-jump="nxSmartPromptPanel" id="nxStepBtn2">
+        <span class="nx-step-dot done" id="nxStepDot2">✓</span>
+        <span class="nx-step-copy"><strong>Estilo &amp; Trilha</strong><small id="nxStepSub2">Automático ativo</small></span>
+      </button>
+      <span class="nx-step-arrow" aria-hidden="true">→</span>
+      <button type="button" class="nx-step-item" data-jump="nxVoiceCardSection" id="nxStepBtn3">
+        <span class="nx-step-dot" id="nxStepDot3">3</span>
+        <span class="nx-step-copy"><strong>Voz &amp; Legenda</strong><small id="nxStepSub3">Opcional PT-BR</small></span>
+      </button>
+      <span class="nx-step-arrow" aria-hidden="true">→</span>
+      <button type="button" class="nx-step-item nx-step-go" data-jump="btnBuild" id="nxStepBtn4">
+        <span class="nx-step-dot" id="nxStepDot4">4</span>
+        <span class="nx-step-copy"><strong>Gerar Vídeo</strong><small id="nxStepSub4">Pronto em 9:16</small></span>
+      </button>
+    </div>
 
     <div class="layout">
       <!-- LEFT STUDIO WORKBENCH -->
@@ -1028,9 +1051,15 @@
 
             <div class="box-group" id="productFieldsBox">
               <div class="grid-2" id="directorRowWrap">
-                <div id="durFieldWrap">
-                  <label for="minDuration">Duração do Comercial</label>
-                  <select id="minDuration">
+                <div id="durFieldWrap" style="grid-column: span 2;">
+                  <label for="minDuration">Duração do Vídeo (Toque para escolher)</label>
+                  <div class="nx-dur-pills" id="nxDurationPills" role="group" aria-label="Duração do Vídeo">
+                    <button type="button" class="nx-dur-pill active" data-dur="10"><strong>10s</strong><span>7 cortes • Viral</span></button>
+                    <button type="button" class="nx-dur-pill" data-dur="15"><strong>15s</strong><span>10 cortes • Retenção</span></button>
+                    <button type="button" class="nx-dur-pill" data-dur="20"><strong>20s</strong><span>15 cortes • Completo</span></button>
+                    <button type="button" class="nx-dur-pill" data-dur="30"><strong>30s</strong><span>20 cortes • História</span></button>
+                  </div>
+                  <select id="minDuration" class="nx-sr-hidden" aria-hidden="true" tabindex="-1">
                     <option value="10" selected>⚡ 10s — 7 Cortes Cinema (Padrão Viral)</option>
                     <option value="15">🔥 15s — 10 Cortes Cinema (Alta Retenção)</option>
                     <option value="20">💎 20s — 15 Cortes Cinema (Superprodução)</option>
@@ -1243,40 +1272,48 @@
           <div class="preset-grid" id="imgPresetGrid"></div>
         </section>
 
-        <!-- CARD 2B & 3: 105 VIDEO CATALOG + AUDIO / VOICE / CAPTIONS -->
+        <!-- CARD 2B & 3: 105 VIDEO CATALOG (COLLAPSIBLE) + VOICE & CAPTIONS -->
         <div id="vidCatalogSection" style="display:flex;flex-direction:column;gap:14px;">
-          <section class="card">
-            <div class="step-header">
-              <div class="step-title"><span class="step-num">02</span> Escolha 1 dos 105 Universos Cinema 9:16</div>
-              <span class="step-meta" id="selectedVidLabel">Selecionado: #101 Eclipse Vulcânico &amp; Faíscas Ouro</span>
+          <details class="nx-fold-card" id="nxManualCatalogDetails">
+            <summary class="nx-fold-summary">
+              <div class="nx-fold-left">
+                <span class="nx-fold-ico">🌍</span>
+                <div>
+                  <strong>Escolher Cenário Manualmente (105 Universos 3D — Opcional)</strong>
+                  <small id="selectedVidLabel">Selecionado: #101 Eclipse Vulcânico &amp; Faíscas Ouro</small>
+                </div>
+              </div>
+              <span class="nx-fold-pill">Abrir catálogo</span>
+            </summary>
+            <div class="nx-fold-body">
+              <div class="filter-bar">
+                <input type="text" id="vidSearch" placeholder="Buscar cenário (eclipse, água negra, estúdio branco, janela UGC, garagem)..." />
+                <select id="vidCatFilter">
+                  <option value="TODOS">Todos os 105 Universos</option>
+                  <option value="Master10">⭐ Master 10/10 Cinema (5)</option>
+                  <option value="Acao">Ação, Eclipse &amp; Reator (10)</option>
+                  <option value="VFX">VFX 1000fps &amp; Impacto (10)</option>
+                  <option value="Luxo">Luxo Noir &amp; Joalheria (10)</option>
+                  <option value="Viral">TikTok Shop Hard-Sell (10)</option>
+                  <option value="Personagem">Personagens &amp; Cinema (10)</option>
+                  <option value="UGC">UGC Criador Real (15)</option>
+                  <option value="POV">POV Primeira Pessoa (15)</option>
+                  <option value="EstudioPro">Estúdio Pro Macro (10)</option>
+                  <option value="Lifestyle">Lifestyle &amp; Ambientes (10)</option>
+                </select>
+                <button type="button" class="btn-rand" id="btnRandVid">🎲 Sortear</button>
+              </div>
+              <div class="preset-grid" id="vidPresetGrid"></div>
             </div>
-            <div class="filter-bar">
-              <input type="text" id="vidSearch" placeholder="Buscar universo (off-white, água negra, espelhos, janela UGC, garagem)..." />
-              <select id="vidCatFilter">
-                <option value="TODOS">Todos os 105 Universos</option>
-                <option value="Master10">⭐ Master 10/10 Cinema (5)</option>
-                <option value="Acao">Ação, Eclipse &amp; Reator (10)</option>
-                <option value="VFX">VFX 1000fps &amp; Impacto (10)</option>
-                <option value="Luxo">Luxo Noir &amp; Joalheria (10)</option>
-                <option value="Viral">TikTok Shop Hard-Sell (10)</option>
-                <option value="Personagem">Personagens &amp; Cinema (10)</option>
-                <option value="UGC">UGC Criador Real (15)</option>
-                <option value="POV">POV Primeira Pessoa (15)</option>
-                <option value="EstudioPro">Estúdio Pro Macro (10)</option>
-                <option value="Lifestyle">Lifestyle &amp; Ambientes (10)</option>
-              </select>
-              <button type="button" class="btn-rand" id="btnRandVid">🎲 Sortear</button>
-            </div>
-            <div class="preset-grid" id="vidPresetGrid"></div>
-          </section>
+          </details>
 
-          <section class="card">
+          <section class="card" id="nxVoiceCardSection">
             <div class="step-header">
-              <div class="step-title"><span class="step-num">03</span> Trilha Sonora + Narração PT-BR (60 Vozes) + Legendas</div>
-              <span class="step-meta">Volume calibrado p/ voz • <strong>Grafia 100% travada</strong></span>
+              <div class="step-title"><span class="step-num">03</span> Narração em Português (60 Vozes) &amp; Legendas</div>
+              <span class="step-meta">Sincronia exata • <strong>10s, 15s, 20s e 30s</strong></span>
             </div>
             <div class="audio-panel">
-              <div class="grid-2">
+              <div class="grid-2 nx-legacy-music-hidden">
                 <div>
                   <label for="musicPreset">Trilha Sonora de Agência (Volume Baixo p/ Voz)</label>
                   <select id="musicPreset">
@@ -1297,9 +1334,9 @@
                 </div>
               </div>
 
-              <div class="options-row">
-                <label class="toggle-row"><input type="checkbox" id="enableSfxHits" checked /><span><strong>Whoosh Sutil Alternado</strong> (Efeitos sonoros baixos)</span></label>
-                <label class="toggle-row"><input type="checkbox" id="enableVideoVoiceover" /><span><strong>🎙️ Ativar Narração PT-BR + Legendas TikTok Shop</strong></span></label>
+              <div class="options-row nx-toggle-cards">
+                <label class="toggle-row nx-tcard nx-tcard-main" id="nxVoiceToggleCard"><input type="checkbox" id="enableVideoVoiceover" /><span><strong>🎙️ Ativar Narração PT-BR + Legendas Sincronizadas</strong><small>60 vozes profissionais com legenda automática na zona segura</small></span></label>
+                <label class="toggle-row nx-tcard"><input type="checkbox" id="enableSfxHits" checked /><span><strong>🔊 Efeitos Sonoros de Transição (Whoosh)</strong><small>Viradas limpas no ritmo dos cortes</small></span></label>
               </div>
 
               <div id="inlineVoiceBox" style="border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:11px;">
@@ -1634,10 +1671,29 @@
               </ul>
             </div>
           </div>
+
+          <!-- LIVE CHECKLIST + QUICK GENERATE (ALWAYS 1 CLICK AWAY ON NOTEBOOK/DESKTOP) -->
+          <div class="nx-quick-summary" id="nxQuickSummaryBox">
+            <div class="nx-qs-title">📋 Resumo antes de gerar</div>
+            <div class="nx-qs-grid">
+              <div class="nx-qs-row"><span>Foto do produto</span><strong id="nxQsPhoto" class="qs-warn">Aguardando foto</strong></div>
+              <div class="nx-qs-row"><span>Duração</span><strong id="nxQsDur">10s (7 cortes)</strong></div>
+              <div class="nx-qs-row"><span>Modelo &amp; Trilha</span><strong id="nxQsStyle" class="qs-ok">⭐ Automático • Lyria 2</strong></div>
+              <div class="nx-qs-row"><span>Voz &amp; Legenda</span><strong id="nxQsVoice">Somente trilha</strong></div>
+            </div>
+            <button type="button" class="btn-generate nx-qs-btn" id="btnBuildMirror">🎬 Gerar Vídeo 9:16 Agora (10s)</button>
+            <div class="nx-qs-trust">🛡️ Estorno automático de créditos em caso de falha na IA</div>
+          </div>
         </div>
       </aside>
     </div>
   </main>
+
+  <!-- MOBILE & TABLET STICKY ACTION DOCK -->
+  <div class="nx-mobile-dock" id="nxMobileDock" aria-label="Ações rápidas">
+    <button type="button" class="nx-dock-preview" id="btnDockJumpPreview">👁️ Preview</button>
+    <button type="button" class="nx-dock-go" id="btnDockBuild">🎬 Gerar Vídeo (10s)</button>
+  </div>
 
   <footer class="site-footer">
     <div><strong>NEXORA.AI</strong> — Plataforma Comercial de Criação Audiovisual IA para E-commerce &amp; TikTok Shop</div>
@@ -3292,6 +3348,12 @@
           if (onStatus) onStatus(engIdx === 0 ? firstLbl : `fallback motor ${engIdx + 1}...`);
           const qm = await callApi({ task: "submit_music", engineIndex: engIdx, musicPrompt: prompt, musicNegativePrompt: MUSIC_CLEAN_NEGATIVE, duration: durationSec }, 26000, attemptCtrl.signal);
           const engName = qm.engine || `Motor ${engIdx + 1}`;
+          // Se já voltou pronta (MP3 instantâneo ou Lyria 2 em cache), usa na hora sem consultar fila!
+          if (qm && qm.status === "COMPLETED" && (qm.audioUrl || qm.audio_url || qm.url)) {
+            const directAudioUrl = qm.audioUrl || qm.audio_url || qm.url;
+            if (onStatus) onStatus(`pronta ✓ (${engName})`);
+            return { audioUrl: directAudioUrl, engine: engName };
+          }
           if (onStatus) onStatus(`${engName}: gerando...`);
           const rm = await pollFalJob(qm, (st) => { if (onStatus) onStatus(`${engName}: ${st}`); }, attemptCtrl.signal);
           if (rm && (rm.audioUrl || rm.audio_url || rm.url)) {
@@ -5280,7 +5342,10 @@
       if (!uploadedBase64) { stage.innerHTML = `<div class="err-msg">Envie a foto do produto primeiro.</div>`; return; }
 
       const targetSec = Number(minDuration.value) || 10;
-      const limitSec = Number(maxWaitLimit.value) || 270;
+      const rawLimitSec = Number(maxWaitLimit.value) || 270;
+      // Mantém 04:30 (270s) como padrão para 10s, e garante fôlego automático para 15s/20s/30s não cortarem antes dos últimos clipes 3D
+      const minHeadroom = targetSec >= 30 ? 540 : targetSec >= 20 ? 420 : targetSec >= 15 ? 330 : 270;
+      const limitSec = rawLimitSec === 270 ? Math.max(rawLimitSec, minHeadroom) : rawLimitSec;
       const chosenEngine = videoEngine.value === "veo" ? "veo" : "kling";
       const mKey = musicPreset.value;
       const wantsVoice = enableVideoVoiceover.checked;
@@ -5336,7 +5401,8 @@
       let musicPromise = Promise.resolve(null);
       if (mKey !== "mute" && mKey !== "custom" && MUSIC_PROMPTS[mKey]) {
         musicPromise = (async () => {
-          const res = await generateMusicWithTripleFallback(mKey, dna, Math.min(24, Math.max(14, targetSec + 4)), (st) => { aiMusicStatus = st; }, runSignal);
+          // Cobre 10s, 15s, 20s e 30s inteiros sem cortes nem reinício brusco da música
+          const res = await generateMusicWithTripleFallback(mKey, dna, Math.min(36, Math.max(14, targetSec + 4)), (st) => { aiMusicStatus = st; }, runSignal);
           if (res && res.audioUrl) {
             aiMusicUrl = res.audioUrl;
             aiMusicEngine = res.engine;
@@ -6944,11 +7010,33 @@
         } else if (adPlatform === "universal") {
           platformCta = `Clique no botão aqui embaixo e garanta ${meta.poss} agora!`;
         }
+        const trimSentence = (txt, maxChars) => {
+          const clean = String(txt || "").trim();
+          if (clean.length <= maxChars) return clean;
+          const cut = clean.slice(0, maxChars);
+          const lastComma = Math.max(cut.lastIndexOf(","), cut.lastIndexOf("—"), cut.lastIndexOf(" "));
+          const trimmed = (lastComma > maxChars * 0.55 ? cut.slice(0, lastComma) : cut).replace(/[,—–\-\s]+$/, "");
+          return /[.!?]$/.test(trimmed) ? trimmed : `${trimmed}.`;
+        };
         let out = "";
-        if (vidSec <= 12) out = `${b.hook} ${b.b1} ${platformCta}`;
-        else if (vidSec <= 17) out = `${b.hook} ${b.b1} ${b.b2} ${platformCta}`;
-        else if (vidSec <= 24) out = `${b.hook} ${b.b1} ${b.b2} ${b.b3} ${platformCta}`;
-        else out = `${b.hook} ${b.b1} ${b.b2} ${b.b3} Qualidade comprovada que impressiona em cada ângulo. ${platformCta}`;
+        if (vidSec <= 12) {
+          // 10s: ~142–168 chars -> fala natural ~9.2s + 0.7s de impacto musical, sync 0,00s perfeito!
+          const b1Fit = trimSentence(b.b1, 74);
+          out = `${b.hook} ${b1Fit} ${platformCta}`;
+        } else if (vidSec <= 17) {
+          // 15s: ~215–248 chars -> fala natural ~14.2s, sync 0,00s perfeito!
+          const b1Fit = trimSentence(b.b1, 78);
+          const b2Fit = trimSentence(b.b2, 74);
+          out = `${b.hook} ${b1Fit} ${b2Fit} ${platformCta}`;
+        } else if (vidSec <= 24) {
+          // 20s: ~295–335 chars -> fala natural ~19.2s, sync 0,00s perfeito!
+          const b2Fit = trimSentence(b.b2, 88);
+          const b3Fit = trimSentence(b.b3, 82);
+          out = `${b.hook} ${b.b1} ${b2Fit} ${b3Fit} ${platformCta}`;
+        } else {
+          // 30s: ~440–485 chars -> fala natural ~29.2s (abaixo do limite de 700 chars do servidor!), sync 0,00s perfeito!
+          out = `${b.hook} ${b.b1} ${b.b2} ${b.b3} Acabamento premium que impressiona em cada ângulo e eleva seu nível desde o primeiro uso. ${platformCta}`;
+        }
         return fixPtAccents(fixPtBrContractions(out));
       }
 
@@ -7278,10 +7366,23 @@
               if (!prodVal || !scriptArea) return;
               const vidSec = Number(document.getElementById("minDuration")?.value || 10) || 10;
               scriptArea.value = buildSuperCommercialScript(vidSec);
+              scriptArea.dataset.autoGen = "1";
               scriptArea.dispatchEvent(new Event("input", { bubbles: true }));
             }, 60);
           });
         }
+        scriptArea?.addEventListener("keydown", () => {
+          scriptArea.dataset.autoGen = "0";
+        });
+        document.getElementById("minDuration")?.addEventListener("change", () => {
+          const vidSec = Number(document.getElementById("minDuration")?.value || 10) || 10;
+          if (autoBtn) autoBtn.textContent = `✨ Gerar Narração (${vidSec}s)`;
+          const prodVal = String(document.getElementById("inlineProductName")?.value || "").trim();
+          if (scriptArea && scriptArea.dataset.autoGen === "1" && prodVal.length >= 2) {
+            scriptArea.value = buildSuperCommercialScript(vidSec);
+            scriptArea.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+        });
 
         const musicSelectOrig = document.getElementById("musicPreset");
         const musicGridWrap = musicSelectOrig ? musicSelectOrig.closest(".grid-2") : null;
@@ -7422,15 +7523,15 @@
                   }, 1000);
                   let rawUrl = "";
                   try {
-                    // Respeita o modo escolhido (Lyria 2 recebe 82s completos — NUNCA aborta em 30s! Modo Rápido usa Stable Audio ~12s!)
-                    const orderEngines = mode === "fast" ? [0, 1] : [1, 0];
+                    // No generate.js atual: engineIndex 0 = Google Lyria 2 Pro | engineIndex 1 = Stable Audio Rápido
+                    const orderEngines = mode === "fast" ? [1, 0] : [0, 1];
                     for (const tryEng of orderEngines) {
-                      const engTitle = tryEng === 1 ? "Lyria 2 Pro" : "Estúdio Rápido";
+                      const engTitle = tryEng === 0 ? "Lyria 2 Pro" : "Estúdio Rápido";
                       btnPrev.textContent = `⏳ ${engTitle}...`;
                       musicStLbl = `${engTitle}: enviando`;
                       const mCtrl = new AbortController();
                       let mTimedOut = false;
-                      const mTimer = setTimeout(() => { mTimedOut = true; mCtrl.abort(); }, tryEng === 1 ? 82000 : 42000);
+                      const mTimer = setTimeout(() => { mTimedOut = true; mCtrl.abort(); }, tryEng === 0 ? 82000 : 42000);
                       try {
                         const q = await callApi({
                           task: "submit_music",
@@ -7543,7 +7644,26 @@
             '  <label for="nxEndCardContact" style="color:#a7f3d0;font-size:10.5px;">📱 Texto da Placa Final / WhatsApp (usado se escolher Placa Final ou Selo WhatsApp)</label>' +
             '  <input type="text" id="nxEndCardContact" placeholder="Ex: 11 97538-1981 ou seusite.com.br" />' +
             '</div>';
-          musicPanel.insertAdjacentElement("afterend", sp);
+          const proFold = document.createElement("details");
+          proFold.id = "nxProExtrasDetails";
+          proFold.className = "nx-fold-card";
+          proFold.style.marginTop = "4px";
+          proFold.innerHTML =
+            '<summary class="nx-fold-summary">' +
+            '  <div class="nx-fold-left">' +
+            '    <span class="nx-fold-ico">🎛️</span>' +
+            '    <div>' +
+            '      <strong>Edição Avançada &amp; Placa Final / WhatsApp (Opcional)</strong>' +
+            '      <small>Padrão 10/10 já ativo: 100% 3D + Voz TV + Whooshes + Vídeo Limpo</small>' +
+            '    </div>' +
+            '  </div>' +
+            '  <span class="nx-fold-pill">Configurar</span>' +
+            '</summary>';
+          const foldBody = document.createElement("div");
+          foldBody.className = "nx-fold-body";
+          foldBody.appendChild(sp);
+          proFold.appendChild(foldBody);
+          musicPanel.insertAdjacentElement("afterend", proFold);
 
           // Sincroniza nos dois sentidos os seletores de Plataforma e atualiza a CTA do roteiro na hora!
           const platSel = document.getElementById("selAdPlatform");
@@ -7764,15 +7884,18 @@
                   }), { status: 200, headers: { "Content-Type": "application/json" } });
                 }
 
-                // Modo Lyria 2: prioriza Google Lyria 2 (1) e fallback Stable Audio (0).
-                // Modo Rápido: prioriza Stable Audio (0, ~12s) e fallback Lyria 2 (1).
-                if (mode !== "fast") {
-                  if (payload.engineIndex === 0) payload.engineIndex = 1;
-                  else if (payload.engineIndex === 1) payload.engineIndex = 0;
+                // No generate.js atual: engineIndex 0 = Google Lyria 2 Pro | engineIndex 1 = Stable Audio Rápido
+                if (mode === "fast" && payload.engineIndex === 0) {
+                  payload.engineIndex = 1;
+                } else if (mode !== "fast" && payload.engineIndex === 1 && !payload.useMusicDatabase) {
+                  payload.engineIndex = 1; // fallback Stable Audio
                 }
-                payload.musicPrompt = tr.lyriaPrompt;
-                payload.prompt = tr.lyriaPrompt;
-                payload.musicNegativePrompt = MUSIC_NEG_STRICT;
+                // Se o painel unificado (1.218 prompts) já selecionou a trilha do banco, preserva a seleção dele!
+                if (!payload.useMusicDatabase) {
+                  payload.musicPrompt = tr.lyriaPrompt;
+                  payload.prompt = tr.lyriaPrompt;
+                }
+                payload.musicNegativePrompt = payload.musicNegativePrompt || MUSIC_NEG_STRICT;
                 init = { ...init, body: JSON.stringify(payload) };
               }
             }
@@ -7811,9 +7934,538 @@
   button:hover, .btn:hover, [role="button"]:hover {
     filter: brightness(1.06);
   }
+
+  /* =========================================================================
+     NEXORA DESIGN SYSTEM v16 — PADRÃO SAAS BRASILEIRO NOTA 10 (DESKTOP/TABLET/MOBILE)
+     ========================================================================= */
+  .nx-sr-hidden,
+  .nx-legacy-music-hidden,
+  #nexoraMusicProPanel,
+  #btnGenScriptSuper14 {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  #nxSuperControlPanel .nx-cta-row > div:first-child {
+    display: none !important; /* Plataforma já está limpa e destacada no Passo 03 */
+  }
+  #nxSuperControlPanel .nx-cta-row {
+    grid-template-columns: 1fr !important;
+  }
+  #nxSuperControlPanel {
+    margin-top: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 2px 0 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Calma visual e hierarquia limpa */
+  .card {
+    background: #0c1322 !important;
+    border: 1px solid rgba(148, 163, 184, 0.16) !important;
+    border-radius: 18px !important;
+    padding: 20px !important;
+  }
+  .box-group, .req-box, details.adv-panel {
+    background: #0f172a !important;
+    border-color: rgba(148, 163, 184, 0.16) !important;
+  }
+  .req-box {
+    border-color: rgba(245, 158, 11, 0.45) !important;
+    background: rgba(245, 158, 11, 0.06) !important;
+  }
+  .req-box.filled {
+    border-color: rgba(34, 197, 94, 0.5) !important;
+    background: rgba(34, 197, 94, 0.06) !important;
+  }
+  .director-banner {
+    background: rgba(15, 23, 42, 0.85) !important;
+    border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  }
+
+  /* Barra de Passo a Passo Guiado (4 Etapas) */
+  .nx-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #0b1220;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 15px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nx-stepper::-webkit-scrollbar { display: none; }
+  .nx-step-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    padding: 7px 11px;
+    color: #cbd5e1;
+    cursor: pointer;
+    text-align: left;
+    flex: 1 1 0;
+    min-width: 145px;
+    transition: all 0.16s ease;
+  }
+  .nx-step-item:hover {
+    background: rgba(148, 163, 184, 0.08);
+    border-color: rgba(148, 163, 184, 0.2);
+  }
+  .nx-step-item.active {
+    background: rgba(34, 197, 94, 0.10);
+    border-color: rgba(34, 197, 94, 0.35);
+  }
+  .nx-step-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    background: #17233b;
+    border: 1.5px solid #33486e;
+    color: #cbd5e1;
+    font-size: 11.5px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .nx-step-dot.done {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: #031208;
+  }
+  .nx-step-copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  .nx-step-copy strong {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #f8fafc;
+  }
+  .nx-step-copy small {
+    font-size: 10.5px;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+  .nx-step-arrow {
+    color: #475569;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  /* Seletor Rápido de Duração (10s / 15s / 20s / 30s) */
+  .nx-dur-pills {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .nx-dur-pill {
+    background: #131d31;
+    border: 1.5px solid rgba(148, 163, 184, 0.22);
+    border-radius: 11px;
+    padding: 9px 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: #cbd5e1;
+    transition: all 0.15s ease;
+  }
+  .nx-dur-pill strong {
+    font-size: 15px;
+    font-weight: 800;
+    color: #f8fafc;
+  }
+  .nx-dur-pill span {
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  .nx-dur-pill:hover {
+    border-color: rgba(34, 197, 94, 0.55);
+    background: #17243d;
+  }
+  .nx-dur-pill.active {
+    background: rgba(34, 197, 94, 0.16);
+    border-color: #22c55e;
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.25);
+  }
+  .nx-dur-pill.active strong { color: #86efac; }
+  .nx-dur-pill.active span { color: #bbf7d0; }
+
+  /* Acordeões Limpos (Progressive Disclosure) */
+  details.nx-fold-card {
+    background: #0c1322;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  summary.nx-fold-summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    user-select: none;
+  }
+  summary.nx-fold-summary::-webkit-details-marker { display: none; }
+  .nx-fold-left {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+  }
+  .nx-fold-ico {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .nx-fold-left strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    color: #f8fafc;
+  }
+  .nx-fold-left small {
+    display: block;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+  .nx-fold-pill {
+    font-size: 11px;
+    font-weight: 800;
+    color: #93c5fd;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 5px 11px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  details.nx-fold-card[open] .nx-fold-pill {
+    background: rgba(34, 197, 94, 0.14);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: #86efac;
+  }
+  .nx-fold-body {
+    padding: 0 18px 18px;
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+    padding-top: 14px;
+  }
+
+  /* Cartões de Toggle (Narração + Whoosh) */
+  .nx-toggle-cards {
+    display: grid !important;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 10px !important;
+  }
+  .nx-tcard {
+    background: #0f172a;
+    border: 1.5px solid rgba(148, 163, 184, 0.18);
+    border-radius: 12px;
+    padding: 11px 13px;
+    align-items: flex-start !important;
+    transition: all 0.15s ease;
+  }
+  .nx-tcard.is-on {
+    border-color: rgba(34, 197, 94, 0.55);
+    background: rgba(34, 197, 94, 0.08);
+  }
+  .nx-tcard span strong {
+    display: block;
+    font-size: 12.5px;
+    color: #f8fafc;
+  }
+  .nx-tcard span small {
+    display: block;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 2px;
+    line-height: 1.35;
+  }
+
+  /* Resumo Vivo + Botão Gerar Espelho na Coluna Direita (Desktop/Notebook) */
+  .nx-quick-summary {
+    margin-top: 14px;
+    background: #080e1a;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .nx-qs-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #f8fafc;
+    letter-spacing: 0.01em;
+  }
+  .nx-qs-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .nx-qs-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: #94a3b8;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  }
+  .nx-qs-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .nx-qs-row strong { color: #e2e8f0; font-weight: 700; text-align: right; }
+  .nx-qs-row strong.qs-ok { color: #4ade80; }
+  .nx-qs-row strong.qs-warn { color: #fbbf24; }
+  .nx-qs-btn {
+    padding: 13px 16px !important;
+    font-size: 14px !important;
+  }
+  .nx-qs-trust {
+    font-size: 10.5px;
+    color: #94a3b8;
+    text-align: center;
+  }
+
+  /* Barra Fixa Inferior para Celular & Tablet (<= 1080px) */
+  .nx-mobile-dock {
+    display: none;
+  }
+  @media (max-width: 1080px) {
+    body { padding-bottom: 92px !important; }
+    .nx-mobile-dock {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+      background: rgba(6, 9, 17, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .nx-dock-preview {
+      background: #131d31;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 13px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .nx-dock-go {
+      flex: 1;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #031208;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.28);
+    }
+    .nx-dock-go:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+  @media (max-width: 720px) {
+    .nx-dur-pills { grid-template-columns: repeat(2, 1fr); }
+    .nx-toggle-cards { grid-template-columns: 1fr !important; }
+    .nx-step-arrow { display: none; }
+    .nx-step-item { min-width: 136px; flex: 0 0 auto; }
+  }
 </style>
+  <script>
+    (function initNexoraDesignV16() {
+      if (window.__NEXORA_DESIGN_V16__) return;
+      window.__NEXORA_DESIGN_V16__ = true;
+
+      function getActivePrimaryButton() {
+        const ids = ["btnBuild", "btnRunVideoLab", "btnOnlyImg", "btnGenVoice", "btnRunRemoveBg"];
+        for (const id of ids) {
+          const el = document.getElementById(id);
+          if (el && !el.classList.contains("hidden")) return el;
+        }
+        return document.getElementById("btnBuild");
+      }
+
+      function refreshSummaryAndStepper() {
+        const minDurSel = document.getElementById("minDuration");
+        const sec = Number(minDurSel?.value || 10) || 10;
+        const cutsMap = { 10: 7, 15: 10, 20: 15, 30: 20 };
+        const cuts = cutsMap[sec] || 7;
+        const hasPhoto = Boolean(document.getElementById("thumbPreview")?.getAttribute("src"));
+        const voiceOn = Boolean(document.getElementById("enableVideoVoiceover")?.checked);
+        const subStyle = document.getElementById("inlineSubtitleStyle")?.value || "viral_yellow";
+        const voiceCard = document.getElementById("nxVoiceToggleCard");
+        if (voiceCard) voiceCard.classList.toggle("is-on", voiceOn);
+
+        // Stepper status
+        const dot1 = document.getElementById("nxStepDot1");
+        const sub1 = document.getElementById("nxStepSub1");
+        if (dot1) { dot1.classList.toggle("done", hasPhoto); dot1.textContent = hasPhoto ? "✓" : "1"; }
+        if (sub1) sub1.textContent = hasPhoto ? `Foto pronta • ${sec}s` : `Envie a foto • ${sec}s`;
+
+        const dot3 = document.getElementById("nxStepDot3");
+        const sub3 = document.getElementById("nxStepSub3");
+        if (dot3) { dot3.classList.toggle("done", voiceOn); dot3.textContent = voiceOn ? "✓" : "3"; }
+        if (sub3) sub3.textContent = voiceOn ? (subStyle === "none" ? "Só voz PT-BR" : "Voz + Legenda") : "Somente trilha";
+
+        // Quick summary panel
+        const qsPhoto = document.getElementById("nxQsPhoto");
+        if (qsPhoto) {
+          qsPhoto.textContent = hasPhoto ? "✓ Foto carregada" : "Envie a foto no Passo 01";
+          qsPhoto.className = hasPhoto ? "qs-ok" : "qs-warn";
+        }
+        const qsDur = document.getElementById("nxQsDur");
+        if (qsDur) qsDur.textContent = `${sec}s (${cuts} cortes 3D)`;
+
+        const st = window.__NEXORA_CINEMA_STATE__;
+        const qsStyle = document.getElementById("nxQsStyle");
+        if (qsStyle && st) {
+          const mLbl = st.modoModelo === "manual" ? `Modelo #${st.modeloManualId}` : "⭐ Melhor Opção";
+          const tLbl = st.fonteTrilha === "mute" ? "Sem música" : st.fonteTrilha === "instant" ? "MP3/Lyria 2" : st.fonteTrilha === "fast" ? "IA Rápida" : "Lyria 2";
+          qsStyle.textContent = `${mLbl} • ${tLbl}`;
+        }
+
+        const qsVoice = document.getElementById("nxQsVoice");
+        if (qsVoice) {
+          qsVoice.textContent = voiceOn ? (subStyle === "none" ? "✓ Narração PT-BR" : "✓ Voz + Legenda 23px") : "Opcional (desativada)";
+          qsVoice.className = voiceOn ? "qs-ok" : "";
+        }
+
+        // Mirror buttons sync
+        const primary = getActivePrimaryButton();
+        const mirrorBtn = document.getElementById("btnBuildMirror");
+        const dockBtn = document.getElementById("btnDockBuild");
+        const isVideoMode = primary && primary.id === "btnBuild";
+        const stepper = document.getElementById("nxGuidedStepper");
+        const summaryBox = document.getElementById("nxQuickSummaryBox");
+        if (stepper) stepper.style.display = isVideoMode ? "flex" : "none";
+        if (summaryBox) summaryBox.style.display = isVideoMode ? "flex" : "none";
+
+        if (mirrorBtn && primary) {
+          mirrorBtn.disabled = Boolean(primary.disabled);
+          mirrorBtn.textContent = isVideoMode ? `🎬 Gerar Vídeo 9:16 Agora (${sec}s)` : primary.textContent;
+        }
+        if (dockBtn && primary) {
+          dockBtn.disabled = Boolean(primary.disabled);
+          dockBtn.textContent = isVideoMode ? `🎬 Gerar Vídeo (${sec}s • ${cuts} cortes)` : primary.textContent;
+        }
+      }
+
+      window.__NEXORA_REFRESH_SUMMARY__ = refreshSummaryAndStepper;
+
+      function bindUX() {
+        // Duration 1-tap pills
+        const durPills = document.querySelectorAll(".nx-dur-pill");
+        const minDurSel = document.getElementById("minDuration");
+        durPills.forEach((pill) => {
+          pill.addEventListener("click", () => {
+            const v = pill.dataset.dur;
+            if (!v || !minDurSel) return;
+            minDurSel.value = v;
+            durPills.forEach((p) => p.classList.toggle("active", p.dataset.dur === v));
+            minDurSel.dispatchEvent(new Event("change", { bubbles: true }));
+            refreshSummaryAndStepper();
+          });
+        });
+        minDurSel?.addEventListener("change", () => {
+          durPills.forEach((p) => p.classList.toggle("active", p.dataset.dur === minDurSel.value));
+          refreshSummaryAndStepper();
+        });
+
+        // Guided stepper smooth navigation
+        document.querySelectorAll(".nx-step-item").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const targetId = btn.dataset.jump;
+            const targetEl = document.getElementById(targetId);
+            if (!targetEl) return;
+            targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            document.querySelectorAll(".nx-step-item").forEach((x) => x.classList.remove("active"));
+            btn.classList.add("active");
+          });
+        });
+
+        // Mirror CTA & Mobile Dock buttons
+        document.getElementById("btnBuildMirror")?.addEventListener("click", () => {
+          const primary = getActivePrimaryButton();
+          primary?.click();
+          document.getElementById("stage")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+        document.getElementById("btnDockBuild")?.addEventListener("click", () => {
+          const primary = getActivePrimaryButton();
+          primary?.click();
+          document.getElementById("stage")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        document.getElementById("btnDockJumpPreview")?.addEventListener("click", () => {
+          document.getElementById("stage")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+
+        // Watch state changes to keep summary & disabled state always accurate
+        ["productImg", "enableVideoVoiceover", "inlineSubtitleStyle", "inlineProductName", "inlineVoiceScript"].forEach((id) => {
+          document.getElementById(id)?.addEventListener("change", refreshSummaryAndStepper);
+          document.getElementById(id)?.addEventListener("input", refreshSummaryAndStepper);
+        });
+        document.querySelectorAll(".mode-btn").forEach((b) => {
+          b.addEventListener("click", () => setTimeout(refreshSummaryAndStepper, 40));
+        });
+
+        const buildBtn = document.getElementById("btnBuild");
+        if (buildBtn) {
+          new MutationObserver(refreshSummaryAndStepper).observe(buildBtn, { attributes: true, attributeFilter: ["disabled", "class"] });
+        }
+        const thumb = document.getElementById("thumbPreview");
+        if (thumb) {
+          new MutationObserver(refreshSummaryAndStepper).observe(thumb, { attributes: true, attributeFilter: ["src", "style"] });
+        }
+        refreshSummaryAndStepper();
+      }
+
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindUX);
+      else bindUX();
+    })();
+  </script>
   <script src="./nexora-saas.js"></script>
-  <script src="./nexora-cinema-ui.js?v=1"></script>
+  <script src="./nexora-cinema-ui.js?v=2"></script>
 </body>
 </html>
 
