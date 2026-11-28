@@ -1,3 +1,11 @@
+import {
+  selecionarMelhorPrompt,
+  selecionarMelhorTrilha,
+  gerarPacoteMultiContas,
+  listarOpcoesInterface,
+  NEGATIVE_PROMPT_PADRAO,
+} from "./prompts-database.js";
+
 const FAL_QUEUE_BASE = "https://queue.fal.run";
 
 const ALLOWED_SCENE_MODELS = new Set([
@@ -10,8 +18,8 @@ const ALLOWED_SCENE_MODELS = new Set([
 ]);
 
 const CLIP_MODEL_TIERS = {
-  "fal-ai/kling-video/v2.6/pro/image-to-video": 12,
   "fal-ai/veo3.1/fast/image-to-video": 12,
+  "fal-ai/kling-video/v2.6/pro/image-to-video": 12,
   "fal-ai/kling-video/v2.1/pro/image-to-video": 12,
   "fal-ai/kling-video/v1.6/pro/image-to-video": 12,
   "fal-ai/kling-video/v2.1/standard/image-to-video": 6,
@@ -24,9 +32,12 @@ const CLIP_MODEL_TIERS = {
 
 const DEFAULT_SCENE_MODEL_EDIT = "fal-ai/nano-banana/edit";
 const DEFAULT_SCENE_MODEL_T2I = "fal-ai/flux-pro/v1.1";
-const DEFAULT_CLIP_MODEL = "fal-ai/kling-video/v2.6/pro/image-to-video";
+// PADRÃO CINEMA: Google Veo 3.1 (mesmo motor dos vídeos de referência do Gemini)
+const DEFAULT_CLIP_MODEL = "fal-ai/veo3.1/fast/image-to-video";
 
 const ACTION_CREDIT_COSTS = {
+  get_options: 0,
+  select_prompt: 0,
   submit_scene: 2,
   generate_angle: 1,
   describe_product: 0,
@@ -39,11 +50,13 @@ const ACTION_CREDIT_COSTS = {
 };
 
 const ACTION_DESCRIPTIONS = {
+  get_options: "Listagem de modelos de conversão e trilhas",
+  select_prompt: "Seleção inteligente de prompt e prévia de exemplo",
   submit_scene: "Geração de cena visual 9:16",
   generate_angle: "Geração de ângulo 3D do produto",
   describe_product: "Descrição visual automática do produto",
   submit_clip: "Geração de clipe de vídeo cinematográfico",
-  submit_music: "Geração de trilha sonora / batida",
+  submit_music: "Geração de trilha sonora cinematográfica (Lyria 2)",
   clone_voice: "Clonagem de voz de referência",
   submit_tts: "Narração de voz (TTS)",
   transcribe_words: "Sincronização de legendas",
@@ -51,6 +64,14 @@ const ACTION_DESCRIPTIONS = {
 };
 
 const ACTION_ALIASES = {
+  get_options: "get_options",
+  list_options: "get_options",
+  opcoes_interface: "get_options",
+  catalog: "get_options",
+  select_prompt: "select_prompt",
+  preview_prompt: "select_prompt",
+  escolher_prompt: "select_prompt",
+  gerar_pacote: "select_prompt",
   remove_bg: "remove_bg",
   removebg: "remove_bg",
   remove_background: "remove_bg",
@@ -286,6 +307,17 @@ function jsonResponse(payload, status = 200) {
 
 export async function onRequestGet(context) {
   const urlObj = new URL(context.request.url);
+  const actionParam = String(urlObj.searchParams.get("action") || "").trim().toLowerCase();
+
+  // Permite ao index.html carregar os 10 Modelos, vídeos de exemplo e 7 Trilhas sem gastar créditos
+  if (actionParam === "get_options" || actionParam === "catalog" || actionParam === "list_options") {
+    return jsonResponse({
+      ok: true,
+      defaultClipModel: DEFAULT_CLIP_MODEL,
+      ...listarOpcoesInterface(),
+    });
+  }
+
   const proxyUrl = urlObj.searchParams.get("proxyUrl");
   if (!proxyUrl) {
     return jsonResponse({ error: "Parâmetro proxyUrl ausente." }, 400);
@@ -347,11 +379,66 @@ function resolveAllowedSceneModel(body, hasInputImage) {
 
 function resolveAllowedClipModel(body) {
   const cleaned = resolveModelCandidate(body).toLowerCase();
-  if (cleaned === "veo") return "fal-ai/veo3.1/fast/image-to-video";
+  if (!cleaned || cleaned === "auto" || cleaned === "melhor_opcao" || cleaned === "veo" || cleaned === "veo3" || cleaned === "veo3.1") {
+    return "fal-ai/veo3.1/fast/image-to-video";
+  }
   if (cleaned === "kling") return "fal-ai/kling-video/v2.6/pro/image-to-video";
   return Object.prototype.hasOwnProperty.call(CLIP_MODEL_TIERS, cleaned)
     ? cleaned
     : DEFAULT_CLIP_MODEL;
+}
+
+function extractProductSelectionParams(body, fallbackDuration = 6) {
+  const nomeProduto = String(
+    body?.nomeProduto ?? body?.productName ?? body?.produto ?? ""
+  ).trim();
+  const detalhesProduto = String(
+    body?.detalhesProduto ?? body?.productDetails ?? body?.visualDescription ?? body?.visual_description ?? ""
+  ).trim();
+  const detalheMacro = String(
+    body?.detalheMacro ?? body?.macroDetail ?? body?.macro_detail ?? ""
+  ).trim();
+  const modeloPreferido =
+    body?.modeloPreferido ?? body?.conversionModel ?? body?.modeloConversao ?? null;
+  const trilhaPreferida =
+    body?.trilhaPreferida ?? body?.soundtrackStyle ?? body?.estiloTrilha ?? null;
+  const categoriaForcada = body?.categoriaForcada ?? body?.categoria ?? null;
+  const idsJaUsados = Array.isArray(body?.idsJaUsados)
+    ? body.idsJaUsados
+    : Array.isArray(body?.usedPromptIds)
+      ? body.usedPromptIds
+      : [];
+  const arquivosTrilhaJaUsados = Array.isArray(body?.arquivosTrilhaJaUsados)
+    ? body.arquivosTrilhaJaUsados
+    : Array.isArray(body?.usedTrackFiles)
+      ? body.usedTrackFiles
+      : [];
+  const apenasAmbienteSeco =
+    typeof body?.apenasAmbienteSeco === "boolean"
+      ? body.apenasAmbienteSeco
+      : typeof body?.dryOnly === "boolean"
+        ? body.dryOnly
+        : null;
+  const priorizarMestres = Boolean(body?.priorizarMestres);
+  const duracaoSegundos = Number(body?.duracaoSegundos ?? body?.duration ?? fallbackDuration) || fallbackDuration;
+
+  return {
+    nomeProduto: nomeProduto || "premium commercial product",
+    detalhesProduto:
+      detalhesProduto ||
+      "exact physical geometry, textures, colors, and finish strictly identical to the clean reference image",
+    detalheMacro:
+      detalheMacro ||
+      "signature surface textures, sculpted edges, and precision craftsmanship",
+    categoriaForcada,
+    modeloPreferido,
+    trilhaPreferida,
+    duracaoSegundos,
+    idsJaUsados,
+    arquivosTrilhaJaUsados,
+    apenasAmbienteSeco,
+    priorizarMestres,
+  };
 }
 
 async function getAuthenticatedUser(env, accessToken) {
@@ -476,6 +563,39 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
+    const body = await request.json();
+    const rawAction = String(body.action || body.mode || body.task || "").trim().toLowerCase();
+    const action = ACTION_ALIASES[rawAction] || rawAction;
+
+    // AÇÕES GRATUITAS (0 CRÉDITOS) — Catálogo de modelos/trilhas e seleção de prévia antes de gerar
+    if (action === "get_options") {
+      return jsonResponse({
+        ok: true,
+        defaultClipModel: DEFAULT_CLIP_MODEL,
+        ...listarOpcoesInterface(),
+      });
+    }
+
+    if (action === "select_prompt") {
+      const opcoes = extractProductSelectionParams(body, 6);
+      const quantidade = Math.min(10, Math.max(1, Number(body?.quantidade || 1)));
+      if (quantidade > 1) {
+        const pacote = gerarPacoteMultiContas(opcoes, quantidade);
+        return jsonResponse({
+          ok: true,
+          defaultClipModel: DEFAULT_CLIP_MODEL,
+          pacote,
+          selecao: pacote[0],
+        });
+      }
+      const selecao = selecionarMelhorPrompt(opcoes);
+      return jsonResponse({
+        ok: true,
+        defaultClipModel: DEFAULT_CLIP_MODEL,
+        selecao,
+      });
+    }
+
     const falKey = env.FAL_KEY;
     if (!falKey) {
       return jsonResponse({ error: "Chave de geração não configurada no servidor." }, 500);
@@ -491,9 +611,6 @@ export async function onRequestPost(context) {
       return jsonResponse({ error: "Faça login para gerar imagens, vídeos ou narrações." }, 401);
     }
 
-    const body = await request.json();
-    const rawAction = String(body.action || body.mode || body.task || "").trim().toLowerCase();
-    const action = ACTION_ALIASES[rawAction] || rawAction;
     const resolvedImageList = extractImageInputList(body);
     const resolvedImageUrl = resolvedImageList[0] || "";
 
@@ -660,11 +777,37 @@ export async function onRequestPost(context) {
       }
     }
 
+    // MODO HÍBRIDO INSTANTÂNEO DE TRILHA (0 CRÉDITOS, 0 SEGUNDOS DE ESPERA)
+    if (action === "submit_music" && String(body.musicMode || "").toLowerCase() === "instant") {
+      const opcoes = extractProductSelectionParams(body, 6);
+      const trilhaInstantanea = selecionarMelhorTrilha({
+        nomeProduto: opcoes.nomeProduto,
+        detalhesProduto: opcoes.detalhesProduto,
+        categoriaForcada: opcoes.categoriaForcada,
+        modeloId: opcoes.modeloPreferido && Number(opcoes.modeloPreferido) >= 1 ? Number(opcoes.modeloPreferido) : null,
+        trilhaPreferida: opcoes.trilhaPreferida,
+        arquivosJaUsados: opcoes.arquivosTrilhaJaUsados,
+      });
+      return jsonResponse({
+        status: "COMPLETED",
+        engine: "nexora/instant-tracks",
+        audioUrl: trilhaInstantanea.arquivoMp3,
+        audio_url: trilhaInstantanea.arquivoMp3,
+        url: trilhaInstantanea.arquivoMp3,
+        trilhaMeta: trilhaInstantanea,
+        charged: 0,
+      });
+    }
+
     const resolvedSceneModel = resolveAllowedSceneModel(body, resolvedImageList.length > 0);
     const resolvedClipModel = resolveAllowedClipModel(body);
+    const isVeoClip = resolvedClipModel.includes("veo");
     const promptText = resolvePromptCandidate(body);
-    const requestedClipSeconds = Number(body.duration || 5);
-    const clipDuration = requestedClipSeconds > 5 ? "10" : "5";
+
+    const requestedClipSeconds = Number(body.duration || (isVeoClip ? 6 : 5));
+    const veoDurationStr = requestedClipSeconds >= 8 ? "8s" : "6s";
+    const klingDurationStr = requestedClipSeconds > 5 ? "10" : "5";
+    const effectiveClipSeconds = isVeoClip ? (requestedClipSeconds >= 8 ? 8 : 6) : (requestedClipSeconds > 5 ? 10 : 5);
 
     let creditCost = Object.prototype.hasOwnProperty.call(ACTION_CREDIT_COSTS, action)
       ? ACTION_CREDIT_COSTS[action]
@@ -673,9 +816,10 @@ export async function onRequestPost(context) {
 
     if (action === "submit_clip") {
       const baseClipCost = CLIP_MODEL_TIERS[resolvedClipModel] || 12;
-      creditCost = clipDuration === "10" ? baseClipCost * 2 : baseClipCost;
-      const tierLabel = baseClipCost <= 6 ? "Econômico" : "Cinema Pro";
-      actionDesc = `${ACTION_DESCRIPTIONS.submit_clip} (${tierLabel} ${clipDuration}s)`;
+      const isExtended = isVeoClip ? requestedClipSeconds >= 8 : klingDurationStr === "10";
+      creditCost = isExtended ? baseClipCost * 2 : baseClipCost;
+      const tierLabel = isVeoClip ? "Veo 3.1 Cinema" : (baseClipCost <= 6 ? "Econômico" : "Cinema Pro");
+      actionDesc = `${ACTION_DESCRIPTIONS.submit_clip} (${tierLabel} ${effectiveClipSeconds}s)`;
     }
 
     let debit = { ok: true, newBalance: null };
@@ -692,11 +836,12 @@ export async function onRequestPost(context) {
 
     let upstream = null;
     let usedEndpoint = "";
+    let promptMeta = null;
+    let trilhaMeta = null;
 
     if (action === "submit_scene" || action === "generate_angle") {
       usedEndpoint = action === "generate_angle" ? DEFAULT_SCENE_MODEL_EDIT : resolvedSceneModel;
       // TRAVA OBRIGATÓRIA 9:16 EM TODAS AS IMAGENS E ÂNGULOS 3D (PROIBIDO GERAR EM 1:1 OU OUTRO TAMANHO)
-      const aspectRatio = "9:16";
       const outFmt = action === "generate_angle" ? "png" : "jpeg";
       let inputPayload;
 
@@ -729,8 +874,9 @@ export async function onRequestPost(context) {
       const engIdx = Number(body.engineIndex || 0);
       const visionPrompt =
         promptText ||
-        "Analyze the exact physical product in this image. Return ONLY valid JSON with two keys in Brazilian Portuguese: " +
-          '{"visual_description": "concise ultra-faithful physical description of the product type, colors, material finishes, shapes and distinctive details in up to 140 characters", ' +
+        "Analyze the exact physical product in this image. Return ONLY valid JSON with three keys in Brazilian Portuguese: " +
+          '{"product_name": "short clear commercial name of the product in 2 to 5 words", ' +
+          '"visual_description": "concise ultra-faithful physical description of the product type, colors, material finishes, shapes and distinctive details in up to 140 characters", ' +
           '"macro_detail": "3 to 6 words naming the best close-up detail for a 100mm macro shot, e.g. textura metálica, lentes e acabamento"}';
 
       if (engIdx === 0) {
@@ -755,40 +901,90 @@ export async function onRequestPost(context) {
       }
     } else if (action === "submit_clip") {
       usedEndpoint = resolvedClipModel;
-      const isVeo = resolvedClipModel.includes("veo");
-      const inputPayload = isVeo
+
+      // Usa automaticamente o Banco de 1.218 Prompts (Veo 3.1 calibrado) quando ativado ou quando houver dados do produto
+      const deveUsarBanco =
+        body.usePromptDatabase === true ||
+        Boolean(body.nomeProduto || body.productName || body.modeloPreferido || body.conversionModel) ||
+        !promptText;
+
+      let finalClipPrompt = promptText;
+      let finalNegativePrompt = String(body.negativePrompt || NEGATIVE_PROMPT_PADRAO).slice(0, 520);
+
+      if (deveUsarBanco) {
+        const opcoes = extractProductSelectionParams(body, effectiveClipSeconds);
+        const selecao = selecionarMelhorPrompt(opcoes);
+        finalClipPrompt = selecao.promptFinal;
+        finalNegativePrompt = String(body.negativePrompt || selecao.negativePrompt).slice(0, 520);
+        promptMeta = {
+          idPromptUsado: selecao.idPromptUsado,
+          assinaturaUnica: selecao.assinaturaUnica,
+          modoSelecao: selecao.modoSelecao,
+          categoriaDetectada: selecao.categoriaDetectada,
+          modeloId: selecao.modeloId,
+          modeloNome: selecao.modeloNome,
+          estiloVisual: selecao.estiloVisual,
+          duracaoCalibrada: selecao.duracaoCalibrada,
+          previewVideo: selecao.previewVideo,
+          trilhaRecomendada: selecao.trilhaRecomendada,
+        };
+      }
+
+      const inputPayload = isVeoClip
         ? {
-            prompt: promptText,
+            prompt: finalClipPrompt,
             image_url: resolvedImageUrl,
             aspect_ratio: "9:16",
-            duration: "6s",
+            duration: veoDurationStr,
             generate_audio: false,
           }
         : {
-            prompt: promptText,
+            prompt: finalClipPrompt,
             image_url: resolvedImageUrl,
-            duration: clipDuration,
+            duration: klingDurationStr,
             aspect_ratio: "9:16",
             cfg_scale: 0.5,
             generate_audio: false,
-            ...(body.negativePrompt ? { negative_prompt: String(body.negativePrompt).slice(0, 520) } : {}),
+            ...(finalNegativePrompt ? { negative_prompt: finalNegativePrompt } : {}),
           };
       upstream = await falFetch(usedEndpoint, falKey, "POST", inputPayload);
     } else if (action === "submit_music") {
+      // MODO HÍBRIDO (OPÇÃO IA EXCLUSIVA): Google Lyria 2 como motor principal de cinema + prompts pesados do banco
       const engIdx = Number(body.engineIndex || 0);
-      const prompt = promptText || "upbeat energetic commercial background track";
+      const opcoes = extractProductSelectionParams(body, 6);
+      const selecaoTrilha = selecionarMelhorTrilha({
+        nomeProduto: opcoes.nomeProduto,
+        detalhesProduto: opcoes.detalhesProduto,
+        categoriaForcada: opcoes.categoriaForcada,
+        modeloId: opcoes.modeloPreferido && Number(opcoes.modeloPreferido) >= 1 ? Number(opcoes.modeloPreferido) : null,
+        trilhaPreferida: opcoes.trilhaPreferida,
+        arquivosJaUsados: opcoes.arquivosTrilhaJaUsados,
+      });
+      trilhaMeta = selecaoTrilha;
+
+      const usarPromptDoBanco =
+        body.useMusicDatabase !== false &&
+        (Boolean(body.trilhaPreferida || body.soundtrackStyle || body.nomeProduto || body.productName) ||
+          !promptText ||
+          promptText.toLowerCase().includes("upbeat energetic commercial background track"));
+
+      const finalMusicPrompt = usarPromptDoBanco ? selecaoTrilha.lyriaPrompt : promptText;
+      const finalMusicNegative = String(
+        body.musicNegativePrompt || selecaoTrilha.lyriaNegativePrompt || ""
+      ).slice(0, 400);
       const duration = Math.min(45, Math.max(8, Number(body.duration || 15)));
+
       if (engIdx === 1) {
-        usedEndpoint = "fal-ai/lyria2";
-        upstream = await falFetch(usedEndpoint, falKey, "POST", {
-          prompt,
-          ...(body.musicNegativePrompt ? { negative_prompt: String(body.musicNegativePrompt).slice(0, 400) } : {}),
-        });
-      } else {
         usedEndpoint = "fal-ai/stable-audio";
         upstream = await falFetch(usedEndpoint, falKey, "POST", {
-          prompt,
+          prompt: finalMusicPrompt,
           seconds_total: duration,
+        });
+      } else {
+        usedEndpoint = "fal-ai/lyria2";
+        upstream = await falFetch(usedEndpoint, falKey, "POST", {
+          prompt: finalMusicPrompt,
+          ...(finalMusicNegative ? { negative_prompt: finalMusicNegative } : {}),
         });
       }
     } else if (action === "clone_voice") {
@@ -949,6 +1145,8 @@ export async function onRequestPost(context) {
       ...(directMedia.videoUrl ? { videoUrl: directMedia.videoUrl, video_url: directMedia.videoUrl } : {}),
       ...(directMedia.audioUrl ? { audioUrl: directMedia.audioUrl, audio_url: directMedia.audioUrl } : {}),
       ...(directMedia.url ? { url: directMedia.url } : {}),
+      ...(promptMeta ? { promptMeta } : {}),
+      ...(trilhaMeta ? { trilhaMeta } : {}),
       ...(typeof debit.newBalance === "number" ? { credits: debit.newBalance } : {}),
       charged: creditCost,
     });
