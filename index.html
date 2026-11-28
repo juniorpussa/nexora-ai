@@ -1200,7 +1200,7 @@
               </div>
             </div>
             <div class="nx-vault-list" id="nxVaultList">
-              <div class="nx-vault-empty">Seus produtos preparados (PNG sem fundo + 3 ângulos + descrição IA) são salvos automaticamente aqui para você criar novos vídeos em outros cenários sem pagar pelos PNGs de novo!</div>
+              <div class="nx-vault-empty">Seus produtos preparados (PNG sem fundo + 6 ângulos 3D + descrição IA) são salvos automaticamente aqui para você criar novos vídeos em outros cenários sem pagar pelos PNGs de novo!</div>
             </div>
           </div>
 
@@ -1214,7 +1214,7 @@
                 <img id="thumbPreview" alt="Produto" />
               </label>
               <button type="button" class="btn-quick-bg" id="btnQuickRemoveBg" disabled>✂️ Remover Fundo (PNG)</button>
-              <button type="button" class="btn-quick-bg" id="btnGen3Angles" disabled style="background:rgba(34,197,94,0.16);color:#86efac;border-color:rgba(34,197,94,0.48);">📐 Gerar 3 Ângulos 3D (9:16) + Salvar</button>
+              <button type="button" class="btn-quick-bg" id="btnGen3Angles" disabled style="background:rgba(34,197,94,0.16);color:#86efac;border-color:rgba(34,197,94,0.48);">📐 Gerar 6 Ângulos 3D (9:16) + Salvar</button>
             </div>
 
             <div class="box-group" id="productFieldsBox">
@@ -1346,8 +1346,8 @@
           </style>
           <div class="angles3-panel" id="angles3Panel">
             <div class="angles3-head">
-              <span>📐 Kit 3 Ângulos 3D Essenciais Sem Fundo • 9:16 (Mesma Qualidade 10/10 • ~55% menos créditos • Salvo Permanente)</span>
-              <span class="angles3-status" id="angles3Status">Envie a foto (ou clique num produto salvo acima) • Opcional: gere os 3 ângulos 1 única vez!</span>
+              <span>📐 Kit 6 Ângulos 3D Sem Fundo • 100% Vertical 9:16 (Qualidade Máxima 10/10 • Salvo Permanente = Pague 1x!)</span>
+              <span class="angles3-status" id="angles3Status">Envie a foto (ou clique num produto salvo acima) e gere os 6 ângulos 1 única vez!</span>
             </div>
             <div class="angles3-grid">
               <div class="angle3-slot" id="angleSlot0">
@@ -1355,12 +1355,24 @@
                 <div class="angle3-thumb checker-bg" id="angleThumb0">Aguardando...</div>
               </div>
               <div class="angle3-slot" id="angleSlot1">
-                <div class="angle3-slot-title">2. Perspectiva 3/4 Direita (35°)</div>
+                <div class="angle3-slot-title">2. Lado Direito (45°/90°)</div>
                 <div class="angle3-thumb checker-bg" id="angleThumb1">Aguardando...</div>
               </div>
               <div class="angle3-slot" id="angleSlot2">
-                <div class="angle3-slot-title">3. De Cima p/ Baixo (50°)</div>
+                <div class="angle3-slot-title">3. Lado Esquerdo (60°/90°)</div>
                 <div class="angle3-thumb checker-bg" id="angleThumb2">Aguardando...</div>
+              </div>
+              <div class="angle3-slot" id="angleSlot3">
+                <div class="angle3-slot-title">4. De Cima p/ Baixo (60°)</div>
+                <div class="angle3-thumb checker-bg" id="angleThumb3">Aguardando...</div>
+              </div>
+              <div class="angle3-slot" id="angleSlot4">
+                <div class="angle3-slot-title">5. De Baixo p/ Cima</div>
+                <div class="angle3-thumb checker-bg" id="angleThumb4">Aguardando...</div>
+              </div>
+              <div class="angle3-slot" id="angleSlot5">
+                <div class="angle3-slot-title">6. Giro 180° / Traseira 3/4</div>
+                <div class="angle3-thumb checker-bg" id="angleThumb5">Aguardando...</div>
               </div>
             </div>
           </div>
@@ -3457,7 +3469,7 @@
           }
         } else if (stEl) {
           stEl.style.color = "#94a3b8";
-          stEl.textContent = "💡 Foto carregada! Se quiser, você também pode editar os detalhes abaixo ou clicar em Gerar 3 Ângulos.";
+          stEl.textContent = "💡 Foto carregada! Se quiser, você também pode editar os detalhes abaixo ou clicar em Gerar 6 Ângulos.";
           if (typeof window.__NEXORA_VAULT_AUTOSAVE__ === "function") {
             window.__NEXORA_VAULT_AUTOSAVE__("foto enviada");
           }
@@ -5174,7 +5186,7 @@
         if (isCleanMode || isGentleNiche) {
           if (isLastCut) {
             // Zoom final bem suave (1.00 -> 1.05) p/ nunca encostar ou cortar o produto nas bordas!
-            scale = 1.00 + smoothCurve * 0.05 * optBoost;
+            scale = 1.00 + smoothCurve * 0.06 * optBoost;
             panX = dir * (1 - smoothCurve) * 4;
             panY = (0.5 - smoothCurve) * 4;
           } else if (sIdx % 2 === 0) {
@@ -5189,7 +5201,7 @@
         } else {
           if (isLastCut) {
             // Zoom final reduzido e controlado (1.00 -> 1.05) — enquadramento limpo de estúdio!
-            scale = 1.00 + fastIn * 0.05 * optBoost;
+            scale = 1.00 + fastIn * 0.06 * optBoost;
             panX = dir * (1 - smoothCurve) * 4;
             panY = (0.5 - smoothCurve) * 4;
           } else {
@@ -6573,7 +6585,7 @@
       }
     });
 
-  // === KIT 3 ÂNGULOS 3D ESSENCIAIS SEM FUNDO (9:16) + BIBLIOTECA PERMANENTE (INDEXEDDB • 0 CRÉDITOS) ===
+  // === KIT 6 ÂNGULOS 3D UNIVERSAIS SEM FUNDO (720x1280) + BIBLIOTECA PERMANENTE (INDEXEDDB • 0 CRÉDITOS) ===
     window.nexora3Angles = [];
     window.nexora6Angles = window.nexora3Angles;
     const btnGen3Angles = document.getElementById("btnGen3Angles");
@@ -6582,14 +6594,14 @@
     function reset3AnglesUI(msg) {
       window.nexora3Angles = [];
       window.nexora6Angles = window.nexora3Angles;
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 6; i++) {
         const slot = document.getElementById(`angleSlot${i}`);
         const thumb = document.getElementById(`angleThumb${i}`);
         if (slot) slot.classList.remove("ready");
         if (thumb) thumb.innerHTML = "Aguardando...";
       }
       if (angles3Status) {
-        angles3Status.textContent = msg || 'Foto carregada — clique em "Gerar 3 Ângulos 3D (9:16) + Salvar" (1 única vez!)';
+        angles3Status.textContent = msg || 'Foto carregada — clique em "Gerar 6 Ângulos 3D (9:16) + Salvar" (pague 1 única vez!)';
       }
     }
 
@@ -6609,7 +6621,7 @@
     }
 
     productImg?.addEventListener("change", () => {
-      reset3AnglesUI('Foto nova carregada — clique em "Gerar 3 Ângulos 3D (9:16) + Salvar" (fica salvo permanente!)');
+      reset3AnglesUI('Foto nova carregada — clique em "Gerar 6 Ângulos 3D (9:16) + Salvar" (fica salvo permanente!)');
     });
 
     async function removeBgFromUrl(imageUrl, onStatus, signal) {
@@ -6629,7 +6641,7 @@
       throw new Error(lastErr);
     }
 
-    async function urlToCompactPngDataUrl(urlOrDataUrl, maxW = 540, maxH = 960) {
+    async function urlToCompactPngDataUrl(urlOrDataUrl, maxW = 720, maxH = 1280) {
       if (!urlOrDataUrl) return "";
       try {
         let srcUrl = urlOrDataUrl;
@@ -6691,8 +6703,9 @@
             setAngleSlotState(slotIdx, `PNG: ${st}`, false);
           }, signal);
           const finalUrl = pngUrl || ra.imageUrl;
-          const compactDataUrl = await urlToCompactPngDataUrl(finalUrl, 540, 960);
-          return { pngUrl: finalUrl, dataUrl: compactDataUrl, studioUrl: ra.imageUrl };
+          // Salva também em 720x1280 PNG permanente para nunca expirar no IndexedDB!
+          const permanentDataUrl = await urlToCompactPngDataUrl(finalUrl, 720, 1280);
+          return { pngUrl: finalUrl, dataUrl: permanentDataUrl, studioUrl: ra.imageUrl };
         } catch (err) {
           if (err.message === "ABORTED_RUN" || err.status === 402 || err.status === 403) throw err;
           lastErr = err;
@@ -6745,15 +6758,14 @@
       if (btnGen3Angles) btnGen3Angles.disabled = true;
 
       try {
-        reset3AnglesUI("Passo 1/2: Preparando Ângulo 1 (Frontal PNG 9:16)...");
+        reset3AnglesUI("Passo 1/3: Preparando Ângulo 1 (Frontal PNG 9:16 HD)...");
         setAngleSlotState(0, uploadedIsTransparent ? "Reaproveitando PNG..." : "Recortando PNG...", false);
-        setAngleSlotState(1, "Aguardando base...", false);
-        setAngleSlotState(2, "Aguardando base...", false);
+        for (let s = 1; s < 6; s++) setAngleSlotState(s, "Aguardando base...", false);
 
         let angle1Url = "";
         let dataUrl1 = uploadedDataUrl || `data:${uploadedMime};base64,${uploadedBase64}`;
 
-        // ECONOMIA INTELIGENTE DE CRÉDITOS: se a foto já está sem fundo (PNG transparente), NÃO paga remove_bg de novo!
+        // ECONOMIA INTELIGENTE: se a foto já está sem fundo, reaproveita sem pagar remove_bg de novo!
         if (!uploadedIsTransparent) {
           const r1 = await removeBgWithTripleFallback(uploadedBase64, uploadedMime, (st) => {
             setAngleSlotState(0, `PNG: ${st}`, false);
@@ -6764,7 +6776,7 @@
           dataUrl1 = await blobToDataUrl(blob1);
         }
 
-        // Normaliza o Frontal 0° em canvas 9:16 transparente (540x960 p/ IndexedDB leve + base branca 720x1280 p/ IA)
+        // Normaliza o Frontal 0° em 720x1280 FULL HD transparente + base branca 720x1280
         const { transparent916DataUrl, whiteStudioBase916 } = await new Promise((resolve) => {
           const im = new Image();
           im.onload = () => {
@@ -6776,9 +6788,8 @@
             const dy = Math.round((H - dh) / 2);
 
             const cPng = document.createElement("canvas");
-            cPng.width = 540; cPng.height = 960;
-            const scS = 0.75;
-            cPng.getContext("2d").drawImage(im, Math.round(dx * scS), Math.round(dy * scS), Math.round(dw * scS), Math.round(dh * scS));
+            cPng.width = W; cPng.height = H;
+            cPng.getContext("2d").drawImage(im, dx, dy, dw, dh);
             const tUrl = cPng.toDataURL("image/png");
 
             const cW = document.createElement("canvas");
@@ -6800,26 +6811,31 @@
         setAngleSlotState(0, `<img src="${transparent916DataUrl}" alt="1. Frontal Hero 0° (9:16)" />`, true);
 
         const needsDescribe = !productDetailHint?.value.trim() || !macroTarget?.value.trim();
-        if (angles3Status) {
-          angles3Status.textContent = needsDescribe
-            ? "Passo 2/2: Gerando 2 ângulos complementares 3D (9:16) + Descrição IA..."
-            : "Passo 2/2: Gerando apenas os 2 ângulos complementares 3D (9:16)...";
-        }
+        if (angles3Status) angles3Status.textContent = "Passo 2/3: Gerando Laterais (70°/80°), Topo 75° e De Baixo p/ Cima 9:16...";
 
         const commonTail =
-          `Keep the exact same product model, case/body geometry, face/details, colors, materials and proportions 100% IDENTICAL to the reference photo (never turn rectangular into round or square, zero invented logos, zero hands, zero text), filling 75% of the frame centered alone in a VERTICAL 9:16 pure solid white #FFFFFF studio background with crisp even commercial softbox lighting.`;
+          `Keep the exact same product model, colors, materials, markings and proportions from the reference photo, zero invented logos, zero hands, zero text, filling 75% of the frame centered alone in a VERTICAL 9:16 pure solid white #FFFFFF studio background with crisp even commercial softbox lighting.`;
 
-        // APENAS OS 2 ÂNGULOS COMPLEMENTARES QUE REALMENTE ENTRAM NO VÍDEO COM FIDELIDADE 100%!
-        const angleSpecs = [
+        const phase1Specs = [
           {
-            slot: 1, key: "right_45", label: "2. Perspectiva 3/4 Direita (35°)",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CLEAN 35-DEGREE FRONT-RIGHT THREE-QUARTER PERSPECTIVE (FRONT FACE STILL CLEARLY VISIBLE AND 100% FAITHFUL). Gently rotate the exact product (${orientShort}) 35 degrees toward the right so the camera sees BOTH the exact front face AND the right lateral thickness/contours in crisp 3D depth. ${commonTail}`
+            slot: 1, key: "right_45", label: "2. Lado Direito (45°/90°)",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — MANDATORY 70-DEGREE RIGHT SIDE PROFILE (NEVER REPEAT FRONT VIEW). Physically turn the exact product (${orientShort}) 70 degrees clockwise so its RIGHT lateral flank faces the camera directly, clearly showing side thickness, side buttons/hinges and full right silhouette. ${commonTail}`
           },
           {
-            slot: 2, key: "top_down", label: "3. De Cima p/ Baixo (50°)",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — ELEVATED 50-DEGREE HIGH THREE-QUARTER TOP-DOWN PERSPECTIVE (KEEP EXACT SILHOUETTE AND FRONT RECOGNIZABLE). Position the camera elevated at 50 degrees looking downward onto the top bevels, upper surface and angled front of the exact product (${orientShort}) in crisp 3D studio depth. ${commonTail}`
+            slot: 2, key: "left_60", label: "3. Lado Esquerdo (60°/90°)",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — MANDATORY 80-DEGREE LEFT SIDE PROFILE (NEVER REPEAT FRONT VIEW). Physically turn the exact product (${orientShort}) 80 degrees counter-clockwise to the opposite side so its LEFT lateral flank faces the camera directly, clearly exposing the full left side contour and 3D depth. ${commonTail}`
+          },
+          {
+            slot: 3, key: "top_down", label: "4. De Cima p/ Baixo (60°)",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — STEEP 75-DEGREE OVERHEAD BIRD'S-EYE TOP-DOWN SHOT (STRICTLY FORBIDDEN TO SHOW EYE-LEVEL FRONT VIEW). Position the camera directly above looking sharply DOWNWARD at 75 degrees onto the TOP roof/crown of the exact product (${orientShort}) angled diagonally, with the top surface dominating the frame and minimal front wall visible. ${commonTail}`
+          },
+          {
+            slot: 4, key: "bottom_up", label: "5. De Baixo p/ Cima",
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — EXTREME LOW WORM'S-EYE UPWARD HERO SHOT (STRICTLY FORBIDDEN TO SHOW EYE-LEVEL FRONT VIEW). Place the camera very low beneath the product looking sharply UPWARD at 40 degrees toward the underside and lower chin of the exact product (${orientShort}) tilted dramatically in 3/4 heroic perspective, towering upward in the 9:16 frame. ${commonTail}`
           }
         ];
+
+        setAngleSlotState(5, "Aguardando ponte lateral...", false);
 
         const renderRetryAngleBtn = (slotIdx, specObj, inputRefs) => {
           window.__nexoraAngleRetryMap = window.__nexoraAngleRetryMap || {};
@@ -6840,11 +6856,18 @@
               const showSrc = outOne.dataUrl || outOne.pngUrl;
               setAngleSlotState(slotIdx, `<img src="${showSrc}" alt="${ctxRetry.spec.label}" />`, true);
               const kitNow = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((x) => x.key !== ctxRetry.spec.key) : [];
-              kitNow.push({ key: ctxRetry.spec.key, angle: ctxRetry.spec.key, label: ctxRetry.spec.label, url: outOne.pngUrl, dataUrl: outOne.dataUrl, savedAt: Date.now() });
+              kitNow.push({
+                key: ctxRetry.spec.key,
+                angle: ctxRetry.spec.key,
+                label: ctxRetry.spec.label,
+                url: outOne.pngUrl || showSrc,
+                dataUrl: outOne.dataUrl || showSrc,
+                savedAt: Date.now()
+              });
               window.nexora3Angles = kitNow;
               window.nexora6Angles = kitNow;
-              if (angles3Status) angles3Status.textContent = `✅ ${kitNow.length}/3 ângulos 3D salvos permanentemente (0 cr p/ reutilizar)`;
-              if (typeof window.__NEXORA_VAULT_AUTOSAVE__ === "function") window.__NEXORA_VAULT_AUTOSAVE__("kit 3 ângulos");
+              if (angles3Status) angles3Status.textContent = `✅ ${kitNow.length}/6 ângulos 3D salvos permanentemente (0 cr p/ reutilizar)`;
+              if (typeof window.__NEXORA_VAULT_AUTOSAVE__ === "function") window.__NEXORA_VAULT_AUTOSAVE__("kit 6 ângulos");
             } else {
               renderRetryAngleBtn(slotIdx, ctxRetry.spec, ctxRetry.refs);
             }
@@ -6853,11 +6876,10 @@
           }
         };
 
-        const tasks = [
-          ...angleSpecs.map((sp, i) => generateAngleCutout(whiteStudioBase916, sp.prompt, sp.slot, sig, i * 300)),
+        const settledPhase1 = await Promise.allSettled([
+          ...phase1Specs.map((sp, i) => generateAngleCutout(whiteStudioBase916, sp.prompt, sp.slot, sig, i * 350)),
           needsDescribe ? describeProductAuto(angle1Url || whiteStudioBase916, sig) : Promise.resolve(null)
-        ];
-        const settled = await Promise.allSettled(tasks);
+        ]);
 
         const nowTs = Date.now();
         const finalKit = [{
@@ -6869,9 +6891,10 @@
           savedAt: nowTs
         }];
 
-        for (let idx = 0; idx < angleSpecs.length; idx++) {
-          const sp = angleSpecs[idx];
-          const res = settled[idx];
+        let sideBridgeUrl = "";
+        for (let idx = 0; idx < phase1Specs.length; idx++) {
+          const sp = phase1Specs[idx];
+          const res = settledPhase1[idx];
           if (res.status === "fulfilled" && res.value && (res.value.dataUrl || res.value.pngUrl)) {
             const showSrc = res.value.dataUrl || res.value.pngUrl;
             setAngleSlotState(sp.slot, `<img src="${showSrc}" alt="${sp.label}" />`, true);
@@ -6883,15 +6906,45 @@
               dataUrl: res.value.dataUrl || showSrc,
               savedAt: nowTs
             });
+            if (!sideBridgeUrl && (sp.key === "right_45" || sp.key === "left_60")) {
+              sideBridgeUrl = res.value.studioUrl || res.value.pngUrl;
+            }
           } else {
             renderRetryAngleBtn(sp.slot, sp, [whiteStudioBase916]);
           }
         }
 
+        // Passo 3/3: Usa o perfil lateral recém-gerado como PONTE para destravar o Giro 180° Traseiro sem repetir a frente!
+        if (angles3Status) angles3Status.textContent = "Passo 3/3: Gerando Giro 180° Traseiro e salvando kit completo permanentemente...";
+        const backSpec = {
+          slot: 5, key: "back_180", label: "6. Giro 180° / Traseira 3/4",
+          prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CONTINUE ROTATING 110 DEGREES FURTHER FROM THE SIDE PROFILE TO SHOW THE REAR BACK VIEW (160°–180° BEHIND THE PRODUCT, ZERO FRONT FACE VISIBLE). Starting from the side-profile reference image, orbit completely behind the exact product (${orientShort}) so the camera sees its BACK side, rear shell/strap/hinge architecture and opposite rear three-quarter contour cleanly. ${commonTail}`
+        };
+        const bridgeInputs = sideBridgeUrl ? [sideBridgeUrl, whiteStudioBase916] : [whiteStudioBase916];
+        try {
+          const backRes = await generateAngleCutout(bridgeInputs, backSpec.prompt, backSpec.slot, sig, 0);
+          if (backRes && (backRes.dataUrl || backRes.pngUrl)) {
+            const showSrc = backRes.dataUrl || backRes.pngUrl;
+            setAngleSlotState(backSpec.slot, `<img src="${showSrc}" alt="${backSpec.label}" />`, true);
+            finalKit.push({
+              key: backSpec.key,
+              angle: backSpec.key,
+              label: backSpec.label,
+              url: backRes.pngUrl || showSrc,
+              dataUrl: backRes.dataUrl || showSrc,
+              savedAt: nowTs
+            });
+          } else {
+            renderRetryAngleBtn(backSpec.slot, backSpec, bridgeInputs);
+          }
+        } catch {
+          renderRetryAngleBtn(backSpec.slot, backSpec, bridgeInputs);
+        }
+
         window.nexora3Angles = finalKit;
         window.nexora6Angles = finalKit;
 
-        const descRes = settled[angleSpecs.length];
+        const descRes = settledPhase1[phase1Specs.length];
         let descNote = "";
         if (descRes && descRes.status === "fulfilled" && descRes.value) {
           if (descRes.value.name && inlineProductName && !inlineProductName.value.trim()) {
@@ -6908,15 +6961,15 @@
           }
         }
 
-        // SALVAMENTO AUTOMÁTICO E PERMANENTE NO INDEXEDDB (REUTILIZAR AMANHÃ OU SEMANA QUE VEM COM 0 CRÉDITOS!)
+        // SALVAMENTO AUTOMÁTICO E PERMANENTE DOS 6 ÂNGULOS NO INDEXEDDB (REUTILIZE AMANHÃ COM 0 CRÉDITOS!)
         if (typeof window.__NEXORA_VAULT_AUTOSAVE__ === "function") {
-          await window.__NEXORA_VAULT_AUTOSAVE__("kit 3 ângulos 3D");
+          await window.__NEXORA_VAULT_AUTOSAVE__("kit 6 ângulos 3D");
         }
         if (typeof window.__NEXORA_APPLY_NICHE__ === "function") {
           window.__NEXORA_APPLY_NICHE__();
         }
         if (angles3Status) {
-          angles3Status.textContent = `✅ ${finalKit.length}/3 ângulos 3D prontos e SALVOS permanentemente${descNote} — reutilize em novos vídeos com 0 créditos!`;
+          angles3Status.textContent = `✅ ${finalKit.length}/6 ângulos 3D HD prontos e SALVOS permanentemente${descNote} — reutilize em novos vídeos com 0 créditos!`;
         }
       } catch (err) {
         if (angles3Status) angles3Status.textContent = `Erro: ${err.message}`;
@@ -6929,7 +6982,7 @@
     });
 
     // =========================================================================
-    // BIBLIOTECA PERMANENTE "MEUS PRODUTOS SALVOS" (INDEXEDDB • 0 CRÉDITOS)
+    // BIBLIOTECA PERMANENTE "MEUS PRODUTOS SALVOS" (INDEXEDDB • 6 ÂNGULOS • 0 CRÉDITOS)
     // =========================================================================
     (function initNexoraProductVault() {
       const DB_NAME = "nexora_product_vault_v1";
@@ -7010,7 +7063,7 @@
         }
         if (!listEl) return;
         if (!cachedVaultItems.length) {
-          listEl.innerHTML = `<div class="nx-vault-empty">Seus produtos preparados (PNG sem fundo + 3 ângulos + descrição IA) são salvos automaticamente aqui para você criar novos vídeos em outros cenários sem pagar pelos PNGs de novo!</div>`;
+          listEl.innerHTML = `<div class="nx-vault-empty">Seus produtos preparados (PNG sem fundo + 6 ângulos 3D + descrição IA) são salvos automaticamente aqui para você criar novos vídeos em outros cenários sem pagar pelos PNGs de novo!</div>`;
           return;
         }
         listEl.innerHTML = cachedVaultItems.map((item) => {
@@ -7067,13 +7120,13 @@
           const desc = (productDetailHint?.value || "").trim();
           const macro = (macroTarget?.value || "").trim();
 
-          // Garante que cada ângulo tenha dataUrl permanente antes de gravar no IndexedDB
+          // Garante que TODOS os 6 ângulos tenham dataUrl permanente em 720x1280 antes de gravar no IndexedDB!
           const kitRaw = Array.isArray(window.nexora3Angles) ? window.nexora3Angles : [];
           const cleanAngles = [];
-          for (const a of kitRaw.slice(0, 3)) {
+          for (const a of kitRaw.slice(0, 6)) {
             if (!a) continue;
             let dUrl = a.dataUrl || "";
-            if (!dUrl && a.url) dUrl = await urlToCompactPngDataUrl(a.url, 540, 960);
+            if (!dUrl && a.url) dUrl = await urlToCompactPngDataUrl(a.url, 720, 1280);
             cleanAngles.push({
               key: a.key || a.angle || "frontal",
               angle: a.angle || a.key || "frontal",
@@ -7105,7 +7158,6 @@
 
           await vaultPut(record);
           cachedVaultItems = await vaultGetAll();
-          // Mantém até 30 produtos salvos automaticamente p/ nunca pesar o navegador
           if (cachedVaultItems.length > 30) {
             for (const old of cachedVaultItems.slice(30)) {
               try { await vaultDelete(old.id); } catch {}
@@ -7154,16 +7206,16 @@
         if (productOrientation && item.orientation) productOrientation.value = item.orientation;
         if (directorProfile && item.directorProfile) directorProfile.value = item.directorProfile;
 
-        // Restaura os 3 ângulos 3D salvos permanentemente (0 créditos!)
+        // Restaura TODOS os 6 ângulos 3D salvos permanentemente (0 créditos!)
         reset3AnglesUI("");
         const savedAngles = Array.isArray(item.angles) ? item.angles : [];
         const restoredKit = [];
-        const slotMap = { frontal: 0, right_45: 1, top_down: 2 };
+        const slotMap = { frontal: 0, right_45: 1, left_60: 2, top_down: 3, bottom_up: 4, back_180: 5 };
         savedAngles.forEach((a, idx) => {
           const srcShow = a.dataUrl || a.url || "";
           if (!srcShow) return;
           const slotIdx = typeof slotMap[a.key] === "number" ? slotMap[a.key] : idx;
-          if (slotIdx >= 0 && slotIdx < 3) {
+          if (slotIdx >= 0 && slotIdx < 6) {
             setAngleSlotState(slotIdx, `<img src="${srcShow}" alt="${a.label || a.key}" />`, true);
           }
           restoredKit.push({
@@ -7178,14 +7230,13 @@
         window.nexora3Angles = restoredKit;
         window.nexora6Angles = restoredKit;
 
-        // Limpa narração antiga em cache p/ novo vídeo gerar voz nova sem misturar
         savedVoiceBuf = null; savedVoiceUrl = ""; savedWhisperChunks = null; savedVoiceMeta = "";
         updateInlineVoiceUI();
 
         if (angles3Status) {
           angles3Status.textContent = restoredKit.length > 0
-            ? `✅ ${restoredKit.length}/3 ângulos 3D carregados da biblioteca (0 créditos gastos) — pronto p/ novo cenário!`
-            : `✅ PNG carregado da biblioteca (0 créditos gastos) — opcional: gere os 3 ângulos ou gere o vídeo direto!`;
+            ? `✅ ${restoredKit.length}/6 ângulos 3D HD carregados da biblioteca (0 créditos gastos) — pronto p/ novo cenário!`
+            : `✅ PNG carregado da biblioteca (0 créditos gastos) — opcional: gere os 6 ângulos ou gere o vídeo direto!`;
         }
         const stEl = document.getElementById("nxAutoDetectStatus");
         if (stEl) {
@@ -7242,7 +7293,6 @@
       });
       document.getElementById("btnVaultNewProduct")?.addEventListener("click", startFreshProduct);
 
-      // Auto-atualiza o produto salvo se o usuário editar nome, descrição ou detalhe macro
       ["inlineProductName", "productDetailHint", "macroTarget", "productOrientation", "directorProfile"].forEach((id) => {
         document.getElementById(id)?.addEventListener("change", () => {
           if (!uploadedBase64) return;
@@ -7251,7 +7301,6 @@
         });
       });
 
-      // Carrega a lista de produtos salvos assim que o site abrir!
       vaultGetAll()
         .then((list) => {
           cachedVaultItems = list;
@@ -8021,7 +8070,7 @@
             hook: /pulso/i.test(prodName)
               ? `Olha a presença marcante ${meta.prepCom} ${prodName}!`
               : `Olha a presença ${meta.prepCom} ${prodName} no pulso!`,
-            b1Short: `Design marcante, ${macroTxt} e presença de luxo real.`,
+            b1Short: `Design marcante, ${macroTxt} e brilho de luxo real.`,
             b1: `Design marcante, ${macroTxt} e construção robusta que impõe respeito no trabalho ou no rolê.`,
             b2: `Brilho de alta joalheria, conforto o dia inteiro e visual luxuoso que faz todo mundo perguntar onde você comprou.`,
             b3: `Cada relevo mostra a qualidade real de perto — é o toque final que transforma completamente o seu estilo.`,
@@ -8245,7 +8294,7 @@
         "Fluid natural commercial lifestyle shot: subtle realistic human presentation keeping the exact product 100% faithful in shape, proportion and finish (never warping or morphing, zero floating objects or camera clips), as the camera tracks gently with rich lively background bokeh and moving ambient light.",
         "Energetic 3D parallax cinema camera sweeping smoothly in a 25-degree front arc around the exact product while keeping its true front geometry and details 100% locked and unwarped, as vivid luminous light waves, glowing bokeh trails and fine atmospheric sparks surge continuously across the living background.",
         "Smooth elevated 40-degree crane camera gliding steadily forward and slightly downward toward the exact product resting directly on the surface (zero invented stands), keeping its exact silhouette and materials 100% locked while curling volumetric mist, dancing light reflections and subtle sparks move nonstop across the stage.",
-        "Commanding steady commercial finale: locked hero framing with ultra-subtle floating stillness keeping the exact product dead-center facing the camera with generous clean margin around all four edges (DO NOT zoom in closely, never crop top or bottom, zero harsh white outline glow), while subtle golden light rays, gentle reflections and floating embers move continuously across the background."
+        "Commanding flagship commercial finale: silky slow 10-degree horizontal hero glide keeping the exact product dead-center facing STRAIGHT at the camera with generous clean margin around all four edges (never cropping top or bottom, never zooming in aggressively, zero harsh white outline glow), while specular light sweeps smoothly across the finish and golden light rays and floating embers radiate continuously behind."
       ];
 
       const SUPER_CLIP_CHOREO_GENTLE = [
@@ -8253,7 +8302,7 @@
         "Gentle sensory 100mm macro camera drifting smoothly across the authentic texture, stitching and fine material quality of the exact product as soft natural light glides delicately across the surface with dreamy bright bokeh behind.",
         "Authentic serene lifestyle commercial shot: graceful natural movement showcasing the exact product 100% faithful in shape and color (zero distortion, zero extra objects), captured with silky fluid camera motion and warm lively sunlit background depth.",
         "Elegant smooth 20-degree front tracking arc gliding effortlessly around the exact product while preserving every original contour and color 100% rigidly, as gentle sunlit particles, airy fabric/foliage bokeh and warm reflections flow peacefully behind.",
-        "Timeless serene front-facing 0-degree flagship finale: calm steady hero framing keeping the exact product centered cleanly with generous margin around all edges (DO NOT zoom in closely, never crop edges), bathed in soft natural light and delicate living bokeh drifting peacefully behind."
+        "Timeless serene front-facing 0-degree flagship finale: graceful silky 10-degree gentle hero parallax glide keeping the exact product centered cleanly facing the camera with generous margin around all edges (never cropping edges), bathed in soft gliding natural light and delicate living bokeh behind."
       ];
 
       const SUPER_NEGATIVE =
@@ -8867,9 +8916,9 @@
         }
         const frontalRef = byKey.get("frontal") || resolveRef(kit[0]);
         if (!frontalRef) return [];
-        // KIT 3 ÂNGULOS ESSENCIAIS + TRAVA DE FIDELIDADE 100% TIKTOK SHOP:
-        // Mantém sempre a Âncora Frontal 0° em 1º lugar + ângulo complementar (3/4 Direita ou Topo 50°)
-        const secKeys = ["frontal", "right_45", "frontal", "right_45", "top_down", "frontal"];
+        // KIT 6 ÂNGULOS 3D COMPLETO + TRAVA DE FIDELIDADE 100% TIKTOK SHOP:
+        // Usa bottom_up no super macro (Corte 2), right_45 no Corte 4 e top_down no Corte 5 mantendo a Âncora Frontal 0° em 1º lugar!
+        const secKeys = ["frontal", "bottom_up", "frontal", "right_45", "top_down", "frontal"];
         const wantedSec = secKeys[cutNum % secKeys.length];
         if (wantedSec === "frontal") {
           return [frontalRef];
