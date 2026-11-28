@@ -902,11 +902,21 @@ export async function onRequestPost(context) {
     } else if (action === "submit_clip") {
       usedEndpoint = resolvedClipModel;
 
-      // Usa automaticamente o Banco de 1.218 Prompts (Veo 3.1 calibrado) quando ativado ou quando houver dados do produto
+      // Usa automaticamente o Banco de 1.218 Prompts (Veo 3.1 / Kling calibrado) quando ativado ou quando houver dados do produto
       const deveUsarBanco =
         body.usePromptDatabase === true ||
         Boolean(body.nomeProduto || body.productName || body.modeloPreferido || body.conversionModel) ||
         !promptText;
+
+      const rawCutMotion = String(body.motionPrompt || body.prompt || "").trim();
+      const hasMultiCutChoreo =
+        rawCutMotion.length > 35 &&
+        (Number.isInteger(body.cutIndex) ||
+          /continuous high-energy 3d|fpv|orbit|crash-zoom|whip-pan|top-down|180/i.test(rawCutMotion));
+
+      // Reforço de movimento 3D real (câmera FPV rápida, rotação de paralaxe e cenário vivo do 1º ao último frame)
+      const DYNAMIC_3D_MOTION_BOOST =
+        "High-speed kinetic FPV 3D camera motion, aggressive real-time 3D parallax orbit around the exact product, lively dynamic background elements and fast specular light sweeps continuously from frame 1 through the final frame, zero frozen frames, strictly silent 9:16 commercial footage, zero text, zero subtitles, zero voiceover.";
 
       let finalClipPrompt = promptText;
       let finalNegativePrompt = String(body.negativePrompt || NEGATIVE_PROMPT_PADRAO).slice(0, 520);
@@ -914,7 +924,6 @@ export async function onRequestPost(context) {
       if (deveUsarBanco) {
         const opcoes = extractProductSelectionParams(body, effectiveClipSeconds);
         const selecao = selecionarMelhorPrompt(opcoes);
-        finalClipPrompt = selecao.promptFinal;
         finalNegativePrompt = String(body.negativePrompt || selecao.negativePrompt).slice(0, 520);
         promptMeta = {
           idPromptUsado: selecao.idPromptUsado,
@@ -928,7 +937,23 @@ export async function onRequestPost(context) {
           previewVideo: selecao.previewVideo,
           trilhaRecomendada: selecao.trilhaRecomendada,
         };
+
+        if (hasMultiCutChoreo) {
+          // Modo Superprodução Multi-Cortes: preserva a coreografia 3D FPV exclusiva do corte + injeta estilo/modelo do banco
+          finalClipPrompt = `${rawCutMotion} Visual commercial style: ${selecao.estiloVisual} (${selecao.modeloNome}). ${DYNAMIC_3D_MOTION_BOOST}`.slice(0, 2200);
+        } else {
+          // Modo Clipe Único Veo 3.1 / Kling: usa roteiro completo de 4 cortes calibrado do banco + reforço 3D vivo
+          finalClipPrompt = `${selecao.promptFinal} ${DYNAMIC_3D_MOTION_BOOST}`.slice(0, 2200);
+        }
+      } else {
+        finalClipPrompt = `${finalClipPrompt || "High-impact 9:16 commercial product showcase."} ${DYNAMIC_3D_MOTION_BOOST}`.slice(0, 2200);
       }
+
+      // Destrava o movimento 3D real no Kling (cfg_scale 0.38 por padrão em vez de 0.50 rígido, aceitando ajuste fino)
+      const rawCfg = Number(body.cfgScale ?? body.cfg_scale);
+      const klingCfgScale = Number.isFinite(rawCfg)
+        ? Math.min(0.65, Math.max(0.28, rawCfg))
+        : 0.38;
 
       const inputPayload = isVeoClip
         ? {
@@ -943,7 +968,7 @@ export async function onRequestPost(context) {
             image_url: resolvedImageUrl,
             duration: klingDurationStr,
             aspect_ratio: "9:16",
-            cfg_scale: 0.5,
+            cfg_scale: klingCfgScale,
             generate_audio: false,
             ...(finalNegativePrompt ? { negative_prompt: finalNegativePrompt } : {}),
           };
