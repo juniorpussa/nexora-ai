@@ -992,7 +992,7 @@
       </button>
       <button type="button" class="mode-btn" data-mode="image">
         <strong>🖼️ Imagens 9:16</strong>
-        <small>105 fotos ARRI 65 • Macro • UGC</small>
+        <small>105 fotos Cinema • Macro • UGC</small>
       </button>
       <button type="button" class="mode-btn" data-mode="voice">
         <strong>🎙️ Narração PT-BR</strong>
@@ -1089,14 +1089,17 @@
                 </div>
               </div>
 
+              <div id="nxAutoDetectStatus" style="font-size:11px;font-weight:700;color:#7dd3fc;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.22);border-radius:9px;padding:7px 10px;">
+                🤖 Detecção IA automática: ao enviar a foto, a IA identifica o produto, preenche os campos abaixo e adapta cenário, ritmo e trilha.
+              </div>
               <div class="nx-auto-row">
                 <div id="macroFieldWrap">
-                  <label for="macroTarget">Detalhe p/ Super Macro 100mm (Opcional)</label>
-                  <input type="text" id="macroTarget" placeholder="Ex: textura, lentes, vidro, costura, acabamento" />
+                  <label for="macroTarget">Detalhe p/ Super Macro 100mm (Preenchido pela IA)</label>
+                  <input type="text" id="macroTarget" placeholder="Preenchido automaticamente ao enviar a foto..." />
                 </div>
                 <div>
-                  <label for="productDetailHint">Descrição Visual do Produto (Opcional • Fidelidade 100%)</label>
-                  <input type="text" id="productDetailHint" placeholder="Ex: óculos armação preta lente azul / tênis esportivo" />
+                  <label for="productDetailHint">Descrição Visual do Produto (Fidelidade 100% • IA)</label>
+                  <input type="text" id="productDetailHint" placeholder="Preenchido automaticamente ao enviar a foto..." />
                 </div>
               </div>
             </div>
@@ -1713,7 +1716,7 @@
         { tag: "Criadora Jovem Estilosa", text: "a charismatic 25-year-old Brazilian creator in modern neutral casual wear, authentic natural expression" }
       ],
       lightVariations: [
-        { tag: "ARRI Chiaroscuro & Glint", text: "ARRI Alexa 65 anamorphic high-contrast chiaroscuro lighting with a sharp specular rim-light glint sweeping smoothly across the product finish" },
+        { tag: "Cinema Chiaroscuro & Glint", text: "flagship cinema anamorphic high-contrast chiaroscuro lighting with a sharp specular rim-light glint sweeping smoothly across the product finish" },
         { tag: "Ouro Quente Especular", text: "sweeping warm golden-amber rim light paired with clean neutral-white key light gliding across every real contour of the product" },
         { tag: "Prata & Aço Cinético", text: "razor-sharp silver-white commercial softbox reflection sweeping briskly across the real surface texture" },
         { tag: "Holofote God-Ray Noir", text: "single dramatic architectural overhead spotlight cutting crisp specular highlights through deep dark studio shadows" },
@@ -1878,7 +1881,7 @@
       surface: m.surface, lighting: m.lighting, envMotion: m.envMotion, macroAccent: m.macroAccent,
       prompt: m.isUGC
         ? `authentic ultra-realistic 9:16 vertical lifestyle/UGC commercial photo (crisp creator optics, f/1.8 shallow bokeh) of the exact product dominating 75% of the frame in the upper-center optical safe zone on ${m.surface}, ${m.lighting}, ${m.envMotion}`
-        : `ARRI Alexa 65 anamorphic 9:16 commercial hero photograph (85mm f/1.4 razor-shallow bokeh, clean stage with 1 epic living background element) of the exact product dominating 75% of the frame in the upper-center optical safe zone on ${m.surface}, ${m.lighting}, ${m.envMotion}`
+        : `flagship cinema anamorphic 9:16 commercial hero photograph (85mm f/1.4 razor-shallow bokeh, clean stage with 1 epic living background element) of the exact product dominating 75% of the frame in the upper-center optical safe zone on ${m.surface}, ${m.lighting}, ${m.envMotion}`
     }));
 
     const ORIENTATION_RULES = {
@@ -1972,10 +1975,10 @@
       const optics = m.isUGC
         ? "ultra-realistic vertical 9:16 creator still photograph, natural f/1.8 shallow bokeh, authentic tactile surface grain"
         : isLight
-          ? "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 bright minimalist architectural commercial photograph, clean even illumination, soft sculpted shadow, pure clean off-white backdrop and authentic physical micro-texture"
+          ? "ultra-realistic ultra-sharp flagship commercial 9:16 bright minimalist architectural commercial photograph, clean even illumination, soft sculpted shadow, pure clean off-white backdrop and authentic physical micro-texture"
           : isBright
-            ? "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 sunlit commercial photograph, natural f/1.8 shallow depth, crisp authentic colors and tactile micro-texture"
-            : "ultra-realistic ARRI Alexa 65 & Master Prime 9:16 high-budget flagship commercial photograph, f/1.4 razor-shallow bokeh, physically accurate materials, razor-sharp detail and authentic specular roll-off";
+            ? "ultra-realistic ultra-sharp flagship commercial 9:16 sunlit commercial photograph, natural f/1.8 shallow depth, crisp authentic colors and tactile micro-texture"
+            : "ultra-realistic ultra-sharp flagship commercial 9:16 high-budget flagship commercial photograph, f/1.4 razor-shallow bokeh, physically accurate materials, razor-sharp detail and authentic specular roll-off";
 
       const macroBgRule = isLight
         ? "clean soft bright off-white studio bokeh matching the same bright backdrop behind, crystal-clear air, no black background"
@@ -1994,7 +1997,7 @@
       const actMacro = {
         key: "super_macro", shortLabel: "Ato 2 • Macro 100mm Esq→Dir", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "radialFlash",
         motion: (world) => `Smooth fast 100mm macro tracking perspective gliding laterally from left to right inches from the product surface while a crisp bright highlight sweeps rapidly across every authentic micro-texture and edge, with ${world} shifting dynamically in shallow bokeh behind.`,
-        desc: (m, orient, isBox, macro) => `Shot 2 (Extreme 100mm close-up macro photograph, 95% surface fill, no base visible): Ultra-close 100mm Master Prime macro lens positioned very close at a 20-degree oblique angle, focused tightly on the central detail (${macro}) of the exact product ${orient.short}, filling 95% of the vertical 9:16 frame so outer borders fall outside the frame. ${m.macroAccent}. Physically accurate micro-grain, sharp original markings, ${macroBgRule}.`
+        desc: (m, orient, isBox, macro) => `Shot 2 (Extreme 100mm close-up macro photograph, 95% surface fill, no base visible): Ultra-close 100mm 100mm cinema macro lens positioned very close at a 20-degree oblique angle, focused tightly on the central detail (${macro}) of the exact product ${orient.short}, filling 95% of the vertical 9:16 frame so outer borders fall outside the frame. ${m.macroAccent}. Physically accurate micro-grain, sharp original markings, ${macroBgRule}.`
       };
 
       const actSweepLeft = {
@@ -2012,7 +2015,7 @@
       const actMacroEdge = {
         key: "macro_edge", shortLabel: "Ato 5 • Macro Borda Dir→Esq", isHuman: false, isMacro: true, editMove: "macroSweep", trans: "radialFlash",
         motion: (world) => `Silky rapid 100mm macro perspective pushing in and gliding diagonally from right to left along the opposite sculpted edge, bevels and craftsmanship details as sharp light glints race across the real surface finish and ${world} shifts smoothly in bokeh.`,
-        desc: (m, orient, isBox, macro) => `Shot 5 (Extreme 100mm opposite-edge macro photograph, 95% fill, no base visible): Ultra-close 100mm Master Prime macro lens from the opposite right-side diagonal focused closely on the sculpted edge, side contours and ${macro} of the exact product ${orient.short}, outer edges cropped out of frame, razor-sharp real material finish and rim highlight, ${macroBgRule}.`
+        desc: (m, orient, isBox, macro) => `Shot 5 (Extreme 100mm opposite-edge macro photograph, 95% fill, no base visible): Ultra-close 100mm 100mm cinema macro lens from the opposite right-side diagonal focused closely on the sculpted edge, side contours and ${macro} of the exact product ${orient.short}, outer edges cropped out of frame, razor-sharp real material finish and rim highlight, ${macroBgRule}.`
       };
 
       const actSweepRight = {
@@ -2066,10 +2069,13 @@
     }
 
     function getCutCountForDuration(sec) {
-      if (sec <= 10) return 7;
-      if (sec <= 15) return 10;
-      if (sec <= 20) return 15;
-      return 20;
+      const prof = typeof window.NEXORA_GET_NICHE_PROFILE === "function" ? window.NEXORA_GET_NICHE_PROFILE() : null;
+      const isGentle = prof && prof.pacing === "gentle";
+      // Ritmo calibrado: 1.5s–2.0s por cena (Moda/Pet/Beleza mais suaves; Luxo/Tech/Brinquedos cadenciados)
+      if (sec <= 10) return isGentle ? 5 : 6;
+      if (sec <= 15) return isGentle ? 8 : 9;
+      if (sec <= 20) return isGentle ? 11 : 13;
+      return isGentle ? 16 : 19;
     }
 
     function buildCinematographyPlan(m, targetSec) {
@@ -2110,11 +2116,12 @@
     function buildCinemaCutDurations(totalSec, mediaItems) {
       const count = mediaItems.length;
       if (count <= 1) return [totalSec];
+      // Cadência equilibrada (~1,5s a ~2,0s por corte — zero corte corrido de 0,9s!)
       const weights = mediaItems.map((item, idx) => {
-        if (idx === 0) return 0.86;
-        if (idx === count - 1) return 1.48;
-        if (item.act && item.act.isMacro) return 0.90;
-        return item.type === "video" ? 0.98 : 0.78;
+        if (idx === 0) return 0.96;
+        if (idx === count - 1) return 1.22;
+        if (item.act && item.act.isMacro) return 0.96;
+        return item.type === "video" ? 1.00 : 0.90;
       });
       const sumW = weights.reduce((a, b) => a + b, 0);
       const durs = weights.map((w) => Number(((w / sumW) * totalSec).toFixed(2)));
@@ -2913,10 +2920,13 @@
     function refreshBtn() {
       const sec = Number(minDuration.value) || 10;
       const cuts = getCutCountForDuration(sec);
-      btnBuild.textContent = `🎬 Gerar Superprodução Nível 10 (${sec}s • ${cuts} Cortes Cinema)`;
+      const prof = typeof window.NEXORA_GET_NICHE_PROFILE === "function" ? window.NEXORA_GET_NICHE_PROFILE() : null;
+      const paceTag = prof && prof.pacing === "gentle" ? "Cortes Suaves" : "Cortes Cinema";
+      btnBuild.textContent = `🎬 Gerar Superprodução (${sec}s • ${cuts} ${paceTag})`;
       updateInlineVoiceUI();
       updateDirectorBanner();
     }
+    window.__NEXORA_REFRESH_BTN__ = refreshBtn;
     directorProfile.addEventListener("change", refreshBtn);
     minDuration.addEventListener("change", refreshBtn);
     maxWaitLimit.addEventListener("change", refreshBtn);
@@ -3118,7 +3128,7 @@
           : `${dna.light.text}.`;
       const prompt = [
         leadMotion,
-        `High-budget 9:16 ARRI Alexa 65 ${m.genre} commercial film, ultra-realistic physical optics, mute video.${smokeGuard}`,
+        `High-budget 9:16 flagship commercial cinema ${m.genre} commercial film, ultra-realistic physical optics, mute video.${smokeGuard}`,
         productAnchor,
         `Lighting: ${lightClause} ${getColorPaletteLock(m)}`
       ].join(" ");
@@ -3229,12 +3239,58 @@
       }
     }
 
+    let autoDetectRunToken = 0;
+    async function autoAnalyzeUploadedProduct(imgUrlOrDataUrl, forceOverwrite = false) {
+      if (!imgUrlOrDataUrl) return;
+      const myToken = ++autoDetectRunToken;
+      const stEl = document.getElementById("nxAutoDetectStatus");
+      if (stEl) {
+        stEl.style.color = "#fde047";
+        stEl.textContent = "🤖 IA analisando a foto do produto para preencher fidelidade 100% e escolher o nicho ideal...";
+      }
+      try {
+        const res = await describeProductAuto(imgUrlOrDataUrl, null);
+        if (myToken !== autoDetectRunToken) return;
+        if (res && (res.name || res.desc || res.macro)) {
+          if (res.name && inlineProductName && (forceOverwrite || !inlineProductName.value.trim())) {
+            inlineProductName.value = res.name;
+            inlineProductName.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+          if (res.desc && productDetailHint && (forceOverwrite || !productDetailHint.value.trim())) {
+            productDetailHint.value = res.desc;
+            productDetailHint.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+          if (res.macro && macroTarget && (forceOverwrite || !macroTarget.value.trim())) {
+            macroTarget.value = res.macro;
+            macroTarget.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+          if (typeof window.__NEXORA_APPLY_NICHE__ === "function") {
+            window.__NEXORA_APPLY_NICHE__();
+          }
+          const prof = typeof window.NEXORA_GET_NICHE_PROFILE === "function" ? window.NEXORA_GET_NICHE_PROFILE() : null;
+          if (stEl) {
+            stEl.style.color = "#86efac";
+            stEl.textContent = `✅ IA identificou: ${res.name || "Produto analisado"} • Diretor IA adaptado (${prof ? prof.badge : "Fidelidade 100%"})`;
+          }
+        } else if (stEl) {
+          stEl.style.color = "#94a3b8";
+          stEl.textContent = "💡 Foto carregada! Se quiser, você também pode editar os detalhes abaixo ou clicar em Gerar 6 Ângulos.";
+        }
+      } catch {
+        if (stEl) {
+          stEl.style.color = "#94a3b8";
+          stEl.textContent = "💡 Foto carregada! Preencha o nome do produto ou faça login para detecção automática IA.";
+        }
+      }
+    }
+
     productImg.addEventListener("change", async (e) => {
       const f = e.target.files?.[0];
       if (!f) return;
       const opt = await optimizeUpload(f);
       const isWhiteBg = await detectWhiteCatalogBg(opt.dataUrl);
       setUploadedProduct(opt.dataUrl, opt.base64, opt.mime, f.type === "image/png" && !isWhiteBg, isWhiteBg);
+      autoAnalyzeUploadedProduct(opt.dataUrl, true);
     });
 
     async function callApi(payload, timeoutMs = 26000, outerSignal = null) {
@@ -4234,7 +4290,12 @@
       const isUpper = style !== "tiktok_native";
       const displayWords = activeBlock.words
         .map((w) => {
-          const cleaned = String(w.text || "").replace(/[.,;:—–\-]+$/g, "").replace(/^[—–\-]+/g, "").trim();
+          const cleaned = String(w.text || "")
+            .replace(/!{2,}/g, "!")
+            .replace(/\?{2,}/g, "?")
+            .replace(/[.,;:—–\-]+$/g, "")
+            .replace(/^[—–\-]+/g, "")
+            .trim();
           return {
             ...w,
             label: isUpper ? cleaned.toUpperCase() : cleaned
@@ -4741,7 +4802,8 @@
         const nBuf = offCtx.createBuffer(1, len, sr);
         const d = nBuf.getChannelData(0);
         for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-        const sfxScale = voiceMixedOk ? (fxOn ? 1.08 : 0.75) : (fxOn ? 1.18 : 0.90);
+        const nicheSfxMult = (typeof window.NEXORA_GET_NICHE_PROFILE === "function" && window.NEXORA_GET_NICHE_PROFILE()?.sfxScale) || 0.78;
+        const sfxScale = (voiceMixedOk ? (fxOn ? 1.02 : 0.70) : (fxOn ? 1.12 : 0.84)) * nicheSfxMult;
         scheduleSoftSubHit(offCtx, comp, 0.0, 0.96 * sfxScale);
         const lastIdx = segments.length - 1;
         for (let idx = 1; idx < segments.length; idx++) {
@@ -4902,6 +4964,11 @@
       const renderFilter = "none";
       const easeOutQuart = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 4);
 
+      const nicheProfRender = typeof window.NEXORA_GET_NICHE_PROFILE === "function" ? window.NEXORA_GET_NICHE_PROFILE() : null;
+      const isGentleNiche = Boolean(nicheProfRender && nicheProfRender.pacing === "gentle");
+      const isLightNiche = Boolean(allowLightBg || (nicheProfRender && nicheProfRender.lightTheme));
+      const zoomMult = (nicheProfRender && Number(nicheProfRender.zoomPower)) || 0.72;
+
       const drawMasterFrame = (clockSec, sIdx, seg, cEl, p, item, activeDrawable, activeCrop) => {
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = "high";
@@ -4910,79 +4977,80 @@
         const fastIn = easeOutCubic(p);
         const rushIn = easeOutQuart(p);
         const dir = (sIdx % 2 === 0 ? 1 : -1) * dna.flipDir;
-        const optBoost = (seg.isImg || activeDrawable === item.fallbackImg) ? 1.12 : 1.0;
-        let scale = 1.04, panX = 0, panY = 0, angle = 0;
+        const optBoost = (seg.isImg || activeDrawable === item.fallbackImg) ? 1.08 : 1.0;
+        const isLastCut = sIdx === segments.length - 1;
+        let scale = 1.02, panX = 0, panY = 0, angle = 0;
 
-        if (isCleanMode) {
-          scale = 1.02 + smoothCurve * 0.20 * optBoost;
-          panX = dir * Math.sin(p * Math.PI) * 16;
-          panY = (0.5 - smoothCurve) * 10;
-        } else {
-          const mv = sIdx % 7;
-          if (mv === 0) {
-            // Corte 1: CRASH-ZOOM explosivo (1.00 -> 1.46)
-            scale = 1.00 + rushIn * 0.46 * optBoost;
-            panX = -24 * Math.sin(p * Math.PI);
-            panY = (0.38 - smoothCurve) * 18;
-          } else if (mv === 1) {
-            // Corte 2: MACRO subindo DE BAIXO PARA CIMA + aproximação rápida (1.04 -> 1.42)
-            scale = 1.04 + fastIn * 0.38 * optBoost;
-            panX = (smoothCurve - 0.5) * 42;
-            panY = (0.58 - smoothCurve) * 32;
-          } else if (mv === 2) {
-            // Corte 3: LIFESTYLE / AÇÃO + punch-in dinâmico (1.02 -> 1.36)
-            scale = 1.02 + rushIn * 0.34 * optBoost;
-            panX = (0.5 - smoothCurve) * 36;
-            panY = (smoothCurve - 0.5) * 15;
-          } else if (mv === 3) {
-            // Corte 4: GIRO 180° + pulso agressivo de velocidade (1.04 -> 1.42 -> 1.08)
-            scale = 1.04 + Math.sin(p * Math.PI) * 0.38 * optBoost;
-            panX = (smoothCurve - 0.5) * 48;
-            angle = -0.015 * Math.sin(p * Math.PI);
-          } else if (mv === 4) {
-            // Corte 5: MERGULHO TOP-DOWN + aproximação veloz (1.02 -> 1.44)
-            scale = 1.02 + rushIn * 0.42 * optBoost;
-            panX = (0.5 - smoothCurve) * 40;
-            panY = (smoothCurve - 0.44) * 32;
-          } else if (mv === 5) {
-            // Corte 6: RECUO EXPLOSIVO (Pull-Out 1.46 -> 1.02)
-            scale = 1.46 - rushIn * 0.44 * optBoost;
-            panX = (smoothCurve - 0.5) * 46;
-            angle = 0.014 * Math.sin(p * Math.PI);
+        if (isCleanMode || isGentleNiche) {
+          if (isLastCut) {
+            scale = 1.02 + smoothCurve * 0.12 * optBoost;
+            panX = dir * (1 - smoothCurve) * 6;
+            panY = (0.5 - smoothCurve) * 6;
+          } else if (sIdx % 2 === 0) {
+            scale = 1.01 + smoothCurve * (0.16 * zoomMult) * optBoost;
+            panX = dir * Math.sin(p * Math.PI) * 14;
+            panY = (0.5 - smoothCurve) * 8;
           } else {
-            // Corte 7: HERO FRONTAL 0° POWER ZOOM-IN firme no centro superior (1.02 -> 1.36)
-            scale = 1.02 + fastIn * 0.34 * optBoost;
-            panX = dir * (1 - smoothCurve) * 12;
-            panY = (0.5 - smoothCurve) * 12;
+            scale = 1.02 + (1 - smoothCurve) * (0.14 * zoomMult) * optBoost;
+            panX = -dir * Math.sin(p * Math.PI) * 14;
+            panY = (smoothCurve - 0.5) * 8;
+          }
+        } else {
+          if (isLastCut) {
+            scale = 1.02 + fastIn * 0.13 * optBoost;
+            panX = dir * (1 - smoothCurve) * 6;
+            panY = (0.5 - smoothCurve) * 6;
+          } else {
+            const mv = sIdx % 5;
+            if (mv === 0) {
+              scale = 1.00 + rushIn * (0.28 * zoomMult) * optBoost;
+              panX = -14 * Math.sin(p * Math.PI);
+              panY = (0.42 - smoothCurve) * 10;
+            } else if (mv === 1) {
+              scale = 1.02 + fastIn * (0.24 * zoomMult) * optBoost;
+              panX = (smoothCurve - 0.5) * 26;
+              panY = (0.54 - smoothCurve) * 18;
+            } else if (mv === 2) {
+              scale = 1.02 + smoothCurve * (0.20 * zoomMult) * optBoost;
+              panX = (0.5 - smoothCurve) * 22;
+              panY = (smoothCurve - 0.5) * 10;
+            } else if (mv === 3) {
+              scale = 1.02 + Math.sin(p * Math.PI) * (0.24 * zoomMult) * optBoost;
+              panX = (smoothCurve - 0.5) * 28;
+              angle = -0.009 * Math.sin(p * Math.PI);
+            } else {
+              scale = 1.02 + (1 - rushIn) * (0.24 * zoomMult) * optBoost;
+              panX = (smoothCurve - 0.5) * 26;
+              angle = 0.008 * Math.sin(p * Math.PI);
+            }
           }
 
-          // Micro-punch óptico forte sincronizado no exato corte (0.14s) + whoosh!
-          if (fxOn && sIdx > 0 && cEl < 0.14) {
-            const cp = 1 - easeOutQuart(cEl / 0.14);
-            scale += cp * 0.11;
+          if (fxOn && sIdx > 0 && !isLastCut && cEl < 0.12) {
+            const cp = 1 - easeOutQuart(cEl / 0.12);
+            scale += cp * 0.055;
           }
-          const maxPanX = canvas.width * 0.082;
-          const maxPanY = canvas.height * 0.068;
+          const maxPanX = canvas.width * 0.052;
+          const maxPanY = canvas.height * 0.042;
           panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
           panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
         }
 
         drawCroppedCover(ctx, activeDrawable, activeCrop, scale, panX, panY, angle, 1, renderFilter);
 
-        // Flash óptico cinematográfico limpo sincronizado com o whoosh no corte
-        if (fxOn && sIdx > 0 && cEl < 0.11) {
-          const fp = 1 - cEl / 0.11;
+        if (fxOn && sIdx > 0 && cEl < 0.10) {
+          const fp = 1 - cEl / 0.10;
+          const flashAlpha = isGentleNiche ? 0.11 : 0.18;
           ctx.save();
           ctx.globalCompositeOperation = "screen";
-          ctx.fillStyle = `rgba(255,250,240,${(fp * fp * 0.24).toFixed(3)})`;
+          ctx.fillStyle = `rgba(255,250,240,${(fp * fp * flashAlpha).toFixed(3)})`;
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.restore();
         }
-        if (isBlockbuster) {
-          drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.10 * Math.sin(p * Math.PI), dir);
+        if (isBlockbuster && !isGentleNiche) {
+          drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.07 * Math.sin(p * Math.PI), dir);
         }
-        if (!allowLightBg) {
-          drawCinematicVignette(ctx, canvas.width, canvas.height, 0.20);
+        if (!isLightNiche) {
+          drawCinematicVignette(ctx, canvas.width, canvas.height, 0.16);
         }
 
         // CTA Animado / Placa Final Limpa (se ativado)
@@ -5557,6 +5625,9 @@
           if (activeMode === "removebg") setMode("video");
           const btn = document.getElementById("btnApplyPng");
           if (btn) btn.textContent = "✓ Aplicado como foto do produto!";
+          if (res.imageUrl && (!productDetailHint?.value.trim() || !macroTarget?.value.trim())) {
+            autoAnalyzeUploadedProduct(res.imageUrl, false);
+          }
         });
       } catch (err) {
         stage.innerHTML = `<div class="err-msg">${err.message === "ABORTED_RUN" ? "Recorte cancelado." : err.message}</div>`;
@@ -5651,7 +5722,7 @@
         stage.innerHTML = `
           <img class="preview-916" src="${r.imageUrl}" alt="Imagem 9:16" />
           <div class="dl-box">
-            <div class="dl-title">${selectedImgModel.name} • ARRI 65 / Nano Banana 9:16</div>
+            <div class="dl-title">${selectedImgModel.name} • Cinema 9:16 HD</div>
             <div class="dl-dna">🛡️ ${dna.id} • Luz: ${dna.light.tag}</div>
             <div class="dl-grid"><a class="dl-btn main" href="${r.imageUrl}" target="_blank" rel="noopener noreferrer" download="nexora-${dna.id.toLowerCase()}.jpg">Abrir / Baixar Imagem 9:16</a></div>
           </div>
@@ -6656,6 +6727,9 @@
 
       function detectRealProductCategory(prodRaw, descRaw) {
         const s = `${prodRaw || ""} ${descRaw || ""}`.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        if (/\b(pet|cachorro|cao|caes|gato|gatos|coleira|peitoral|caminha|arranhador|comedouro|racao|petisco)\b/.test(s)) return "pet";
+        if (/\b(brinquedo|boneca|boneco|carrinho|lego|pelucia|infantil|crianca|bebe|slime|massinha|educativo)\b/.test(s)) return "toys";
+        if (/\b(vestido|saia|blusa|cropped|lingerie|biquini|maio|legging|moda\s*feminina|roupa\s*feminina|salto|scarpin|bolsa\s*feminina|kimono|tricot)\b/.test(s)) return "women_fashion";
         if (/(headset|\bvr\b|realidade virtual|metaverso|meta quest|quest \d|visor vr|oculos vr|controles.*vr)/.test(s)) return "vr";
         if (/(relogio|smartwatch|cronografo|watch|tonneau|pulseira.*aco)/.test(s)) return "watch";
         if (/(oculos de sol|armacao|lente uv|lente polarizada|solar|aviador|wayfarer)/.test(s) && !/vr/.test(s)) return "sunglasses";
@@ -6663,7 +6737,7 @@
         if (/(tenis|sapato|bota|sandalia|chinelo|calcado|sneaker|chuteira)/.test(s)) return "footwear";
         if (/(perfume|colonia|serum|creme|hidratante|maquiagem|batom|shampoo|cosmetico|skincare|fragrancia)/.test(s)) return "beauty";
         if (/(mouse|teclado|console|portatil|gamer|celular|smartphone|carregador|powerbank|camera|drone|eletronico|gadget)/.test(s)) return "tech";
-        if (/(bolsa|mochila|carteira|colar|anel|brinco|pulseira|joia|corrente|acessorio)/.test(s)) return "fashion";
+        if (/(bolsa|mochila|carteira|colar|anel|brinco|pulseira|joia|corrente|acessorio|camisa|camiseta|jaqueta|calca|roupa)/.test(s)) return "fashion";
         if (/(cafe|moedor|liquidificador|garrafa|copo termico|cozinha|panela|airfryer|carro|automotivo|ferramenta)/.test(s)) return "home";
         return "universal";
       }
@@ -7315,6 +7389,27 @@
         const macroTxt = macroClean || (vidSec <= 12 ? "acabamento impecável" : "acabamento impecável em cada detalhe");
 
         const BANK = {
+          women_fashion: {
+            hook: `Olha o caimento maravilhoso ${meta.prepCom} ${prodName}!`,
+            b1: `Tecido leve de toque macio, ${macroTxt} e modelagem que valoriza o corpo com elegância natural.`,
+            b2: `Veste super bem do dia até a noite, sem apertar, com acabamento de boutique que chama atenção.`,
+            b3: `É aquela peça coringa feminina que levanta o visual em segundos e rende elogios em todo lugar.`,
+            cta: `Toque no carrinho aqui embaixo e garanta ${meta.poss}!`
+          },
+          toys: {
+            hook: `A diversão vai começar agora! Olha ${meta.dem} ${prodName}!`,
+            b1: `Cores vibrantes, ${macroTxt} e material seguro feito para estimular a criatividade longe das telas.`,
+            b2: `Fácil de brincar, super resistente e perfeito para arrancar sorrisos e criar momentos incríveis em família.`,
+            b3: `As crianças se apaixonam logo no primeiro minuto — é o presente inesquecível que todo mundo elogia.`,
+            cta: `Toque no carrinho aqui embaixo e garanta ${meta.poss}!`
+          },
+          pet: {
+            hook: `Seu pet merece esse carinho! Olha ${meta.dem} ${prodName}!`,
+            b1: `Material macio e seguro, ${macroTxt} e conforto pensado para o bem-estar do seu melhor amigo todos os dias.`,
+            b2: `Super prático de limpar, resistente no uso diário e feito com cuidado especial para deixar seu pet ainda mais feliz.`,
+            b3: `Quem ama o seu bichinho vê a diferença na hora — carinho, proteção e alegria em cada detalhe.`,
+            cta: `Toque no carrinho aqui embaixo e garanta ${meta.poss}!`
+          },
           vr: {
             hook: `Para tudo e olha ${meta.dem} ${prodName}!`,
             b1: `Imersão absurda em alta definição, ${macroTxt} e encaixe ultra confortável sem cabos te atrapalhando.`,
@@ -7435,74 +7530,124 @@
       // F) DIREÇÃO MULTI-CENÁRIO DE SUPERPRODUÇÃO (FIM DO "VULCÃO REPETIDO")
       // -----------------------------------------------------------------------
       function getLifestyleScenePrompt(cat, prodDesc) {
-        const refItem = prodDesc ? `the exact "${prodDesc}"` : "the exact product from the reference cutouts";
+        const refItem = prodDesc ? `the exact "${prodDesc}"` : "the exact product from the reference photo";
+        const cleanHumanGuard = "natural five-finger anatomy, zero extra accessories, zero objects on head, zero camera mounts, zero floating straps or clips, product 100% identical in shape and color to reference";
         const map = {
-          vr: `REAL-WORLD LIFESTYLE ACTION SHOT: A charismatic young adult wearing ${refItem} inside a sleek neon-lit futuristic gaming room with vibrant cyan and warm-gold atmospheric light waves, holding the controllers in mid-action, shallow f/1.4 cinema bokeh, zero text.`,
-          watch: `REAL-WORLD LIFESTYLE ACTION SHOT: Ultra-sharp cinematic close-up of ${refItem} worn confidently on a stylish person's wrist gripping a dark luxury sports car steering wheel at twilight with glowing golden city lights rushing past in bokeh.`,
-          sunglasses: `REAL-WORLD LIFESTYLE ACTION SHOT: Confident stylish Brazilian model wearing ${refItem} outdoors during golden-hour sunset on a vibrant modern avenue, crisp reflections on the lenses, warm sunlight rim-light, shallow f/1.4 bokeh.`,
-          audio: `REAL-WORLD LIFESTYLE ACTION SHOT: Energetic young creator wearing/using ${refItem} in a vibrant night city studio lit with warm amber and electric teal bokeh lights, dynamic energy, ultra-realistic skin and product materials.`,
-          footwear: `REAL-WORLD LIFESTYLE ACTION SHOT: Dynamic low-angle cinema tracking shot of ${refItem} on an athlete's feet striding powerfully across a rain-slicked neon urban street at night, crisp water droplets splashing in dramatic backlight.`,
-          beauty: `REAL-WORLD LIFESTYLE ACTION SHOT: High-fashion editorial close-up of an elegant hand presenting ${refItem} beside sunlit sculptural marble, shimmering water ripples and golden light caustics, luxury boutique atmosphere.`,
-          tech: `REAL-WORLD LIFESTYLE ACTION SHOT: Sleek hands actively using ${refItem} on a dark minimalist pro creator desk bathed in subtle gold and teal cinema rim lighting, clean modern depth of field.`,
-          fashion: `REAL-WORLD LIFESTYLE ACTION SHOT: Editorial close-up of a stylish person wearing/carrying ${refItem} along a blurred luxury evening city boulevard with warm golden bokeh and confident movement.`,
-          home: `REAL-WORLD LIFESTYLE ACTION SHOT: Bright modern architectural kitchen/home scene with confident hands demonstrating ${refItem} in crisp real-world action, rich natural sunlight beams and shallow depth of field.`,
-          universal: `REAL-WORLD LIFESTYLE ACTION SHOT: Confident human hands holding and showcasing ${refItem} in a sleek modern high-end studio-lifestyle environment with dramatic golden rim light and rich city bokeh behind.`
+          women_fashion: `REAL-WORLD EDITORIAL LIFESTYLE SHOT: Graceful Brazilian woman wearing or presenting ${refItem} in a bright sunlit boutique terrace with soft warm window daylight and airy cream linen bokeh, natural elegant posture, ${cleanHumanGuard}.`,
+          toys: `REAL-WORLD JOYFUL LIFESTYLE SHOT: Cheerful bright living-room play table bathed in warm natural daylight with clean hands playfully presenting ${refItem}, colorful soft pastel bokeh behind, fun family energy, ${cleanHumanGuard}.`,
+          pet: `REAL-WORLD COZY PET LIFESTYLE SHOT: Warm sunlit home living room with soft cream rug and gentle natural window light, caring human hands presenting ${refItem} cleanly in foreground with a happy cozy home atmosphere in soft bokeh behind, ${cleanHumanGuard}.`,
+          vr: `REAL-WORLD LIFESTYLE SHOT: Stylish young adult holding and showcasing ${refItem} cleanly inside a sleek modern lit room with soft cyan and warm-gold bokeh behind, ${cleanHumanGuard}.`,
+          watch: `REAL-WORLD LIFESTYLE SHOT: Ultra-sharp clean close-up of ${refItem} worn neatly on a stylish wrist resting calmly on a tailored cuff inside a modern dark luxury lounge with warm golden bokeh behind (zero car mounts, zero floating black clips, exact original case shape and dial preserved 100%), ${cleanHumanGuard}.`,
+          sunglasses: `REAL-WORLD LIFESTYLE SHOT: Confident stylish person wearing ${refItem} outdoors in warm golden-hour sunlight with soft city avenue bokeh, crisp reflections, ${cleanHumanGuard}.`,
+          audio: `REAL-WORLD LIFESTYLE SHOT: Stylish creator showcasing ${refItem} in a clean modern studio lit with warm amber and soft teal bokeh, ${cleanHumanGuard}.`,
+          footwear: `REAL-WORLD LIFESTYLE SHOT: Clean low-angle commercial shot of ${refItem} worn on feet stepping confidently across a sleek sunlit urban stone walkway, crisp sharp detail, ${cleanHumanGuard}.`,
+          beauty: `REAL-WORLD LIFESTYLE SHOT: High-fashion clean close-up of an elegant hand presenting ${refItem} beside bright sunlit Carrara marble and soft shimmering water reflections, ${cleanHumanGuard}.`,
+          tech: `REAL-WORLD LIFESTYLE SHOT: Clean hands neatly using ${refItem} on a modern minimalist pro creator desk with subtle warm and cool rim lighting, ${cleanHumanGuard}.`,
+          fashion: `REAL-WORLD LIFESTYLE SHOT: Editorial close-up of a stylish person wearing/carrying ${refItem} in soft golden afternoon light with clean architectural bokeh, ${cleanHumanGuard}.`,
+          home: `REAL-WORLD LIFESTYLE SHOT: Bright modern sunlit kitchen/home counter with clean hands demonstrating ${refItem} in crisp practical action, natural daylight beams, ${cleanHumanGuard}.`,
+          universal: `REAL-WORLD LIFESTYLE SHOT: Clean human hands holding and presenting ${refItem} in a bright modern studio-lifestyle environment with warm rim light and clean shallow bokeh, ${cleanHumanGuard}.`
         };
         return map[cat] || map.universal;
       }
 
       function buildMultiWorldScenePrompt(cutIdx, selectedModelBase, cat, prodDesc, macroHint, anglesCount) {
-        const refItem = prodDesc ? `the exact "${prodDesc}"` : "the exact product from the reference cutouts";
-        const refLock = prodDesc
-          ? `Strict product fidelity: render ${refItem} with its exact original colors, proportions, materials, silhouette and markings — never recolor, never morph, never invent logos.`
-          : `Strict product fidelity: preserve the exact original colors, materials, proportions and markings of the reference product — never recolor or morph.`;
+        const nicheProf = typeof window.NEXORA_GET_NICHE_PROFILE === "function" ? window.NEXORA_GET_NICHE_PROFILE() : null;
+        const nicheId = nicheProf ? nicheProf.id : "universal";
+        const refItem = prodDesc ? `the exact "${prodDesc}"` : "the exact product from the reference photo";
+        const refLock =
+          `ABSOLUTE PRODUCT FIDELITY LOCK (ZERO HALLUCINATIONS): Render ${refItem} 100% IDENTICAL to the reference photo — preserve exact case/body silhouette, exact geometry (never turn rectangular into round or square), exact dial/face/details, exact colors and materials. ZERO invented brand names, ZERO printed text on the product, ZERO transparent plastic display stands, ZERO floating camera clips or rigs.`;
         const multiAngleNote = anglesCount >= 2
-          ? "Adopt the EXACT 3D pose and orientation of the FIRST provided 9:16 reference PNG cutout while locking material/logo fidelity with the secondary frontal anchor — physically grounded contact shadows and authentic reflections, never pasted-on or flat. "
-          : "";
+          ? "Match the exact 3D shape, front face and original colors from the PRIMARY frontal reference image first, using the secondary angle only for authentic 3D depth — grounded natural contact shadow, never pasted-on or flat. "
+          : "Keep the exact product from the reference image clearly recognizable from front or front three-quarter view with grounded contact shadow. ";
         const macroClause = macroHint ? ` Highlight real craftsmanship detail: ${macroHint}.` : "";
-        const fullBleed = "Vertical 9:16 edge-to-edge full-bleed ARRI Alexa 65 commercial photograph (strictly 9:16 vertical, zero white bars, zero black bars, zero borders, zero text, zero watermarks, zero filming gear), vivid cinema contrast and rich saturated highlights.";
+        const fullBleed = "Vertical 9:16 edge-to-edge full-bleed flagship commercial photograph (strictly 9:16 vertical, zero white bars, zero black bars, zero borders, zero text, zero watermarks, zero filming gear), crystal-clear sharp focus and true-to-life colors.";
         const lifeShot = getLifestyleScenePrompt(cat, prodDesc);
 
-        const worlds = [
-          // 0: RIGHT-FACING 45°/90° EXPLOSIVE HOOK (uses right_45 PNG)
-          `Dynamic vertical 9:16 commercial hero shot with ${refItem} angled boldly toward the RIGHT side of the frame inside the chosen living universe (${selectedModelBase.slice(0, 320)}), photographed from an energetic right three-quarter perspective with dramatic rim highlights, glowing embers, atmospheric haze and radiant light streaks surging through deep f/1.4 bokeh, product bold in the upper-center safe zone.`,
-          // 1: BOTTOM-UP LOW-ANGLE 100MM SUPER MACRO (uses bottom_up PNG)
-          `Extreme 100mm cinema super-macro photograph shot from a steep low worm's-eye angle looking UPWARD from below at ${refItem}, showcasing sculpted underside contours, real material grain and precision edges on a glossy obsidian luxury stage bathed in sweeping golden-white spotlight beams and floating luminous dust particles in deep bokeh.`,
-          // 2: REAL-WORLD LIFESTYLE HUMAN ACTION (uses right_45 + frontal)
-          `${lifeShot} Product and subject framed dynamically in real action with vivid kinetic light ribbons, rich atmospheric depth and energetic real-world motion across the entire background.`,
-          // 3: 180-DEGREE REAR/OPPOSITE FLANK IN LUMINOUS ENERGY VORTEX (uses back_180 PNG)
-          `Ultra-dynamic futuristic commercial shot capturing ${refItem} from its dramatic 180-degree rear-and-opposite-flank 3D perspective suspended dynamically in mid-air inside a hyper-kinetic glowing cyan-and-gold luminous energy light tunnel with swirling light waves and high-speed bokeh trails racing toward the lens.`,
-          // 4: HIGH 60° OVERHEAD TOP-DOWN ANGLE ON MARBLE (uses top_down PNG)
-          `Dramatic elevated 60-degree bird's-eye overhead commercial photograph looking steeply DOWN from above onto ${refItem} resting on dark reflective Nero Marquina marble, revealing top geometry and full 3D contours surrounded by curling volumetric studio mist, shimmering water-light caustics, sweeping diagonal god-rays and rising golden sparks.`,
-          // 5: LEFT-FACING 60°/90° LOW ACTION PROFILE AGAINST RACING SKYLINE (uses left_60 PNG)
-          `Cinematic low-angle 3D lateral profile showing ${refItem} facing sharply toward the LEFT on a dark reflective architectural ledge overlooking a blazing night metropolis skyline with streaking neon traffic light trails, glowing amber-and-teal bokeh spheres and drifting atmospheric sparks filling 100% of the vertical 9:16 frame.`,
-          // 6: DEAD-CENTER FRONT-FACING 0° ICONIC HERO FINALE (uses pure frontal PNG)
-          `Iconic symmetrical dead-center FRONT-FACING (0 degrees) flagship commercial finale with ${refItem} facing STRAIGHT AT THE CAMERA in commanding full-front view, positioned cleanly in the upper 60% safe zone (with rich dark atmospheric stage space below for subtitles), backlit by dramatic volumetric golden-white cinema flares, sweeping spotlight beams and swirling fire sparks.`
-        ];
+        let worlds;
+        if (nicheId === "moda_feminina") {
+          worlds = [
+            `Bright airy high-fashion boutique commercial hero shot showcasing ${refItem} facing front three-quarter in a sunlit minimalist Parisian cream-and-travertine studio with soft golden window sunbeams and delicate floating light bokeh, centered cleanly in the upper-center safe zone.`,
+            `Ultra-clean 100mm editorial macro photograph focusing closely on the authentic fabric weave, stitching, drape and ${macroHint || "fine boutique craftsmanship"} of ${refItem} bathed in soft warm natural daylight with bright creamy bokeh behind.`,
+            `${lifeShot}`,
+            `Luminous minimalist architectural gallery showcase presenting ${refItem} in natural golden afternoon light beside soft sculpted travertine stone and subtle warm mirror depth, graceful feminine boutique atmosphere.`,
+            `Elevated 40-degree sunlit editorial overview of ${refItem} neatly styled on a bright warm cream linen surface with dappled window leaf shadows and gentle daylight shimmer.`,
+            `Iconic symmetrical FRONT-FACING (0 degrees) editorial boutique finale with ${refItem} centered cleanly in the upper 60% safe zone (ample clean space below for captions), softly backlit by warm golden sunlit studio glow.`
+          ];
+        } else if (nicheId === "brinquedos") {
+          worlds = [
+            `Vibrant cheerful sunlit commercial hero shot of ${refItem} facing front three-quarter on a bright clean modern playroom table bathed in happy natural daylight with colorful soft pastel bokeh spheres and joyful floating sparkle highlights behind, centered in the upper-center safe zone.`,
+            `Crisp bright 100mm macro close-up highlighting the playful colors, smooth safe edges and ${macroHint || "fun tactile details"} of ${refItem} under bright cheerful daylight with colorful soft background bokeh.`,
+            `${lifeShot}`,
+            `Fun vibrant commercial studio showcase of ${refItem} angled boldly front three-quarter on a clean light pastel-and-wood stage surrounded by cheerful sunlit color bokeh and lively joyful energy (zero dark or scary tones).`,
+            `Elevated 40-degree cheerful overhead commercial view of ${refItem} on a bright sunlit wooden play tabletop with clean colorful out-of-focus playroom depth behind.`,
+            `Iconic symmetrical FRONT-FACING (0 degrees) cheerful hero finale of ${refItem} centered cleanly in the upper 60% safe zone against a bright sunny vibrant commercial backdrop with joyful glowing bokeh.`
+          ];
+        } else if (nicheId === "pet") {
+          worlds = [
+            `Warm heartwarming sunlit home commercial hero shot of ${refItem} facing front three-quarter on a cozy light natural wood floor beside a soft cream rug with gentle golden morning window sunlight and soft living-room bokeh behind, centered in the upper-center safe zone.`,
+            `Soft clean 100mm macro close-up showcasing the gentle pet-safe texture, soft materials and ${macroHint || "cozy durable stitching"} of ${refItem} in warm natural morning daylight with airy soft home bokeh.`,
+            `${lifeShot}`,
+            `Bright cozy sunlit patio and garden-view commercial shot presenting ${refItem} in natural front three-quarter perspective surrounded by warm sunny daylight and soft green backyard bokeh (zero dark or harsh industrial tones).`,
+            `Elevated 40-degree welcoming home tabletop view of ${refItem} resting naturally on warm light oak wood with gentle window sunbeams and cozy soft shadows.`,
+            `Iconic symmetrical FRONT-FACING (0 degrees) heartwarming finale with ${refItem} centered cleanly in the upper 60% safe zone, bathed in soft golden sunlit home warmth and gentle inviting bokeh.`
+          ];
+        } else if (nicheId === "beleza" || nicheId === "perfumes") {
+          const isDarkPerfume = nicheId === "perfumes";
+          worlds = [
+            isDarkPerfume
+              ? `Sensual luxury commercial hero shot of ${refItem} facing front three-quarter on dark reflective smoked glass bathed in warm golden amber rim light, silky atmospheric mist and delicate shimmering gold dust in deep bokeh, upper-center safe zone.`
+              : `Radiant luxury beauty commercial hero shot of ${refItem} facing front three-quarter on bright polished white Carrara marble bathed in warm sunlit water caustics and soft luminous bokeh, upper-center safe zone.`,
+            `Ultra-sharp 100mm sensory macro photograph focusing tightly on the authentic texture, glass/material sheen and ${macroHint || "refined finish"} of ${refItem} with gliding specular reflections and silky shallow bokeh.`,
+            `${lifeShot}`,
+            isDarkPerfume
+              ? `Opulent boutique showcase of ${refItem} in front-left three-quarter angle surrounded by soft glowing champagne-gold bokeh spheres and graceful curling volumetric light beams on obsidian marble.`
+              : `Fresh luminous spa-luxury studio showcase of ${refItem} in front-left three-quarter angle over calm crystal water ripples with soft sunlit reflections and airy clean bokeh.`,
+            `Elevated 40-degree editorial vanity view looking down onto ${refItem} resting cleanly on honed stone with gentle morning light rays and crisp natural contact shadows (zero extra stands).`,
+            `Iconic symmetrical FRONT-FACING (0 degrees) flagship beauty finale with ${refItem} centered cleanly in the upper 60% safe zone, glowing with soft flattering halo rim light and pristine elegance.`
+          ];
+        } else if (nicheId === "casa") {
+          worlds = [
+            `Bright clean modern architectural home hero shot of ${refItem} facing front three-quarter on a sunlit light quartz kitchen/home counter with warm natural morning sunlight beams and tidy modern home bokeh behind, upper-center safe zone.`,
+            `Crisp 100mm daylight macro close-up showing the solid build quality, clean finish and ${macroHint || "practical precision details"} of ${refItem} under clear bright natural light.`,
+            `${lifeShot}`,
+            `Clean modern bright studio showcase of ${refItem} angled front-left three-quarter on a natural light oak tabletop with soft sculpted daylight shadows and inviting modern home depth.`,
+            `Elevated 40-degree organized tabletop view of ${refItem} resting firmly on a clean modern counter with crisp sunlit reflections and zero clutter.`,
+            `Iconic symmetrical FRONT-FACING (0 degrees) high-trust commercial finale with ${refItem} centered cleanly in the upper 60% safe zone on a bright clean architectural stage.`
+          ];
+        } else {
+          worlds = [
+            `Ultra-sharp vertical 9:16 commercial hero shot with ${refItem} clearly recognizable in commanding front-right 25-degree three-quarter view inside the chosen living universe (${selectedModelBase.slice(0, 260)}), resting naturally with grounded shadow (zero plastic stand, zero display holder), crisp directional rim highlights and rich atmospheric bokeh behind, upper-center safe zone.`,
+            `Extreme 100mm cinema macro photograph focusing closely on the authentic front surface, precision edges and ${macroHint || "real material craftsmanship"} of ${refItem} on a dark honed obsidian luxury surface bathed in clean gliding specular highlights and delicate floating golden dust in deep bokeh.`,
+            `${lifeShot}`,
+            `High-impact flagship commercial showcase of ${refItem} positioned clearly in front-left 30-degree three-quarter view (front face and exact geometry 100% visible and faithful) on dark reflective Nero Marquina marble framed by dynamic glowing golden-and-amber volumetric light ribbons and deep f/1.4 bokeh trails.`,
+            `Dramatic elevated 40-degree commercial photograph looking down onto ${refItem} resting naturally and directly on dark reflective honed stone (zero clear plastic support or display ring), clearly preserving its exact original proportions and markings, surrounded by gentle curling mist and subtle golden sparks.`,
+            `Iconic symmetrical dead-center FRONT-FACING (0 degrees) flagship commercial finale with ${refItem} facing STRAIGHT AT THE CAMERA in full commanding view with generous clean breathing margin around all edges, positioned in the upper 62% safe zone (rich clean space below for captions), backlit by refined golden-white cinema rim light and subtle floating embers.`
+          ];
+        }
 
         const worldDirective = worlds[cutIdx % worlds.length];
         return `${worldDirective} ${multiAngleNote}${refLock}${macroClause} ${fullBleed}`.replace(/\s{2,}/g, " ").trim().slice(0, 2150);
       }
 
-      const SUPER_CLIP_CHOREO = [
-        // 0: Continuous 3D Product Rotation + Explosive FPV Crash-Zoom + Surging Living Scenario
-        "Explosive high-energy commercial opening: the exact product dynamically rotates and turns smoothly in 3D on its axis from right three-quarter toward front-center catching blazing moving reflections while an ultra-fast FPV cinema drone crash-zoom rockets forward in sweeping 3D parallax, as dense golden sparks, swirling volumetric smoke and fast directional light beams erupt nonstop across 100% of the background from frame 1 to the final frame.",
-        // 1: Dynamic Tilting Product Macro + Low-to-High FPV Crane Sweep + Racing Light Beams
-        "High-velocity 100mm cinema macro shot: the exact product slowly tilts and glides through intense sweeping specular light while a fast low-angle FPV crane camera rockets rapidly upward from BOTTOM TO TOP along its sculpted underside, edges and precision details, as vivid volumetric spotlights, glowing dust and drifting golden embers fly nonstop across the living dark backdrop.",
-        // 2: Active Real-World Human Movement + Dynamic Product Presentation + Fast Orbit
-        "Lively real-world lifestyle commercial action: the subject actively turns, lifts and showcases the exact product in fluid natural hand/body motion while an agile FPV handheld camera whips swiftly in a 3D arc from RIGHT TO LEFT around them, with fast-moving neon light streaks, shimmering reflections and deep kinetic city/studio parallax surging continuously behind.",
-        // 3: Full 180-Degree Dynamic 3D Product Spin + Hyper-Speed Energy Vortex Tunnel
-        "Thrilling continuous 180-degree 3D product turnaround: the exact product levitates and spins smoothly through 180 degrees from its rear/side flank around to its commanding front face while the FPV camera orbits rapidly in counter-motion, surrounded by rushing glowing cyan-and-gold plasma energy rings, hyperspace speed-light trails and flying sparks blasting nonstop through the tunnel.",
-        // 4: Dynamic Top-Down 3D Pivot + High-Speed Overhead Crane Dive + Billowing Mist & Embers
-        "Dramatic elevated 60-degree overhead FPV crane dive plunging rapidly DOWNWARD from TOP TO BOTTOM while arcing clockwise around the exact product as it rotates gracefully on dark reflective marble to reveal its top bevels and full 3D contours, while fast-moving volumetric studio mist, dancing light caustics and rising golden fire sparks race continuously across the stage.",
-        // 5: Aggressive Left-to-Right Whip-Pan + Kinetic Product Reveal + Blazing Racing Skyline
-        "Kinetic whip-pan FPV cinema camera ripping rapidly from LEFT TO RIGHT with a bold pull-out-to-push-in speed ramp while the exact product turns boldly from left lateral profile toward three-quarter front silhouette catching razor-sharp rim glints, as streaking night metropolis lights, rushing neon traffic trails and wind-blown sparks surge continuously across the entire moving skyline.",
-        // 6: Hero Power Zoom-In + Subtle Levitation Glint + Explosive Cinema Flares Finale
-        "Iconic blockbuster finale: the exact product rises and floats with crisp authoritative presence facing straight toward the camera in the upper safe zone while intense specular glints sweep continuously across its front face, as a high-speed power zoom-in drives forward and dazzling volumetric cinema flares, sweeping spotlight rays and swirling golden fire sparks erupt nonstop behind."
+      const SUPER_CLIP_CHOREO_DYNAMIC = [
+        "Crisp immediate commercial opening from frame 1 (zero blinding white flash): smooth kinetic cinema camera pushing steadily forward while arcing 20 degrees around the front three-quarter view of the exact product, keeping its exact original shape, face and details 100% locked and rigid while vivid specular light sweeps continuously across its finish and lively sparks, mist and light streaks flow nonstop across the background.",
+        "Silky 100mm cinema macro tracking camera gliding smoothly across the exact product's authentic surface grain, bevels and craftsmanship details while a bright specular reflection travels cleanly across the real material, keeping every marking and shape 100% rigid as soft luminous dust and volumetric light beams drift continuously behind.",
+        "Fluid natural commercial lifestyle shot: subtle realistic human presentation keeping the exact product 100% faithful in shape, proportion and finish (never warping or morphing, zero floating objects or camera clips), as the camera tracks gently with rich lively background bokeh and moving ambient light.",
+        "Energetic 3D parallax cinema camera sweeping smoothly in a 25-degree front arc around the exact product while keeping its true front geometry and details 100% locked and unwarped, as vivid luminous light waves, glowing bokeh trails and fine atmospheric sparks surge continuously across the living background.",
+        "Smooth elevated 40-degree crane camera gliding steadily forward and slightly downward toward the exact product resting directly on the surface (zero invented stands), keeping its exact silhouette and materials 100% locked while curling volumetric mist, dancing light reflections and subtle sparks move nonstop across the stage.",
+        "Commanding steady commercial finale: smooth controlled zoom-in gliding straight toward the exact product locked dead-center facing the camera (keeping generous clean margin around all edges, never cropping or morphing), while refined golden-white rim flares, sweeping light rays and floating embers radiate continuously behind."
+      ];
+
+      const SUPER_CLIP_CHOREO_GENTLE = [
+        "Graceful airy editorial commercial opening from frame 1: silky slow cinema camera gliding gently forward in soft 15-degree 3D parallax around the exact product, keeping its exact original silhouette, colors and texture 100% faithful while warm natural sunlight beams and soft bokeh shimmer continuously behind.",
+        "Gentle sensory 100mm macro camera drifting smoothly across the authentic texture, stitching and fine material quality of the exact product as soft natural light glides delicately across the surface with dreamy bright bokeh behind.",
+        "Authentic serene lifestyle commercial shot: graceful natural movement showcasing the exact product 100% faithful in shape and color (zero distortion, zero extra objects), captured with silky fluid camera motion and warm lively sunlit background depth.",
+        "Elegant smooth 20-degree front tracking arc gliding effortlessly around the exact product while preserving every original contour and color 100% rigidly, as gentle sunlit particles, airy fabric/foliage bokeh and warm reflections flow peacefully behind.",
+        "Timeless serene front-facing 0-degree flagship finale: gentle steady push-in toward the exact product centered cleanly with generous margin in the upper safe zone, bathed in glowing natural warm rim light and delicate living bokeh behind."
       ];
 
       const SUPER_NEGATIVE =
-        "static frame, frozen image, slideshow, motionless camera, motionless background, black and white, monochrome, desaturated, greyscale, washed out colors, blurry, pixelation, color change, recolored product, black glass visor replacement, morphing product, distorted geometry, garbled text, watermark, studio light stand, camera rig";
+        "morphing product, changing watch shape, rectangular turning round, rectangular turning square, invented brand logo, fake text on product, garbled text, transparent plastic stand, clear C-stand, watch holder ring, floating camera mount, black clip, object on head, extra fingers, deformed hands, blinding white flash covering frame 1, static background, black and white, monochrome, blurry, pixelation, color change, recolored product, watermark, studio light stand, camera rig";
 
       // -----------------------------------------------------------------------
       // G) INTERFACE UNIFICADA E LIMPA
@@ -8103,16 +8248,17 @@
           if (k) byKey.set(k, item.url);
         }
         const frontalUrl = byKey.get("frontal") || kit[0].url;
-        // Mapeamento exato: envia APENAS o par [Ângulo 9:16 do corte + Âncora Frontal 0°] para pose real sem confundir a IA!
-        // Cut 0: Direita | Cut 1: Baixo p/ Cima | Cut 2: Direita (Lifestyle) | Cut 3: Giro 180° | Cut 4: Cima p/ Baixo | Cut 5: Esquerda | Cut 6: Frontal 0° Puro
-        const targetKeys = ["right_45", "bottom_up", "right_45", "back_180", "top_down", "left_60", "frontal"];
-        const wantedKey = targetKeys[cutNum % targetKeys.length];
-        if (wantedKey === "frontal") {
+        // TRAVA DE FIDELIDADE 100% TIKTOK SHOP:
+        // NUNCA envia traseira (back_180) ou perfil cego 90° como referência principal — mantém a Âncora Frontal 0° em 1º lugar
+        // para o produto NUNCA virar quadrado/redondo nem alucinar mostrador!
+        const secKeys = ["frontal", "bottom_up", "frontal", "right_45", "top_down", "frontal"];
+        const wantedSec = secKeys[cutNum % secKeys.length];
+        if (wantedSec === "frontal") {
           return [frontalUrl];
         }
-        const primaryUrl = byKey.get(wantedKey) || kit[cutNum % kit.length].url;
-        if (primaryUrl && primaryUrl !== frontalUrl) {
-          return [primaryUrl, frontalUrl];
+        const secUrl = byKey.get(wantedSec);
+        if (secUrl && secUrl !== frontalUrl) {
+          return [frontalUrl, secUrl];
         }
         return [frontalUrl];
       }
@@ -8199,13 +8345,20 @@
               const promptKey = typeof payload.prompt === "string" && payload.prompt.trim() ? "prompt" : "motionPrompt";
               const descRaw = String(document.getElementById("productDetailHint")?.value || "").trim();
               const macroRaw = String(document.getElementById("macroTarget")?.value || "").trim();
-              const choreo = SUPER_CLIP_CHOREO[cutIdx % SUPER_CLIP_CHOREO.length];
+              const nProf = typeof window.NEXORA_GET_NICHE_PROFILE === "function" ? window.NEXORA_GET_NICHE_PROFILE() : null;
+              const choreoPool = (nProf && nProf.pacing === "gentle") ? SUPER_CLIP_CHOREO_GENTLE : SUPER_CLIP_CHOREO_DYNAMIC;
+              const choreo = choreoPool[cutIdx % choreoPool.length];
+              payload.cfgScale = (nProf && nProf.pacing === "gentle") ? 0.50 : 0.45;
               const fidelity = descRaw
-                ? `Strict product fidelity: keep exact original colors, finish and shape of "${descRaw}"${macroRaw ? ` (${macroRaw})` : ""}. Zero color shift, zero morphing.`
-                : `Strict product fidelity: keep exact original product colors, materials and shape. Zero morphing.`;
+                ? `ABSOLUTE PRODUCT FIDELITY LOCK: keep the exact original silhouette, geometry, face/details, finish and colors of "${descRaw}"${macroRaw ? ` (${macroRaw})` : ""} 100% unchanged. Never turn rectangular into round or square, zero invented text or brand logos, zero morphing, zero added stands or clips.`
+                : `ABSOLUTE PRODUCT FIDELITY LOCK: keep the exact original product shape, face/details, materials and colors 100% unchanged. Never morph geometry, zero invented brand text, zero added stands or clips.`;
+
+              const moodTail = (nProf && nProf.pacing === "gentle")
+                ? "Natural true-to-life commercial colors, soft graceful camera motion and lively realistic background movement continuously from frame 1 to final frame."
+                : "Vivid true-to-life commercial cinema colors, crisp contrast, continuous fluid 3D camera parallax and lively moving background elements from frame 1 to final frame.";
 
               payload[promptKey] =
-                `${choreo} ${fidelity} Vivid ARRI Alexa 65 cinema colors, rich contrast and continuous high-energy 3D FPV camera + real 3D parallax + living background motion from frame 1 to final frame.`
+                `${choreo} ${fidelity} ${moodTail}`
                   .replace(/\s{2,}/g, " ")
                   .trim()
                   .slice(0, 2200);
@@ -8283,8 +8436,9 @@
                 } else if (mode !== "fast" && payload.engineIndex === 1 && !payload.useMusicDatabase) {
                   payload.engineIndex = 1; // fallback Stable Audio
                 }
-                // Se o painel unificado (1.218 prompts) já selecionou a trilha do banco, preserva a seleção dele!
-                if (!payload.useMusicDatabase) {
+                // Preserva a trilha sob medida escolhida pelo Diretor IA por Nicho (nexora-cinema-ui.js)!
+                const alreadyHasNichePrompt = Boolean(payload.trilhaPreferida && typeof payload.musicPrompt === "string" && payload.musicPrompt.length > 40);
+                if (!payload.useMusicDatabase && !alreadyHasNichePrompt) {
                   payload.musicPrompt = tr.lyriaPrompt;
                   payload.prompt = tr.lyriaPrompt;
                 }
@@ -8796,8 +8950,9 @@
       function refreshSummaryAndStepper() {
         const minDurSel = document.getElementById("minDuration");
         const sec = Number(minDurSel?.value || 10) || 10;
-        const cutsMap = { 10: 7, 15: 10, 20: 15, 30: 20 };
-        const cuts = cutsMap[sec] || 7;
+        const nProfQs = typeof window.NEXORA_GET_NICHE_PROFILE === "function" ? window.NEXORA_GET_NICHE_PROFILE() : null;
+        const cutsMap = (nProfQs && nProfQs.cutsMap) || { 10: 6, 15: 9, 20: 13, 30: 19 };
+        const cuts = cutsMap[sec] || 6;
         const hasPhoto = Boolean(document.getElementById("thumbPreview")?.getAttribute("src"));
         const voiceOn = Boolean(document.getElementById("enableVideoVoiceover")?.checked);
         const subStyle = document.getElementById("inlineSubtitleStyle")?.value || "viral_yellow";
@@ -8933,7 +9088,7 @@
     })();
   </script>
   <script src="./nexora-saas.js"></script>
-  <script src="./nexora-cinema-ui.js?v=3"></script>
+  <script src="./nexora-cinema-ui.js?v=4"></script>
 </body>
 </html>
 
