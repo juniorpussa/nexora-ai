@@ -38,7 +38,7 @@
       color: var(--text-main);
       font-family: "Inter", system-ui, -apple-system, sans-serif;
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow-x: clip;
       -webkit-font-smoothing: antialiased;
     }
     body {
@@ -1050,22 +1050,23 @@
             </div>
 
             <div class="box-group" id="productFieldsBox">
-              <div class="grid-2" id="directorRowWrap">
-                <div id="durFieldWrap" style="grid-column: span 2;">
-                  <label for="minDuration">Duração do Vídeo (Toque para escolher)</label>
-                  <div class="nx-dur-pills" id="nxDurationPills" role="group" aria-label="Duração do Vídeo">
-                    <button type="button" class="nx-dur-pill active" data-dur="10"><strong>10s</strong><span>7 cortes • Viral</span></button>
-                    <button type="button" class="nx-dur-pill" data-dur="15"><strong>15s</strong><span>10 cortes • Retenção</span></button>
-                    <button type="button" class="nx-dur-pill" data-dur="20"><strong>20s</strong><span>15 cortes • Completo</span></button>
-                    <button type="button" class="nx-dur-pill" data-dur="30"><strong>30s</strong><span>20 cortes • História</span></button>
-                  </div>
-                  <select id="minDuration" class="nx-sr-hidden" aria-hidden="true" tabindex="-1">
-                    <option value="10" selected>⚡ 10s — 7 Cortes Cinema (Padrão Viral)</option>
-                    <option value="15">🔥 15s — 10 Cortes Cinema (Alta Retenção)</option>
-                    <option value="20">💎 20s — 15 Cortes Cinema (Superprodução)</option>
-                    <option value="30">🎬 30s — 20 Cortes Cinema (Completo)</option>
-                  </select>
+              <div id="durFieldWrap">
+                <label for="minDuration">Duração do Vídeo (Toque para escolher)</label>
+                <div class="nx-dur-pills" id="nxDurationPills" role="group" aria-label="Duração do Vídeo">
+                  <button type="button" class="nx-dur-pill active" data-dur="10"><strong>10s</strong><span>7 cortes • Viral</span></button>
+                  <button type="button" class="nx-dur-pill" data-dur="15"><strong>15s</strong><span>10 cortes • Retenção</span></button>
+                  <button type="button" class="nx-dur-pill" data-dur="20"><strong>20s</strong><span>15 cortes • Completo</span></button>
+                  <button type="button" class="nx-dur-pill" data-dur="30"><strong>30s</strong><span>20 cortes • História</span></button>
                 </div>
+                <select id="minDuration" class="nx-sr-hidden" aria-hidden="true" tabindex="-1">
+                  <option value="10" selected>⚡ 10s — 7 Cortes Cinema (Padrão Viral)</option>
+                  <option value="15">🔥 15s — 10 Cortes Cinema (Alta Retenção)</option>
+                  <option value="20">💎 20s — 15 Cortes Cinema (Superprodução)</option>
+                  <option value="30">🎬 30s — 20 Cortes Cinema (Completo)</option>
+                </select>
+              </div>
+
+              <div class="grid-2" id="directorRowWrap">
                 <div>
                   <label for="productOrientation">Posição Física do Produto</label>
                   <select id="productOrientation">
@@ -1075,9 +1076,6 @@
                     <option value="flat_lay">Em bandeja / maleta aberta (Kit, Joia)</option>
                   </select>
                 </div>
-              </div>
-
-              <div class="grid-2">
                 <div>
                   <label for="directorProfile">Estilo de Direção</label>
                   <select id="directorProfile">
@@ -1088,15 +1086,17 @@
                     <option value="wearable_face">🕶️ Uso Real no Rosto/Corpo (Óculos / Joia)</option>
                   </select>
                 </div>
+              </div>
+
+              <div class="nx-auto-row">
                 <div id="macroFieldWrap">
                   <label for="macroTarget">Detalhe p/ Super Macro 100mm (Opcional)</label>
                   <input type="text" id="macroTarget" placeholder="Ex: textura, lentes, vidro, costura, acabamento" />
                 </div>
-              </div>
-
-              <div>
-                <label for="productDetailHint">Descrição Visual do Produto (Opcional • Reforça Fidelidade 100%)</label>
-                <input type="text" id="productDetailHint" placeholder="Ex: óculos de sol armação preta lente azul / tênis esportivo branco e verde" />
+                <div>
+                  <label for="productDetailHint">Descrição Visual do Produto (Opcional • Fidelidade 100%)</label>
+                  <input type="text" id="productDetailHint" placeholder="Ex: óculos armação preta lente azul / tênis esportivo" />
+                </div>
               </div>
             </div>
           </div>
@@ -1205,16 +1205,8 @@
               </div>
             </div>
           </div>
-          <div class="director-banner" id="directorBannerWrap" style="margin-top:12px;">
-            <div class="director-banner-head">
-              <span>🎬 Coreografia 3D v12.8 (7 Ângulos Únicos + Panorâmica + Zero Equipamento):</span>
-              <small style="color:#86efac;">100% universal nos 105 universos</small>
-            </div>
-            <div class="director-acts-preview" id="directorActsPreview"></div>
-          </div>
-
-          <details class="adv-panel" id="slaBarWrap" style="margin-top:10px;">
-            <summary>⚙️ Configurações Avançadas de Motor 3D, Edição &amp; Limite de Tempo (Padrão 10/10 já ativo)</summary>
+          <details class="adv-panel" id="slaBarWrap" style="margin-top:12px;">
+            <summary>⚙️ Configurações Avançadas: Motor 3D, Coreografia, Edição &amp; Limite de Tempo (Padrão 10/10 ativo)</summary>
             <div class="adv-body">
               <div class="grid-3">
                 <div>
@@ -1241,6 +1233,13 @@
                     <option value="195">🚀 Rápido 3m15s</option>
                   </select>
                 </div>
+              </div>
+              <div class="director-banner" id="directorBannerWrap">
+                <div class="director-banner-head">
+                  <span>🎬 Coreografia 3D v15 (7 Ângulos Únicos + Panorâmica + Zero Equipamento):</span>
+                  <small style="color:#86efac;">100% universal nos 105 universos</small>
+                </div>
+                <div class="director-acts-preview" id="directorActsPreview"></div>
               </div>
             </div>
           </details>
@@ -1697,7 +1696,7 @@
 
   <footer class="site-footer">
     <div><strong>NEXORA.AI</strong> — Plataforma Comercial de Criação Audiovisual IA para E-commerce &amp; TikTok Shop</div>
-    <div>Motor Hollywood v12.8 • 105 Universos 3D • 60 Vozes PT-BR • Render 9:16 HD</div>
+    <div>Motor Hollywood v15 • Veo 3.1 &amp; Kling Pro • 1.218 Prompts • 60 Vozes PT-BR • Render 9:16 HD</div>
   </footer>
 
   <canvas id="renderCanvas" width="720" height="1280" style="display:none;"></canvas>
@@ -7611,7 +7610,7 @@
           sp.className = "nx-super-panel";
           sp.innerHTML =
             '<div class="nx-super-title">' +
-            '  <span>🏆 Motor Superprodução Agência v16.0 (Kit 6 Ângulos 9:16 • 15Mbps HD • Sync 0,00s • Lyria 2)</span>' +
+            '  <span>🏆 Motor Superprodução Agência v15 (Kit 6 Ângulos 9:16 • 15Mbps HD • Sync 0,00s • Lyria 2)</span>' +
             '  <span style="font-size:11px;color:#7dd3fc;">Sync 0,00s • Whooshes Reais • Zooms Dinâmicos</span>' +
             '</div>' +
             '<div class="nx-super-checks">' +
@@ -7663,7 +7662,9 @@
           foldBody.className = "nx-fold-body";
           foldBody.appendChild(sp);
           proFold.appendChild(foldBody);
-          musicPanel.insertAdjacentElement("afterend", proFold);
+          const voiceBoxEl = document.getElementById("inlineVoiceBox");
+          if (voiceBoxEl) voiceBoxEl.insertAdjacentElement("afterend", proFold);
+          else musicPanel.insertAdjacentElement("afterend", proFold);
 
           // Sincroniza nos dois sentidos os seletores de Plataforma e atualiza a CTA do roteiro na hora!
           const platSel = document.getElementById("selAdPlatform");
@@ -8306,11 +8307,84 @@
     }
     .nx-dock-go:disabled { opacity: 0.5; cursor: not-allowed; }
   }
+  /* === POLIMENTO FINAL NOTA 10/10 === */
+  html, body {
+    overflow-x: clip !important;
+  }
+
+  /* 1) Cabeçalho compacto em 1 única linha (sem chips repetidos roubando altura) */
+  .navbar-inner {
+    padding: 9px 20px !important;
+    flex-wrap: nowrap !important;
+  }
+  .nav-right .trust-strip,
+  .nav-right .credits-pill {
+    display: none !important;
+  }
+
+  /* 2) Linha auto-ajustável no Passo 01 (zero buraco vazio) */
+  .nx-auto-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 11px;
+  }
+
+  /* 3) Coluna Direita (Preview + Resumo + Botão Gerar) 100% flutuante ao rolar */
+  @media (min-width: 1081px) {
+    .preview-col {
+      position: sticky !important;
+      top: 72px !important;
+      align-self: start !important;
+    }
+    .preview-col > .card {
+      max-height: calc(100vh - 86px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #263858 transparent;
+    }
+    .preview-col > .card::-webkit-scrollbar { width: 5px; }
+    .preview-col > .card::-webkit-scrollbar-thumb { background: #263858; border-radius: 6px; }
+    .preview-stage {
+      min-height: 360px !important;
+      padding: 14px 12px !important;
+      gap: 10px !important;
+    }
+    .empty-hero {
+      gap: 10px !important;
+    }
+    .phone-frame-ghost {
+      width: 118px !important;
+      border-radius: 18px !important;
+      padding: 10px !important;
+    }
+    .feature-bullets {
+      padding: 10px 12px !important;
+      gap: 5px !important;
+      font-size: 11.5px !important;
+    }
+  }
+
+  /* 4) Campos de voz suavizados enquanto a narração estiver desmarcada */
+  #inlineVoiceBox {
+    transition: opacity 0.2s ease, filter 0.2s ease;
+  }
+  #inlineVoiceBox.nx-voice-dimmed {
+    opacity: 0.56;
+  }
+  #inlineVoiceBox.nx-voice-dimmed:hover,
+  #inlineVoiceBox.nx-voice-dimmed:focus-within {
+    opacity: 1;
+  }
+
+  @media (max-width: 900px) {
+    .navbar-inner { flex-wrap: wrap !important; }
+  }
   @media (max-width: 720px) {
     .nx-dur-pills { grid-template-columns: repeat(2, 1fr); }
     .nx-toggle-cards { grid-template-columns: 1fr !important; }
     .nx-step-arrow { display: none; }
     .nx-step-item { min-width: 136px; flex: 0 0 auto; }
+    .nx-auto-row { grid-template-columns: 1fr; }
   }
 </style>
   <script>
@@ -8337,6 +8411,8 @@
         const subStyle = document.getElementById("inlineSubtitleStyle")?.value || "viral_yellow";
         const voiceCard = document.getElementById("nxVoiceToggleCard");
         if (voiceCard) voiceCard.classList.toggle("is-on", voiceOn);
+        const voiceBoxDim = document.getElementById("inlineVoiceBox");
+        if (voiceBoxDim) voiceBoxDim.classList.toggle("nx-voice-dimmed", !voiceOn);
 
         // Stepper status
         const dot1 = document.getElementById("nxStepDot1");
