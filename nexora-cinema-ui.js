@@ -1,17 +1,14 @@
 /**
  * ============================================================================
- * NEXORA.AI — ETAPA 3: PAINEL INTELIGENTE DE 1.218 PROMPTS + TRILHAS + PRÉVIA 9:16
+ * NEXORA.AI — PAINEL INTELIGENTE DE 1.218 PROMPTS + TRILHAS HÍBRIDAS + PRÉVIA 9:16
  * ============================================================================
- * Arquivo separado (plug-and-play) para subir na raiz do repositório,
- * ao lado do index.html e do nexora-saas.js.
- *
- * O que este módulo ativa automaticamente sem alterar o código antigo:
- *  1) Define Google Veo 3.1 como motor padrão de vídeo.
- *  2) Adiciona os 2 campos de Modelo de Vídeo ("Melhor Opção" + Escolha Manual 1..10).
- *  3) Adiciona os 2 campos de Trilha Sonora ("Melhor Opção" + Escolha Manual 7 estilos)
- *     em Modo Híbrido (MP3 Instantâneo 0 créditos + Google Lyria 2 Exclusivo).
- *  4) Exibe o Vídeo Curto de Exemplo 9:16 antes da geração (0 créditos).
- *  5) Mantém memória anti-repetição (localStorage) para nunca repetir o mesmo vídeo.
+ * Versão 2.0 (Design Nota 10 + Correção Definitiva de Trilhas Híbridas)
+ *  - Google Veo 3.1 como padrão seguro (Kling v2.6 Pro destravado disponível).
+ *  - Google Lyria 2 Pro como padrão da trilha sonora (nunca gera vídeo mudo!).
+ *  - Fallback automático inteligente: se escolher MP3 Pronta e o arquivo ainda não
+ *    estiver na pasta tracks/, alterna automaticamente para Google Lyria 2 Pro.
+ *  - Botão de upload próprio MP3/WAV (0 créditos) integrado direto no painel.
+ *  - Memória anti-repetição (localStorage) para nunca repetir o mesmo vídeo.
  * ============================================================================
  */
 (function () {
@@ -22,16 +19,16 @@
   const STORAGE_USED_TRACKS = "nexora_used_track_files_v15";
 
   const FALLBACK_MODELOS = [
-    { id: 1, nome: "1. Gancho de Impacto + Demonstração Extrema", foco: "Retenção imediata e prova visual de resistência", previewVideo: "previews/modelo-01-impacto.mp4", dicaExemplo: "Exemplo ilustrativo do ritmo de impacto e resistência — seu vídeo será gerado com o seu produto." },
-    { id: 2, nome: "2. Problema vs. Solução Visual", foco: "Dor cotidiana e alívio instantâneo com corte seco", previewVideo: "previews/modelo-02-problema-solucao.mp4", dicaExemplo: "Exemplo ilustrativo da virada problema → solução — seu vídeo será gerado com o seu produto." },
-    { id: 3, nome: "3. Unboxing Cinematográfico / Reveal de Luxo", foco: "Iluminação dramática e percepção de alto valor", previewVideo: "previews/modelo-03-unboxing-luxo.mp4", dicaExemplo: "Exemplo ilustrativo do estilo Reveal de Luxo — seu vídeo será gerado com o seu produto." },
-    { id: 4, nome: "4. POV (Ponto de Vista) / Primeira Pessoa", foco: "Imersão real segurando ou usando o produto", previewVideo: "previews/modelo-04-pov.mp4", dicaExemplo: "Exemplo ilustrativo da câmera em primeira pessoa (POV) — seu vídeo será gerado com o seu produto." },
-    { id: 5, nome: "5. Antes e Depois / Transformação Rápida", foco: "Prova visual imediata de resultado", previewVideo: "previews/modelo-05-antes-depois.mp4", dicaExemplo: "Exemplo ilustrativo da transformação Antes e Depois — seu vídeo será gerado com o seu produto." },
-    { id: 6, nome: "6. Vitrine Dinâmica Multi-Ângulos / Hollywood Cut", foco: "Ritmo acelerado de trailer para compra por impulso", previewVideo: "previews/modelo-06-hollywood-cut.mp4", dicaExemplo: "Exemplo ilustrativo do ritmo acelerado Hollywood Cut — seu vídeo será gerado com o seu produto." },
-    { id: 7, nome: "7. UGC Autêntico / Achadinho Real", foco: "Estética natural de comprador real", previewVideo: "previews/modelo-07-ugc-achadinho.mp4", dicaExemplo: "Exemplo ilustrativo do estilo UGC Achadinho Real — seu vídeo será gerado com o seu produto." },
-    { id: 8, nome: "8. ASMR Sensorial / Textura e Detalhe Macro", foco: "Super closes macro hipnóticos em loop", previewVideo: "previews/modelo-08-asmr-macro.mp4", dicaExemplo: "Exemplo ilustrativo do estilo ASMR Sensorial Macro — seu vídeo será gerado com o seu produto." },
-    { id: 9, nome: "9. Comparativo Direto / O Comum vs. O Nosso", foco: "Superioridade técnica sobre genéricos", previewVideo: "previews/modelo-09-comparativo.mp4", dicaExemplo: "Exemplo ilustrativo do Comparativo Direto — seu vídeo será gerado com o seu produto." },
-    { id: 10, nome: "10. Estilo de Vida / Aspiracional em Movimento", foco: "Status, ambiente de alto padrão e desejo", previewVideo: "previews/modelo-10-lifestyle.mp4", dicaExemplo: "Exemplo ilustrativo do estilo Aspiracional em Movimento — seu vídeo será gerado com o seu produto." }
+    { id: 1, nome: "1. Gancho de Impacto + Demonstração Extrema", foco: "Retenção imediata e prova visual de resistência", previewVideo: "previews/modelo-01-impacto.mp4", dicaExemplo: "Ritmo de impacto e prova visual — seu vídeo será gerado 100% com o seu produto." },
+    { id: 2, nome: "2. Problema vs. Solução Visual", foco: "Dor cotidiana e alívio instantâneo com corte seco", previewVideo: "previews/modelo-02-problema-solucao.mp4", dicaExemplo: "Virada visual problema → solução — seu vídeo será gerado com o seu produto." },
+    { id: 3, nome: "3. Unboxing Cinematográfico / Reveal de Luxo", foco: "Iluminação dramática e percepção de alto valor", previewVideo: "previews/modelo-03-unboxing-luxo.mp4", dicaExemplo: "Estilo Reveal de Luxo de alto valor — seu vídeo será gerado com o seu produto." },
+    { id: 4, nome: "4. POV (Ponto de Vista) / Primeira Pessoa", foco: "Imersão real segurando ou usando o produto", previewVideo: "previews/modelo-04-pov.mp4", dicaExemplo: "Câmera em primeira pessoa (POV) — seu vídeo será gerado com o seu produto." },
+    { id: 5, nome: "5. Antes e Depois / Transformação Rápida", foco: "Prova visual imediata de resultado", previewVideo: "previews/modelo-05-antes-depois.mp4", dicaExemplo: "Transformação visual Antes e Depois — seu vídeo será gerado com o seu produto." },
+    { id: 6, nome: "6. Vitrine Dinâmica Multi-Ângulos / Hollywood Cut", foco: "Ritmo acelerado de trailer para compra por impulso", previewVideo: "previews/modelo-06-hollywood-cut.mp4", dicaExemplo: "Ritmo acelerado Hollywood Cut — seu vídeo será gerado 100% com o seu produto." },
+    { id: 7, nome: "7. UGC Autêntico / Achadinho Real", foco: "Estética natural de comprador real", previewVideo: "previews/modelo-07-ugc-achadinho.mp4", dicaExemplo: "Estilo natural Achadinho Real TikTok Shop — seu vídeo será gerado com o seu produto." },
+    { id: 8, nome: "8. ASMR Sensorial / Textura e Detalhe Macro", foco: "Super closes macro hipnóticos em loop", previewVideo: "previews/modelo-08-asmr-macro.mp4", dicaExemplo: "Super closes macro sensoriais — seu vídeo será gerado com o seu produto." },
+    { id: 9, nome: "9. Comparativo Direto / O Comum vs. O Nosso", foco: "Superioridade técnica sobre genéricos", previewVideo: "previews/modelo-09-comparativo.mp4", dicaExemplo: "Comparativo de superioridade visual — seu vídeo será gerado com o seu produto." },
+    { id: 10, nome: "10. Estilo de Vida / Aspiracional em Movimento", foco: "Status, ambiente de alto padrão e desejo", previewVideo: "previews/modelo-10-lifestyle.mp4", dicaExemplo: "Estilo aspiracional em movimento — seu vídeo será gerado com o seu produto." }
   ];
 
   const FALLBACK_TRILHAS = [
@@ -48,14 +45,16 @@
     modelos: FALLBACK_MODELOS,
     trilhas: FALLBACK_TRILHAS,
     totalPrompts: 1218,
-    modoModelo: "melhor_opcao",     // "melhor_opcao" | "manual"
+    modoModelo: "melhor_opcao",
     modeloManualId: "6",
-    modoTrilha: "melhor_opcao",     // "melhor_opcao" | "manual"
+    modoTrilha: "melhor_opcao",
     trilhaManualId: "hollywood_phonk",
-    fonteTrilha: "instant",         // "instant" (MP3 0 créditos) | "lyria2" (IA exclusiva)
+    fonteTrilha: "lyria2", // Padrão seguro: Google Lyria 2 Pro (sempre funciona!)
     ultimaSelecao: null,
     previewAudioEl: null
   };
+
+  window.__NEXORA_CINEMA_STATE__ = state;
 
   function getUsedList(key) {
     try {
@@ -94,20 +93,34 @@
     return state.modoTrilha === "manual" ? state.trilhaManualId : "melhor_opcao";
   }
 
+  function syncLegacyMusicEngine() {
+    const legEng = document.getElementById("nexoraMusicEngine2000");
+    if (!legEng) return;
+    if (state.fonteTrilha === "instant") legEng.value = "tracks";
+    else if (state.fonteTrilha === "fast") legEng.value = "fast";
+    else legEng.value = "lyria2";
+  }
+
+  function notifySummaryUpdate() {
+    if (typeof window.__NEXORA_REFRESH_SUMMARY__ === "function") {
+      try { window.__NEXORA_REFRESH_SUMMARY__(); } catch {}
+    }
+  }
+
   function injectStyles() {
     if (document.getElementById("nxCinemaUiStyles")) return;
     const style = document.createElement("style");
     style.id = "nxCinemaUiStyles";
     style.textContent = `
       .nx-smart-card {
-        background: linear-gradient(155deg, rgba(13, 24, 42, 0.96), rgba(9, 16, 28, 0.98));
-        border: 1.5px solid rgba(34, 197, 94, 0.45);
+        background: #0c1322;
+        border: 1px solid rgba(148, 163, 184, 0.16);
         border-radius: 18px;
-        padding: 18px;
-        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.32);
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 16px;
       }
       .nx-smart-head {
         display: flex;
@@ -115,45 +128,59 @@
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
-        padding-bottom: 10px;
-        border-bottom: 1px solid rgba(34, 197, 94, 0.22);
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
       }
       .nx-smart-title {
         font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-        font-size: 14.5px;
+        font-size: 15px;
         font-weight: 800;
-        color: #ffffff;
+        color: #f8fafc;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 9px;
+      }
+      .nx-step-badge {
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        background: rgba(34, 197, 94, 0.15);
+        border: 1px solid rgba(34, 197, 94, 0.45);
+        color: #4ade80;
+        font-size: 11.5px;
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
       }
       .nx-pill-veo {
         font-size: 10.5px;
         font-weight: 800;
-        padding: 3px 9px;
+        padding: 3px 10px;
         border-radius: 999px;
-        background: rgba(34, 197, 94, 0.16);
-        border: 1px solid rgba(34, 197, 94, 0.5);
+        background: rgba(34, 197, 94, 0.14);
+        border: 1px solid rgba(34, 197, 94, 0.42);
         color: #86efac;
       }
       .nx-two-col {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        gap: 14px;
       }
       .nx-choice-box {
-        background: #0c1424;
-        border: 1px solid #223556;
-        border-radius: 13px;
-        padding: 12px;
+        background: #0f172a;
+        border: 1px solid rgba(148, 163, 184, 0.14);
+        border-radius: 14px;
+        padding: 14px;
         display: flex;
         flex-direction: column;
-        gap: 9px;
+        gap: 10px;
       }
       .nx-choice-box label.nx-lbl {
         font-size: 11px;
         font-weight: 800;
-        color: #93c5fd;
+        color: #cbd5e1;
         text-transform: uppercase;
         letter-spacing: 0.04em;
         margin: 0;
@@ -161,30 +188,35 @@
       .nx-mode-pair {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 7px;
+        gap: 8px;
       }
       .nx-mode-opt {
-        background: #131f36;
-        border: 1.5px solid #283c60;
+        background: #141f35;
+        border: 1.5px solid rgba(148, 163, 184, 0.2);
         color: #cbd5e1;
-        border-radius: 9px;
-        padding: 9px 10px;
-        font-size: 12px;
+        border-radius: 10px;
+        padding: 10px;
+        min-height: 42px;
+        font-size: 12.5px;
         font-weight: 800;
         cursor: pointer;
         text-align: center;
-        transition: 0.15s;
+        transition: all 0.16s ease;
+      }
+      .nx-mode-opt:hover {
+        border-color: rgba(148, 163, 184, 0.45);
+        color: #fff;
       }
       .nx-mode-opt.active {
-        background: rgba(34, 197, 94, 0.16);
+        background: rgba(34, 197, 94, 0.15);
         border-color: #22c55e;
         color: #86efac;
-        box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2);
+        box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.18);
       }
       .nx-sub-hint {
-        font-size: 11px;
+        font-size: 11.5px;
         color: #94a3b8;
-        line-height: 1.4;
+        line-height: 1.45;
       }
       .nx-audio-bar {
         display: flex;
@@ -193,34 +225,43 @@
         flex-wrap: wrap;
       }
       .nx-btn-sm {
-        background: #172744;
-        border: 1px solid #2f4b7c;
+        background: #162238;
+        border: 1px solid rgba(148, 163, 184, 0.24);
         color: #e2e8f0;
-        border-radius: 8px;
-        padding: 7px 11px;
+        border-radius: 9px;
+        padding: 8px 12px;
+        min-height: 36px;
         font-size: 11.5px;
         font-weight: 700;
         cursor: pointer;
-        transition: 0.15s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.15s ease;
       }
-      .nx-btn-sm:hover { border-color: #38bdf8; color: #fff; }
+      .nx-btn-sm:hover { border-color: #22c55e; color: #fff; background: #1a2a44; }
+      .nx-btn-sm.nx-upload-ok {
+        border-color: rgba(34, 197, 94, 0.55);
+        background: rgba(34, 197, 94, 0.14);
+        color: #86efac;
+      }
       .nx-preview-box {
-        background: #070d18;
-        border: 1px solid #24385c;
+        background: #080e1a;
+        border: 1px solid rgba(148, 163, 184, 0.15);
         border-radius: 14px;
-        padding: 13px;
+        padding: 14px;
         display: grid;
-        grid-template-columns: 155px 1fr;
+        grid-template-columns: 122px 1fr;
         gap: 14px;
         align-items: center;
       }
       .nx-preview-video-wrap {
-        width: 155px;
+        width: 122px;
         aspect-ratio: 9 / 16;
-        border-radius: 13px;
+        border-radius: 12px;
         overflow: hidden;
-        background: radial-gradient(circle at 50% 25%, #162847, #060a12);
-        border: 1.5px solid #2d4672;
+        background: radial-gradient(circle at 50% 25%, #15233d, #070b13);
+        border: 1px solid rgba(148, 163, 184, 0.22);
         position: relative;
         display: flex;
         align-items: center;
@@ -233,15 +274,15 @@
         display: block;
       }
       .nx-preview-fallback {
-        padding: 12px;
+        padding: 10px;
         text-align: center;
-        font-size: 11px;
-        color: #93c5fd;
-        line-height: 1.4;
+        font-size: 10.5px;
+        color: #94a3b8;
+        line-height: 1.35;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
+        gap: 5px;
       }
       .nx-preview-info {
         display: flex;
@@ -254,28 +295,31 @@
         align-items: center;
         gap: 6px;
         width: fit-content;
-        font-size: 10.5px;
+        font-size: 10px;
         font-weight: 800;
-        color: #fde047;
-        background: rgba(245, 158, 11, 0.14);
-        border: 1px solid rgba(245, 158, 11, 0.45);
+        color: #86efac;
+        background: rgba(34, 197, 94, 0.12);
+        border: 1px solid rgba(34, 197, 94, 0.35);
         padding: 3px 9px;
         border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
       }
       .nx-preview-title {
         font-size: 13.5px;
         font-weight: 800;
-        color: #ffffff;
+        color: #f8fafc;
       }
       .nx-preview-meta {
-        font-size: 11.5px;
+        font-size: 12px;
         color: #cbd5e1;
         line-height: 1.45;
       }
       .nx-preview-meta strong { color: #86efac; }
       @media (max-width: 720px) {
+        .nx-smart-card { padding: 15px; }
         .nx-two-col, .nx-preview-box { grid-template-columns: 1fr; }
-        .nx-preview-video-wrap { margin: 0 auto; width: 175px; }
+        .nx-preview-video-wrap { margin: 0 auto; width: 144px; }
       }
     `;
     document.head.appendChild(style);
@@ -286,7 +330,7 @@
     if (!ve) return;
     const veoOpt = Array.from(ve.options).find((o) => o.value === "veo");
     if (veoOpt) {
-      veoOpt.textContent = "⭐ Google Veo 3.1 Cinema (Padrão • Igual Gemini)";
+      veoOpt.textContent = "⭐ Google Veo 3.1 Cinema (Padrão)";
       ve.value = "veo";
     }
   }
@@ -296,61 +340,68 @@
       <section class="nx-smart-card" id="nxSmartPromptPanel">
         <div class="nx-smart-head">
           <div class="nx-smart-title">
-            <span>🧠 Motor Cinema 1.218 Prompts + Anti-Repetição</span>
-            <span class="nx-pill-veo">Veo 3.1 Padrão</span>
+            <span class="nx-step-badge">02</span>
+            <span>Estilo do Vídeo &amp; Trilha Sonora</span>
+            <span class="nx-pill-veo">Anti-Repetição Ativo</span>
           </div>
-          <span style="font-size:11px;color:#86efac;font-weight:700;">Zero legendas/voz vazadas • Adaptado p/ qualquer produto</span>
+          <span style="font-size:11.5px;color:#94a3b8;font-weight:600;">1.218 variações exclusivas • Escolha automática ou manual</span>
         </div>
 
         <div class="nx-two-col">
-          <!-- 2 CAMPOS DE MODELO DE VÍDEO -->
+          <!-- MODELO DE VÍDEO -->
           <div class="nx-choice-box">
-            <label class="nx-lbl">🎬 Modelo de Vídeo (10 Modelos de Conversão)</label>
+            <label class="nx-lbl">🎬 Estilo de Comercial (10 Modelos)</label>
             <div class="nx-mode-pair">
               <button type="button" class="nx-mode-opt active" id="nxBtnModeloAuto">⭐ Melhor Opção</button>
-              <button type="button" class="nx-mode-opt" id="nxBtnModeloManual">🎯 Escolher Modelo</button>
+              <button type="button" class="nx-mode-opt" id="nxBtnModeloManual">🎯 Escolher Manual</button>
             </div>
             <select id="nxSelectModeloManual" style="display:none;"></select>
-            <div class="nx-sub-hint" id="nxModeloHint">Modo <strong>Melhor Opção</strong> ativo: a IA analisa seu produto e escolhe automaticamente o modelo mais forte entre os 10.</div>
+            <div class="nx-sub-hint" id="nxModeloHint"><strong>Automático ativo:</strong> a IA escolhe o melhor modelo de conversão para o seu produto sem repetir vídeos.</div>
           </div>
 
-          <!-- 2 CAMPOS DE TRILHA SONORA (MODO HÍBRIDO) -->
+          <!-- TRILHA SONORA UNIFICADA -->
           <div class="nx-choice-box">
-            <label class="nx-lbl">🎵 Trilha Sonora Cinema (Estilo dos Vídeos)</label>
+            <label class="nx-lbl">🎵 Trilha Sonora (7 Estilos de Agência)</label>
             <div class="nx-mode-pair">
               <button type="button" class="nx-mode-opt active" id="nxBtnTrilhaAuto">⭐ Melhor Opção</button>
-              <button type="button" class="nx-mode-opt" id="nxBtnTrilhaManual">🎧 Escolher Trilha</button>
+              <button type="button" class="nx-mode-opt" id="nxBtnTrilhaManual">🎧 Escolher Estilo</button>
             </div>
             <select id="nxSelectTrilhaManual" style="display:none;"></select>
             <div class="nx-audio-bar">
-              <select id="nxSelectFonteTrilha" style="flex:1;min-height:34px;padding:6px 10px;font-size:11.5px;">
-                <option value="instant" selected>⚡ Trilha Pronta Cinema MP3 (0 créditos • Instantânea)</option>
-                <option value="lyria2">🤖 Gerar Trilha Exclusiva IA (Google Lyria 2 • 3 créditos)</option>
+              <select id="nxSelectFonteTrilha" style="flex:1;min-height:36px;padding:6px 10px;font-size:11.5px;">
+                <option value="lyria2" selected>🏆 Trilha Exclusiva IA (Google Lyria 2 • Padrão)</option>
+                <option value="fast">⚡ Trilha IA Rápida (Stable Audio • ~12s)</option>
+                <option value="instant">💿 Biblioteca MP3 Pronta (0 cr • Fallback Lyria 2)</option>
+                <option value="mute">🔇 Sem Música (Somente Voz / Efeitos)</option>
               </select>
-              <button type="button" class="nx-btn-sm" id="nxBtnOuvirTrilha">🔊 Ouvir</button>
             </div>
-            <div class="nx-sub-hint" id="nxTrilhaHint">Trilha selecionada automaticamente no ritmo do seu produto e modelo de vídeo.</div>
+            <div class="nx-audio-bar">
+              <button type="button" class="nx-btn-sm" id="nxBtnOuvirTrilha">🔊 Ouvir Trilha</button>
+              <button type="button" class="nx-btn-sm" id="nxBtnUploadMp3Unified">📁 Subir Meu MP3 (0 cr)</button>
+              <button type="button" class="nx-btn-sm" id="nxBtnClearMp3Unified" style="display:none;color:#fca5a5;">✕ Remover MP3</button>
+            </div>
+            <div class="nx-sub-hint" id="nxTrilhaHint">Volume ajustado automaticamente atrás da voz para o locutor ficar cristalino.</div>
           </div>
         </div>
 
-        <!-- VÍDEO CURTO DE EXEMPLO 9:16 ANTES DA GERAÇÃO (0 CRÉDITOS) -->
+        <!-- PRÉVIA ANTES DA GERAÇÃO (0 CRÉDITOS) -->
         <div class="nx-preview-box" id="nxExamplePreviewBox">
           <div class="nx-preview-video-wrap" id="nxPreviewVideoWrap">
             <video id="nxExampleVideo" muted loop playsinline autoplay></video>
             <div class="nx-preview-fallback" id="nxExampleFallback" style="display:none;">
-              <span style="font-size:24px;">🎬</span>
-              <strong style="color:#fff;">Exemplo 9:16</strong>
-              <span id="nxFallbackText">Suba o vídeo curto em <code>previews/</code> para exibir aqui.</span>
+              <span style="font-size:22px;">🎬</span>
+              <strong style="color:#f8fafc;font-size:11px;">Prévia 9:16</strong>
+              <span id="nxFallbackText">Estilo pronto para gerar com o seu produto.</span>
             </div>
           </div>
           <div class="nx-preview-info">
-            <span class="nx-preview-badge">👁️ EXEMPLO ANTES DE GERAR (0 CRÉDITOS)</span>
-            <div class="nx-preview-title" id="nxPrevModelTitle">Carregando melhor modelo...</div>
-            <div class="nx-preview-meta" id="nxPrevModelDesc">Preencha o produto acima para a IA selecionar o melhor modelo, cenário e trilha sonora.</div>
+            <span class="nx-preview-badge">👁️ Sugestão Inteligente • 0 Créditos</span>
+            <div class="nx-preview-title" id="nxPrevModelTitle">Preparando sugestão ideal...</div>
+            <div class="nx-preview-meta" id="nxPrevModelDesc">Envie a foto e escreva o nome do produto para a IA escolher o melhor modelo, cenário e trilha.</div>
             <div class="nx-preview-meta" id="nxPrevTrackInfo"></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
-              <button type="button" class="nx-btn-sm" id="nxBtnRefreshPreview">🔄 Ver outra variação (Anti-Repetição)</button>
-              <button type="button" class="nx-btn-sm" id="nxBtnMuteExample">🔇 Ativar Som do Exemplo</button>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px;">
+              <button type="button" class="nx-btn-sm" id="nxBtnRefreshPreview">🔄 Sortear outra variação</button>
+              <button type="button" class="nx-btn-sm" id="nxBtnMuteExample" style="display:none;">🔇 Ativar Som</button>
             </div>
           </div>
         </div>
@@ -385,15 +436,24 @@
     const vidEl = document.getElementById("nxExampleVideo");
     const fbEl = document.getElementById("nxExampleFallback");
     const fbTxt = document.getElementById("nxFallbackText");
+    const muteBtn = document.getElementById("nxBtnMuteExample");
 
     if (titleEl) titleEl.textContent = `${selecao.modeloNome} • ${selecao.estiloVisual}`;
     if (descEl) {
       descEl.innerHTML =
-        `${selecao.dicaExemplo || "Exemplo ilustrativo do estilo escolhido — seu vídeo será gerado com o seu produto."}<br/>` +
-        `Categoria detectada: <strong>${selecao.categoriaDetectada}</strong> • Prompt único: <strong>${selecao.idPromptUsado}</strong>`;
+        `${selecao.dicaExemplo || "Estilo selecionado automaticamente — seu vídeo será gerado 100% com o seu produto."}<br/>` +
+        `Categoria: <strong>${selecao.categoriaDetectada}</strong> • Código único: <strong>${selecao.idPromptUsado}</strong>`;
     }
     if (trackEl && selecao.trilhaRecomendada) {
-      trackEl.innerHTML = `🎵 Trilha casada: <strong>${selecao.trilhaRecomendada.trilhaNome}</strong> (${state.fonteTrilha === "instant" ? "MP3 Instantâneo • 0 créditos" : "Google Lyria 2 IA"})`;
+      const fonteLbl =
+        state.fonteTrilha === "mute"
+          ? "Sem música"
+          : state.fonteTrilha === "instant"
+            ? "MP3 Pronta (ou Lyria 2 automático)"
+            : state.fonteTrilha === "fast"
+              ? "IA Rápida (~12s)"
+              : "Google Lyria 2 Pro";
+      trackEl.innerHTML = `🎵 Trilha recomendada: <strong>${selecao.trilhaRecomendada.trilhaNome}</strong> (${fonteLbl})`;
     }
 
     if (vidEl && selecao.previewVideo) {
@@ -402,16 +462,21 @@
         vidEl.setAttribute("data-src", srcPath);
         vidEl.style.display = "block";
         if (fbEl) fbEl.style.display = "none";
+        vidEl.onloadeddata = () => {
+          if (muteBtn) muteBtn.style.display = "inline-flex";
+        };
         vidEl.onerror = () => {
           vidEl.style.display = "none";
+          if (muteBtn) muteBtn.style.display = "none";
           if (fbEl) fbEl.style.display = "flex";
-          if (fbTxt) fbTxt.innerHTML = `Exemplo ilustrativo pronto para <code>${selecao.previewVideo}</code> (subir MP4 curto na pasta <code>previews/</code>).`;
+          if (fbTxt) fbTxt.textContent = "Modelo pronto! Seu vídeo sairá em 9:16 com o seu produto.";
         };
         vidEl.src = srcPath;
         vidEl.load();
         vidEl.play().catch(() => {});
       }
     }
+    notifySummaryUpdate();
   }
 
   let previewDebounce = null;
@@ -435,7 +500,7 @@
           trilhaPreferida: getActiveTrilhaPreferida(),
           idsJaUsados: getUsedList(STORAGE_USED_PROMPTS),
           arquivosTrilhaJaUsados: getUsedList(STORAGE_USED_TRACKS),
-          duracaoSegundos: 6
+          duracaoSegundos: Number(document.getElementById("minDuration")?.value || 10) >= 20 ? 8 : 6
         })
       });
       if (res.ok) {
@@ -460,15 +525,19 @@
     const selFonte = document.getElementById("nxSelectFonteTrilha");
     const hintT = document.getElementById("nxTrilhaHint");
     const btnOuvir = document.getElementById("nxBtnOuvirTrilha");
+    const btnUpMp3 = document.getElementById("nxBtnUploadMp3Unified");
+    const btnClrMp3 = document.getElementById("nxBtnClearMp3Unified");
     const btnRef = document.getElementById("nxBtnRefreshPreview");
     const btnMuteEx = document.getElementById("nxBtnMuteExample");
+    const legacyMp3Inp = document.getElementById("customAudioFile");
+    const legacyMusicSel = document.getElementById("musicPreset");
 
     btnMAuto?.addEventListener("click", () => {
       state.modoModelo = "melhor_opcao";
       btnMAuto.classList.add("active");
       btnMMan?.classList.remove("active");
       if (selM) selM.style.display = "none";
-      if (hintM) hintM.innerHTML = "Modo <strong>Melhor Opção</strong> ativo: a IA analisa seu produto e escolhe automaticamente o modelo mais forte entre os 10.";
+      if (hintM) hintM.innerHTML = "<strong>Automático ativo:</strong> a IA escolhe o melhor modelo de conversão para o seu produto sem repetir vídeos.";
       refreshSmartSelection(true);
     });
 
@@ -477,7 +546,7 @@
       btnMMan.classList.add("active");
       btnMAuto?.classList.remove("active");
       if (selM) selM.style.display = "block";
-      if (hintM) hintM.textContent = "Escolha manual ativa: o vídeo seguirá exatamente o modelo selecionado acima.";
+      if (hintM) hintM.textContent = "Escolha manual ativa: o comercial seguirá exatamente o modelo selecionado acima.";
       refreshSmartSelection(true);
     });
 
@@ -491,7 +560,7 @@
       btnTAuto.classList.add("active");
       btnTMan?.classList.remove("active");
       if (selT) selT.style.display = "none";
-      if (hintT) hintT.textContent = "Trilha selecionada automaticamente no ritmo do seu produto e modelo de vídeo.";
+      if (hintT) hintT.textContent = "Volume ajustado automaticamente atrás da voz para o locutor ficar cristalino.";
       refreshSmartSelection(true);
     });
 
@@ -500,7 +569,7 @@
       btnTMan.classList.add("active");
       btnTAuto?.classList.remove("active");
       if (selT) selT.style.display = "block";
-      if (hintT) hintT.textContent = "Trilha manual ativa: o comercial usará o estilo escolhido acima.";
+      if (hintT) hintT.textContent = "Estilo manual ativo: o vídeo usará a trilha selecionada acima.";
       refreshSmartSelection(true);
     });
 
@@ -511,28 +580,97 @@
 
     selFonte?.addEventListener("change", () => {
       state.fonteTrilha = selFonte.value;
+      syncLegacyMusicEngine();
+      if (legacyMusicSel) {
+        if (state.fonteTrilha === "mute") legacyMusicSel.value = "mute";
+        else if (legacyMusicSel.value === "mute") legacyMusicSel.value = "hollywood_luxury";
+      }
       if (state.ultimaSelecao) updatePreviewUI(state.ultimaSelecao);
+      notifySummaryUpdate();
     });
 
-    btnOuvir?.addEventListener("click", () => {
+    btnUpMp3?.addEventListener("click", () => {
+      legacyMp3Inp?.click();
+    });
+
+    legacyMp3Inp?.addEventListener("change", () => {
+      const f = legacyMp3Inp.files && legacyMp3Inp.files[0];
+      if (f) {
+        if (btnUpMp3) {
+          btnUpMp3.textContent = `✓ MP3: ${f.name.slice(0, 18)}`;
+          btnUpMp3.classList.add("nx-upload-ok");
+        }
+        if (btnClrMp3) btnClrMp3.style.display = "inline-flex";
+        if (hintT) hintT.textContent = `✅ Sua trilha própria "${f.name}" está ativa (0 créditos)!`;
+      }
+      notifySummaryUpdate();
+    });
+
+    btnClrMp3?.addEventListener("click", () => {
+      if (legacyMp3Inp) {
+        legacyMp3Inp.value = "";
+        legacyMp3Inp.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      if (legacyMusicSel && legacyMusicSel.value === "custom") {
+        legacyMusicSel.value = state.fonteTrilha === "mute" ? "mute" : "hollywood_luxury";
+      }
+      if (btnUpMp3) {
+        btnUpMp3.textContent = "📁 Subir Meu MP3 (0 cr)";
+        btnUpMp3.classList.remove("nx-upload-ok");
+      }
+      if (btnClrMp3) btnClrMp3.style.display = "none";
+      if (hintT) hintT.textContent = "Volume ajustado automaticamente atrás da voz para o locutor ficar cristalino.";
+      notifySummaryUpdate();
+    });
+
+    btnOuvir?.addEventListener("click", async () => {
       if (state.previewAudioEl && !state.previewAudioEl.paused) {
         state.previewAudioEl.pause();
-        btnOuvir.textContent = "🔊 Ouvir";
+        btnOuvir.textContent = "🔊 Ouvir Trilha";
         return;
       }
+      // 1) Se o usuário subiu MP3 próprio, toca na hora!
+      const customFile = legacyMp3Inp?.files && legacyMp3Inp.files[0];
+      if (customFile && legacyMusicSel?.value === "custom") {
+        const u = URL.createObjectURL(customFile);
+        if (state.previewAudioEl) { try { state.previewAudioEl.pause(); } catch {} }
+        const audio = new Audio(u);
+        state.previewAudioEl = audio;
+        btnOuvir.textContent = "⏹️ Parar";
+        audio.onended = () => { btnOuvir.textContent = "🔊 Ouvir Trilha"; };
+        audio.play().catch(() => { btnOuvir.textContent = "🔊 Ouvir Trilha"; });
+        return;
+      }
+
+      // 2) Tenta MP3 local na pasta tracks/ se existir
       const mp3 = state.ultimaSelecao?.trilhaRecomendada?.arquivoMp3 ||
         (state.trilhas.find((t) => t.id === state.trilhaManualId)?.arquivoPreviewMp3);
-      if (!mp3) return;
-      if (state.previewAudioEl) { try { state.previewAudioEl.pause(); } catch {} }
-      const audio = new Audio(`./${mp3.replace(/^\/+/, "")}`);
-      state.previewAudioEl = audio;
-      btnOuvir.textContent = "⏹️ Parar";
-      audio.onended = () => { btnOuvir.textContent = "🔊 Ouvir"; };
-      audio.onerror = () => {
-        btnOuvir.textContent = "🔊 Ouvir";
-        if (hintT) hintT.innerHTML = `Suba o arquivo <code>${mp3}</code> na pasta <code>tracks/</code> do GitHub para ouvir na hora.`;
-      };
-      audio.play().catch(() => { btnOuvir.textContent = "🔊 Ouvir"; });
+      if (mp3) {
+        try {
+          const check = await fetch(`./${mp3.replace(/^\/+/, "")}`);
+          const ct = String(check.headers.get("content-type") || "").toLowerCase();
+          if (check.ok && !ct.includes("text/html")) {
+            const blobUrl = URL.createObjectURL(await check.blob());
+            if (state.previewAudioEl) { try { state.previewAudioEl.pause(); } catch {} }
+            const audio = new Audio(blobUrl);
+            state.previewAudioEl = audio;
+            btnOuvir.textContent = "⏹️ Parar";
+            audio.onended = () => { btnOuvir.textContent = "🔊 Ouvir Trilha"; };
+            audio.play().catch(() => { btnOuvir.textContent = "🔊 Ouvir Trilha"; });
+            return;
+          }
+        } catch {}
+      }
+
+      // 3) Se não houver MP3 local na pasta tracks/, dispara o preview real Lyria 2 / Estúdio!
+      const legacyPrevBtn = document.getElementById("btnPreviewMusicSuper");
+      if (legacyPrevBtn) {
+        if (hintT) hintT.textContent = "⏳ Gerando amostra da trilha IA (fica em cache grátis para o vídeo)...";
+        syncLegacyMusicEngine();
+        legacyPrevBtn.click();
+      } else if (hintT) {
+        hintT.textContent = "A trilha será gerada automaticamente com o seu vídeo pelo Google Lyria 2 Pro.";
+      }
     });
 
     btnRef?.addEventListener("click", () => {
@@ -546,16 +684,16 @@
       const v = document.getElementById("nxExampleVideo");
       if (!v) return;
       v.muted = !v.muted;
-      btnMuteEx.textContent = v.muted ? "🔇 Ativar Som do Exemplo" : "🔊 Silenciar Exemplo";
+      btnMuteEx.textContent = v.muted ? "🔇 Ativar Som" : "🔊 Silenciar";
     });
 
-    // Atualiza o exemplo automaticamente quando o usuário digitar o produto
     ["inlineProductName", "productDetailHint", "macroTarget"].forEach((id) => {
       document.getElementById(id)?.addEventListener("input", () => refreshSmartSelection(false));
     });
+    document.getElementById("minDuration")?.addEventListener("change", () => refreshSmartSelection(false));
   }
 
-  // Intercepta chamadas a /api/generate para injetar o Banco de 1.218 Prompts, Veo 3.1, Trilhas Híbridas e Anti-Repetição
+  // Intercepta chamadas a /api/generate com proteção total de fallback nas trilhas
   function installFetchBridge() {
     const origFetch = window.fetch.bind(window);
     window.fetch = async function (input, init) {
@@ -579,8 +717,42 @@
             init = { ...init, body: JSON.stringify(parsed) };
           } else if (act === "submit_music" || act === "music") {
             const prod = getProductInfoFromDOM();
+            let effectiveMusicMode = state.fonteTrilha === "instant" ? "instant" : "lyria2";
+
+            // Se o usuário escolheu MP3 Pronta (instant), verifica antes se o arquivo realmente existe em ./tracks/!
+            if (effectiveMusicMode === "instant" && !parsed.__isMusicPreviewDirect) {
+              const candMp3 = state.ultimaSelecao?.trilhaRecomendada?.arquivoMp3 ||
+                (state.trilhas.find((t) => t.id === state.trilhaManualId)?.arquivoPreviewMp3) || "";
+              let mp3OkUrl = "";
+              if (candMp3) {
+                try {
+                  const testRes = await origFetch(`./${candMp3.replace(/^\/+/, "")}`);
+                  const ct = String(testRes.headers.get("content-type") || "").toLowerCase();
+                  if (testRes.ok && !ct.includes("text/html")) {
+                    mp3OkUrl = URL.createObjectURL(await testRes.blob());
+                  }
+                } catch {}
+              }
+              if (mp3OkUrl) {
+                pushUsedItem(STORAGE_USED_TRACKS, candMp3);
+                return new Response(JSON.stringify({
+                  status: "COMPLETED",
+                  engine: "Biblioteca MP3 Pronta (0 créditos)",
+                  audioUrl: mp3OkUrl,
+                  audio_url: mp3OkUrl,
+                  url: mp3OkUrl,
+                  charged: 0
+                }), { status: 200, headers: { "Content-Type": "application/json" } });
+              }
+              // Pasta tracks/ ainda não enviada -> cai automaticamente para Google Lyria 2 Pro sem nunca deixar o vídeo mudo!
+              effectiveMusicMode = "lyria2";
+            }
+
             parsed.useMusicDatabase = true;
-            parsed.musicMode = state.fonteTrilha; // "instant" ou "lyria2"
+            parsed.musicMode = effectiveMusicMode;
+            if (state.fonteTrilha === "fast" && parsed.engineIndex === 0) {
+              parsed.engineIndex = 1; // Stable Audio rápido (~12s)
+            }
             parsed.nomeProduto = parsed.nomeProduto || prod.nome;
             parsed.detalhesProduto = parsed.detalhesProduto || prod.detalhes;
             parsed.modeloPreferido = getActiveModeloPreferido();
@@ -617,9 +789,9 @@
       vidSection.insertAdjacentHTML("afterbegin", buildPanelHTML());
       populateSelects();
       bindPanelEvents();
+      syncLegacyMusicEngine();
     }
 
-    // Carrega o catálogo oficial direto do servidor (0 créditos)
     try {
       const res = await fetch("/api/generate?action=get_options");
       if (res.ok) {
