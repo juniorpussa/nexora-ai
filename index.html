@@ -117,6 +117,42 @@
       margin-top: 3px;
       font-weight: 500;
     }
+    .brand-left-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brand-shield-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.22), rgba(14, 165, 233, 0.16));
+      border: 1.5px solid rgba(34, 197, 94, 0.62);
+      box-shadow: 0 0 22px rgba(34, 197, 94, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      color: #ecfdf5;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      line-height: 1.25;
+    }
+    .brand-shield-pill .shield-tag {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #031208;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .brand-shield-pill .shield-txt {
+      color: #dcfce7;
+      font-weight: 800;
+    }
 
     .nav-right {
       display: flex;
@@ -868,6 +904,8 @@
       .navbar-inner { padding: 10px 14px; }
       .brand-name { font-size: 17.5px; }
       .brand-sub { display: none; }
+      .brand-left-group { gap: 8px; width: 100%; }
+      .brand-shield-pill { font-size: 10.5px; padding: 6px 10px; width: 100%; justify-content: center; text-align: center; flex-wrap: wrap; }
       .credits-pill { font-size: 10.5px; padding: 5px 10px; }
       .shell { padding: 0 12px; margin-top: 12px; }
       .card { padding: 14px; border-radius: 14px; }
@@ -904,22 +942,28 @@
   <!-- STICKY BRAND NAVBAR -->
   <header class="navbar">
     <div class="navbar-inner">
-      <div class="brand-wrap">
-        <svg class="brand-logo" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="NEXORA.AI Logo">
-          <defs>
-            <linearGradient id="nexoraGrad" x1="4" y1="4" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#22C55E" />
-              <stop offset="55%" stop-color="#10B981" />
-              <stop offset="100%" stop-color="#38BDF8" />
-            </linearGradient>
-          </defs>
-          <rect x="2" y="2" width="40" height="40" rx="12" fill="#0B1324" stroke="url(#nexoraGrad)" stroke-width="2.2" />
-          <path d="M13 30V14L23.5 26.5V14" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M27.5 16.5L34.5 22L27.5 27.5V16.5Z" fill="url(#nexoraGrad)" />
-        </svg>
-        <div class="brand-text">
-          <div class="brand-name">NEXORA<span class="dot-ai">.AI</span> <span class="brand-tag">PRO v12.8</span></div>
-          <div class="brand-sub">Estúdio Cinema IA para E-commerce &amp; TikTok Shop</div>
+      <div class="brand-left-group">
+        <div class="brand-wrap">
+          <svg class="brand-logo" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="NEXORA.AI Logo">
+            <defs>
+              <linearGradient id="nexoraGrad" x1="4" y1="4" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#22C55E" />
+                <stop offset="55%" stop-color="#10B981" />
+                <stop offset="100%" stop-color="#38BDF8" />
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="40" height="40" rx="12" fill="#0B1324" stroke="url(#nexoraGrad)" stroke-width="2.2" />
+            <path d="M13 30V14L23.5 26.5V14" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M27.5 16.5L34.5 22L27.5 27.5V16.5Z" fill="url(#nexoraGrad)" />
+          </svg>
+          <div class="brand-text">
+            <div class="brand-name">NEXORA<span class="dot-ai">.AI</span> <span class="brand-tag">PRO v15</span></div>
+            <div class="brand-sub">Estúdio Cinema IA para E-commerce &amp; TikTok Shop</div>
+          </div>
+        </div>
+        <div class="brand-shield-pill" title="Rotação anti-repetição, 9:16 limpo na zona segura e proteção para contas TikTok Shop">
+          <span class="shield-tag">🛡️ Único no Brasil</span>
+          <span class="shield-txt">Blindagem Anti-Bloqueio e Anti-Punição para TikTok Shop</span>
         </div>
       </div>
 
@@ -1079,16 +1123,17 @@
             }
             .angle3-thumb {
               width: 100%;
+              max-width: 128px;
               aspect-ratio: 9 / 16;
-              max-height: 175px;
-              border-radius: 8px;
+              margin: 0 auto;
+              border-radius: 9px;
               display: flex;
               align-items: center;
               justify-content: center;
               overflow: hidden;
               font-size: 10.5px;
               color: #64748b;
-              padding: 4px;
+              padding: 3px;
             }
             .angle3-thumb img {
               width: 100%;
@@ -1161,8 +1206,8 @@
                 <div>
                   <label for="maxWaitLimit">Limite Máximo de Geração</label>
                   <select id="maxWaitLimit">
-                    <option value="600" selected>🔥 10m00s (100% Cenas 3D Cinema)</option>
-                    <option value="270">⚡ 4m30s (Rápido)</option>
+                    <option value="270" selected>⚡ 4m30s (Padrão Rápido • 100% 3D)</option>
+                    <option value="600">🔥 10m00s (Estendido)</option>
                     <option value="240">⚡ 4m00s</option>
                     <option value="195">🚀 Rápido 3m15s</option>
                   </select>
@@ -4620,12 +4665,13 @@
       // Monta todos os <video> num container oculto no DOM p/ o Chrome NUNCA congelar a decodificação!
       const hiddenVidBox = document.createElement("div");
       hiddenVidBox.style.cssText = "position:fixed;left:-9999px;top:0;width:4px;height:4px;opacity:0.001;overflow:hidden;pointer-events:none;";
+      const initialSpeedRate = editMode === "cinema_clean" ? 2.0 : 2.95;
       loaded.forEach((x) => {
         if (x.type === "video") {
           x.el.loop = true;
           x.el.muted = true;
           x.el.playsInline = true;
-          try { x.el.playbackRate = 1.24; } catch {}
+          try { x.el.playbackRate = initialSpeedRate; } catch {}
           hiddenVidBox.appendChild(x.el);
         }
       });
@@ -4659,7 +4705,8 @@
           vSrc.buffer = voiceDecodedForSubs;
           vSrc.playbackRate.value = 1.0;
           const vg = audioCtx.createGain();
-          vg.gain.setValueAtTime(1.18, startAt);
+          // Equilíbrio broadcast (1.04) para a voz não esmagar a batida no compressor
+          vg.gain.setValueAtTime(1.04, startAt);
           vSrc.connect(vg); vg.connect(comp);
           vSrc.start(startAt, voiceTrimForSubs);
           vSrc.stop(startAt + totalSec + 0.20);
@@ -4671,9 +4718,10 @@
           sSrc.loop = true;
           const mg = audioCtx.createGain();
 
-          const openVol = voiceMixedOk ? 0.58 : 0.78;
-          const duckVol = 0.32;
-          mg.gain.setValueAtTime(0.18, startAt);
+          // Trilha mais alta e pesada (0.44 atrás da voz • 0.76 nos cortes / 0.86 sem voz)
+          const openVol = voiceMixedOk ? 0.76 : 0.86;
+          const duckVol = 0.44;
+          mg.gain.setValueAtTime(0.24, startAt);
           mg.gain.linearRampToValueAtTime(openVol, startAt + 0.04);
 
           const fadeAt = startAt + Math.max(0.8, totalSec - 0.28);
@@ -4691,11 +4739,11 @@
             }
             const endSpeechT = startAt + voiceEnvelope.length * voiceEnvStepSec;
             if (endSpeechT < fadeAt - 0.06) {
-              mg.gain.setTargetAtTime(Math.min(0.64, openVol + 0.06), endSpeechT, 0.05);
+              mg.gain.setTargetAtTime(Math.min(0.84, openVol + 0.06), endSpeechT, 0.05);
             }
           }
 
-          mg.gain.setValueAtTime(voiceMixedOk ? 0.54 : openVol, fadeAt);
+          mg.gain.setValueAtTime(voiceMixedOk ? 0.72 : openVol, fadeAt);
           mg.gain.linearRampToValueAtTime(0.01, startAt + totalSec + 0.10);
           sSrc.connect(mg); mg.connect(comp);
           sSrc.start(startAt, dropOffset);
@@ -4706,22 +4754,20 @@
           const nBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
           const d = nBuf.getChannelData(0);
           for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-          // WHOOSH + SUB-IMPACT audíveis e limpos em TODOS os cortes!
-          const sfxScale = voiceMixedOk ? (fxOn ? 0.85 : 0.55) : (fxOn ? 1.0 : 0.72);
-          scheduleSoftSubHit(audioCtx, comp, startAt, 0.92 * sfxScale);
+          // WHOOSH + SUB-IMPACT cortando limpos e audíveis em TODAS as viradas!
+          const sfxScale = voiceMixedOk ? (fxOn ? 1.05 : 0.72) : (fxOn ? 1.15 : 0.88);
+          scheduleSoftSubHit(audioCtx, comp, startAt, 0.96 * sfxScale);
           const lastIdx = segments.length - 1;
           for (let idx = 1; idx < segments.length; idx++) {
             const cutT = startAt + segments[idx].start;
             if (idx === lastIdx && lastIdx >= 2) {
-              scheduleCinemaRiser(audioCtx, comp, nBuf, cutT, 0.55, 0.90 * sfxScale);
-              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, 2, 1.0 * sfxScale);
-              scheduleSoftSubHit(audioCtx, comp, cutT, 0.90 * sfxScale);
+              scheduleCinemaRiser(audioCtx, comp, nBuf, cutT, 0.55, 0.96 * sfxScale);
+              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, 2, 1.08 * sfxScale);
+              scheduleSoftSubHit(audioCtx, comp, cutT, 0.96 * sfxScale);
             } else {
               const variant = idx % 3;
-              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, variant, 0.92 * sfxScale);
-              if (idx % 2 === 1) {
-                scheduleSoftSubHit(audioCtx, comp, cutT, 0.68 * sfxScale);
-              }
+              scheduleSubtleWhoosh(audioCtx, comp, nBuf, cutT, variant, 1.02 * sfxScale);
+              scheduleSoftSubHit(audioCtx, comp, cutT, (idx % 2 === 1 ? 0.80 : 0.56) * sfxScale);
             }
           }
         }
@@ -4731,6 +4777,24 @@
       const fillEl = document.getElementById("renderProgressFill");
       const secEl = document.getElementById("renderProgressSec");
 
+      const isBlockbuster = editMode === "cinema_blockbuster";
+      const isCleanMode = editMode === "cinema_clean";
+      const computeSpeedRampRate = (segDur, clipDur, progress) => {
+        const activeSpan = Math.max(2.2, (Number.isFinite(clipDur) && clipDur > 1.0 ? clipDur : 5.0) - 0.36);
+        const idealBase = activeSpan / Math.max(0.65, segDur || 1.35);
+        if (isCleanMode) {
+          const baseClean = Math.min(2.35, Math.max(1.75, idealBase * 0.85));
+          return Number(Math.min(2.45, Math.max(1.65, baseClean + (progress < 0.25 || progress > 0.78 ? 0.22 : -0.10))).toFixed(2));
+        }
+        // Curva Speed-Ramp Cinema (2.4x–3.2x): entrada explosiva -> giro 3D nítido no meio -> chicote final sem congelar
+        const base = Math.min(2.92, Math.max(2.58, idealBase));
+        let factor = 1.0;
+        if (progress < 0.24) factor = 1.12;
+        else if (progress > 0.74) factor = 1.14;
+        else factor = 0.90;
+        return Number(Math.min(3.2, Math.max(2.4, base * factor)).toFixed(2));
+      };
+
       let currentSegIdx = 0;
       const activateSegment = (sIdx) => {
         if (currentSegIdx === sIdx) return;
@@ -4738,30 +4802,29 @@
           loaded[segments[currentSegIdx].clipIdx].el.pause();
         }
         currentSegIdx = sIdx;
-        const nextItem = loaded[segments[sIdx].clipIdx];
+        const segNow = segments[sIdx];
+        const nextItem = loaded[segNow.clipIdx];
         if (nextItem.type === "video") {
           try {
-            nextItem.el.playbackRate = 1.24;
             const vDur = nextItem.el.duration || 5;
-            const entryT = vDur > 1.5 ? 0.25 : 0.08;
-            if (nextItem.el.currentTime < 0.20 || nextItem.el.currentTime >= Math.max(0.5, vDur - 0.8)) {
+            nextItem.el.playbackRate = computeSpeedRampRate(segNow.dur, vDur, 0.05);
+            const entryT = vDur > 1.8 ? 0.18 : 0.05;
+            if (nextItem.el.currentTime < 0.12 || nextItem.el.currentTime >= Math.max(0.5, vDur - 0.5)) {
               nextItem.el.currentTime = entryT;
             }
           } catch {}
           nextItem.el.play().catch(() => {});
         }
-        // Pré-aquece o próximo corte já no pico de velocidade 3D (0.25s) para troca instantânea!
+        // Pré-aquece o próximo corte já no início da curva Speed-Ramp (0.18s) para troca instantânea!
         const upcoming = segments[sIdx + 1] ? loaded[segments[sIdx + 1].clipIdx] : null;
         if (upcoming && upcoming.type === "video" && upcoming.el !== nextItem.el) {
           try {
             const uDur = upcoming.el.duration || 5;
-            upcoming.el.currentTime = uDur > 1.5 ? 0.25 : 0.08;
+            upcoming.el.currentTime = uDur > 1.8 ? 0.18 : 0.05;
           } catch {}
         }
       };
 
-      const isBlockbuster = editMode === "cinema_blockbuster";
-      const isCleanMode = editMode === "cinema_clean";
       // ZERO ctx.filter na CPU -> Chrome mantém 30 FPS cravados em GPU e imagem cristalina 15 Mbps!
       const renderFilter = "none";
       const easeOutQuart = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 4);
@@ -4802,77 +4865,81 @@
           const item = loaded[seg.clipIdx];
           const mediaEl = item.el;
 
-          // Garante movimento contínuo — NUNCA congela no fim da cena!
+          // SPEED-RAMP REAL EM TEMPO REAL (2.4x–3.2x) + LOOP CONTÍNUO SEM NUNCA CONGELAR NO FINAL!
           if (item.type === "video") {
-            if (mediaEl.paused && !mediaEl.ended) mediaEl.play().catch(() => {});
             const vDur = mediaEl.duration || 5;
-            if (mediaEl.ended || (mediaEl.currentTime || 0) >= Math.max(0.5, vDur - 0.15)) {
-              try { mediaEl.currentTime = vDur > 1.5 ? 0.25 : 0.08; mediaEl.play().catch(() => {}); } catch {}
+            const targetRate = computeSpeedRampRate(seg.dur, vDur, p);
+            if (Math.abs((mediaEl.playbackRate || 1) - targetRate) > 0.14) {
+              try { mediaEl.playbackRate = targetRate; } catch {}
+            }
+            if (mediaEl.paused && !mediaEl.ended) mediaEl.play().catch(() => {});
+            if (mediaEl.ended || (mediaEl.currentTime || 0) >= Math.max(0.6, vDur - 0.22)) {
+              try { mediaEl.currentTime = vDur > 1.8 ? 0.18 : 0.05; mediaEl.play().catch(() => {}); } catch {}
             }
           }
 
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = "high";
 
-          // A) ZOOMS DINÂMICOS COM VELOCIDADE REAL NA APROXIMAÇÃO (PASSAGEM ÚNICA CRISTALINA — ZERO BORRÃO!)
+          // A) ZOOMS AGRESSIVOS NO RITMO DA BATIDA (1.00 -> 1.48 CRASH-ZOOM, APROXIMAÇÃO RÁPIDA E RECUO EXPLOSIVO)
           if (item.type !== "video" || mediaEl.readyState >= 2) {
             const smoothCurve = easeInOutQuad(p);
             const fastIn = easeOutCubic(p);
             const rushIn = easeOutQuart(p);
             const dir = (sIdx % 2 === 0 ? 1 : -1) * dna.flipDir;
-            const optBoost = seg.isImg ? 1.18 : 1.0;
-            let scale = 1.03, panX = 0, panY = 0, angle = 0;
+            const optBoost = seg.isImg ? 1.12 : 1.0;
+            let scale = 1.04, panX = 0, panY = 0, angle = 0;
 
             if (isCleanMode) {
-              scale = 1.02 + smoothCurve * 0.14 * optBoost;
-              panX = dir * Math.sin(p * Math.PI) * 12;
-              panY = (0.5 - smoothCurve) * 8;
+              scale = 1.02 + smoothCurve * 0.20 * optBoost;
+              panX = dir * Math.sin(p * Math.PI) * 16;
+              panY = (0.5 - smoothCurve) * 10;
             } else {
               const mv = sIdx % 7;
               if (mv === 0) {
-                // Corte 1: CRASH-ZOOM de alta velocidade entrando rápido (1.00 -> 1.24)
-                scale = 1.00 + rushIn * 0.24 * optBoost;
-                panX = -16 * Math.sin(p * Math.PI);
-                panY = (0.38 - smoothCurve) * 14;
+                // Corte 1: CRASH-ZOOM explosivo de alta velocidade (1.00 -> 1.48)
+                scale = 1.00 + rushIn * 0.48 * optBoost;
+                panX = -24 * Math.sin(p * Math.PI);
+                panY = (0.38 - smoothCurve) * 20;
               } else if (mv === 1) {
-                // Corte 2: MACRO subindo DE BAIXO PARA CIMA + aproximação (1.03 -> 1.23)
-                scale = 1.03 + fastIn * 0.20 * optBoost;
-                panX = (smoothCurve - 0.5) * 32;
-                panY = (0.55 - smoothCurve) * 26;
+                // Corte 2: MACRO subindo DE BAIXO PARA CIMA + aproximação agressiva (1.04 -> 1.44)
+                scale = 1.04 + fastIn * 0.40 * optBoost;
+                panX = (smoothCurve - 0.5) * 44;
+                panY = (0.58 - smoothCurve) * 34;
               } else if (mv === 2) {
-                // Corte 3: LIFESTYLE USO REAL + punch-in dinâmico (1.02 -> 1.18)
-                scale = 1.02 + fastIn * 0.16 * optBoost;
-                panX = (0.5 - smoothCurve) * 26;
-                panY = (smoothCurve - 0.5) * 10;
+                // Corte 3: LIFESTYLE / AÇÃO + punch-in rápido no ritmo (1.02 -> 1.38)
+                scale = 1.02 + rushIn * 0.36 * optBoost;
+                panX = (0.5 - smoothCurve) * 38;
+                panY = (smoothCurve - 0.5) * 16;
               } else if (mv === 3) {
-                // Corte 4: GIRO 180° TÚNEL ENERGIA + pulso de velocidade (1.02 -> 1.22 -> 1.08)
-                scale = 1.02 + Math.sin(p * Math.PI) * 0.20 * optBoost;
-                panX = (smoothCurve - 0.5) * 38;
-                angle = -0.011 * Math.sin(p * Math.PI);
+                // Corte 4: GIRO 180° + pulso agressivo de velocidade (1.04 -> 1.44 -> 1.10)
+                scale = 1.04 + Math.sin(p * Math.PI) * 0.40 * optBoost;
+                panX = (smoothCurve - 0.5) * 52;
+                angle = -0.015 * Math.sin(p * Math.PI);
               } else if (mv === 4) {
-                // Corte 5: MERGULHO DE CIMA PARA BAIXO (Top-Down) + aproximação veloz (1.01 -> 1.23)
-                scale = 1.01 + rushIn * 0.22 * optBoost;
-                panX = (0.5 - smoothCurve) * 30;
-                panY = (smoothCurve - 0.45) * 26;
+                // Corte 5: MERGULHO TOP-DOWN + aproximação veloz (1.02 -> 1.46)
+                scale = 1.02 + rushIn * 0.44 * optBoost;
+                panX = (0.5 - smoothCurve) * 42;
+                panY = (smoothCurve - 0.44) * 34;
               } else if (mv === 5) {
-                // Corte 6: PULL-OUT explosivo revelando cenário + virada esquerda→direita (1.24 -> 1.02)
-                scale = 1.24 - rushIn * 0.22 * optBoost;
-                panX = (smoothCurve - 0.5) * 38;
-                angle = 0.010 * Math.sin(p * Math.PI);
+                // Corte 6: RECUO EXPLOSIVO (Pull-Out 1.48 -> 1.02) revelando todo o universo 3D
+                scale = 1.48 - rushIn * 0.46 * optBoost;
+                panX = (smoothCurve - 0.5) * 50;
+                angle = 0.014 * Math.sin(p * Math.PI);
               } else {
-                // Corte 7: HERO FRONTAL 0° POWER ZOOM-IN firme no centro superior (1.01 -> 1.19)
-                scale = 1.01 + smoothCurve * 0.18 * optBoost;
-                panX = dir * (1 - smoothCurve) * 8;
-                panY = (0.5 - smoothCurve) * 8;
+                // Corte 7: HERO FRONTAL 0° POWER ZOOM-IN firme no centro superior (1.02 -> 1.38)
+                scale = 1.02 + fastIn * 0.36 * optBoost;
+                panX = dir * (1 - smoothCurve) * 12;
+                panY = (0.5 - smoothCurve) * 12;
               }
 
-              // Micro-punch óptico limpo sincronizado no exato corte (0.14s) — sensação de velocidade sem borrão!
-              if (fxOn && sIdx > 0 && cEl < 0.14) {
-                const cp = 1 - easeOutQuart(cEl / 0.14);
-                scale += cp * 0.068;
+              // Micro-punch óptico forte sincronizado no exato corte (0.15s) + whoosh!
+              if (fxOn && sIdx > 0 && cEl < 0.15) {
+                const cp = 1 - easeOutQuart(cEl / 0.15);
+                scale += cp * 0.11;
               }
-              const maxPanX = canvas.width * 0.065;
-              const maxPanY = canvas.height * 0.055;
+              const maxPanX = canvas.width * 0.088;
+              const maxPanY = canvas.height * 0.072;
               panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
               panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
             }
@@ -5889,15 +5956,17 @@
       throw new Error(lastErr);
     }
 
-    async function generateAngleCutout(baseImageUrl, anglePrompt, slotIdx, signal) {
+    async function generateAngleCutout(baseImageOrList, anglePrompt, slotIdx, signal) {
       setAngleSlotState(slotIdx, "Gerando 9:16...", false);
+      const refs = Array.isArray(baseImageOrList) ? baseImageOrList.filter(Boolean) : [baseImageOrList].filter(Boolean);
       const qa = await callApi({
         task: "generate_angle",
         aspectRatio: "9:16",
         aspect_ratio: "9:16",
-        imageUrl: baseImageUrl,
+        imageUrl: refs[0] || "",
+        ...(refs.length > 1 ? { referenceImages: refs } : {}),
         imagePrompt: anglePrompt
-      }, 32000, signal);
+      }, 34000, signal);
       const ra = await pollFalJob(qa, (st) => {
         setAngleSlotState(slotIdx, `3D 9:16: ${st}`, false);
       }, signal);
@@ -5906,7 +5975,7 @@
       const pngUrl = await removeBgFromUrl(ra.imageUrl, (st) => {
         setAngleSlotState(slotIdx, `PNG: ${st}`, false);
       }, signal);
-      return pngUrl || ra.imageUrl;
+      return { pngUrl: pngUrl || ra.imageUrl, studioUrl: ra.imageUrl };
     }
 
     async function describeProductAuto(imageUrl, signal) {
@@ -5964,12 +6033,12 @@
         const blob1 = await fetchMediaBlob(angle1Url);
         const dataUrl1 = await blobToDataUrl(blob1);
 
-        // Normaliza o Frontal 0° em canvas 9:16 transparente (720x1280) e cria a base estúdio branca 9:16 (720x1280)
+        // Normaliza o Frontal 0° em canvas 9:16 transparente (720x1280) com PRODUTO AMPLIADO na base branca 9:16
         const { transparent916DataUrl, whiteStudioBase916 } = await new Promise((resolve) => {
           const im = new Image();
           im.onload = () => {
             const W = 720, H = 1280;
-            const sc = Math.min(480 / (im.naturalWidth || 720), 680 / (im.naturalHeight || 720));
+            const sc = Math.min(620 / (im.naturalWidth || 720), 980 / (im.naturalHeight || 720));
             const dw = Math.round((im.naturalWidth || 720) * sc);
             const dh = Math.round((im.naturalHeight || 720) * sc);
             const dx = Math.round((W - dw) / 2);
@@ -5986,7 +6055,7 @@
             g.fillStyle = "#FFFFFF";
             g.fillRect(0, 0, W, H);
             g.drawImage(im, dx, dy, dw, dh);
-            const wUrl = cW.toDataURL("image/jpeg", 0.92);
+            const wUrl = cW.toDataURL("image/jpeg", 0.94);
 
             resolve({ transparent916DataUrl: tUrl, whiteStudioBase916: wUrl });
           };
@@ -5998,55 +6067,76 @@
         setUploadedProduct(transparent916DataUrl, b64_1, "image/png", true);
         setAngleSlotState(0, `<img src="${transparent916DataUrl}" alt="1. Frontal Hero 0° (9:16)" />`, true);
 
-        if (angles3Status) angles3Status.textContent = "Passo 2/2: Gerando 5 novos ângulos 3D em 9:16 (paralelo) + Descrição IA...";
+        if (angles3Status) angles3Status.textContent = "Passo 2/3: Gerando Laterais, Topo 70° e Base Inferior 9:16 + Descrição IA...";
 
         const commonTail =
-          `Keep the exact same product model, colors, materials, markings and proportions from the reference photo, zero invented logos, zero hands, zero text, centered alone with generous clean margin in a VERTICAL 9:16 pure solid white #FFFFFF studio background with crisp even commercial softbox lighting.`;
+          `Keep the exact same product model, colors, materials, markings and proportions from the reference photo, zero invented logos, zero hands, zero text, filling 75% of the frame centered alone in a VERTICAL 9:16 pure solid white #FFFFFF studio background with crisp even commercial softbox lighting.`;
 
-        const angleSpecs = [
+        const phase1Specs = [
           {
             slot: 1, key: "right_45", label: "2. Lado Direito (45°/90°)",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE COMPLETELY (DO NOT REPEAT FRONT POSE). Rotate the camera 65 degrees to shoot the exact product (${orientShort}) turned boldly toward the RIGHT side of the vertical 9:16 frame, clearly revealing its right lateral flank, 3D depth and side silhouette. ${commonTail}`
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — MANDATORY 70-DEGREE RIGHT SIDE PROFILE (NEVER REPEAT FRONT VIEW). Physically turn the exact product (${orientShort}) 70 degrees clockwise so its RIGHT lateral flank faces the camera directly, clearly showing side thickness, side buttons/hinges and full right silhouette. ${commonTail}`
           },
           {
             slot: 2, key: "left_60", label: "3. Lado Esquerdo (60°/90°)",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE COMPLETELY (DO NOT REPEAT FRONT POSE). Rotate the camera 75 degrees to the opposite side to shoot the exact product (${orientShort}) turned sharply toward the LEFT side of the vertical 9:16 frame, clearly exposing its full left side profile, thickness and lateral contours. ${commonTail}`
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — MANDATORY 80-DEGREE LEFT SIDE PROFILE (NEVER REPEAT FRONT VIEW). Physically turn the exact product (${orientShort}) 80 degrees counter-clockwise to the opposite side so its LEFT lateral flank faces the camera directly, clearly exposing the full left side contour and 3D depth. ${commonTail}`
           },
           {
             slot: 3, key: "top_down", label: "4. De Cima p/ Baixo (60°)",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE COMPLETELY (DO NOT REPEAT FRONT POSE). Elevate the camera steeply 60 degrees overhead looking DOWN from above onto the exact product (${orientShort}) angled diagonally toward the right, clearly showing the entire top surface, upper bevels and 3D depth from above. ${commonTail}`
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — STEEP 75-DEGREE OVERHEAD BIRD'S-EYE TOP-DOWN SHOT (STRICTLY FORBIDDEN TO SHOW EYE-LEVEL FRONT VIEW). Position the camera directly above looking sharply DOWNWARD at 75 degrees onto the TOP roof/crown of the exact product (${orientShort}) angled diagonally, with the top surface dominating the frame and minimal front wall visible. ${commonTail}`
           },
           {
             slot: 4, key: "bottom_up", label: "5. De Baixo p/ Cima",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE COMPLETELY (DO NOT REPEAT FRONT POSE). Position the camera at a dramatic low worm's-eye angle looking UPWARD from below at the exact product (${orientShort}) turned slightly left, giving a heroic imposing silhouette and revealing bottom edges, underside contours and precision details. ${commonTail}`
-          },
-          {
-            slot: 5, key: "back_180", label: "6. Giro 180° / Traseira 3/4",
-            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CHANGE CAMERA ANGLE 180 DEGREES (DO NOT REPEAT FRONT POSE). Orbit the camera 150 to 180 degrees around behind the exact product (${orientShort}) to reveal its rear three-quarter and opposite back architecture, back strap/back finish and opposite side depth. ${commonTail}`
+            prompt: `VERTICAL 9:16 STUDIO TURNAROUND — EXTREME LOW WORM'S-EYE UPWARD HERO SHOT (STRICTLY FORBIDDEN TO SHOW EYE-LEVEL FRONT VIEW). Place the camera very low beneath the product looking sharply UPWARD at 40 degrees toward the underside and lower chin of the exact product (${orientShort}) tilted dramatically in 3/4 heroic perspective, towering upward in the 9:16 frame. ${commonTail}`
           }
         ];
 
-        const settledAll = await Promise.allSettled([
-          ...angleSpecs.map((sp) => generateAngleCutout(whiteStudioBase916, sp.prompt, sp.slot, sig)),
+        setAngleSlotState(5, "Aguardando ponte lateral...", false);
+
+        const settledPhase1 = await Promise.allSettled([
+          ...phase1Specs.map((sp) => generateAngleCutout(whiteStudioBase916, sp.prompt, sp.slot, sig)),
           describeProductAuto(angle1Url, sig)
         ]);
 
         const finalKit = [{ key: "frontal", angle: "frontal", url: angle1Url, dataUrl: transparent916DataUrl }];
-        for (let idx = 0; idx < angleSpecs.length; idx++) {
-          const sp = angleSpecs[idx];
-          const res = settledAll[idx];
-          if (res.status === "fulfilled" && res.value) {
-            setAngleSlotState(sp.slot, `<img src="${res.value}" alt="${sp.label}" />`, true);
-            finalKit.push({ key: sp.key, angle: sp.key, url: res.value });
+        let sideBridgeUrl = "";
+        for (let idx = 0; idx < phase1Specs.length; idx++) {
+          const sp = phase1Specs[idx];
+          const res = settledPhase1[idx];
+          if (res.status === "fulfilled" && res.value && res.value.pngUrl) {
+            setAngleSlotState(sp.slot, `<img src="${res.value.pngUrl}" alt="${sp.label}" />`, true);
+            finalKit.push({ key: sp.key, angle: sp.key, url: res.value.pngUrl });
+            if (!sideBridgeUrl && (sp.key === "right_45" || sp.key === "left_60")) {
+              sideBridgeUrl = res.value.studioUrl || res.value.pngUrl;
+            }
           } else {
             setAngleSlotState(sp.slot, "Fallback base", false);
           }
         }
 
+        // Passo 3/3: Usa o perfil lateral recém-gerado como PONTE para destravar o Giro 180° Traseiro sem repetir a frente!
+        if (angles3Status) angles3Status.textContent = "Passo 3/3: Gerando Giro 180° Traseiro usando perfil lateral como ponte...";
+        const backSpec = {
+          slot: 5, key: "back_180", label: "6. Giro 180° / Traseira 3/4",
+          prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CONTINUE ROTATING 110 DEGREES FURTHER FROM THE SIDE PROFILE TO SHOW THE REAR BACK VIEW (160°–180° BEHIND THE PRODUCT, ZERO FRONT FACE VISIBLE). Starting from the side-profile reference image, orbit completely behind the exact product (${orientShort}) so the camera sees its BACK side, rear shell/strap/hinge architecture and opposite rear three-quarter contour cleanly. ${commonTail}`
+        };
+        try {
+          const bridgeInputs = sideBridgeUrl ? [sideBridgeUrl, whiteStudioBase916] : [whiteStudioBase916];
+          const backRes = await generateAngleCutout(bridgeInputs, backSpec.prompt, backSpec.slot, sig);
+          if (backRes && backRes.pngUrl) {
+            setAngleSlotState(backSpec.slot, `<img src="${backRes.pngUrl}" alt="${backSpec.label}" />`, true);
+            finalKit.push({ key: backSpec.key, angle: backSpec.key, url: backRes.pngUrl });
+          } else {
+            setAngleSlotState(backSpec.slot, "Fallback base", false);
+          }
+        } catch {
+          setAngleSlotState(backSpec.slot, "Fallback base", false);
+        }
+
         window.nexora3Angles = finalKit;
         window.nexora6Angles = finalKit;
 
-        const descRes = settledAll[angleSpecs.length];
+        const descRes = settledPhase1[phase1Specs.length];
         let descNote = "";
         if (descRes && descRes.status === "fulfilled" && descRes.value) {
           if (descRes.value.desc && productDetailHint) {
@@ -6916,20 +7006,20 @@
       }
 
       const SUPER_CLIP_CHOREO = [
-        // 0: High-velocity Crash-Zoom + Right-to-Front 3D Orbit + Living Background
-        "High-velocity FPV cinema crash-zoom rushing boldly forward toward the product while orbiting smoothly around its RIGHT flank toward front-center in strong 3D parallax, as glowing sparks, swirling volumetric mist and bright directional light streaks blast nonstop at high speed across 100% of the background.",
-        // 1: Low-to-High Upward Crane Rise (De Baixo para Cima) + Macro Sweep
-        "Fast upward low-angle crane camera swooping rapidly from BOTTOM TO TOP while pushing closer in 100mm macro along the product's sculpted underside and edges, sweeping bright specular reflections across every real texture as volumetric spotlight beams and glowing particles drift nonstop behind.",
-        // 2: Dynamic Lifestyle Action + Right-to-Left Cinema Orbit
-        "Fluid handheld cinema tracking camera orbiting swiftly from RIGHT TO LEFT around the person naturally using and presenting the product in lively real-world action, with vibrant moving neon light waves, traffic bokeh, shimmering reflections and atmospheric energy in full nonstop motion behind.",
-        // 3: Full 180-Degree 3D Orbital Revolution inside Hyper-Speed Energy Tunnel
-        "Thrilling continuous 180-degree 3D orbital camera revolution swinging rapidly from the rear and opposite flank all the way around to the front of the product, exposing every 3D angle and thickness as luminous energy ribbons, plasma waves and hyperspace speed-light trails surge nonstop through the tunnel.",
-        // 4: High Top-Down Overhead Crane Dive (De Cima para Baixo) + Clockwise Right Arc
-        "Dramatic high-angle crane camera plunging smoothly DOWNWARD from TOP TO BOTTOM while arcing clockwise around the RIGHT side of the product, showcasing top contours and 3D depth as billowing volumetric mist, moving light caustics and rising golden embers flow nonstop across the dark marble stage.",
-        // 5: Aggressive Left-to-Right Whip-Orbit + Dynamic Zoom-Out/In + Racing Skyline
-        "Kinetic whip-arc cinema camera sweeping rapidly from LEFT TO RIGHT while executing a dramatic pull-out-to-push-in speed ramp, exposing full left-side-to-front geometry as streaking night city lights, neon bokeh trails and glowing wind sparks surge continuously across the entire moving skyline.",
-        // 6: Authoritative Frontal 0° Hero Power Zoom-In (Locks Front Face Straight Toward Viewer!)
-        "Authoritative continuous fast zoom-in gliding straight forward toward the product while keeping its FRONT FACE locked squarely toward the camera in the upper safe zone (never turning sideways or away), as dazzling volumetric cinema flares, sweeping spotlight rays and swirling golden sparks radiate nonstop behind."
+        // 0: High-velocity FPV Crash-Zoom + Aggressive 3D Orbit + High-Speed Living Background
+        "Ultra-fast FPV cinema drone crash-zoom rocketing boldly forward into the product while banking in a sweeping 70-degree 3D parallax orbit from the RIGHT flank to front-center, while blazing sparks, high-speed volumetric mist and bright directional light streaks surge rapidly across 100% of the background from frame 1 to the final frame.",
+        // 1: High-Speed Low-to-High Upward Crane Rise (De Baixo para Cima) + Dynamic Macro Glide
+        "Fast high-energy low-angle FPV crane camera rocketing rapidly upward from BOTTOM TO TOP while carving close in 100mm macro along the product's sculpted underside and precision edges, racing razor-sharp specular light glints across every surface texture as volumetric beams and luminous particles fly nonstop behind.",
+        // 2: Kinetic Lifestyle Action + Swift 3D Tracking Orbit
+        "Agile high-speed handheld FPV cinema camera whipping swiftly in a 3D arc from RIGHT TO LEFT around the subject dynamically using and presenting the product in real-world motion, with fast-moving neon reflections, lively background depth parallax and glowing atmospheric energy flowing nonstop behind.",
+        // 3: Full 180-Degree 3D Orbital Revolution + High-Velocity Energy Tunnel
+        "Explosive continuous 180-degree 3D orbital camera revolution whipping rapidly from the rear and side flank all the way around to the front of the product with bold 3D product rotation feel, while hyperspace light trails, plasma waves and surging particles blast nonstop through the tunnel.",
+        // 4: High-Speed Top-Down Overhead Crane Dive (De Cima para Baixo) + Clockwise Arc
+        "Dynamic high-angle FPV crane dive plunging rapidly DOWNWARD from TOP TO BOTTOM while sweeping clockwise around the RIGHT side of the product, revealing upper bevels and full 3D depth as fast-moving volumetric mist, dancing caustics and rising golden embers race nonstop across the dark stage.",
+        // 5: Aggressive Left-to-Right Whip-Orbit + Explosive Speed-Ramp Pull-Out/In
+        "Kinetic whip-pan FPV cinema camera ripping rapidly from LEFT TO RIGHT with a dramatic pull-out-to-push-in speed ramp around the left flank to front silhouette, while streaking skyline bokeh lights, rushing wind sparks and sweeping rim reflections blaze continuously across the entire background.",
+        // 6: Authoritative Frontal 0° Hero Power Zoom-In (Front Face Locked + Explosive Living Backdrop)
+        "Commanding continuous high-speed power zoom-in driving straight forward toward the product while keeping its FRONT FACE locked squarely toward the camera in the upper safe zone, as dazzling volumetric cinema flares, fast-sweeping spotlight rays and swirling golden embers erupt nonstop behind."
       ];
 
       const SUPER_NEGATIVE =
@@ -7588,9 +7678,10 @@
               const now = Date.now();
               if (now - lastClipTime > 240000) clipCutCounter = 0;
               lastClipTime = now;
-              // Usa cutIndex exato do corte (garante Hero 0° no Corte 7, Giro 180° no Corte 4, Top-Down no Corte 5, etc.!)
+              // Preserva cutIndex exato do corte + destrava movimento 3D FPV no Kling (cfgScale 0.38) e Veo 3.1
               const cutIdx = Number.isInteger(payload.cutIndex) ? payload.cutIndex : clipCutCounter++;
-              delete payload.cutIndex;
+              payload.cutIndex = cutIdx;
+              payload.cfgScale = 0.38;
 
               const promptKey = typeof payload.prompt === "string" && payload.prompt.trim() ? "prompt" : "motionPrompt";
               const descRaw = String(document.getElementById("productDetailHint")?.value || "").trim();
@@ -7601,7 +7692,7 @@
                 : `Strict product fidelity: keep exact original product colors, materials and shape. Zero morphing.`;
 
               payload[promptKey] =
-                `${choreo} ${fidelity} Vivid ARRI Alexa 65 cinema colors, rich contrast and continuous high-energy 3D camera + living background motion from frame 1 to final frame.`
+                `${choreo} ${fidelity} Vivid ARRI Alexa 65 cinema colors, rich contrast and continuous high-energy 3D FPV camera + real 3D parallax + living background motion from frame 1 to final frame.`
                   .replace(/\s{2,}/g, " ")
                   .trim()
                   .slice(0, 2200);
