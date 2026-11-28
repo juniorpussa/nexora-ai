@@ -4604,8 +4604,20 @@
 
       const loaded = [];
       for (const item of mediaItems) {
-        if (item.type === "video") loaded.push(await loadVideoElement(item.blob, allowLightBg));
-        else loaded.push(await loadImageElement(item.blob, allowLightBg));
+        if (item.type === "video") {
+          const vObj = await loadVideoElement(item.blob, allowLightBg);
+          if (item.fallbackBlob) {
+            try {
+              const fbObj = await loadImageElement(item.fallbackBlob, allowLightBg);
+              vObj.fallbackImg = fbObj.el;
+              vObj.fallbackCrop = fbObj.crop;
+              vObj.fallbackBlobUrl = fbObj.blobUrl;
+            } catch {}
+          }
+          loaded.push(vObj);
+        } else {
+          loaded.push(await loadImageElement(item.blob, allowLightBg));
+        }
       }
 
       const n = loaded.length;
@@ -4712,31 +4724,55 @@
       const recProf = pickRecorderProfile();
       const stream = new MediaStream(tracks);
       let rec;
-      // 15 Mbps reais (sem ctx.filter na CPU -> 30 FPS cravados, imagem cristalina ~8 MB, ZERO granulação!)
-      const targetBitrate = 15000000;
+      // 8 Mbps HD estável (720x1280 super nítido sem sobrecarregar o encoder nem encurtar para 6s!)
+      const targetBitrate = 8000000;
       try {
         rec = recProf.mimeType
           ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: targetBitrate, audioBitsPerSecond: 192000 })
           : new MediaRecorder(stream, { videoBitsPerSecond: targetBitrate });
       } catch {
-        try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 11000000, audioBitsPerSecond: 192000 }) : new MediaRecorder(stream); }
+        try { rec = recProf.mimeType ? new MediaRecorder(stream, { mimeType: recProf.mimeType, videoBitsPerSecond: 6000000, audioBitsPerSecond: 192000 }) : new MediaRecorder(stream); }
         catch { rec = new MediaRecorder(canvasStream); }
       }
 
-      // Monta todos os <video> num container oculto no DOM p/ o Chrome NUNCA congelar a decodificação!
+      // Monta os <video> DENTRO da área visível do navegador (atrás do site, z-index:-1) para o Chrome NUNCA pausar a decodificação GPU!
       const hiddenVidBox = document.createElement("div");
-      hiddenVidBox.style.cssText = "position:fixed;left:-9999px;top:0;width:4px;height:4px;opacity:0.001;overflow:hidden;pointer-events:none;";
-      const initialSpeedRate = editMode === "cinema_clean" ? 2.0 : 2.95;
+      hiddenVidBox.style.cssText = "position:fixed;left:0;top:0;width:90px;height:160px;opacity:0.01;z-index:-1;overflow:hidden;pointer-events:none;";
+      const smoothPlaybackRate = editMode === "cinema_clean" ? 1.25 : 1.65;
       loaded.forEach((x) => {
         if (x.type === "video") {
           x.el.loop = true;
           x.el.muted = true;
+          x.el.defaultMuted = true;
           x.el.playsInline = true;
-          try { x.el.playbackRate = initialSpeedRate; } catch {}
+          x.el.style.cssText = "width:90px;height:160px;object-fit:cover;position:absolute;left:0;top:0;";
+          try { x.el.playbackRate = smoothPlaybackRate; } catch {}
           hiddenVidBox.appendChild(x.el);
         }
       });
       document.body.appendChild(hiddenVidBox);
+
+      // Pré-aquece TODOS os clipes 3D antes de iniciar o gravador (destrava decodificador de hardware em cada corte!)
+      for (let i = 0; i < loaded.length; i++) {
+        const x = loaded[i];
+        if (x.type !== "video") continue;
+        try {
+          x.el.playbackRate = smoothPlaybackRate;
+          const vd = x.el.duration || 5;
+          x.el.currentTime = vd > 1.5 ? 0.12 : 0.04;
+          await x.el.play().catch(() => {});
+          await sleep(55);
+          if (i > 0) x.el.pause();
+        } catch {}
+      }
+      if (loaded[0] && loaded[0].type === "video") {
+        try {
+          const d0 = loaded[0].el.duration || 5;
+          loaded[0].el.currentTime = d0 > 1.5 ? 0.12 : 0.04;
+          loaded[0].el.playbackRate = smoothPlaybackRate;
+          await loaded[0].el.play().catch(() => {});
+        } catch {}
+      }
 
       const chunks = [];
       rec.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
@@ -4747,17 +4783,8 @@
         };
       });
 
-      // Pré-aquece o 1º clipe já no pico de velocidade 3D (0.25s) antes de iniciar a gravação
-      if (loaded[0] && loaded[0].type === "video") {
-        try {
-          const d0 = loaded[0].el.duration || 5;
-          loaded[0].el.currentTime = d0 > 1.5 ? 0.25 : 0.08;
-        } catch {}
-        await loaded[0].el.play().catch(() => {});
-      }
-
-      // rec.start() atômico (SEM timeslice 100ms) -> garante 10,0s completos sem jamais truncar em 8,7s!
-      rec.start();
+      // Timeslice estável de 250ms + flush final -> garante 10,0s / 15,0s / 20,0s / 30,0s cravados!
+      rec.start(250);
       if (audioCtx && audioCtx.state === "running" && comp) {
         const startAt = audioCtx.currentTime + 0.05;
         audioOriginCtxTime = startAt;
@@ -4840,53 +4867,26 @@
 
       const isBlockbuster = editMode === "cinema_blockbuster";
       const isCleanMode = editMode === "cinema_clean";
-      const computeSpeedRampRate = (segDur, clipDur, progress) => {
-        const activeSpan = Math.max(2.2, (Number.isFinite(clipDur) && clipDur > 1.0 ? clipDur : 5.0) - 0.36);
-        const idealBase = activeSpan / Math.max(0.65, segDur || 1.35);
-        if (isCleanMode) {
-          const baseClean = Math.min(2.35, Math.max(1.75, idealBase * 0.85));
-          return Number(Math.min(2.45, Math.max(1.65, baseClean + (progress < 0.25 || progress > 0.78 ? 0.22 : -0.10))).toFixed(2));
-        }
-        // Curva Speed-Ramp Cinema (2.4x–3.2x): entrada explosiva -> giro 3D nítido no meio -> chicote final sem congelar
-        const base = Math.min(2.92, Math.max(2.58, idealBase));
-        let factor = 1.0;
-        if (progress < 0.24) factor = 1.12;
-        else if (progress > 0.74) factor = 1.14;
-        else factor = 0.90;
-        return Number(Math.min(3.2, Math.max(2.4, base * factor)).toFixed(2));
-      };
 
       let currentSegIdx = 0;
+      let preRolledSegIdx = -1;
       const activateSegment = (sIdx) => {
         if (currentSegIdx === sIdx) return;
-        if (currentSegIdx >= 0 && loaded[segments[currentSegIdx].clipIdx].type === "video") {
-          loaded[segments[currentSegIdx].clipIdx].el.pause();
+        const prevItem = currentSegIdx >= 0 ? loaded[segments[currentSegIdx].clipIdx] : null;
+        const nextItem = loaded[segments[sIdx].clipIdx];
+        if (prevItem && prevItem.type === "video" && prevItem.el !== nextItem.el) {
+          try { prevItem.el.pause(); } catch {}
         }
         currentSegIdx = sIdx;
-        const segNow = segments[sIdx];
-        const nextItem = loaded[segNow.clipIdx];
         if (nextItem.type === "video") {
           try {
-            const vDur = nextItem.el.duration || 5;
-            nextItem.el.playbackRate = computeSpeedRampRate(segNow.dur, vDur, 0.05);
-            const entryT = vDur > 1.8 ? 0.18 : 0.05;
-            if (nextItem.el.currentTime < 0.12 || nextItem.el.currentTime >= Math.max(0.5, vDur - 0.5)) {
-              nextItem.el.currentTime = entryT;
-            }
-          } catch {}
-          nextItem.el.play().catch(() => {});
-        }
-        // Pré-aquece o próximo corte já no início da curva Speed-Ramp (0.18s) para troca instantânea!
-        const upcoming = segments[sIdx + 1] ? loaded[segments[sIdx + 1].clipIdx] : null;
-        if (upcoming && upcoming.type === "video" && upcoming.el !== nextItem.el) {
-          try {
-            const uDur = upcoming.el.duration || 5;
-            upcoming.el.currentTime = uDur > 1.8 ? 0.18 : 0.05;
+            nextItem.el.playbackRate = smoothPlaybackRate;
+            if (nextItem.el.paused) nextItem.el.play().catch(() => {});
           } catch {}
         }
       };
 
-      // ZERO ctx.filter na CPU -> Chrome mantém 30 FPS cravados em GPU e imagem cristalina 15 Mbps!
+      // ZERO ctx.filter na CPU -> 30 FPS cravados e imagem cristalina em 8 Mbps HD!
       const renderFilter = "none";
       const easeOutQuart = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 4);
 
@@ -4903,13 +4903,14 @@
           if (fillEl) fillEl.style.width = `${Math.min(100, Math.round((clockSec / totalSec) * 100))}%`;
           if (secEl) secEl.textContent = `${Math.min(totalSec, clockSec).toFixed(1)}s / ${totalSec}.0s`;
 
-          if (clockSec >= totalSec + 0.24 || wallElapsed >= totalSec + 2.0) {
+          if (clockSec >= totalSec + 0.14 || wallElapsed >= totalSec + 1.8) {
             finished = true; stop();
-            loaded.forEach((x) => { if (x.type === "video") x.el.pause(); });
+            loaded.forEach((x) => { if (x.type === "video") { try { x.el.pause(); } catch {} } });
+            try { if (rec.state === "recording") rec.requestData(); } catch {}
             setTimeout(() => {
               if (rec.state !== "inactive") rec.stop();
               resolve();
-            }, 240);
+            }, 220);
             return;
           }
 
@@ -4926,102 +4927,118 @@
           const item = loaded[seg.clipIdx];
           const mediaEl = item.el;
 
-          // SPEED-RAMP REAL EM TEMPO REAL (2.4x–3.2x) + LOOP CONTÍNUO SEM NUNCA CONGELAR NO FINAL!
+          // Pré-inicia o PRÓXIMO corte 0.35s ANTES da virada para zero atraso e zero congelamento na troca!
+          if (sIdx + 1 < segments.length && (seg.end - t) <= 0.35 && preRolledSegIdx !== sIdx + 1) {
+            preRolledSegIdx = sIdx + 1;
+            const upItem = loaded[segments[sIdx + 1].clipIdx];
+            if (upItem && upItem.type === "video" && upItem.el !== mediaEl) {
+              try {
+                upItem.el.playbackRate = smoothPlaybackRate;
+                const uDur = upItem.el.duration || 5;
+                if (upItem.el.ended || upItem.el.currentTime >= Math.max(0.5, uDur - 0.5)) {
+                  upItem.el.currentTime = uDur > 1.5 ? 0.12 : 0.04;
+                }
+                upItem.el.play().catch(() => {});
+              } catch {}
+            }
+          }
+
+          // Mantém o vídeo ativo rodando liso sem jamais travar no último quadro
           if (item.type === "video") {
             const vDur = mediaEl.duration || 5;
-            const targetRate = computeSpeedRampRate(seg.dur, vDur, p);
-            if (Math.abs((mediaEl.playbackRate || 1) - targetRate) > 0.14) {
-              try { mediaEl.playbackRate = targetRate; } catch {}
-            }
             if (mediaEl.paused && !mediaEl.ended) mediaEl.play().catch(() => {});
-            if (mediaEl.ended || (mediaEl.currentTime || 0) >= Math.max(0.6, vDur - 0.22)) {
-              try { mediaEl.currentTime = vDur > 1.8 ? 0.18 : 0.05; mediaEl.play().catch(() => {}); } catch {}
+            if (mediaEl.ended || (mediaEl.currentTime || 0) >= Math.max(0.6, vDur - 0.18)) {
+              try { mediaEl.currentTime = vDur > 1.5 ? 0.12 : 0.04; mediaEl.play().catch(() => {}); } catch {}
             }
           }
 
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = "high";
 
-          // A) ZOOMS AGRESSIVOS NO RITMO DA BATIDA (1.00 -> 1.48 CRASH-ZOOM, APROXIMAÇÃO RÁPIDA E RECUO EXPLOSIVO)
-          if (item.type !== "video" || mediaEl.readyState >= 2) {
-            const smoothCurve = easeInOutQuad(p);
-            const fastIn = easeOutCubic(p);
-            const rushIn = easeOutQuart(p);
-            const dir = (sIdx % 2 === 0 ? 1 : -1) * dna.flipDir;
-            const optBoost = seg.isImg ? 1.12 : 1.0;
-            let scale = 1.04, panX = 0, panY = 0, angle = 0;
+          // REGRA DE OURO ANTI-TRAVAMENTO: NUNCA pula o redesenho do fundo!
+          // Se o <video> ainda estiver decodificando 1 frame, desenha a foto 4K do mesmo corte (zero congelamento e zero legenda encavalada!)
+          const videoReady = item.type === "video" && mediaEl.readyState >= 2 && mediaEl.videoWidth > 0 && !mediaEl.seeking;
+          const activeDrawable = item.type !== "video" ? mediaEl : (videoReady ? mediaEl : (item.fallbackImg || mediaEl));
+          const activeCrop = (activeDrawable === item.fallbackImg && item.fallbackCrop) ? item.fallbackCrop : item.crop;
 
-            if (isCleanMode) {
-              scale = 1.02 + smoothCurve * 0.20 * optBoost;
-              panX = dir * Math.sin(p * Math.PI) * 16;
-              panY = (0.5 - smoothCurve) * 10;
+          // A) ZOOMS DINÂMICOS NO RITMO DA BATIDA (1.00 -> 1.38 CRASH-ZOOM, APROXIMAÇÃO RÁPIDA E RECUO EXPLOSIVO)
+          const smoothCurve = easeInOutQuad(p);
+          const fastIn = easeOutCubic(p);
+          const rushIn = easeOutQuart(p);
+          const dir = (sIdx % 2 === 0 ? 1 : -1) * dna.flipDir;
+          const optBoost = (seg.isImg || activeDrawable === item.fallbackImg) ? 1.12 : 1.0;
+          let scale = 1.03, panX = 0, panY = 0, angle = 0;
+
+          if (isCleanMode) {
+            scale = 1.02 + smoothCurve * 0.18 * optBoost;
+            panX = dir * Math.sin(p * Math.PI) * 14;
+            panY = (0.5 - smoothCurve) * 8;
+          } else {
+            const mv = sIdx % 7;
+            if (mv === 0) {
+              // Corte 1: CRASH-ZOOM explosivo (1.00 -> 1.38)
+              scale = 1.00 + rushIn * 0.38 * optBoost;
+              panX = -20 * Math.sin(p * Math.PI);
+              panY = (0.38 - smoothCurve) * 16;
+            } else if (mv === 1) {
+              // Corte 2: MACRO subindo DE BAIXO PARA CIMA + aproximação rápida (1.03 -> 1.35)
+              scale = 1.03 + fastIn * 0.32 * optBoost;
+              panX = (smoothCurve - 0.5) * 38;
+              panY = (0.56 - smoothCurve) * 28;
+            } else if (mv === 2) {
+              // Corte 3: LIFESTYLE / AÇÃO + punch-in dinâmico (1.02 -> 1.32)
+              scale = 1.02 + rushIn * 0.30 * optBoost;
+              panX = (0.5 - smoothCurve) * 32;
+              panY = (smoothCurve - 0.5) * 14;
+            } else if (mv === 3) {
+              // Corte 4: GIRO 180° + pulso de velocidade (1.03 -> 1.36 -> 1.08)
+              scale = 1.03 + Math.sin(p * Math.PI) * 0.33 * optBoost;
+              panX = (smoothCurve - 0.5) * 44;
+              angle = -0.013 * Math.sin(p * Math.PI);
+            } else if (mv === 4) {
+              // Corte 5: MERGULHO TOP-DOWN + aproximação veloz (1.02 -> 1.36)
+              scale = 1.02 + rushIn * 0.34 * optBoost;
+              panX = (0.5 - smoothCurve) * 36;
+              panY = (smoothCurve - 0.45) * 28;
+            } else if (mv === 5) {
+              // Corte 6: RECUO EXPLOSIVO (Pull-Out 1.38 -> 1.02)
+              scale = 1.38 - rushIn * 0.36 * optBoost;
+              panX = (smoothCurve - 0.5) * 42;
+              angle = 0.012 * Math.sin(p * Math.PI);
             } else {
-              const mv = sIdx % 7;
-              if (mv === 0) {
-                // Corte 1: CRASH-ZOOM explosivo de alta velocidade (1.00 -> 1.48)
-                scale = 1.00 + rushIn * 0.48 * optBoost;
-                panX = -24 * Math.sin(p * Math.PI);
-                panY = (0.38 - smoothCurve) * 20;
-              } else if (mv === 1) {
-                // Corte 2: MACRO subindo DE BAIXO PARA CIMA + aproximação agressiva (1.04 -> 1.44)
-                scale = 1.04 + fastIn * 0.40 * optBoost;
-                panX = (smoothCurve - 0.5) * 44;
-                panY = (0.58 - smoothCurve) * 34;
-              } else if (mv === 2) {
-                // Corte 3: LIFESTYLE / AÇÃO + punch-in rápido no ritmo (1.02 -> 1.38)
-                scale = 1.02 + rushIn * 0.36 * optBoost;
-                panX = (0.5 - smoothCurve) * 38;
-                panY = (smoothCurve - 0.5) * 16;
-              } else if (mv === 3) {
-                // Corte 4: GIRO 180° + pulso agressivo de velocidade (1.04 -> 1.44 -> 1.10)
-                scale = 1.04 + Math.sin(p * Math.PI) * 0.40 * optBoost;
-                panX = (smoothCurve - 0.5) * 52;
-                angle = -0.015 * Math.sin(p * Math.PI);
-              } else if (mv === 4) {
-                // Corte 5: MERGULHO TOP-DOWN + aproximação veloz (1.02 -> 1.46)
-                scale = 1.02 + rushIn * 0.44 * optBoost;
-                panX = (0.5 - smoothCurve) * 42;
-                panY = (smoothCurve - 0.44) * 34;
-              } else if (mv === 5) {
-                // Corte 6: RECUO EXPLOSIVO (Pull-Out 1.48 -> 1.02) revelando todo o universo 3D
-                scale = 1.48 - rushIn * 0.46 * optBoost;
-                panX = (smoothCurve - 0.5) * 50;
-                angle = 0.014 * Math.sin(p * Math.PI);
-              } else {
-                // Corte 7: HERO FRONTAL 0° POWER ZOOM-IN firme no centro superior (1.02 -> 1.38)
-                scale = 1.02 + fastIn * 0.36 * optBoost;
-                panX = dir * (1 - smoothCurve) * 12;
-                panY = (0.5 - smoothCurve) * 12;
-              }
-
-              // Micro-punch óptico forte sincronizado no exato corte (0.15s) + whoosh!
-              if (fxOn && sIdx > 0 && cEl < 0.15) {
-                const cp = 1 - easeOutQuart(cEl / 0.15);
-                scale += cp * 0.11;
-              }
-              const maxPanX = canvas.width * 0.088;
-              const maxPanY = canvas.height * 0.072;
-              panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
-              panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
+              // Corte 7: HERO FRONTAL 0° POWER ZOOM-IN firme no centro superior (1.02 -> 1.32)
+              scale = 1.02 + fastIn * 0.30 * optBoost;
+              panX = dir * (1 - smoothCurve) * 10;
+              panY = (0.5 - smoothCurve) * 10;
             }
 
-            drawCroppedCover(ctx, mediaEl, item.crop, scale, panX, panY, angle, 1, renderFilter);
+            // Micro-punch óptico limpo sincronizado no exato corte (0.14s) + whoosh!
+            if (fxOn && sIdx > 0 && cEl < 0.14) {
+              const cp = 1 - easeOutQuart(cEl / 0.14);
+              scale += cp * 0.095;
+            }
+            const maxPanX = canvas.width * 0.075;
+            const maxPanY = canvas.height * 0.062;
+            panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
+            panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
+          }
 
-            // Flash óptico cinematográfico limpo sincronizado com o whoosh no corte
-            if (fxOn && sIdx > 0 && cEl < 0.11) {
-              const fp = 1 - cEl / 0.11;
-              ctx.save();
-              ctx.globalCompositeOperation = "screen";
-              ctx.fillStyle = `rgba(255,250,240,${(fp * fp * 0.24).toFixed(3)})`;
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-              ctx.restore();
-            }
-            if (isBlockbuster) {
-              drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.10 * Math.sin(p * Math.PI), dir);
-            }
-            if (!allowLightBg) {
-              drawCinematicVignette(ctx, canvas.width, canvas.height, 0.20);
-            }
+          drawCroppedCover(ctx, activeDrawable, activeCrop, scale, panX, panY, angle, 1, renderFilter);
+
+          // Flash óptico cinematográfico limpo sincronizado com o whoosh no corte
+          if (fxOn && sIdx > 0 && cEl < 0.11) {
+            const fp = 1 - cEl / 0.11;
+            ctx.save();
+            ctx.globalCompositeOperation = "screen";
+            ctx.fillStyle = `rgba(255,250,240,${(fp * fp * 0.22).toFixed(3)})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+          }
+          if (isBlockbuster) {
+            drawOpticalLightSweep(ctx, canvas.width, canvas.height, p, 0.09 * Math.sin(p * Math.PI), dir);
+          }
+          if (!allowLightBg) {
+            drawCinematicVignette(ctx, canvas.width, canvas.height, 0.20);
           }
 
           // C) CTA ANIMADO / PLACA FINAL LIMPA (se usuário ativar; padrão é vídeo limpo)
@@ -5031,7 +5048,7 @@
             window.NEXORA_UI_OVERLAY.drawCtaOrEndCard(ctx, canvas.width, canvas.height, t, totalSec, ctaMode, endCardContact);
           }
 
-          // D) LEGENDAS CRAVADAS NO MESMO RELÓGIO DE ÁUDIO (0.00s DE SINCRONISMO!)
+          // D) LEGENDAS CRAVADAS NO MESMO RELÓGIO DE ÁUDIO (0.00s DE SINCRONISMO • ZERO SOBREPOSIÇÃO!)
           const hideCapForEndCard = ctaMode === "endcard" && ctaActiveNow;
           if (!hideCapForEndCard && captionBlocks.length > 0 && captionCfg) {
             drawTikTokCaption(ctx, canvas.width, canvas.height, captionBlocks, clockSec, captionCfg.style, captionCfg.pos || "safe_tiktok", captionCfg.size || "normal", ctaActiveNow);
@@ -5041,11 +5058,14 @@
 
       const outBlob = await doneP;
       try { hiddenVidBox.remove(); } catch {}
-      loaded.forEach((x) => URL.revokeObjectURL(x.blobUrl));
+      loaded.forEach((x) => {
+        try { URL.revokeObjectURL(x.blobUrl); } catch {}
+        if (x.fallbackBlobUrl) { try { URL.revokeObjectURL(x.fallbackBlobUrl); } catch {} }
+      });
       if (activeVideoBlobUrl) URL.revokeObjectURL(activeVideoBlobUrl);
       activeVideoBlobUrl = URL.createObjectURL(outBlob);
       const gpuCount = mediaItems.filter((x) => x.type === "video").length;
-      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: `${recProf.label} 15Mbps HD`, uniqueCount: n, gpuCount, sec: totalSec, musicMixedOk, voiceMixedOk };
+      return { videoUrl: activeVideoBlobUrl, videoBlob: outBlob, ext: recProf.ext, label: `${recProf.label} 8Mbps HD`, uniqueCount: n, gpuCount, sec: totalSec, musicMixedOk, voiceMixedOk };
     }
 
     function downloadBlob(blob, filename) {
@@ -5632,8 +5652,8 @@
 
         const assembledPlan = [];
         for (let i = 0; i < totalUnique; i++) {
-          if (readyClipUrls[i]) assembledPlan.push({ type: "video", url: readyClipUrls[i], act: actPlan[i], cutIdx: i });
-          else if (keyframeUrls[i]) assembledPlan.push({ type: "image", url: keyframeUrls[i], act: actPlan[i], cutIdx: i });
+          if (readyClipUrls[i]) assembledPlan.push({ type: "video", url: readyClipUrls[i], keyframeUrl: keyframeUrls[i] || "", act: actPlan[i], cutIdx: i });
+          else if (keyframeUrls[i]) assembledPlan.push({ type: "image", url: keyframeUrls[i], keyframeUrl: keyframeUrls[i], act: actPlan[i], cutIdx: i });
         }
 
         const readyGpuTotal = assembledPlan.filter((x) => x.type === "video").length;
@@ -5652,16 +5672,19 @@
 
         stage.innerHTML = `
           <div class="status-msg">
-            <strong>Finalizando Superprodução Cinema 15Mbps (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
+            <strong>Finalizando Superprodução Cinema HD (<span id="renderProgressSec">0.0s / ${targetSec}.0s</span>)</strong><br/>
             Montando ${assembledPlan.length} cortes 3D + Zooms Dinâmicos + Trilha + Voz + Legendas 0.00s...
           </div>
           <div class="progress-bar-wrap"><div class="progress-bar-fill" id="renderProgressFill" style="width:10%"></div></div>
         `;
 
-        const mediaItems = await Promise.all(assembledPlan.map(async (item) => ({
-          ...item,
-          blob: (item.type === "video" && preloadedMediaBlobs[item.cutIdx]) ? preloadedMediaBlobs[item.cutIdx] : await fetchMediaBlob(item.url)
-        })));
+        const mediaItems = await Promise.all(assembledPlan.map(async (item) => {
+          const [mainBlob, fbBlob] = await Promise.all([
+            (item.type === "video" && preloadedMediaBlobs[item.cutIdx]) ? Promise.resolve(preloadedMediaBlobs[item.cutIdx]) : fetchMediaBlob(item.url),
+            (item.type === "video" && item.keyframeUrl) ? fetchMediaBlob(item.keyframeUrl).catch(() => null) : Promise.resolve(null)
+          ]);
+          return { ...item, blob: mainBlob, fallbackBlob: fbBlob };
+        }));
 
         let soundtrackBuf = null;
         if (mKey === "custom" && customAudioBuf) soundtrackBuf = customAudioBuf;
@@ -6021,26 +6044,39 @@
       throw new Error(lastErr);
     }
 
-    async function generateAngleCutout(baseImageOrList, anglePrompt, slotIdx, signal) {
-      setAngleSlotState(slotIdx, "Gerando 9:16...", false);
+    async function generateAngleCutout(baseImageOrList, anglePrompt, slotIdx, signal, startDelayMs = 0) {
+      if (startDelayMs > 0) await sleep(startDelayMs);
       const refs = Array.isArray(baseImageOrList) ? baseImageOrList.filter(Boolean) : [baseImageOrList].filter(Boolean);
-      const qa = await callApi({
-        task: "generate_angle",
-        aspectRatio: "9:16",
-        aspect_ratio: "9:16",
-        imageUrl: refs[0] || "",
-        ...(refs.length > 1 ? { referenceImages: refs } : {}),
-        imagePrompt: anglePrompt
-      }, 34000, signal);
-      const ra = await pollFalJob(qa, (st) => {
-        setAngleSlotState(slotIdx, `3D 9:16: ${st}`, false);
-      }, signal);
-      if (!ra || !ra.imageUrl) throw new Error("Falha ao criar ângulo 3D 9:16.");
-      setAngleSlotState(slotIdx, "Recortando PNG...", false);
-      const pngUrl = await removeBgFromUrl(ra.imageUrl, (st) => {
-        setAngleSlotState(slotIdx, `PNG: ${st}`, false);
-      }, signal);
-      return { pngUrl: pngUrl || ra.imageUrl, studioUrl: ra.imageUrl };
+      let lastErr = new Error("Falha ao criar ângulo 3D 9:16.");
+
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        if (signal && signal.aborted) throw new Error("ABORTED_RUN");
+        try {
+          setAngleSlotState(slotIdx, attempt === 1 ? "Gerando 9:16..." : "Tentativa 2/2...", false);
+          const qa = await callApi({
+            task: "generate_angle",
+            aspectRatio: "9:16",
+            aspect_ratio: "9:16",
+            imageUrl: refs[0] || "",
+            ...(refs.length > 1 ? { referenceImages: refs } : {}),
+            imagePrompt: anglePrompt
+          }, 42000, signal);
+          const ra = await pollFalJob(qa, (st) => {
+            setAngleSlotState(slotIdx, `3D 9:16: ${st}`, false);
+          }, signal);
+          if (!ra || !ra.imageUrl) throw new Error("Falha ao criar ângulo 3D 9:16.");
+          setAngleSlotState(slotIdx, "Recortando PNG...", false);
+          const pngUrl = await removeBgFromUrl(ra.imageUrl, (st) => {
+            setAngleSlotState(slotIdx, `PNG: ${st}`, false);
+          }, signal);
+          return { pngUrl: pngUrl || ra.imageUrl, studioUrl: ra.imageUrl };
+        } catch (err) {
+          if (err.message === "ABORTED_RUN" || err.status === 402 || err.status === 403) throw err;
+          lastErr = err;
+          if (attempt < 2) await sleep(1400);
+        }
+      }
+      throw lastErr;
     }
 
     async function describeProductAuto(imageUrl, signal) {
@@ -6055,8 +6091,9 @@
           if (jsonMatch) {
             try {
               const parsed = JSON.parse(jsonMatch[0]);
-              if (parsed.visual_description || parsed.macro_detail) {
+              if (parsed.product_name || parsed.visual_description || parsed.macro_detail) {
                 return {
+                  name: String(parsed.product_name || "").trim().slice(0, 48),
                   desc: String(parsed.visual_description || "").trim().slice(0, 160),
                   macro: String(parsed.macro_detail || "").trim().slice(0, 100)
                 };
@@ -6158,8 +6195,39 @@
 
         setAngleSlotState(5, "Aguardando ponte lateral...", false);
 
+        const renderRetryAngleBtn = (slotIdx, specObj, inputRefs) => {
+          window.__nexoraAngleRetryMap = window.__nexoraAngleRetryMap || {};
+          window.__nexoraAngleRetryMap[slotIdx] = { spec: specObj, refs: inputRefs };
+          setAngleSlotState(
+            slotIdx,
+            `<button type="button" class="btn-mini" style="font-size:10.5px;padding:6px 8px;" onclick="window.__nexoraRetrySingleAngle(${slotIdx})">🔄 Gerar só este</button>`,
+            false
+          );
+        };
+
+        window.__nexoraRetrySingleAngle = async (slotIdx) => {
+          const ctxRetry = window.__nexoraAngleRetryMap && window.__nexoraAngleRetryMap[slotIdx];
+          if (!ctxRetry) return;
+          try {
+            const outOne = await generateAngleCutout(ctxRetry.refs, ctxRetry.spec.prompt, slotIdx, null, 0);
+            if (outOne && outOne.pngUrl) {
+              setAngleSlotState(slotIdx, `<img src="${outOne.pngUrl}" alt="${ctxRetry.spec.label}" />`, true);
+              const kitNow = Array.isArray(window.nexora3Angles) ? window.nexora3Angles.filter((x) => x.key !== ctxRetry.spec.key) : [];
+              kitNow.push({ key: ctxRetry.spec.key, angle: ctxRetry.spec.key, url: outOne.pngUrl });
+              window.nexora3Angles = kitNow;
+              window.nexora6Angles = kitNow;
+              if (angles3Status) angles3Status.textContent = `✅ ${kitNow.length}/6 ângulos 3D em 9:16 sem fundo prontos`;
+            } else {
+              renderRetryAngleBtn(slotIdx, ctxRetry.spec, ctxRetry.refs);
+            }
+          } catch {
+            renderRetryAngleBtn(slotIdx, ctxRetry.spec, ctxRetry.refs);
+          }
+        };
+
+        // Escalonamento suave de 350ms entre os 4 ângulos paralelos para evitar erro de pico simultâneo na fila fal.ai!
         const settledPhase1 = await Promise.allSettled([
-          ...phase1Specs.map((sp) => generateAngleCutout(whiteStudioBase916, sp.prompt, sp.slot, sig)),
+          ...phase1Specs.map((sp, i) => generateAngleCutout(whiteStudioBase916, sp.prompt, sp.slot, sig, i * 350)),
           describeProductAuto(angle1Url, sig)
         ]);
 
@@ -6175,7 +6243,7 @@
               sideBridgeUrl = res.value.studioUrl || res.value.pngUrl;
             }
           } else {
-            setAngleSlotState(sp.slot, "Fallback base", false);
+            renderRetryAngleBtn(sp.slot, sp, [whiteStudioBase916]);
           }
         }
 
@@ -6185,17 +6253,17 @@
           slot: 5, key: "back_180", label: "6. Giro 180° / Traseira 3/4",
           prompt: `VERTICAL 9:16 STUDIO TURNAROUND — CONTINUE ROTATING 110 DEGREES FURTHER FROM THE SIDE PROFILE TO SHOW THE REAR BACK VIEW (160°–180° BEHIND THE PRODUCT, ZERO FRONT FACE VISIBLE). Starting from the side-profile reference image, orbit completely behind the exact product (${orientShort}) so the camera sees its BACK side, rear shell/strap/hinge architecture and opposite rear three-quarter contour cleanly. ${commonTail}`
         };
+        const bridgeInputs = sideBridgeUrl ? [sideBridgeUrl, whiteStudioBase916] : [whiteStudioBase916];
         try {
-          const bridgeInputs = sideBridgeUrl ? [sideBridgeUrl, whiteStudioBase916] : [whiteStudioBase916];
-          const backRes = await generateAngleCutout(bridgeInputs, backSpec.prompt, backSpec.slot, sig);
+          const backRes = await generateAngleCutout(bridgeInputs, backSpec.prompt, backSpec.slot, sig, 0);
           if (backRes && backRes.pngUrl) {
             setAngleSlotState(backSpec.slot, `<img src="${backRes.pngUrl}" alt="${backSpec.label}" />`, true);
             finalKit.push({ key: backSpec.key, angle: backSpec.key, url: backRes.pngUrl });
           } else {
-            setAngleSlotState(backSpec.slot, "Fallback base", false);
+            renderRetryAngleBtn(backSpec.slot, backSpec, bridgeInputs);
           }
         } catch {
-          setAngleSlotState(backSpec.slot, "Fallback base", false);
+          renderRetryAngleBtn(backSpec.slot, backSpec, bridgeInputs);
         }
 
         window.nexora3Angles = finalKit;
@@ -6204,8 +6272,13 @@
         const descRes = settledPhase1[phase1Specs.length];
         let descNote = "";
         if (descRes && descRes.status === "fulfilled" && descRes.value) {
+          if (descRes.value.name && inlineProductName && !inlineProductName.value.trim()) {
+            inlineProductName.value = descRes.value.name;
+            inlineProductName.dispatchEvent(new Event("input", { bubbles: true }));
+          }
           if (descRes.value.desc && productDetailHint) {
             productDetailHint.value = descRes.value.desc;
+            productDetailHint.dispatchEvent(new Event("input", { bubbles: true }));
             descNote = " + Descrição Visual preenchida ✓";
           }
           if (descRes.value.macro && macroTarget && !macroTarget.value.trim()) {
@@ -6452,13 +6525,13 @@
           const sr = rawAudioBuffer.sampleRate;
           const { samples: trimmed, timeMap } = trimDeadSilencesWithMap(rawAudioBuffer);
           const trimmedDur = trimmed.length / sr;
-          // Encerra a fala completa entre 00:09.30 e 00:09.45 (deixa ~0.55s limpos de impacto musical — NUNCA corta "o seu!")
-          const targetMaxDur = Math.max(2.5, (Number(targetSec) || 10) - 0.58);
+          // Encerra a fala completa ~0.50s antes do fim (deixa impacto final limpo — NUNCA corta o final da locução!)
+          const targetMaxDur = Math.max(2.5, (Number(targetSec) || 10) - 0.50);
 
           let speedRate = 1.0;
           if (trimmedDur > targetMaxDur) {
-            speedRate = Math.min(1.42, trimmedDur / targetMaxDur);
-          } else if (trimmedDur >= (Number(targetSec) || 10) * 0.88) {
+            speedRate = Math.min(1.62, trimmedDur / targetMaxDur);
+          } else if (trimmedDur >= (Number(targetSec) || 10) * 0.90) {
             speedRate = 1.04;
           }
 
@@ -6526,7 +6599,9 @@
 
           let remappedWhisper = null;
           if (Array.isArray(whisperChunks) && whisperChunks.length > 0) {
-            // 1) Mapeia cada palavra pelo corte de silêncios + WSOLA
+            // 1) Escala REAL medida do finalBuffer pós-WSOLA (elimina 100% qualquer drift progressivo das legendas!)
+            const trimmedEndSec = Math.max(0.1, timeMap[timeMap.length - 1]?.newEnd || trimmedDur || 1);
+            const actualScale = finalBuffer.duration / trimmedEndSec;
             const prelim = [];
             for (let idx = 0; idx < whisperChunks.length; idx++) {
               const ch = whisperChunks[idx];
@@ -6538,15 +6613,14 @@
                 const nextS = whisperChunks[idx + 1]?.timestamp?.[0];
                 rawE = Number.isFinite(nextS) && nextS > rawS ? nextS : rawS + 0.20;
               }
-              const ms = mapTimeThroughMap(rawS, timeMap, speedRate);
-              const me = Math.max(ms + 0.06, mapTimeThroughMap(rawE, timeMap, speedRate));
+              const ms = mapTimeThroughMap(rawS, timeMap, 1.0) * actualScale;
+              const me = Math.max(ms + 0.06, mapTimeThroughMap(rawE, timeMap, 1.0) * actualScale);
               prelim.push({ ch, s: ms, e: me });
             }
 
-            // 2) Mapeamento determinístico direto (sem esticamento pós-compressor -> 0,00s exato de sincronia!)
             if (prelim.length > 0) {
               const maxDur = Math.max(0.5, finalBuffer.duration);
-              const VISUAL_LEAD = 0.03;
+              const VISUAL_LEAD = 0.02;
               let lastEnd = 0;
               remappedWhisper = prelim.map((item) => {
                 let ns = Math.max(0, Math.min(maxDur - 0.06, item.s - VISUAL_LEAD));
@@ -6914,7 +6988,15 @@
         const descRaw = String(document.getElementById("productDetailHint")?.value || "").trim();
         const macroRaw = String(document.getElementById("macroTarget")?.value || "").trim();
         const cat = detectRealProductCategory(prodRaw, descRaw);
-        const prodName = prodRaw || "esse lançamento";
+        // Encurta automaticamente se o usuário colou descrição técnica longa no nome do produto (garante fala perfeita em 10s!)
+        const shortProd = (() => {
+          if (!prodRaw) return "esse lançamento";
+          const beforeSep = prodRaw.split(/[,;/|•()]/)[0].trim();
+          const words = beforeSep.split(/\s+/).filter(Boolean);
+          if (beforeSep.length <= 34 && words.length <= 5) return beforeSep;
+          return words.slice(0, 4).join(" ").replace(/(de|da|do|com|e|para|em)$/i, "").trim() || beforeSep.slice(0, 32);
+        })();
+        const prodName = shortProd;
         const meta = inferPtMeta(prodName);
         let macroClean = macroRaw ? macroRaw.toLowerCase().replace(/[.;]+/g, ",").trim() : "";
         if (vidSec <= 12 && macroClean.length > 28) {
@@ -7019,8 +7101,8 @@
         };
         let out = "";
         if (vidSec <= 12) {
-          // 10s: ~142–168 chars -> fala natural ~9.2s + 0.7s de impacto musical, sync 0,00s perfeito!
-          const b1Fit = trimSentence(b.b1, 74);
+          // 10s: ~122–150 chars -> fala natural ~8.5s–9.1s, ZERO corte no final e sync 0,00s perfeito!
+          const b1Fit = trimSentence(b.b1, 60);
           out = `${b.hook} ${b1Fit} ${platformCta}`;
         } else if (vidSec <= 17) {
           // 15s: ~215–248 chars -> fala natural ~14.2s, sync 0,00s perfeito!
@@ -8541,7 +8623,7 @@
     })();
   </script>
   <script src="./nexora-saas.js"></script>
-  <script src="./nexora-cinema-ui.js?v=2"></script>
+  <script src="./nexora-cinema-ui.js?v=3"></script>
 </body>
 </html>
 
